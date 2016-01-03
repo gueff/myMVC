@@ -1,3 +1,12 @@
+# myMVC
+A tiny MVC Framework, written in PHP. Open Source and free of charge.
+- Open Source
+- MVC Structure, +Events, +Policies
+- Smarty Template Engine
+- PHP7 ready 
+- Modular
+- Expandable
+- myMVC InfoTool: an integrated Debug-/Info-Toolbar (Frontend + Browser Console)
 
 Website : https://www.mymvc.org/
 
