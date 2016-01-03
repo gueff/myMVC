@@ -1,0 +1,23 @@
+{
+	"/":
+			{
+				"query":
+						"module=standard&c=index&m=home"
+				,
+				"title":
+						"Home"
+				,
+				"ssl": false
+			}
+	,
+	"/about/":
+			{
+				"query":
+						"module=standard&c=index&m=about"
+				,
+				"title":
+						"About"
+				,
+				"ssl": false
+			}
+}

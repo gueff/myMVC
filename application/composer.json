@@ -1,0 +1,35 @@
+{
+	"require": {
+		"php":
+				">=5.4.0"
+		,
+		"smarty/smarty":
+				">=3.1.2.8"
+		,
+		"ezyang/htmlpurifier":
+				"dev-master"
+		,
+		"phpids/phpids":
+				"dev-master"
+		,
+		"monolog/monolog":
+				"1.11.*"
+	},
+	"require-dev": {
+		"phpunit/phpunit":
+				"*",
+		"facebook/webdriver":
+				"dev-master",
+		"phpunit/phpunit-selenium":
+				">=1.2"
+	},
+	"autoload": {
+		"psr-0": {
+			"IDS\\Tests":
+					"tests/"
+			,
+			"IDS":
+					"lib/"
+		}
+	}
+}
