@@ -10,6 +10,6 @@ written in PHP since 2014 by Guido K.B.W. Üffing / ueffing.net, info [at] ueffi
 
 It runs on PHP5.4 and as well as on PHP7.
 
-License: GNU GENERAL PUBLIC LICENSE Version 3 [see <a href="http://dev.mymvc.org/Documentation/COPYING">License</a>].
+License: GNU GENERAL PUBLIC LICENSE Version 3 [see <a href="https://www.mymvc.org/Documentation/COPYING">License</a>].
 
 </div>
