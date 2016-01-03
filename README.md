@@ -1,3 +1,6 @@
+
+Website : https://www.mymvc.org/
+
 # Installing myMVC
 
 This is about how to set up and run a working application built with myMVC. 
@@ -34,5 +37,4 @@ If you don't like to setup and run a webserver like Apache or Nginx, **you can a
 
 -	**Run the Auto-Installer** by calling that domain (or, if you run the php internal server: localhost:1969) in your browser. The Auto-Installer will instantly begin to install all necessary files. 
 (In case of errors, a text will prompt up showing details about what went wrong). 
-![installation.1.png](/myMVC/images/installation.1.png)
 -	The Page will reload after **Installation succeeded** and you should see the myMVC Welcome Webpage.
