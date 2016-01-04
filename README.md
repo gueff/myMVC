@@ -15,7 +15,7 @@ Website : https://www.mymvc.org/
 This is about how to set up and run a working application built with myMVC. 
 
 ## 1. Preliminary
-**Download and extract** myMVC into your www folder (e.g.: `/var/www/myMVC/`), so that you finally get this structure:
+**[Download](https://github.com/gueff/myMVC/releases) and extract** myMVC into your www folder (e.g.: `/var/www/myMVC/`), so that you finally get this structure:
 
 - `/var/www/myMVC/application/`
 - `/var/www/myMVC/modules/`
