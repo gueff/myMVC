@@ -1,3 +1,5 @@
+Download [latest Release](https://github.com/gueff/myMVC/releases)
+
 # myMVC
 A tiny MVC Framework, written in PHP. Open Source and free of charge.
 - Open Source
