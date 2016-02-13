@@ -313,8 +313,8 @@ class MyMVCInstaller
 
 		// save runfile
 		$sCmd = 'cd ' . $this->_aConfig['MVC_APPLICATION_PATH'] . ';'
-			. 'php ' . $this->_aConfig['MVC_APPLICATION_PATH'] . '/composer.phar self-update;'
-			. 'php ' . $this->_aConfig['MVC_APPLICATION_PATH'] . '/composer.phar install;'
+			. PHP_BINDIR . '/php ' . $this->_aConfig['MVC_APPLICATION_PATH'] . '/composer.phar self-update;'
+			. PHP_BINDIR . '/php ' . $this->_aConfig['MVC_APPLICATION_PATH'] . '/composer.phar install;'
 			. 'rm ' . $this->_sInstallLock . ';';
 		
 		file_put_contents($this->_sInstallLock, "#!/bin/bash\n" . $sCmd);
