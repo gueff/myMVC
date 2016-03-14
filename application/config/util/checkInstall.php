@@ -259,6 +259,18 @@ class MyMVCInstaller
 			return true;
 		}
 
+		/**
+		 * customize/extend the config:
+		 * scan the webroot/config folder and require all *.php files. 
+		 * You may customize previous settings there and/or declare new ones 
+		 */
+		foreach (glob ($this->_aConfig['MVC_APPLICATION_CONFIG_EXTEND_DIR'] . '/*.php') as $sFile)
+		{
+			$aConfig = $this->_aConfig;
+			include $sFile;
+			$this->_aConfig = $aConfig;
+		}	
+		
 		$this->preset();		
 		$this->_aBootstrapperFileInfo = $this->_getBootstrapperFileInfo();
 
