@@ -36,7 +36,7 @@ class Index
 	protected function __construct()
 	{
 		// this is not bonded to an event, instead it is executed directly
-		\MVC\Helper::ENSURECORRECTPROTOCOL();
+		\MVC\Request::ENSURECORRECTPROTOCOL();
 
 		\MVC\Event::BIND('mvc.ids.impact', function($mPackage) {
 			\MVC\Log::WRITE($mPackage, 'ids.log');

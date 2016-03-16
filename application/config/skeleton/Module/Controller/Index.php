@@ -104,7 +104,7 @@ class Index implements \MVC\MVCInterface\Controller
 	}
 	
 	/**
-	 * Destrucor
+	 * Destructor
 	 * 
 	 * @access public
 	 * @return void
