@@ -19,9 +19,9 @@ namespace {module}\Event;
 class Index
 {
 	/**
-	 * {module}\Event\Index
+	 * \{module}\Event\Index
 	 * 
-	 * @var {module}\Event\Index
+	 * @var \{module}\Event\Index
 	 * @access private
 	 * @static
 	 */
@@ -52,7 +52,7 @@ class Index
 	 *
 	 * @access public
 	 * @static
-	 * @return {module}\Event\Index
+	 * @return \{module}\Event\Index
 	 */
 	public static function getInstance ()
 	{

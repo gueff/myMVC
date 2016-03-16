@@ -47,7 +47,7 @@ class Index implements \MVC\MVCInterface\Controller
 	/**
 	 * View Object
 	 * 
-	 * @var {module}_View_Index
+	 * @var \{module}\View\Index
 	 * @access public
 	 */
 	public $o{module}ViewIndex;
@@ -55,7 +55,7 @@ class Index implements \MVC\MVCInterface\Controller
 	/**
 	 * Model Object
 	 * 
-	 * @var {module}_Model_Index 
+	 * @var \{module}\Model\Index 
 	 * @access protected
 	 */
 	protected $_o{module}ModelIndex;
