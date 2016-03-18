@@ -149,7 +149,7 @@ class MyMVCInstaller
 		
 		$aExt = get_loaded_extensions();
 		$sMsg = '';
-		
+
 		foreach ($aMustHave as $sExt)
 		{
 			if (!in_array ($sExt, $aExt))
@@ -304,6 +304,7 @@ class MyMVCInstaller
 		if ('' !== $sPhpExtensionMissing)
 		{
 			$this->_text('<dd>'. trim($sPhpExtensionMissing) . '</dd>');
+			(file_exists($this->_sInstallLock)) ? unlink($this->_sInstallLock) : false;
 			exit();
 		}		
 		
@@ -326,7 +327,7 @@ class MyMVCInstaller
 		// save runfile
 		$sCmd = 'cd ' . $this->_aConfig['MVC_APPLICATION_PATH'] . ';'
 			. PHP_BINDIR . '/php ' . $this->_aConfig['MVC_APPLICATION_PATH'] . '/composer.phar self-update;'
-			. PHP_BINDIR . '/php ' . $this->_aConfig['MVC_APPLICATION_PATH'] . '/composer.phar install;'
+			. PHP_BINDIR . '/php ' . $this->_aConfig['MVC_APPLICATION_PATH'] . '/composer.phar install --prefer-dist;'
 			. 'rm ' . $this->_sInstallLock . ';';
 		
 		file_put_contents($this->_sInstallLock, "#!/bin/bash\n" . $sCmd);
@@ -345,7 +346,7 @@ class MyMVCInstaller
 			if (file_exists ($this->_aConfig['MVC_COMPOSER_DIR']))
 			{
 				$this->_text("<dd>installing custom libs defined by custom config</dd>");
-				$sCmd = "cd " . $this->_aConfig['MVC_APPLICATION_PATH'] . "; php " . $this->_aConfig['MVC_APPLICATION_PATH'] . "/composer.phar --working-dir=" . $this->_aConfig['MVC_COMPOSER_DIR'] . " install";
+				$sCmd = "cd " . $this->_aConfig['MVC_APPLICATION_PATH'] . "; php " . $this->_aConfig['MVC_APPLICATION_PATH'] . "/composer.phar --working-dir=" . $this->_aConfig['MVC_COMPOSER_DIR'] . " install --prefer-dist";
 				$this->_text('<pre>' . $sCmd . "\n" . '</pre>');
 				$iPid = $this->_runInBackground ($sCmd);
 				$this->_text('<dd>PID: ' . $iPid . '</dd>');

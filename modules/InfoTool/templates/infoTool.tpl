@@ -79,34 +79,40 @@ for more Info
 							<li class=""><a href="#Variables8" role="tab" data-toggle="tab">$_SERVER</a></li>
 							<li class=""><a href="#Variables7" role="tab" data-toggle="tab">Constants</a></li>
 						</ul>
-						<div id="meinTabContent" class="tab-content" style="overflow: auto;width: 100%;height: 500px;">
+						<div class="tab-content" style="overflow: auto;width: 100%;height: 500px;">
 							<div class="tab-pane active in" id="Variables1">
-								<pre>{$aToolbar.aGet|@print_r}</pre>		  
+								<p>
+									<br />unfiltered Values in $_GET:
+								</p>
+								<pre>{$aToolbar.aGet|@print_r:true}</pre>		
+								<p>									
+									to see filtered $_GET Values by myMVC, see [myMVC] => [MVC_Request::getQueryArrays]
+								</p>
 							</div>
 							<div class="tab-pane" id="Variables2" style="overflow: auto;width: 100%;height: 500px;">
-								<pre>{$aToolbar.aPost|@print_r}</pre>
+								<pre>{$aToolbar.aPost|@print_r:true}</pre>
 							</div>
 							<div class="tab-pane" id="Variables3" style="overflow: auto;width: 100%;height: 500px;">
-								<pre>{$aToolbar.aCookie|@print_r}</pre>
+								<pre>{$aToolbar.aCookie|@print_r:true}</pre>
 							</div>
 							<div class="tab-pane" id="Variables4" style="overflow: auto;width: 100%;height: 500px;">
-								<pre>{$aToolbar.aRequest|@print_r}</pre>
+								<pre>{$aToolbar.aRequest|@print_r:true}</pre>
 							</div>
 							<div class="tab-pane" id="Variables5" style="overflow: auto;width: 100%;height: 500px;">
-								<pre>{$aToolbar.aSession|@print_r}</pre>
+								<pre>{$aToolbar.aSession|@print_r:true}</pre>
 							</div>
 							<div class="tab-pane" id="Variables7" style="overflow: auto;width: 100%;height: 500px;">
-								<pre>{$aToolbar.aConstant|@print_r}</pre>
+								<pre>{$aToolbar.aConstant|@print_r:true}</pre>
 							</div>
 							<div class="tab-pane" id="Variables8" style="overflow: auto;width: 100%;height: 500px;">
-								<pre>{$aToolbar.aServer|@print_r}</pre>
+								<pre>{$aToolbar.aServer|@print_r:true}</pre>
 							</div>
 						</div>							
 					</ul>
 				</li>
 
 				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cube"></i> myMVC <span class="caret"></span></a>
+					<a id="menuMyMvc" href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cube"></i> myMVC <span class="caret"></span></a>
 					<ul class="dropdown-menu myMvcToolbarDropUp" 
 						role="menu" 
 						data-placement="auto" 
@@ -114,17 +120,17 @@ for more Info
 
 						<ul id="meinTab" class="nav nav-tabs" role="tablist">
 							<li class="active"><a href="#myMvc2" role="tab" data-toggle="tab">MVC_Request::getWhitelistParams</a></li>
-							<li class=""><a href="#myMvc1" role="tab" data-toggle="tab">MVC_Request::getQueryArray</a></li>
+							<li id="tabTest" class=""><a href="#myMvc1" role="tab" data-toggle="tab">MVC_Request::getQueryArray</a></li>
 							<li class=""><a href="#myMvc3" role="tab" data-toggle="tab">MVC_Event</a></li>
 							<li class=""><a href="#myMvc5" role="tab" data-toggle="tab">ROUTING</a></li>
 							<li class=""><a href="#myMvc4" role="tab" data-toggle="tab">MVC_POLICY</a></li>
 						</ul>
-						<div id="meinTabContent" class="tab-content">
+						<div class="tab-content">
 							<div class="tab-pane active in" id="myMvc2" style="overflow: auto;width: 100%;height: 500px;">
-								<pre>{$aToolbar.oMvcRequestGetWhitelistParams|@print_r}</pre>	  
+								<pre>{$aToolbar.oMvcRequestGetWhitelistParams|@print_r:true}</pre>	  
 							</div>
 							<div class="tab-pane" id="myMvc1" style="overflow: auto;width: 100%;height: 500px;">
-								<pre>{$aToolbar.oMvcRequestGetQueryArray|@print_r}</pre>	  
+								<pre>{$aToolbar.oMvcRequestGetQueryArray|@print_r:true}</pre>	  
 							</div>
 							<div class="tab-pane" id="myMvc3" style="overflow: auto;width: 100%;height: 500px;">
 								<h3>BIND</h3>
@@ -141,6 +147,15 @@ for more Info
 								{/foreach}
 								{/if}
 
+{*								<h4>BONDED</h4>
+*}								{if isset($aToolbar.aEvent.RUN_BONDED)}
+								<ul>
+								{foreach key=key item=item from=$aToolbar.aEvent.RUN_BONDED}
+									<li>RUN BONDED #<b>{$key}</b><pre class="prettyprint">{$item}</pre></li>
+								{/foreach}
+								</ul>
+								{/if}
+								
 								<h3>UNBIND</h3>
 								{if isset($aToolbar.aEvent.UNBIND)}
 								{foreach key=key item=item from=$aToolbar.aEvent.UNBIND}
@@ -180,10 +195,10 @@ for more Info
 							</div>							
 							<div class="tab-pane" id="myMvc4" style="overflow: auto;width: 100%;height: 500px;">
 								<h3>RULES</h3>
-								<pre>{$aToolbar.aPolicy.aRule|@print_r}</pre>	
+								<pre>{$aToolbar.aPolicy.aRule|@print_r:true}</pre>	
 								<h3>APPLIED</h3>
 								<b>{$aToolbar.aPolicy.sAppliedAt}</b><br />
-								<pre>{$aToolbar.aPolicy.aApplied|@print_r}</pre>	
+								<pre>{$aToolbar.aPolicy.aApplied|@print_r:true}</pre>	
 							</div>
 						</div>						
 					</ul>
@@ -201,7 +216,7 @@ for more Info
 							<li class=""><a href="#Variables6" role="tab" data-toggle="tab">Smarty Template Vars</a></li>							
 							<li class=""><a href="#view2" role="tab" data-toggle="tab">Rendered</a></li>
 						</ul>
-						<div id="meinTabContent" class="tab-content">
+						<div class="tab-content">
 							<div class="tab-pane active in" id="view1" style="overflow: auto;width: 100%;max-height: 500px;">
 								<pre class="prettyprint">{$aToolbar.sTemplate|escape}</pre>			  
 								<pre class="prettyprint">{$aToolbar.sTemplateContent|escape}</pre>			  
@@ -210,7 +225,7 @@ for more Info
 								<pre class="prettyprint">{$aToolbar.sRendered|escape}</pre>	
 							</div>
 							<div class="tab-pane" id="Variables6" style="overflow: auto;width: 100%;height: 500px;">
-								<pre>{$aToolbar.aSmartyTemplateVars|@print_r}</pre>
+								<pre>{$aToolbar.aSmartyTemplateVars|@print_r:true}</pre>
 							</div>							
 						</div>						
 					</ul>
@@ -226,7 +241,7 @@ for more Info
 						<ul id="meinTab" class="nav nav-tabs" role="tablist">
 							<li class="active"><a href="#Files1" role="tab" data-toggle="tab">Files loaded</a></li>
 						</ul>
-						<div id="meinTabContent" class="tab-content">
+						<div class="tab-content">
 							<div class="tab-pane active in" id="Files1" style="overflow: auto;width: 100%;max-height: 500px;">
 								<pre class="prettyprint">{foreach key=key item=item from=$aToolbar.aFilesIncluded}{$key} - {$item}
 {/foreach}</pre>
@@ -245,7 +260,7 @@ for more Info
 						<ul id="meinTab" class="nav nav-tabs" role="tablist">
 							<li class="active"><a href="#Memory1" role="tab" data-toggle="tab">Memory</a></li>
 						</ul>
-						<div id="meinTabContent" class="tab-content">
+						<div class="tab-content">
 							<div class="tab-pane active in myMvcToolbarToolbarDataBg" id="Memory1" style="overflow: auto;width: 100%;max-height: 200px;">
 								<b>Real Memory Usage</b>: {$aToolbar.aMemory.iRealMemoryUsage} KB<br />
 								<b>Memory Usage</b>: {$aToolbar.aMemory.dMemoryUsage} KB<br />
@@ -265,9 +280,9 @@ for more Info
 						<ul id="meinTab" class="nav nav-tabs" role="tablist">
 							<li class="active"><a href="#Registry1" role="tab" data-toggle="tab">Registry</a></li>
 						</ul>
-						<div id="meinTabContent" class="tab-content">
+						<div class="tab-content">
 							<div class="tab-pane active in" id="Registry1" style="overflow: auto;width: 100%;height: 500px;">
-								<pre>{$aToolbar.aRegistry|@print_r}</pre> 
+								<pre>{$aToolbar.aRegistry|@print_r:true}</pre> 
 							</div>
 						</div>						
 					</ul>
@@ -283,9 +298,9 @@ for more Info
 						<ul id="meinTab" class="nav nav-tabs" role="tablist">
 							<li class="active"><a href="#Cache1" role="tab" data-toggle="tab">Cache</a></li>
 						</ul>
-						<div id="meinTabContent" class="tab-content">
+						<div class="tab-content">
 							<div class="tab-pane active in" id="Cache1" style="overflow: auto;width: 100%;max-height: 500px;">
-								<pre>{$aToolbar.aCache|@print_r}</pre>
+								<pre>{$aToolbar.aCache|@print_r:true}</pre>
 							</div>
 						</div>							
 					</ul>
@@ -302,7 +317,7 @@ for more Info
 						<ul id="meinTab" class="nav nav-tabs" role="tablist">
 							<li class="active"><a href="#Error1" role="tab" data-toggle="tab">Last Error</a></li>
 						</ul>
-						<div id="meinTabContent" class="tab-content myMvcToolbarToolbarDataBg">
+						<div class="tab-content myMvcToolbarToolbarDataBg">
 							<div class="tab-pane active in" id="Error1" style="overflow: auto;width: 100%;max-height: 200px;">			
 								{foreach key=key item=item from=$aToolbar.aError}
 									<b>{$key}</b>: {$item}<br />
@@ -314,20 +329,61 @@ for more Info
 				{/if}
 
 				{if $aToolbar.oIds != ''}
-				<li class="dropdown bg-danger">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-shield myMvcToolbarBlink"></i> IDS <span class="caret"></span></a>
+				<li class="dropdown{if $aToolbar.oIds->getImpact () >= $aToolbar.aIdsConfig->config.General.impactThreshold} bg-danger{/if}">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+						{if $aToolbar.oIds->getImpact () >= $aToolbar.aIdsConfig->config.General.impactThreshold}
+							<i class="fa fa-shield myMvcToolbarBlink"></i> 
+							{else}
+							<i class="fa fa-check"></i> 
+						{/if}
+						{$aToolbar.oIds->getImpact ()}/{$aToolbar.aIdsConfig->config.General.impactThreshold}
+						IDS <span class="caret"></span></a>
 					<ul class="dropdown-menu myMvcToolbarDropUp" 
 						role="menu" 
 						data-placement="auto" 
-						style="width: 800px;max-height: 600px;padding: 20px;">
+						style="width: 700px;height: 400px;padding: 20px;">
 
 						<ul id="meinTab" class="nav nav-tabs" role="tablist">
 							<li class="active"><a href="#IDS1" role="tab" data-toggle="tab">IDS</a></li>
+							<li class=""><a href="#IDS2" role="tab" data-toggle="tab">Config</a></li>
+							<li class=""><a href="#IDS3" role="tab" data-toggle="tab">Help</a></li>
 						</ul>
-						<div id="meinTabContent" class="tab-content myMvcToolbarToolbarDataBg">
-							<div class="tab-pane active in" id="IDS1" style="overflow: auto;width: 100%;max-height: 500px;">
+						<div class="tab-content myMvcToolbarToolbarDataBg">
+							<div class="tab-pane active in" id="IDS1" style="overflow: auto;width: 100%;max-height: 250px;">
+								Impact {$aToolbar.oIds->getImpact ()} while Threshold {$aToolbar.aIdsConfig->config.General.impactThreshold}.<br />
+								{if $aToolbar.oIds->getImpact () >= $aToolbar.aIdsConfig->config.General.impactThreshold}
+									<i class="fa fa-shield myMvcToolbarBlink"></i> <b>Threshold exceeded</b>							
+									{else}
+									<i class="fa fa-check"></i> Impact below Threshold value.
+								{/if}								
+								<hr />
 								{$aToolbar.oIds}
 							</div>
+							<div class="tab-pane" id="IDS2" style="overflow: auto;width: 100%;max-height: 250px;">
+								{foreach key=key item=item from=$aToolbar.aIdsConfig->config}
+									<ul>
+										<li>{$key|escape}</li> 
+										<ul>
+										{foreach key=key2 item=item2 from=$item}
+											<li>{$key2|escape}: 
+											{if is_array($item2)}
+												{$item2|@print_r:true}
+												{else}
+												{$item2}
+											{/if}
+											</li> 											
+										{/foreach}			
+										</ul>
+									</ul>
+								{/foreach}								
+							</div>	
+							<div class="tab-pane" id="IDS3" style="overflow: auto;width: 100%;max-height: 250px;">
+								<h3>PHPIDS</h3>
+								<ul>
+									<li><a href="https://github.com/PHPIDS/PHPIDS">Project at GitHub</a></li>
+									<li><a href="http://forum.itratos.de/forum.php">Forum</a></li>
+								</ul>			
+							</div>								
 						</div>							
 					</ul>
 				</li>	
@@ -356,8 +412,8 @@ for more Info
 	 */
 	!window.jQuery && document.write(unescape('%3Cscript src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"%3E%3C/script%3E'));
 	
-	ready(function () {
-
+	ready(function () {		
+		
 		/**
 		 * load bootstrap.js if not available
 		 */
