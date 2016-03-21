@@ -28,11 +28,17 @@ The Auto-Installer will instantly begin to install all necessary files. (In case
 - `/var/www/myMVC/modules/`
 - `/var/www/myMVC/public/`
 
-# Run
 run php's internal webserver:
 
     cd /var/www/myMVC/public/; php -S localhost:1969;
 
-Run the Auto-Installer by calling `localhost:1969` in your browser. 
+Call `localhost:1969` in your browser. 
 
 The Auto-Installer will instantly begin to install all necessary files (In case of errors, a text will prompt up showing details about what went wrong). The Page will reload after Installation has succeeded and you should see the myMVC Welcome Webpage.
+
+## Run
+run php's internal webserver:
+
+    cd /var/www/myMVC/public/; php -S localhost:1969;
+
+Call `localhost:1969` in your browser. 
