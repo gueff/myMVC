@@ -1,6 +1,3 @@
- 
-Download [latest Release](https://github.com/gueff/myMVC/releases)
-
 # myMVC
 A tiny MVC Framework, written in PHP. Open Source and free of charge.
 - Open Source
@@ -15,7 +12,7 @@ Website : https://www.mymvc.org/
 
 # Installing myMVC
 
-## command line (preferred)
+## Installing via command line (preferred)
 
 e.g. for a `develop` Environment
 
@@ -23,7 +20,7 @@ e.g. for a `develop` Environment
 
 The Auto-Installer will instantly begin to install all necessary files. (In case of errors, a text will prompt up showing details about what went wrong). 
 
-## Browser
+## Installing via Browser
 
 **[Download](https://github.com/gueff/myMVC/releases) and extract** myMVC into your www folder (e.g.: `/var/www/myMVC/`), so that you finally get this structure:
 
@@ -31,6 +28,7 @@ The Auto-Installer will instantly begin to install all necessary files. (In case
 - `/var/www/myMVC/modules/`
 - `/var/www/myMVC/public/`
 
+# Run
 run php's internal webserver:
 
     cd /var/www/myMVC/public/; php -S localhost:1969;
