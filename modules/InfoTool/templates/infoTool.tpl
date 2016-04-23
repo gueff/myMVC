@@ -11,9 +11,15 @@ for more Info
 		bottom: -30px;
 		left: -20px;		
 		border: 1px solid silver;
-		background-color: white;
 		box-shadow: 0 0 10px 2px rgba(0, 0, 0, .15);		
 	}
+	#myMvcToolbar div,#myMvcToolbar ul, #myMvcToolbar li {
+		background-color: white !important;
+		color: #000;
+	}
+	#myMvcToolbar a {
+		color: #303030;
+	}	
 	#myMvcToolbar textarea {
 		border: none;
 	}
@@ -147,8 +153,7 @@ for more Info
 								{/foreach}
 								{/if}
 
-{*								<h4>BONDED</h4>
-*}								{if isset($aToolbar.aEvent.RUN_BONDED)}
+								{if isset($aToolbar.aEvent.RUN_BONDED)}
 								<ul>
 								{foreach key=key item=item from=$aToolbar.aEvent.RUN_BONDED}
 									<li>RUN BONDED #<b>{$key}</b><pre class="prettyprint">{$item}</pre></li>
@@ -410,7 +415,7 @@ for more Info
 	 * load jquery if not available
 	 * @see http://stackoverflow.com/a/4686195/2487859
 	 */
-	!window.jQuery && document.write(unescape('%3Cscript src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"%3E%3C/script%3E'));
+	!window.jQuery && document.write(unescape('%3Cscript src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"%3E%3C/script%3E'));
 	
 	ready(function () {		
 		
@@ -422,7 +427,7 @@ for more Info
 			(function() {
 				var newscript = document.createElement('script');
 				newscript.type = 'text/javascript';newscript.async = true;
-				newscript.src = '//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js';
+				newscript.src = '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js';
 				(document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(newscript);
 			})();
 		}
