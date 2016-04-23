@@ -93,28 +93,28 @@ for more Info
 								<p>
 									<br />unfiltered Values in $_GET:
 								</p>
-								<pre>{$aToolbar.aGet|@print_r:true}</pre>		
+								<pre>{$aToolbar.aGet|@print_r:true|escape:'htmlall'}</pre>		
 								<p>									
 									to see filtered $_GET Values by myMVC, see [myMVC] => [MVC_Request::getQueryArrays]
 								</p>
 							</div>
 							<div class="tab-pane" id="Variables2" style="overflow: auto;width: 100%;height: 500px;">
-								<pre>{$aToolbar.aPost|@print_r:true}</pre>
+								<pre>{$aToolbar.aPost|@print_r:true|escape:'htmlall'}</pre>
 							</div>
 							<div class="tab-pane" id="Variables3" style="overflow: auto;width: 100%;height: 500px;">
-								<pre>{$aToolbar.aCookie|@print_r:true}</pre>
+								<pre>{$aToolbar.aCookie|@print_r:true|escape:'htmlall'}</pre>
 							</div>
 							<div class="tab-pane" id="Variables4" style="overflow: auto;width: 100%;height: 500px;">
-								<pre>{$aToolbar.aRequest|@print_r:true}</pre>
+								<pre>{$aToolbar.aRequest|@print_r:true|escape:'htmlall'}</pre>
 							</div>
 							<div class="tab-pane" id="Variables5" style="overflow: auto;width: 100%;height: 500px;">
-								<pre>{$aToolbar.aSession|@print_r:true}</pre>
+								<pre>{$aToolbar.aSession|@print_r:true|escape:'htmlall'}</pre>
 							</div>
 							<div class="tab-pane" id="Variables7" style="overflow: auto;width: 100%;height: 500px;">
-								<pre>{$aToolbar.aConstant|@print_r:true}</pre>
+								<pre>{$aToolbar.aConstant|@print_r:true|escape:'htmlall'}</pre>
 							</div>
 							<div class="tab-pane" id="Variables8" style="overflow: auto;width: 100%;height: 500px;">
-								<pre>{$aToolbar.aServer|@print_r:true}</pre>
+								<pre>{$aToolbar.aServer|@print_r:true|escape:'htmlall'}</pre>
 							</div>
 						</div>							
 					</ul>
@@ -136,10 +136,10 @@ for more Info
 						</ul>
 						<div class="tab-content">
 							<div class="tab-pane active in" id="myMvc2" style="overflow: auto;width: 100%;height: 500px;">
-								<pre>{$aToolbar.oMvcRequestGetWhitelistParams|@print_r:true}</pre>	  
+								<pre>{$aToolbar.oMvcRequestGetWhitelistParams|@print_r:true|escape:'htmlall'}</pre>	  
 							</div>
 							<div class="tab-pane" id="myMvc1" style="overflow: auto;width: 100%;height: 500px;">
-								<pre>{$aToolbar.oMvcRequestGetQueryArray|@print_r:true}</pre>	  
+								<pre>{$aToolbar.oMvcRequestGetQueryArray|@print_r:true|escape:'htmlall'}</pre>	  
 							</div>
 							<div class="tab-pane" id="myMvc3" style="overflow: auto;width: 100%;height: 500px;">
 								<h3>BIND</h3>
@@ -203,10 +203,10 @@ for more Info
 							</div>							
 							<div class="tab-pane" id="myMvc4" style="overflow: auto;width: 100%;height: 500px;">
 								<h3>RULES</h3>
-								<pre>{$aToolbar.aPolicy.aRule|@print_r:true}</pre>	
+								<pre>{$aToolbar.aPolicy.aRule|@print_r:true|escape:'htmlall'}</pre>	
 								<h3>APPLIED</h3>
 								<b>{$aToolbar.aPolicy.sAppliedAt}</b><br />
-								<pre>{$aToolbar.aPolicy.aApplied|@print_r:true}</pre>	
+								<pre>{$aToolbar.aPolicy.aApplied|@print_r:true|escape:'htmlall'}</pre>	
 							</div>
 						</div>						
 					</ul>
@@ -226,14 +226,14 @@ for more Info
 						</ul>
 						<div class="tab-content">
 							<div class="tab-pane active in" id="view1" style="overflow: auto;width: 100%;max-height: 500px;">
-								<pre class="prettyprint">{$aToolbar.sTemplate|escape}</pre>			  
-								<pre class="prettyprint">{$aToolbar.sTemplateContent|escape}</pre>			  
+								<pre class="prettyprint">{$aToolbar.sTemplate|escape:'htmlall'}</pre>			  
+								<pre class="prettyprint">{$aToolbar.sTemplateContent|escape:'htmlall'}</pre>			  
 							</div>
 							<div class="tab-pane" id="view2" style="overflow: auto;width: 100%;max-height: 500px;">
-								<pre class="prettyprint">{$aToolbar.sRendered|escape}</pre>	
+								<pre class="prettyprint">{$aToolbar.sRendered|escape:'htmlall'}</pre>	
 							</div>
 							<div class="tab-pane" id="Variables6" style="overflow: auto;width: 100%;height: 500px;">
-								<pre>{$aToolbar.aSmartyTemplateVars|@print_r:true}</pre>
+								<pre>{$aToolbar.aSmartyTemplateVars|@print_r:true|escape:'htmlall'}</pre>
 							</div>							
 						</div>						
 					</ul>
@@ -290,7 +290,7 @@ for more Info
 						</ul>
 						<div class="tab-content">
 							<div class="tab-pane active in" id="Registry1" style="overflow: auto;width: 100%;height: 500px;">
-								<pre>{$aToolbar.aRegistry|@print_r:true}</pre> 
+								<pre>{$aToolbar.aRegistry|@print_r:true|escape:'htmlall'}</pre> 
 							</div>
 						</div>						
 					</ul>
@@ -308,7 +308,7 @@ for more Info
 						</ul>
 						<div class="tab-content">
 							<div class="tab-pane active in" id="Cache1" style="overflow: auto;width: 100%;max-height: 500px;">
-								<pre>{$aToolbar.aCache|@print_r:true}</pre>
+								<pre>{$aToolbar.aCache|@print_r:true|escape:'htmlall'}</pre>
 							</div>
 						</div>							
 					</ul>
@@ -375,7 +375,7 @@ for more Info
 										{foreach key=key2 item=item2 from=$item}
 											<li>{$key2|escape}: 
 											{if is_array($item2)}
-												{$item2|@print_r:true}
+												{$item2|@print_r:true|escape:'htmlall'}
 												{else}
 												{$item2}
 											{/if}
