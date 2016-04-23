@@ -15,6 +15,9 @@ for more Info
 	}
 	#myMvcToolbar div,#myMvcToolbar ul, #myMvcToolbar li {
 		background-color: white !important;
+		font-family: monospace;
+		font-size: 12px;
+		font-weight: normal;
 		color: #000;
 	}
 	#myMvcToolbar a {
