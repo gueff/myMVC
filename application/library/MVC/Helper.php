@@ -32,6 +32,11 @@ class Helper
 		// source
 		$aBacktrace = self::PREPAREBACKTRACEARRAY(debug_backtrace ());
 		
+		ob_start();
+		var_dump($mData);
+		$mData = htmlentities(ob_get_contents());
+		ob_end_clean();
+			
 		// output CLI
 		if (isset ($GLOBALS['argc']))
 		{
@@ -41,13 +46,13 @@ class Helper
 			echo "\nClass::function:\t" . $aBacktrace['sClass'] . '::' . $aBacktrace['sFunction'] . "\n";
 			if (isset ($mData))
 			{
-				echo "\n" . '$data:' . "\n" . print_r ($mData, true) . "\n\n";
+				echo "\n" . '$data:' . "\n" . $mData . "\n\n";
 			}
 			echo "\n---/DEBUG------------------------\n\n";
 		}
 		// output Web
 		else
-		{
+		{			
 			echo '<div style="position: fixed; bottom:30px;left:5px;z-index:1;float:left;text-align:left;background-color:white;border:1px solid gray;padding:5px;filter: Alpha (opacity=80);opacity: 0.8; moz-opacity: 0.8;-moz-border-radius:20px; border-radius: 20px;">
 				<h1 style="color:red;margin:0;padding:10px 0 0 10px;font-size:16px;">DEBUG</h1>
 				<table style="font-size:12px;padding:0 0 0 10px;">
@@ -55,7 +60,7 @@ class Helper
 					<tr><td><b>Line:</b></td><td>' . $aBacktrace['sLine'] . '</td></tr>
 					<tr><td><b>Class/Method:</b></td><td>' . $aBacktrace['sClass'] . '::' . $aBacktrace['sFunction'] . '</td></tr>
 				</table>
-				<textarea style="float:left;border:5px solid red;width:500px;height:400px;z-index:100;font-size:10px;-moz-border-radius:20px; border-radius: 20px;padding:10px;">' . print_r ($mData, true) . '</textarea>
+				<textarea style="float:left;border:5px solid red;width:500px;height:400px;z-index:100;font-size:10px;-moz-border-radius:20px; border-radius: 20px;padding:10px;">' . $mData . '</textarea>
 			</div>';
 		}
 	}
@@ -80,6 +85,11 @@ class Helper
 		// Source
 		$aBacktrace = self::PREPAREBACKTRACEARRAY(debug_backtrace ());
 
+		ob_start();
+		var_dump($mData);
+		$mData = htmlentities(ob_get_contents());
+		ob_end_clean();
+		
 		// Output for CLI
 		if (isset ($GLOBALS['argc']))
 		{
@@ -90,7 +100,7 @@ class Helper
 			echo "\nClass::function:\t" . $aBacktrace['sClass'] . '::' . $aBacktrace['sFunction'] . "\n";
 			if (isset ($mData))
 			{
-				echo "\n" . '$data:' . "\n" . print_r ($mData, true) . "\n\n";
+				echo "\n" . '$data:' . "\n" . htmlentities($mData) . "\n\n";
 			}
 			echo "\n---/DISPLAY------------------------\n\n";
 		}
@@ -107,11 +117,11 @@ class Helper
 
 			if (is_array ($mData))
 			{
-				$sDisplay.= $sConsultation . '<textarea style="font-size:10px;width:100%;height:200px;margin:0;background-color:blue;color:white;border: none;">' . print_r ($mData, true) . '</textarea>';
+				$sDisplay.= $sConsultation . '<textarea style="font-size:10px;width:100%;height:200px;margin:0;background-color:blue;color:white;border: none;">' . $mData . '</textarea>';
 			}
 			else
 			{
-				$sDisplay.= $sConsultation . '<div style="font-size:10px;width:100%;padding:2px 0px 10px 0px;margin:0;background-color:blue;color:white;border: none;">' . print_r ($mData, true) . '</div>';
+				$sDisplay.= $sConsultation . '<div style="font-size:10px;width:100%;padding:2px 0px 10px 0px;margin:0;background-color:blue;color:white;border: none;">' . $mData . '</div>';
 			}
 
 			// Display
@@ -140,6 +150,11 @@ class Helper
 		// source
 		$aBacktrace = self::PREPAREBACKTRACEARRAY(debug_backtrace ());
 
+		ob_start();
+		var_dump($sData);
+		$mData = htmlentities(ob_get_contents());
+		ob_end_clean();
+		
 		// output CLI
 		if (isset ($GLOBALS['argc']))
 		{
@@ -154,7 +169,7 @@ class Helper
 			if (isset ($sData) && !empty ($sData))
 			{
 				echo ($bOccurrence === true) ? "\nData:\n" : '';
-				echo $sData . "\n";
+				echo $mData . "\n";
 			}
 			echo "\n---/STOP------------------------\n\n";
 		}
@@ -176,7 +191,7 @@ class Helper
 			if (isset ($sData) && !empty ($sData))
 			{
 				echo ($bOccurrence === true) ? '<h2>Data</h2><p>' : '';
-				echo $sData . '</p>';
+				echo $mData . '</p>';
 			}
 			echo '</b></div>';
 		}
