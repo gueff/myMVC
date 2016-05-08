@@ -63,9 +63,10 @@ class Index
 		/*
 		 * What to do if IDS detects an impact
 		 */
-		\MVC\Event::BIND ('mvc.ids.impact', function($mPackage) {
-			
-			\MVC\Log::WRITE ($mPackage, 'ids.log');
+		\MVC\Event::BIND ('mvc.ids.impact', function($oIdsReport) {
+
+			// dispose infected Variables mentioned in report
+			\MVC\IDS::dispose($oIdsReport);
 		});
 		
 		/*
