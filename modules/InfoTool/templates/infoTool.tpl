@@ -6,6 +6,7 @@ for more Info
 *}
 <style>
 {literal}
+	#myMvcToolbar h3 {color: #000;}
 	#myMvcToolbar {
 		position: fixed;
 		bottom: -30px;
@@ -352,12 +353,13 @@ for more Info
 						style="width: 700px;height: 400px;padding: 20px;">
 
 						<ul id="meinTab" class="nav nav-tabs" role="tablist">
-							<li class="active"><a href="#IDS1" role="tab" data-toggle="tab">IDS</a></li>
-							<li class=""><a href="#IDS2" role="tab" data-toggle="tab">Config</a></li>
-							<li class=""><a href="#IDS3" role="tab" data-toggle="tab">Help</a></li>
+							<li class="active"><a href="#IDS2" role="tab" data-toggle="tab">Config</a></li>
+							<li class=""><a href="#IDS1" role="tab" data-toggle="tab">IDS</a></li>
+							<li class=""><a href="#IDS3" role="tab" data-toggle="tab">Disposed</a></li>
+							<li class=""><a href="#IDS4" role="tab" data-toggle="tab"><i>Help</i></a></li>
 						</ul>
 						<div class="tab-content myMvcToolbarToolbarDataBg">
-							<div class="tab-pane active in" id="IDS1" style="overflow: auto;width: 100%;max-height: 250px;">
+							<div class="tab-pane" id="IDS1" style="overflow: auto;width: 100%;max-height: 250px;">
 								Impact {$aToolbar.oIds->getImpact ()} while Threshold {$aToolbar.aIdsConfig->config.General.impactThreshold}.<br />
 								{if $aToolbar.oIds->getImpact () >= $aToolbar.aIdsConfig->config.General.impactThreshold}
 									<i class="fa fa-shield myMvcToolbarBlink"></i> <b>Threshold exceeded</b>							
@@ -367,7 +369,7 @@ for more Info
 								<hr />
 								{$aToolbar.oIds}
 							</div>
-							<div class="tab-pane" id="IDS2" style="overflow: auto;width: 100%;max-height: 250px;">
+							<div class="tab-pane active in" id="IDS2" style="overflow: auto;width: 100%;max-height: 250px;">
 								{foreach key=key item=item from=$aToolbar.aIdsConfig->config}
 									<ul>
 										<li>{$key|escape}</li> 
@@ -386,6 +388,17 @@ for more Info
 								{/foreach}								
 							</div>	
 							<div class="tab-pane" id="IDS3" style="overflow: auto;width: 100%;max-height: 250px;">
+								{if !empty($aToolbar.aIdsDisposed)}
+								{foreach key=key item=item from=$aToolbar.aIdsDisposed}
+									<ul>
+										<li>{$item|escape}</li> 
+									</ul>
+								{/foreach}				
+								{else}
+									nothing disposed
+								{/if}
+							</div>								
+							<div class="tab-pane" id="IDS4" style="overflow: auto;width: 100%;max-height: 250px;">
 								<h3>PHPIDS</h3>
 								<ul>
 									<li><a href="https://github.com/PHPIDS/PHPIDS">Project at GitHub</a></li>

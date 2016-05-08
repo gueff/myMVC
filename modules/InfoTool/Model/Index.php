@@ -128,10 +128,10 @@ class Index
 		$aToolbar['sOS'] = PHP_OS;
 		$aToolbar['sEnv'] = \MVC\Registry::get('MVC_ENV');
 
-		$aToolbar['aGet'] = $_GET;
-		$aToolbar['aPost'] = $_POST;
-		$aToolbar['aCookie'] = $_COOKIE;
-		$aToolbar['aRequest'] = $_REQUEST;
+		$aToolbar['aGet'] = array_map('htmlentities', $_GET);		
+		$aToolbar['aPost'] = array_map('htmlentities', $_POST);
+		$aToolbar['aCookie'] = array_map('htmlentities', $_COOKIE);
+		$aToolbar['aRequest'] = array_map('htmlentities', $_REQUEST);
 		$aToolbar['aSession'] = $_SESSION;
 		$aToolbar['aSmartyTemplateVars'] = $oView->getTemplateVars ();
 		$aConstants = get_defined_constants (true);
@@ -183,14 +183,16 @@ class Index
 		$aToolbar['aCache'] = $this->getCaches ();
 		$aToolbar['aError'] = \MVC\Error::getERROR ();
 		$aToolbar['oIds'] = ( (\MVC\Registry::isRegistered ('MVC_IDS_IMPACT')) ? \MVC\Registry::get ('MVC_IDS_IMPACT') : '' );
-
+		$aToolbar['aIdsConfig'] = ( (\MVC\Registry::isRegistered ('MVC_IDS_INIT')) ? \MVC\Registry::get ('MVC_IDS_INIT') : '' );
+		$aToolbar['aIdsDisposed'] = ( (\MVC\Registry::isRegistered ('MVC_IDS_DISPOSED')) ? \MVC\Registry::get ('MVC_IDS_DISPOSED') : '' );
+		
 		$iMicrotime = microtime (true);
 		$sMicrotime = sprintf ("%06d", ($iMicrotime - floor ($iMicrotime)) * 1000000);
 		$oDateTime = new \DateTime (date ('Y-m-d H:i:s.' . $sMicrotime, $iMicrotime));
 		$oStart = \MVC\Session::getInstance ()->get ('startDateTime');
 		$dDiff = (date_format ($oDateTime, "s.u") - date_format ($oStart, "s.u"));
 		$aToolbar['sConstructionTime'] = round ($dDiff, 3);
-
+		
 		return $aToolbar;
 	}
 
