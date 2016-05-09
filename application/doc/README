@@ -214,9 +214,17 @@
 	                inside IDS constructor, nothing happened yet
 	                this is called before any check is done
 
-	            mvc.ids.impact
+	            mvc.ids.impact.warn
 					/application/library/MVC/IDS.php
-					An IDS Impact is noticed
+					impact is given and threshold is reached
+					contains Monitor $oIdsResult
+
+					mvc.ids.impact
+						# same as "mvc.ids.impact.warn", for backwards compatibility only
+
+	            mvc.ids.impact.info
+					/application/library/MVC/IDS.php
+					impact is given and threshold is not reached
 					contains Monitor $oIdsResult
 
 	            mvc.ids.execption

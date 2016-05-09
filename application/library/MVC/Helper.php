@@ -121,11 +121,11 @@ class Helper
 			}
 			else
 			{
-				$sDisplay.= $sConsultation . '<div style="font-size:10px;width:100%;padding:2px 0px 10px 0px;margin:0;background-color:blue;color:white;border: none;">' . $mData . '</div>';
+				$sDisplay.= $sConsultation . '<div style="font-size:10px;width:100%;padding:2px 0px 10px 0px;margin:0;background-color:blue;color:white;border:none;"><pre style="font-size:10px;overflow:auto;max-height:300px;background-color:transparent;color:#fff;border: none;">' . $mData . '</pre></div>';
 			}
 
 			// Display
-			echo '<div style="z-index:10000;position:fixed;bottom:10px;right:10px;background-color:blue;color:white;border:2px solid gray;width:300px;height:95%;overflow:auto;-moz-border-radius:20px; border-radius: 20px;"><b>';
+			echo '<div style="overflow:auto;z-index:10000;position:fixed;bottom:10px;right:10px;background-color:blue;color:white;border:2px solid gray;width:500px;height:95%;overflow:y-scroll;-moz-border-radius:20px; border-radius: 20px;"><b>';
 			echo $sDisplay;
 			echo '</b></div>';
 		}
@@ -191,7 +191,7 @@ class Helper
 			if (isset ($sData) && !empty ($sData))
 			{
 				echo ($bOccurrence === true) ? '<h2>Data</h2><p>' : '';
-				echo $mData . '</p>';
+				echo '<pre style="font-size:10px;overflow:auto;max-height:300px;background-color:transparent;color:#fff;border: none;">' . $mData . '</pre></p>';
 			}
 			echo '</b></div>';
 		}

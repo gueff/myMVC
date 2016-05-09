@@ -40,7 +40,7 @@ class IDS
 			$oRequest = Request::getInstance ();
 			$aRequest = $oRequest->getQueryArray ();
 
-			$oIdsInit = Init::init (Registry::get ('MVC_IDS_CONFIG'));
+			$oIdsInit = self::init();
 			$oIdsInit->config['General']['base_path'] = Registry::get ('MVC_LIBRARY') . '/IDS/';
 			$oIdsInit->config['Caching']['path'] = Registry::get ('MVC_CACHE_DIR');
 			
@@ -51,20 +51,20 @@ class IDS
 			// save to registry
 			Registry::set('MVC_IDS_INIT', $oIdsInit);
 			Registry::set('MVC_IDS_IMPACT', $oIdsReport);
-			
+
 			// impact is given and threshold is reached
 			if	(
 						!$oIdsReport->isEmpty() 
 					&&	filter_var($oIdsReport->getImpact(), FILTER_VALIDATE_INT) >= $oIdsInit->config['General']['impactThreshold']
 				)
 			{
-				\MVC\Log::WRITE("WARN\t" . self::getReport ($oIdsReport), 'ids.log');
 				Event::RUN ('mvc.ids.impact', $oIdsReport);
+				Event::RUN ('mvc.ids.impact.warn', $oIdsReport);
 			}
-			// threshold not reached but an impact is given
+			// impact is given but threshold not reached
 			elseif(!$oIdsReport->isEmpty())
 			{
-				\MVC\Log::WRITE("INFO\t" . self::getReport ($oIdsReport), 'ids.log');
+				Event::RUN ('mvc.ids.impact.info', $oIdsReport);
 			}			
 		}
 		catch (\Exception $oExc)
@@ -73,6 +73,28 @@ class IDS
 		}
 
 		Event::RUN ('mvc.ids.after', $this);
+	}
+	
+	/**
+	 * Starts IDS with the Config 
+	 * defined in /application/config/staging/{MVC_ENV}/ids.ini
+	 * 
+	 * @return \IDS\Init $oIdsInit
+	 */
+	public static function init()
+	{		
+		// By Binding to this Event you
+		// could e.g. load a different config and save to Registry::set ('MVC_IDS_CONFIG', array([..]))
+		Event::RUN ('mvc.ids.init.before');
+		
+		$oIdsInit = Init::init (Registry::get ('MVC_IDS_CONFIG'));
+		
+		// By Binding to this Event you
+		// could modify the loaded config; 
+		// The Config you could access by $oIdsInit->config
+		Event::RUN ('mvc.ids.init.after', $oIdsInit);
+		
+		return $oIdsInit;
 	}
 	
 	/**
