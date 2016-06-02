@@ -35,16 +35,35 @@ class Index
 	 */
 	protected function __construct()
 	{
-		// this is not bonded to an event, instead it is executed directly
-		\MVC\Request::ENSURECORRECTPROTOCOL();
+		/*
+		 *  this is not bonded to an event, instead it is executed directly
+		 */
+		\MVC\Request::ENSURECORRECTPROTOCOL ();
 
-		\MVC\Event::BIND('mvc.ids.impact', function($mPackage) {
-			\MVC\Log::WRITE($mPackage, 'ids.log');
+		/*
+		 * What to do on invalid requets
+		 */
+		\MVC\Event::BIND ('mvc.invalidRequest', function() {
+			
+			\MVC\Request::REDIRECT ('/');
 		});
+		
+		/*
+		 * What to do if IDS detects an impact
+		 */
+		\MVC\Event::BIND ('mvc.ids.impact', function($oIdsReport) {
 
-		\MVC\Event::BIND('mvc.invalidRequest', function() {
-			\MVC\Request::REDIRECT('/');
+			// dispose infected Variables mentioned in report
+			\MVC\IDS::dispose($oIdsReport);
 		});
+		
+		/*
+		 * We want to log the end of the request
+		 */
+		\MVC\Event::BIND ('mvc.application.destruct', function () {
+			
+			\MVC\Log::WRITE (str_repeat('*', 25) . "\t" . 'End of Request' . str_repeat ("\n", 6));
+		});	
 	}
 
 	/**

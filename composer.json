@@ -1,0 +1,11 @@
+{
+	"name": "gueff/mymvc",
+	"description": "A tiny MVC Framework, written in PHP. MVC Structure, +Events, +Policies, Smarty Template Engine, PHP7 ready, Modular, Expandable https://www.mymvc.org/",
+    "license": "GPLv3",
+    "authors": [
+        {
+            "name": "Guido K.B.W. Ueffing"
+        }
+    ]
+}
+ 
