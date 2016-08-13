@@ -31,7 +31,7 @@ class Index extends \MVC\View
 		parent::__construct ();
 
 		// Standard Template
-		$this->sTemplate = $this->sTemplateDir . '/layout/index.tpl'
+		$this->sTemplate = $this->sTemplateDir . '/layout/index.tpl';
 
 		// Standard Variable
 		$this->sContentVar = 'sContent';
