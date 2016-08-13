@@ -30,6 +30,14 @@ class View extends \Smarty
 	public static $_bEchoOut = true;
 
 	/**
+	 * Current Template Directory
+	 * 
+	 * @var string 
+	 * @access public
+	 */
+	public $sTemplateDir;
+	
+	/**
 	 * Standard Template / Layout
 	 * 
 	 * @var string 
@@ -64,6 +72,7 @@ class View extends \Smarty
 	{		
 		parent::__construct ();
 		
+		$this->sTemplateDir = \mvc\registry::get('MVC_MODULES') . '/' . \mvc\Request::getInstance ()->getModule() . '/templates';
 		$this->sTemplate = Registry::get('MVC_SMARTY_TEMPLATE_DEFAULT');			
 		$this->iSmartyVersion = (int) preg_replace ('/[^0-9]+/', '', self::SMARTY_VERSION);
 		$this->setAbsolutePathToTemplateDir ();		
