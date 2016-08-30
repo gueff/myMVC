@@ -162,9 +162,9 @@ class Index
 		$aToolbar['aPolicy']['aApplied'] = ((isset($aPolicy[$sController][$sMethod])) ? $aPolicy[$sController][$sMethod] : false);
 		$aToolbar['aPolicy']['sAppliedAt'] = ((isset($aPolicy[$sController][$sMethod])) ? $sController . '::' . $sMethod : false);
 		
-		
-		$aToolbar['sTemplate'] = $oView->_joined_template_dir . '/' . $oView->sTemplate;
-		$aToolbar['sTemplateContent'] = file_get_contents ($oView->_joined_template_dir . '/' . $oView->sTemplate);
+		$sTemplate = ((file_exists($oView->sTemplate)) ? $oView->sTemplate : ((file_exists($oView->_joined_template_dir . '/' . $oView->sTemplate)) ? $oView->_joined_template_dir . '/' . $oView->sTemplate : false));
+		$aToolbar['sTemplate'] = $sTemplate;
+		$aToolbar['sTemplateContent'] = file_get_contents ($aToolbar['sTemplate']);
 		
 		ob_start ();
 		$sTemplate = file_get_contents ($oView->sTemplate, true);
