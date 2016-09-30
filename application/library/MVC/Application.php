@@ -47,11 +47,6 @@ class Application
 		// handle Routing
 		new Router();
 
-		// consider Policy Rules
-		// e.g. maybe the requested target controller may not be called due to some reason 
-		// and should be protected from any requesting
-		new Policy();
-
 		// Run target Controller's __preconstruct()
 		self::runTargetClassPreconstruct (Request::getInstance ()->getQueryArray ());
 
@@ -60,6 +55,11 @@ class Application
 
 		// Run Intrusion Detection System (phpids)
 		new IDS();
+
+		// consider Policy Rules
+		// e.g. maybe the requested target controller may not be called due to some reason 
+		// and should be protected from any requesting
+		new Policy();
 
 		// Run the requested target Controller
 		new Controller (Request::getInstance ());
