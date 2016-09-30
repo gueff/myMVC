@@ -101,17 +101,20 @@ class Session
 	 * sets namespace
 	 * 
 	 * @access private
-	 * @param string $sNamespace
+	 * @param string $sNamespace | default=myMVC
 	 * @return void
 	 */
-	private function setNamespace ($sNamespace = '')
+	private function setNamespace ($sNamespace = 'myMVC')
 	{
 		if ('' !== $sNamespace)
 		{
 			$this->_sNamespace = $sNamespace;
 		}
 
-		$_SESSION[$this->_sNamespace] = NULL;
+		if (!array_key_exists($this->_sNamespace, $_SESSION))
+		{
+			$_SESSION[$this->_sNamespace] = NULL;
+		}
 	}
 
 	/**
