@@ -124,6 +124,7 @@ MVC_APPLICATION_SETTINGS: {
     $aConfig['MVC_SESSION_PATH'] = $aConfig['MVC_APPLICATION_PATH'] . '/session';
     $aConfig['MVC_SESSION_OPTIONS'] = array(
         'cookie_httponly' => true
+        , 'auto_start' => 0
         , 'save_path' => $aConfig['MVC_SESSION_PATH']
         , 'cookie_secure' => $aConfig['MVC_SECURE_REQUEST']
         , 'name' => 'myMVC' . (($aConfig['MVC_SECURE_REQUEST']) ? '_secure' : '' )
