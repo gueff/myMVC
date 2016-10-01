@@ -34,7 +34,7 @@ class Helper
 		
 		ob_start();
 		var_dump($mData);
-		$mData = htmlentities(ob_get_contents());
+		$mData = ob_get_contents();
 		ob_end_clean();
 			
 		// output CLI
@@ -87,7 +87,7 @@ class Helper
 
 		ob_start();
 		var_dump($mData);
-		$mData = htmlentities(ob_get_contents());
+		$mData = ob_get_contents();
 		ob_end_clean();
 		
 		// Output for CLI
@@ -100,7 +100,7 @@ class Helper
 			echo "\nClass::function:\t" . $aBacktrace['sClass'] . '::' . $aBacktrace['sFunction'] . "\n";
 			if (isset ($mData))
 			{
-				echo "\n" . '$data:' . "\n" . htmlentities($mData) . "\n\n";
+				echo "\n" . '$data:' . "\n" . $mData . "\n\n";
 			}
 			echo "\n---/DISPLAY------------------------\n\n";
 		}
@@ -152,7 +152,7 @@ class Helper
 
 		ob_start();
 		var_dump($sData);
-		$mData = htmlentities(ob_get_contents());
+		$mData = ob_get_contents();
 		ob_end_clean();
 		
 		// output CLI
