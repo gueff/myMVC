@@ -120,6 +120,8 @@ class RouterJsonfile extends \MVC\RouterJson
                             $_GET[$aEx[0]] = $aEx[1];
                         }
 
+                        $this->_aRouting[$sIndex]['path'] = $sIndex;
+                        $this->_aRouting[$sIndex]['class'] = ucfirst($_GET['module']) . '\\Controller\\' . ucfirst($_GET['c']);
                         $this->_aRouting[$sIndex]['index'] = $sIndex;
                         $this->_sRequestUri = $sIndex;
                         $this->_addParam();
