@@ -8,7 +8,7 @@ A tiny MVC Framework, written in PHP. Open Source and free of charge.
 - Expandable
 - myMVC InfoTool: an integrated Debug-/Info-Toolbar (Frontend + Browser Console)
 
-Website : https://www.mymvc.org/
+Website : https://mymvc.ueffing.net/
 
 # Installing myMVC
 
