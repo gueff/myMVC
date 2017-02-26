@@ -88,10 +88,10 @@ class Error
 	 * 
 	 * @access public
 	 * @static
-	 * @param \ErrorException $oErrorException
+	 * @param $oErrorException 
 	 * @return void
 	 */
-	public static function EXCEPTION (\ErrorException $oErrorException)
+	public static function EXCEPTION ($oErrorException)
 	{		
 		
 		$sLogfile = 'error.log';
