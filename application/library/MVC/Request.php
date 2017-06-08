@@ -154,19 +154,30 @@ class Request
 		/*
 		 * serve simple CLI Requests
 		 * Allows calling via CLI without any need of a /route/. 
-         * Syntax:
-		 *		$ php index.php module=standard c=index m=index
-		 * write Parameter separated by spaces
+		 * Write Parameter separated by spaces.
+         * When adding JSON in a parameter, encapsulate with single quote `'`
+         * Example:
+		 *		$ export MVC_ENV="develop"; php index.php module=standard c=index m=index a='{"foo":"bar","baz":[1,2,3]}'
 		 */
 		if (php_sapi_name() === 'cli' && !empty($GLOBALS['argv']))
 		{
-			for($i = 1; $i <= 3; $i++)
+			for($i = 1; $i <= 4; $i++)
 			{
                 if (array_key_exists($i, $GLOBALS['argv']))
                 {
                     $sToken = strtolower(strtok($GLOBALS['argv'][$i], '='));
 
-                    if (in_array($sToken, array(Registry::get ('MVC_GET_PARAM_MODULE'), Registry::get ('MVC_GET_PARAM_C'), Registry::get ('MVC_GET_PARAM_M'))))
+                    if  (
+                            in_array(
+                                $sToken, 
+                                array(
+                                    Registry::get ('MVC_GET_PARAM_MODULE'), 
+                                    Registry::get ('MVC_GET_PARAM_C'), 
+                                    Registry::get ('MVC_GET_PARAM_M'),
+                                    Registry::get ('MVC_GET_PARAM_A')
+                                )
+                            )
+                        )
                     {
                         $this->_aQueryVar['GET'][$sToken] = substr($GLOBALS['argv'][$i], (strpos($GLOBALS['argv'][$i], '=') + 1), strlen($GLOBALS['argv'][$i]));
                     }
