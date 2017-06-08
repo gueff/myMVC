@@ -151,6 +151,29 @@ class Request
 	 */
 	public function prepareQueryVarsForUsage ()
 	{
+		/*
+		 * serve simple CLI Requests
+		 * Allows calling via CLI without any need of a /route/. 
+         * Syntax:
+		 *		$ php index.php module=standard c=index m=index
+		 * write Parameter separated by spaces
+		 */
+		if (php_sapi_name() === 'cli' && !empty($GLOBALS['argv']))
+		{
+			for($i = 1; $i <= 3; $i++)
+			{
+                if (array_key_exists($i, $GLOBALS['argv']))
+                {
+                    $sToken = strtolower(strtok($GLOBALS['argv'][$i], '='));
+
+                    if (in_array($sToken, array(Registry::get ('MVC_GET_PARAM_MODULE'), Registry::get ('MVC_GET_PARAM_C'), Registry::get ('MVC_GET_PARAM_M'))))
+                    {
+                        $this->_aQueryVar['GET'][$sToken] = substr($GLOBALS['argv'][$i], (strpos($GLOBALS['argv'][$i], '=') + 1), strlen($GLOBALS['argv'][$i]));
+                    }
+                }
+			}
+		}
+        
 		$aFallback = self::URLQUERYTOARRAY (Registry::get ('MVC_ROUTING_FALLBACK'));
 
 		if (array_key_exists ('GET', $this->_aQueryVar))
