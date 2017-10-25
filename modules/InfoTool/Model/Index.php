@@ -28,9 +28,8 @@ class Index
 	private $aToolbar = array ();
 
 	/**
-	 * checks if env is develop, and if so:<br>
-	 * - adds Event Listerner to 'mvc.view.render.before'<br>
-	 * - starts collecting Infos and save it to Registry
+	 * adds Event Listerner to 'mvc.view.render.before'<br>
+	 * starts collecting Infos and save it to Registry
 	 * 
 	 * @access public
 	 * @param \Smarty $oView
@@ -38,17 +37,14 @@ class Index
 	 */
 	public function __construct (\Smarty $oView)
 	{			
-		if ('develop' === \MVC\Registry::get('MVC_ENV'))
+		// add toolbar at the right time
+		\MVC\Event::BIND ('mvc.view.render.before', function ($oView)
 		{
-			// add toolbar at the right time
-			\MVC\Event::BIND ('mvc.view.render.before', function ($oView)
-			{
-				\InfoTool\Model\Index::injectToolbar ($oView);
-			});
+			\InfoTool\Model\Index::injectToolbar ($oView);
+		});
 
-			// get toolbar values and save them to registry
-			\MVC\Registry::set ('aToolbar', $this->collectInfo ($oView));
-		}
+		// get toolbar values and save them to registry
+		\MVC\Registry::set ('aToolbar', $this->collectInfo ($oView));
 	}
 
 	/**
