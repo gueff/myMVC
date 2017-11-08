@@ -40,7 +40,7 @@ class Controller
 		// Request not handable
 		if ($bStatus === FALSE)
 		{
-			Event::RUN ('mvc.invalidRequest');
+			Event::RUN ('mvc.invalidRequest', $oRequest);
 		}
 	}
 
@@ -55,5 +55,5 @@ class Controller
 	{
 		Event::RUN ('mvc.controller.destruct');
 	}
-
+	
 }
