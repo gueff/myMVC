@@ -1,11 +1,14 @@
 {
-	"name": "gueff/mymvc",
-	"description": "A tiny MVC Framework, written in PHP. MVC Structure, +Events, +Policies, Smarty Template Engine, PHP7 ready, Modular, Expandable https://www.mymvc.org/",
+    "name": "gueff/mymvc",
+    "description": "A tiny MVC Framework, written in PHP. MVC Structure, +Events, +Policies, Smarty Template Engine, PHP7 ready, Modular, Expandable https://www.mymvc.org/",
+    "keywords": ["PHP","PHP7","MVC","Framework","Smarty","Model","View","Controller","Event","Policy"],
+    "homepage": "https://www.mymvc.org/",
+    "type": "framework",
     "license": "GPLv3",
     "authors": [
         {
             "name": "Guido K.B.W. Ueffing"
         }
-    ]
+    ],
+    "minimum-stability": "dev",
 }
- 
