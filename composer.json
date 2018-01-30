@@ -4,7 +4,7 @@
     "keywords": ["PHP","PHP7","MVC","Framework","Smarty","Model","View","Controller","Event","Policy"],
     "homepage": "https://www.mymvc.org/",
     "type": "framework",
-    "license": "GPLv3",
+    "license": "GPL-3.0-or-later",
     "authors": [
         {
             "name": "Guido K.B.W. Ueffing"
