@@ -6,8 +6,8 @@
 		"smarty/smarty":
 				">=3.1.2.8"
 		,
-		"ezyang/htmlpurifier":
-				"dev-master"
+                "ezyang/htmlpurifier":
+                                "v4.5.0"
 		,
 		"phpids/phpids":
 				"dev-master"
