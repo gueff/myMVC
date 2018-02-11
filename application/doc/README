@@ -209,38 +209,8 @@
 				mvc.policy.after
 					/application/library/MVC/Policy.php
 
-	            mvc.ids.before
-					/application/library/MVC/IDS.php
-	                inside IDS constructor, nothing happened yet
-	                this is called before any check is done
-
-	            mvc.ids.impact.warn
-					/application/library/MVC/IDS.php
-					impact is given and threshold is reached
-					contains Monitor $oIdsResult
-
-					mvc.ids.impact
-						# same as "mvc.ids.impact.warn", for backwards compatibility only
-
-	            mvc.ids.impact.info
-					/application/library/MVC/IDS.php
-					impact is given and threshold is not reached
-					contains Monitor $oIdsResult
-
-	            mvc.ids.execption
-					/application/library/MVC/IDS.php
-					An Execption inside IDS
-					contains Exception $oException
-
-	            mvc.ids.after
-					/application/library/MVC/IDS.php
-	                inside IDS constructor, checks have been run
-	                then there may be a event:
-	                -   mvc.ids.impact
-	                -   mvc.ids.execption
-
-				mvc.controller.before					
-					/application/library/MVC/Controller.php
+                    mvc.controller.before					
+                            /application/library/MVC/Controller.php
 
 	            mvc.reflect.start
 					/application/library/MVC/Reflex.php
