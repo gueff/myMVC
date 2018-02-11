@@ -72,7 +72,7 @@ MVC_APPLICATION_SETTINGS: {
 
     /**
      * Name of method to be executed in the Target Controller Class
-     * before session, IDS and other main functionalities.
+     * before session and other main functionalities.
      * It will be called in /application/library/MVC/Application.php:
      * 		self::runTargetClassPreconstruct (Request::getInstance ()->getQueryArray ());
      * 
@@ -191,11 +191,6 @@ MVC_TEMPLATE_ENGINE_SMARTY: {
 
     // array Location of Smarty PlugIns 
     $aConfig['MVC_SMARTY_PLUGINS_DIR'][] = $aConfig['MVC_APPLICATION_PATH'] . '/smartyPlugins';
-}
-
-MVC_IDS: {
-
-    $aConfig['MVC_IDS_CONFIG'] = $aConfig['MVC_APPLICATION_CONFIG_DIR'] . '/staging/' . getenv('MVC_ENV') . '/ids.ini';
 }
 
 /**
