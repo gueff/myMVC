@@ -19,14 +19,5 @@
                 "dev-master",
         "phpunit/phpunit-selenium":
                 "2.0.3"
-    },
-    "autoload": {
-        "psr-0": {
-            "IDS\\Tests":
-                    "tests/"
-            ,
-            "IDS":
-                    "lib/"
-        }
     }
 }
