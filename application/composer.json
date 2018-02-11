@@ -1,35 +1,32 @@
 {
-	"require": {
-		"php":
-				">=5.4.0"
-		,
-		"smarty/smarty":
-				">=3.1.2.8"
-		,
-                "ezyang/htmlpurifier":
-                                "v4.5.0"
-		,
-		"phpids/phpids":
-				"dev-master"
-		,
-		"monolog/monolog":
-				"1.11.*"
-	},
-	"require-dev": {
-		"phpunit/phpunit":
-				"*",
-		"facebook/webdriver":
-				"dev-master",
-		"phpunit/phpunit-selenium":
-				">=1.2"
-	},
-	"autoload": {
-		"psr-0": {
-			"IDS\\Tests":
-					"tests/"
-			,
-			"IDS":
-					"lib/"
-		}
-	}
+    "require": {
+        "php":
+                ">=5.4.0"
+        ,
+        "smarty/smarty":
+                ">=3.1.31"
+        ,
+        "ezyang/htmlpurifier":
+                "v4.9.3"
+        ,
+        "monolog/monolog":
+                "1.23.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit":
+                "*",
+        "facebook/webdriver":
+                "dev-master",
+        "phpunit/phpunit-selenium":
+                "2.0.3"
+    },
+    "autoload": {
+        "psr-0": {
+            "IDS\\Tests":
+                    "tests/"
+            ,
+            "IDS":
+                    "lib/"
+        }
+    }
 }

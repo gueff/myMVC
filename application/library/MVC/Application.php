@@ -53,9 +53,6 @@ class Application
 		// Set Session
 		self::setSession ();
 
-		// Run Intrusion Detection System (phpids)
-		new IDS();
-
 		// consider Policy Rules
 		// e.g. maybe the requested target controller may not be called due to some reason 
 		// and should be protected from any requesting
