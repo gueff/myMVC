@@ -153,152 +153,179 @@
 
 
 	Events
-		Event Names must be unique!
-		Use an Event only once! (otherwise the event would be overwritten)
+                You can listen to Events in 2 ways:
+                1. Event Names
+                2. Class::method
+                
+                ----
 
-		BIND and RUN
+                1. EventNames
 
-			Bind to an Event
-				\MVC\Event::BIND ('mvc.session', function() {
+                    Event Names must be unique!
+                    Use an Event only once! (otherwise the event would be overwritten)
 
-					$oPackage = \MVC\Event::$aPackage['mvc.session'];
-					// see if there is a package relating to that event
-					\MVC\Helper::DISPLAY ($oPackage);
-				});
+                    BIND and RUN
 
-			Run an Event
-				\MVC\Event::RUN ('mvc.session');
+                            Bind to an Event
+                                    \MVC\Event::BIND ('mvc.session', function() {
 
-			Run an Event and deploy a Package which could be read inside the Bind/Closure
-				\MVC\Event::RUN ('mvc.session', $oPackage);
+                                            $oPackage = \MVC\Event::$aPackage['mvc.session'];
+                                            // see if there is a package relating to that event
+                                            \MVC\Helper::DISPLAY ($oPackage);
+                                    });
 
-			Helper Methods
-				Detect a Closure
-					if (true === filter_var (\MVC\Helper::ISCLOSURE ($oPackage), FILTER_VALIDATE_BOOLEAN)) { .. }
+                            Run an Event
+                                    \MVC\Event::RUN ('mvc.session');
 
-				Call a Closure
-					call_user_func ($oPackage)
+                            Run an Event and deploy a Package which could be read inside the Bind/Closure
+                                    \MVC\Event::RUN ('mvc.session', $oPackage);
+
+                            Helper Methods
+                                    Detect a Closure
+                                            if (true === filter_var (\MVC\Helper::ISCLOSURE ($oPackage), FILTER_VALIDATE_BOOLEAN)) { .. }
+
+                                    Call a Closure
+                                            call_user_func ($oPackage)
 
 
-		EventNames
-	        in chronological order	
-			The path shows where the event is going to be called (RUN)
-	            mvc.request.saved
-					/application/library/MVC/Request.php
-	                request is saved as a klassvar to \MVC\Request
+                    EventNames
+                    in chronological order	
+                            The path shows where the event is going to be called (RUN)
+                        mvc.request.saved
+                            /application/library/MVC/Request.php
+                            request is saved as a klassvar to \MVC\Request
 
-	            mvc.request.prepared
-					/application/library/MVC/Request.php
-	                request is prepared for usage
+                        mvc.request.prepared
+                            /application/library/MVC/Request.php
+                            request is prepared for usage
 
-	            mvc.targetClassBeforeMethod.after
-					/application/library/MVC/Applicatilogon.php
-	                the "BEFORE" method inside the requested Controller has been run
+                        mvc.targetClassBeforeMethod.after
+                            /application/library/MVC/Applicatilogon.php
+                            the "BEFORE" method inside the requested Controller has been run
 
-	            mvc.session.before
-					/application/library/MVC/Application.php
-	                function which creates the Session is entered, but a Session has not been build yet
+                        mvc.session.before
+                            /application/library/MVC/Application.php
+                            function which creates the Session is entered, but a Session has not been build yet
 
-	            mvc.session
-					/application/library/MVC/Application.php
-	                Session Object is built and copied to the registry
+                        mvc.session
+                            /application/library/MVC/Application.php
+                            Session Object is built and copied to the registry
 
-				mvc.policy.before
-					/application/library/MVC/Policy.php
+                                mvc.policy.before
+                                    /application/library/MVC/Policy.php
 
-				mvc.policy.after
-					/application/library/MVC/Policy.php
+                                mvc.policy.after
+                                    /application/library/MVC/Policy.php
 
-                    mvc.controller.before					
+                        mvc.controller.before					
                             /application/library/MVC/Controller.php
 
-	            mvc.reflect.start
-					/application/library/MVC/Reflex.php
+                        mvc.reflect.start
+                            /application/library/MVC/Reflex.php
 
-				mvc.reflect.targetObject.before
-					/application/library/MVC/Reflex.php
-					contains the target Class as the already instanciated object
-					which for sure could be accessed
-					This event is called immediatly before the target method will be called
+                                mvc.reflect.targetObject.before
+                                    /application/library/MVC/Reflex.php
+                                    contains the target Class as the already instanciated object
+                                    which for sure could be accessed
+                                    This event is called immediatly before the target method will be called
 
-				$sControllerClassName . '::' . $sMethod
-					/application/library/MVC/Reflex.php
-					e.g. "\Standard\Controller\Index::home"
-					run an event which KEY is
-						Class::method 
-					of the requested Target
-					and store the object of the target class within
+                                $sControllerClassName . '::' . $sMethod
+                                    /application/library/MVC/Reflex.php
+                                    e.g. "\Standard\Controller\Index::home"
+                                    run an event which KEY is
+                                            Class::method 
+                                    of the requested Target
+                                    and store the object of the target class within
 
-				mvc.reflect.targetObject.after
-					/application/library/MVC/Reflex.php
-					contains the target Class as the already instanciated object
-					which for sure could be accessed
-					This event is called immediatly after the target method was called
+                                mvc.reflect.targetObject.after
+                                    /application/library/MVC/Reflex.php
+                                    contains the target Class as the already instanciated object
+                                    which for sure could be accessed
+                                    This event is called immediatly after the target method was called
 
-	            mvc.invalidRequest
-					/application/library/MVC/Controller.php
-					Request could not be handled
+                        mvc.invalidRequest
+                            /application/library/MVC/Controller.php
+                            Request could not be handled
 
-	            [..] Concrete Controller / User's Application
+                        [..] Concrete Controller / User's Application
+                        please see below, Point "2. Class::method"
+                        
+                        mvc.view.echoOut.off
+                            /application/library/MVC/View.php
+                            disables the echo out of the rendered view template
+                            view listens here 
 
-				mvc.view.echoOut.off
-					/application/library/MVC/View.php
-					disables the echo out of the rendered view template
-					view listens here 
+                        mvc.view.echoOut.on
+                            /application/library/MVC/View.php
+                            enables the echo out of the rendered view template
+                            view listens here 
 
-				mvc.view.echoOut.on
-					/application/library/MVC/View.php
-					enables the echo out of the rendered view template
-					view listens here 
+                        mvc.view.render.before
+                            /application/library/MVC/View.php
+                            MVC_View render is called, but not rendered yet
+                            contains MVC_View object
 
-				mvc.view.render.before
-					/application/library/MVC/View.php
-					MVC_View render is called, but not rendered yet
-					contains MVC_View object
+                        mvc.view.renderString.before
+                            /application/library/MVC/View.php
+                            MVC_View renderString is called, but not rendered yet
+                            contains string $sTemplateString
 
-				mvc.view.renderString.before
-					/application/library/MVC/View.php
-					MVC_View renderString is called, but not rendered yet
-					contains string $sTemplateString
+                        mvc.view.renderString.after
+                            /application/library/MVC/View.php
+                            MVC_View renderString has been called, already rendered
+                            contains string $sTemplateString
 
-				mvc.view.renderString.after
-					/application/library/MVC/View.php
-					MVC_View renderString has been called, already rendered
-					contains string $sTemplateString
+                        mvc.view.render.after
+                            /application/library/MVC/View.php
+                            MVC_View render has been called, already rendered
+                            contains MVC_View object
 
-				mvc.view.render.after
-					/application/library/MVC/View.php
-					MVC_View render has been called, already rendered
-					contains MVC_View object
+                        mvc.reflex.destruct
+                            /application/library/MVC/Reflex.php
+                            MVC_MVC_Reflex end of runtime reached
 
-	            mvc.reflex.destruct
-					/application/library/MVC/Reflex.php
-	                MVC_MVC_Reflex end of runtime reached
+                        mvc.controller.destruct
+                            /application/library/MVC/Controller.php
+                            MVC_Controller end of runtime reached
 
-	            mvc.controller.destruct
-					/application/library/MVC/Controller.php
-					MVC_Controller end of runtime reached
+                        mvc.application.construct.finished
+                            /application/library/MVC/Application.php
 
-				mvc.application.construct.finished
-					/application/library/MVC/Application.php
+                        mvc.application.destruct
+                            /application/library/MVC/Application.php
+                            MVC_Application end of runtime reached
 
-	            mvc.application.destruct
-					/application/library/MVC/Application.php
-					MVC_Application end of runtime reached
-
-	            mvc.helper.stop
-					/application/library/MVC/Helper.php
-	                \MVC\Helper::STOP method has been called.
-					This Event is fired immediatly before the last command in that method, which is: exit();
+                        mvc.helper.stop
+                            /application/library/MVC/Helper.php
+                            \MVC\Helper::STOP method has been called.
+                                This Event is fired immediatly before the last command in that method, which is: exit();
 						
-			other
-				mvc.error
-					/application/library/MVC/Application.php
-					/application/library/MVC/Helper.php
-					/application/library/MVC/Policy.php
-					\MVC\Event::RUN('mvc.error', 'hereby an error is reported: bla blub...');	
-					Triggered Errors this way will be caught by \MVC\Error class by default
+                        other
+                            mvc.error
+                                /application/library/MVC/Application.php
+                                /application/library/MVC/Helper.php
+                                /application/library/MVC/Policy.php
+                                \MVC\Event::RUN('mvc.error', 'hereby an error is reported: bla blub...');	
+                                Triggered Errors this way will be caught by \MVC\Error class by default
 
+
+                2. Class::method
+
+                    Using a Concrete Controller::method  of User's Application.
+                    Instead of an Event-Name to listen to you can always address a certain Method of a Controller. 
+                    That gives you even more flexibility.
+                    Example: 
+                        If you want to listen to when the Method "\Standard\Controller\Index::home" is being called,
+                        simply note the method as the event name.
+                        Make sure to write it as the method was a static one, even it is not.
+
+                        /*
+                         * redirect if explicitly if the method "home" is requested
+                         */
+                        \MVC\Event::BIND ('\Standard\Controller\Index::home', function ($oObject)
+                        {
+                            \MVC\Request::REDIRECT('/');
+                        });
 
 	Helper
 	    the helper class methods can be accessed from everywhere by simply call its static methods.
@@ -331,16 +358,6 @@
 		Watching logs during developing is already helpful, so if you are on linux
 		you can easily watch it like so:
 		tail -f * /var/www/myMVC/application/log/
-		
-
-
-	IDS
-		Test requests
-			http://dev.mymvc.de/?a='%20OR%201=1--		
-			http://dev.mymvc.de/?a=%22%3E%3C%27%3C%3E
-			
-		@see
-			https://phpids.org/faq/
 
 
 	Policy
@@ -470,22 +487,22 @@
 		here is a basic example of how the routing.json could be defined.	
 
 		{
-				"/":			{"query":""}
-			,	"/404/":		{"query":"module=default&c=index&m=error404"}
-			,	"/@/":			{"query":"module=admin&c=index&m=index"}
+				"/":		{"query":""}
+			,	"/404/":	{"query":"module=default&c=index&m=error404"}
+			,	"/@/":		{"query":"module=admin&c=index&m=index"}
 			,	"/@/Login/":	{"query":"module=admin&c=auth&m=login"}
 			,	"/@/Logout/":	{"query":"module=admin&c=auth&m=logout"}
 		}
 		
 		Some Example Explanations:
 			Route			Module, Controller, Method, Parameters			Remark
-			----------------------------------------------------------------|--------------------
-			"/":			{"query":""}									|	if / is requested, the MVC_ROUTING_FALLBACK is called
-																			|	which is, per default, 'module=default&c=index&m=fallback'
-																			|
+			------------------------------------------------------------------------|--------------------
+			"/":			{"query":""}                                    |	if / is requested, the MVC_ROUTING_FALLBACK is called
+												|	which is, per default, 'module=default&c=index&m=fallback'
+												|
 			"/404/":		{"query":"module=default&c=index&m=error404"}	|	if /404/ is requested,
-																			|	the following Method is called, so it exists:
-																			|	Default_Controller_Index->error404()
+												|	the following Method is called, so it exists:
+												|	Default_Controller_Index->error404()
 
 
 	CLI Wrapper
@@ -520,111 +537,95 @@
 
 Composer
 	without any ZendFramework (Default)
-		{
-			"require": {
-				"php":
-						">=5.4.0"
-				,
-				"smarty/smarty":
-						"~3.1"
-				,
-				"ezyang/htmlpurifier":
-						"dev-master"
-				,
-				"phpids/phpids":
-						"dev-master"
-			},
-			"require-dev": {
-				"phpunit/phpunit":
-						"4.8.*@dev"
-			},
-			"autoload": {
-				"psr-0": {
-					"IDS\\Tests":
-							"tests/"
-					,
-					"IDS":
-							"lib/"
-				}
-			}
-		}
+            {
+                "require": {
+                    "php":
+                            ">=5.4.0"
+                    ,
+                    "smarty/smarty":
+                            ">=3.1.31"
+                    ,
+                    "ezyang/htmlpurifier":
+                            "v4.9.3"
+                    ,
+                    "monolog/monolog":
+                            "1.23.*"
+                },
+                "require-dev": {
+                    "phpunit/phpunit":
+                            "*",
+                    "facebook/webdriver":
+                            "dev-master",
+                    "phpunit/phpunit-selenium":
+                            "2.0.3"
+                }
+            }
 
 
 	with ZF1
-		{
-			"require": {
-				"php":
-						">=5.4.0"
-				,
-				"zendframework/zendframework1":
-						"1.12.*"
-				,
-				"smarty/smarty":
-						"~3.1"
-				,
-				"ezyang/htmlpurifier":
-						"dev-master"
-				,
-				"phpids/phpids":
-						"dev-master"
-			},
-			"require-dev": {
-				"phpunit/phpunit":
-						"4.8.*@dev"
-			},
-			"autoload": {
-				"psr-0": {
-					"ZendX":
-							"vendor/zendframework/zendframework1/extras/library"
-					,
-					"IDS\\Tests":
-							"tests/"
-					,
-					"IDS":
-							"lib/"
-				}
-			}
-		}
+            {
+                "require": {
+                    "php":
+                            ">=5.4.0"
+                    ,
+                    "zendframework/zendframework1":
+                            "1.12.*"
+                    ,
+                    "smarty/smarty":
+                            ">=3.1.31"
+                    ,
+                    "ezyang/htmlpurifier":
+                            "v4.9.3"
+                    ,
+                    "monolog/monolog":
+                            "1.23.*"
+                },
+                "require-dev": {
+                    "phpunit/phpunit":
+                            "*",
+                    "facebook/webdriver":
+                            "dev-master",
+                    "phpunit/phpunit-selenium":
+                            "2.0.3"
+                }
+            }
 	
 	with ZF2
-		{
-			"repositories": [
-				{
-					"type": "composer",
-					"url": "https://packages.zendframework.com/"
-				}
-			],
-			"require": {
-				"php":
-						">=5.4.0"
-				,
-				"zendframework/zendframework":
-						"dev-master"
-				,
-				"smarty/smarty":
-						"~3.1"
-				,
-				"ezyang/htmlpurifier":
-						"dev-master"
-				,
-				"phpids/phpids":
-						"dev-master"
-			},
-			"require-dev": {
-				"phpunit/phpunit":
-						"4.8.*@dev"
-			},
-			"autoload": {
-				"psr-0": {
-					"ZendX":
-							"vendor/zendframework/zendframework1/extras/library"
-					,
-					"IDS\\Tests":
-							"tests/"
-					,
-					"IDS":
-							"lib/"
-				}
-			}
-		}
-
+            {
+                "repositories": [
+                    {
+                        "type": "composer",
+                        "url": "https://packages.zendframework.com/"
+                    }
+                ],
+                "require": {
+                    "php":
+                            ">=5.4.0"
+                    ,
+                    "zendframework/zendframework":
+                            "dev-master"
+                    ,
+                    "smarty/smarty":
+                            ">=3.1.31"
+                    ,
+                    "ezyang/htmlpurifier":
+                            "v4.9.3"
+                    ,
+                    "monolog/monolog":
+                            "1.23.*"
+                },
+                "require-dev": {
+                    "phpunit/phpunit":
+                            "*",
+                    "facebook/webdriver":
+                            "dev-master",
+                    "phpunit/phpunit-selenium":
+                            "2.0.3"
+                },
+                "autoload": {
+                    "psr-0": {
+                        "ZendX":
+                            "vendor/zendframework/zendframework1/extras/library"
+                    }
+                }
+            }
