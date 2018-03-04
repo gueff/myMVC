@@ -125,9 +125,9 @@ class Index
 		$aToolbar['sEnv'] = \MVC\Registry::get('MVC_ENV');
 
 		$aToolbar['aGet'] = array_map('htmlentities', $_GET);		
-		$aToolbar['aPost'] = array_map('htmlentities', $_POST);
-		$aToolbar['aCookie'] = array_map('htmlentities', $_COOKIE);
-		$aToolbar['aRequest'] = array_map('htmlentities', $_REQUEST);
+		$aToolbar['aPost'] = array_walk_recursive($_POST, function (&$value) {$value = htmlentities($value);});
+		$aToolbar['aCookie'] = array_walk_recursive($_COOKIE, function (&$value) {$value = htmlentities($value);});
+		$aToolbar['aRequest'] = array_walk_recursive($_REQUEST, function (&$value) {$value = htmlentities($value);});
 		$aToolbar['aSession'] = $_SESSION;
 		$aToolbar['aSmartyTemplateVars'] = $oView->getTemplateVars ();
 		$aConstants = get_defined_constants (true);
