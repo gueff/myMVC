@@ -18,15 +18,6 @@ namespace InfoTool\Model;
  */
 class Index
 {
-
-	/**
-	 * toolbar array
-	 * 
-	 * @var array
-	 * @access private
-	 */
-	private $aToolbar = array ();
-
 	/**
 	 * adds Event Listerner to 'mvc.view.render.before'<br>
 	 * starts collecting Infos and save it to Registry
@@ -116,19 +107,22 @@ class Index
 	 * @param \Smarty $oView
 	 * @return array $aToolbar containing all Info for toolbar
 	 */
-	private function collectInfo (\Smarty $oView)
+	protected function collectInfo (\Smarty $oView)
 	{
+        $this->recursiveHtmlentity();
+        
 		$aToolbar = array ();
 
 		$aToolbar['sPHP'] = phpversion ();
 		$aToolbar['sOS'] = PHP_OS;
 		$aToolbar['sEnv'] = \MVC\Registry::get('MVC_ENV');
-
 		$aToolbar['aGet'] = array_map('htmlentities', $_GET);		
-		$aToolbar['aPost'] = array_walk_recursive($_POST, function (&$value) {$value = htmlentities($value);});
-		$aToolbar['aCookie'] = array_walk_recursive($_COOKIE, function (&$value) {$value = htmlentities($value);});
-		$aToolbar['aRequest'] = array_walk_recursive($_REQUEST, function (&$value) {$value = htmlentities($value);});
+		$aToolbar['aPost'] = $_POST;
+		$aToolbar['aCookie'] = $_COOKIE;
+		$aToolbar['aRequest'] = $_REQUEST;
+		$aToolbar['aEnv'] = $_ENV;        
 		$aToolbar['aSession'] = $_SESSION;
+		$aToolbar['aGLOBALS'] = $GLOBALS;
 		$aToolbar['aSmartyTemplateVars'] = $oView->getTemplateVars ();
 		$aConstants = get_defined_constants (true);
 		$aToolbar['aConstant'] = $aConstants['user'];
@@ -192,13 +186,36 @@ class Index
 		return $aToolbar;
 	}
 
-	/**
+    /**
+     * walk recursive and htmlentity 
+     */
+    protected function recursiveHtmlentity() 
+    {
+        array_walk_recursive($_POST, function (&$value) {
+            $value = htmlentities($value);
+        });        
+
+        array_walk_recursive($_COOKIE, function (&$value) {
+            $value = htmlentities($value);
+        });        
+        
+        array_walk_recursive($_REQUEST, function (&$value) {
+            $value = htmlentities($value);
+        });        
+        
+        array_walk_recursive($_ENV, function (&$value) {
+            $value = htmlentities($value);
+        });         
+    }
+
+
+    /**
 	 * get cachefiles
 	 * 
 	 * @access private
 	 * @return array $aCache
 	 */
-	private function getCaches ()
+	protected function getCaches ()
 	{
 		$aCache = array ();
 		$oObjects = new \RecursiveIteratorIterator (
