@@ -17,6 +17,7 @@ for more Info
     position: fixed;
     bottom: 20px;
     left: 10px;
+    z-index: 9999999;    
 }
 #myMvcToolbar pre {
     background-color: silver;
