@@ -53,14 +53,14 @@ class Helper
 		// output Web
 		else
 		{			
-			echo '<div style="position: fixed; bottom:30px;left:5px;z-index:1;float:left;text-align:left;background-color:white;border:1px solid gray;padding:5px;filter: Alpha (opacity=80);opacity: 0.8; moz-opacity: 0.8;-moz-border-radius:20px; border-radius: 20px;">
-				<h1 style="color:red;margin:0;padding:10px 0 0 10px;font-size:16px;">DEBUG</h1>
-				<table style="font-size:12px;padding:0 0 0 10px;">
-					<tr><td><b>File:</b></td><td>' . $aBacktrace['sFile'] . '</td></tr>
-					<tr><td><b>Line:</b></td><td>' . $aBacktrace['sLine'] . '</td></tr>
-					<tr><td><b>Class/Method:</b></td><td>' . $aBacktrace['sClass'] . '::' . $aBacktrace['sFunction'] . '</td></tr>
-				</table>
-				<textarea style="float:left;border:5px solid red;width:500px;height:400px;z-index:100;font-size:10px;-moz-border-radius:20px; border-radius: 20px;padding:10px;">' . $mData . '</textarea>
+			echo '<div class="draggable" style="position: fixed !important; bottom:30px !important;left:5px !important;z-index:1 !important;float:left !important;text-align:left !important;background-color:white !important;border:1px solid gray !important;padding:5px !important;filter: Alpha (opacity=80) !important;opacity: 0.8 !important; moz-opacity: 0.8 !important;-moz-border-radius: 3px !important; border-radius: 3px !important;width: 600px !important;height: 550px !important;">
+				<h1 style="color:red !important;margin:0 !important;padding:2px 0 0 0 !important;font-size:16px !important;">DEBUG</h1>
+                <div style="overflow-wrap: break-word !important;word-wrap: break-word !important;hyphens: auto !important;">
+                    <b>File:</b> ' . $aBacktrace['sFile'] . '<br>
+                    <b>Line:</b> ' . $aBacktrace['sLine'] . '<br>
+                    <b>Class/Method:</b> ' . $aBacktrace['sClass'] . '::' . $aBacktrace['sFunction'] . '<br>
+                </div>
+				<textarea style="float:left !important;border:1px solid red !important;width:100% !important;min-height:400px !important;z-index:100 !important;font-size:12px !important;-moz-border-radius: 3px !important; border-radius: 3px !important;padding:10px !important;font-family: monospace !important;">' . $mData . '</textarea>
 			</div>';
 		}
 	}
@@ -108,24 +108,24 @@ class Helper
 		else
 		{
 			// show source
-			$sConsultation = '<table style="padding:5px 0 2px 10px;background-color:white;color:red;width:100%;-moz-border-radius:20px; border-radius: 20px;" cellpadding="0" cellspacing="0">';
-			$sConsultation.= '<tr><td><b><span style="font-size:10px;">' . $iCount . '</span></b></td><td></td></tr>';
-			(isset ($aBacktrace['sFile'])) ? $sConsultation.= '<tr><td><b><span style="font-size:10px;">File:</span></b></td><td><span style="font-size:10px;">' . $aBacktrace['sFile'] . '</span></td></tr>' : FALSE;
-			(isset ($aBacktrace['sLine'])) ? $sConsultation.= '<tr><td><b><span style="font-size:10px;">Line:</span></b></td><td><span style="font-size:10px;">' . $aBacktrace['sLine'] . '</span></td></tr>' : FALSE;
-			(isset ($aBacktrace['sClass']) && isset ($aBacktrace['sFunction'])) ? $sConsultation.= '<tr><td><b><span style="font-size:10px;">Class/Method:</span></b></td><td><span style="font-size:10px;">' . $aBacktrace['sClass'] . '::' . $aBacktrace['sFunction'] . '</span></td></tr>' : FALSE;
-			$sConsultation.= '</table>';
-
+            $sConsultation = '<div style="overflow-wrap: break-word !important;word-wrap: break-word !important;hyphens: auto !important;background-color:white !important;color:red !important;font-weight: normal !important;">';
+            $sConsultation.= '<span style="color: white; background-color: blue; padding: 2px;">' . $iCount . '</span>';
+            (isset ($aBacktrace['sFile'])) ? $sConsultation.= '<b>File:</b> ' . $aBacktrace['sFile'] . '<br>' : '';
+            (isset ($aBacktrace['sLine'])) ? $sConsultation.= '<b>Line:</b> ' . $aBacktrace['sLine'] . '<br>' : '';
+            (isset ($aBacktrace['sClass']) && isset ($aBacktrace['sFunction'])) ? $sConsultation.= '<b>Class/Method:</b> ' . $aBacktrace['sClass'] . '::' . $aBacktrace['sFunction'] . '<br>' : '';
+            $sConsultation.= '</div>';            
+            
 			if (is_array ($mData))
 			{
-				$sDisplay.= $sConsultation . '<textarea style="font-size:10px;width:100%;height:200px;margin:0;background-color:blue;color:white;border: none;">' . $mData . '</textarea>';
+				$sDisplay.= $sConsultation . '<textarea style="font-size:10px;width:100% !important;height:200px !important;margin:0 !important;background-color:blue !important;color:white !important;border: none !important;padding: 5px !important;font-family: monospace !important;">' . $mData . '</textarea>';
 			}
 			else
 			{
-				$sDisplay.= $sConsultation . '<div style="font-size:10px;width:100%;padding:2px 0px 10px 0px;margin:0;background-color:blue;color:white;border:none;"><pre style="font-size:10px;overflow:auto;max-height:300px;background-color:transparent;color:#fff;border: none;">' . $mData . '</pre></div>';
+				$sDisplay.= $sConsultation . '<div style="font-size:10px;width:100%;padding:2px 0px 10px 0px;margin:0;background-color:blue;color:white;border:none;"><pre style="font-size:12px !important;overflow:auto !important;max-height:300px !important;background-color:transparent !important;color:#fff !important;border: none !important;padding: 5px !important;font-family: monospace !important;">' . $mData . '</pre></div>';
 			}
 
 			// Display
-			echo '<div style="overflow:auto;z-index:10000;position:fixed;bottom:10px;right:10px;background-color:blue;color:white;border:2px solid gray;width:500px;height:95%;overflow:y-scroll;-moz-border-radius:20px; border-radius: 20px;"><b>';
+			echo '<div class="draggable" style="overflow:auto;z-index:10000 !important;position:fixed !important;bottom:10px !important;right:10px !important;background-color:blue !important;color:white !important;border:1px solid #333 !important;width:500px !important;overflow:y-scroll !important;-moz-border-radius:3px !important; border-radius: 3px !important;font-size:12px !important;font-family: monospace !important;"><b>';
 			echo $sDisplay;
 			echo '</b></div>';
 		}
@@ -177,21 +177,20 @@ class Helper
 		else
 		{
 			// show source
-			$sConsultation = '<table style="padding:5px 0 2px 10px;background-color:white;color:red;width:100%;-moz-border-radius:20px; border-radius: 20px;" cellpadding="0" cellspacing="0">';
-			$sConsultation.= '<tr><td><b><span style="font-size:10px;">' . $iCount . '</span></b></td><td></td></tr>';
-			$sConsultation.= '<tr><td><b><span style="font-size:10px;">File:</span></b></td><td><span style="font-size:10px;">' . $aBacktrace['sFile'] . '</span></td></tr>';
-			$sConsultation.= '<tr><td><b><span style="font-size:10px;">Line:</span></b></td><td><span style="font-size:10px;">' . $aBacktrace['sLine'] . '</span></td></tr>';
-			$sConsultation.= '<tr><td><b><span style="font-size:10px;">Class/Method:</span></b></td><td><span style="font-size:10px;">' . $aBacktrace['sClass'] . '::' . $aBacktrace['sFunction'] . '</span></td></tr>';
-			$sConsultation.= '</table>';
-
+            $sConsultation = '<div style="overflow-wrap: break-word !important;word-wrap: break-word !important;hyphens: auto !important;background-color:white !important;color:red !important;font-weight: normal !important;">';
+            (isset ($aBacktrace['sFile'])) ? $sConsultation.= '<b>File:</b> ' . $aBacktrace['sFile'] . '<br>' : '';
+            (isset ($aBacktrace['sLine'])) ? $sConsultation.= '<b>Line:</b> ' . $aBacktrace['sLine'] . '<br>' : '';
+            (isset ($aBacktrace['sClass']) && isset ($aBacktrace['sFunction'])) ? $sConsultation.= '<b>Class/Method:</b> ' . $aBacktrace['sClass'] . '::' . $aBacktrace['sFunction'] . '<br>' : '';
+            $sConsultation.= '</div>';  
+            
 			// display
-			echo '<div style="padding:10px;z-index:10000;position:fixed;top:10px;left:10px;background-color:red;color:white;border:2px solid gray;width:400px;height:auto;overflow:auto;-moz-border-radius:20px; border-radius: 20px;"><b>';
-			echo ($bOccurrence === true) ? '<h1 style="font-size:20px;">STOP</h1><p>Stopped at:</p>' . $sConsultation : '';
+			echo '<div class="draggable" style="padding:10px !important;z-index:10000 !important;position:fixed !important;top:10px !important;left:10px !important;background-color:red !important;color:white !important;border:1px solid #333 !important;width:400px !important;height:auto !important;overflow:auto !important;-moz-border-radius: 3px !important; border-radius: 3px !important;"><b>';
+			echo ($bOccurrence === true) ? '<h1 style="font-size:20px !important;">STOP</h1><p>Stopped at:</p>' . $sConsultation : '';
 
 			if (isset ($sData) && !empty ($sData))
 			{
 				echo ($bOccurrence === true) ? '<h2>Data</h2><p>' : '';
-				echo '<pre style="font-size:10px;overflow:auto;max-height:300px;background-color:transparent;color:#fff;border: none;">' . $mData . '</pre></p>';
+				echo '<pre style="font-size:10px;overflow:auto !important;max-height:300px !important;background-color:transparent !important;color:#fff !important;border: none !important;">' . $mData . '</pre></p>';
 			}
 			echo '</b></div>';
 		}
