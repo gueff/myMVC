@@ -81,7 +81,8 @@ class Application
 	}
 
 	/**
-	 * inits a session and copies it to the registry
+	 * inits a session if MVC_COOKIE_CONSENT is set to 1 
+     * and copies it to the registry
 	 * 
 	 * @access private
 	 * @static
@@ -91,8 +92,18 @@ class Application
 	{
 		Event::RUN ('mvc.session.before');
 
+        $oSession = null;
+        
 		// Start a default Session, if no session was started before
-		if (!session_id ())
+        // AND
+        // if a cookie consent is given
+		if  (
+                    !session_id () 
+                &&  (
+                            true === Registry::isRegistered('MVC_COOKIE_CONSENT') 
+                        &&  "true" == Registry::get('MVC_COOKIE_CONSENT')
+                    )
+            )
 		{
 			(!file_exists (Registry::get ('MVC_SESSION_PATH'))) ? mkdir (Registry::get ('MVC_SESSION_PATH')) : false;
 
@@ -101,10 +112,10 @@ class Application
 			$sMicrotime = sprintf ("%06d", ($iMicrotime - floor ($iMicrotime)) * 1000000);
 			$oSession->set ('startDateTime', new \DateTime (date ('Y-m-d H:i:s.' . $sMicrotime, $iMicrotime)));
 			$oSession->set ('uniqueid', Registry::get ('MVC_UNIQUE_ID'));
-
-			// copy Session Object to registry
-			Registry::set ('MVC_SESSION', $oSession);
 		}
+        
+        // copy Session Object to registry
+        Registry::set ('MVC_SESSION', $oSession);
 
 		Event::RUN ('mvc.session');
 	}
