@@ -36,11 +36,6 @@ class Index
 	protected function __construct()
 	{
 		/*
-		 *  this is not bonded to an event, instead it is executed directly
-		 */
-		\MVC\Request::ENSURECORRECTPROTOCOL ();
-
-		/*
 		 * What to do on invalid requets
 		 */
 		\MVC\Event::BIND ('mvc.invalidRequest', function() {
