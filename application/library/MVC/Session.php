@@ -62,10 +62,24 @@ class Session
 			Log::WRITE ('ini_set("session.' . $sKey . '", ' . $mValue . ');');
 		}
 
-		session_start ();
-		session_cache_limiter ('nocache');
-		session_cache_expire (0);
+		// Start a default Session, if no session was started before
+        // AND
+        // if MVC_SESSION_ENABLE is explicitely set to true
+		if  (
+                    !session_id () 
+                &&  (
+                            true === Registry::isRegistered('MVC_SESSION_ENABLE') 
+                        &&  true === Registry::get('MVC_SESSION_ENABLE')
+                    )
+            )
+        {
+            session_start ();
+            session_cache_limiter ('nocache');
+            session_cache_expire (0);
+        }
 
+        $_SESSION = null;
+        
 		$this->setNamespace ();
 	}
 
@@ -111,7 +125,7 @@ class Session
 			$this->_sNamespace = $sNamespace;
 		}
 
-		if (!array_key_exists($this->_sNamespace, $_SESSION))
+		if (!isset($_SESSION[$this->_sNamespace]))
 		{
 			$_SESSION[$this->_sNamespace] = NULL;
 		}
@@ -150,7 +164,7 @@ class Session
 	 */
 	public function get ($sKey)
 	{
-		if (!array_key_exists ($sKey, $_SESSION[$this->_sNamespace]))
+		if (!isset($_SESSION[$this->_sNamespace][$sKey]))
 		{
 			return '';
 		}
@@ -166,7 +180,7 @@ class Session
 	 */
 	public function getAll ()
 	{
-		return $_SESSION[$this->_sNamespace];
+		return (isset($_SESSION[$this->_sNamespace])) ? $_SESSION[$this->_sNamespace] : array();
 	}
 
 	/**

@@ -41,6 +41,18 @@ class Index
 		 */
 		\MVC\Request::ENSURECORRECTPROTOCOL ();
 
+        /**
+        * GDPR cookie consent
+        */
+        \MVC\Event::BIND ('mvc.session.before', function(){
+
+            // get consent to set session cookie
+            if (isset($_COOKIE['myMVC_cookieConsent']) && "true" == $_COOKIE['myMVC_cookieConsent'])
+            {
+                \MVC\Registry::set('MVC_SESSION_ENABLE', true);
+            }
+        });        
+        
 		/*
 		 * What to do on invalid requets
 		 */
@@ -59,15 +71,6 @@ class Index
 //			$oObject->fallback();
 //			exit();
 //		});
-		
-		/*
-		 * What to do if IDS detects an impact
-		 */
-		\MVC\Event::BIND ('mvc.ids.impact', function($oIdsReport) {
-
-			// dispose infected Variables mentioned in report
-			\MVC\IDS::dispose($oIdsReport);
-		});
 		
 		/*
 		 * switch on the debug toolbar in develop environment

@@ -5,10 +5,6 @@
 #
 ################################################################################
 
-# google pagespeed
-# see https://developers.google.com/speed/pagespeed/module/configuration
-#ModPagespeed on
-
 # Environment
 SetEnv MVC_ENV develop
 

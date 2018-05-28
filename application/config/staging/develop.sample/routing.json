@@ -20,4 +20,15 @@
 				,
 				"ssl": false
 			}
+    	,
+	"/data-protection-declaration/":
+			{
+				"query":
+						"module=standard&c=index&m=dataProtectionDeclaration"
+				,
+				"title":
+						"Data Protection Declaration"
+				,
+				"ssl": false
+			}        
 }

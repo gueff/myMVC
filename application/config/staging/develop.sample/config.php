@@ -140,6 +140,10 @@ MVC_APPLICATION_SETTINGS: {
         , 'upload_progress.enabled' => 1
     );
 
+    // default behaviour; session does NOT start
+    // means NO cookie is written to users browser
+    $aConfig['MVC_SESSION_ENABLE'] = false;
+    
     /**
      * Request
      */

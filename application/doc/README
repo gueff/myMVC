@@ -386,7 +386,57 @@
 			)
 		);	
 
+		
+    Cookie Consent
+        Due to 2018-05-25 EU-wide GDPR law, it may make sense to get users cookie Consent before setting any session cookie.
+        Since Rev. 71 (2018-05-27) there will be no session cookie set automatically, if there MVC_SESSION_ENABLE is NOT SET or has NOT VALUE set to TRUE.
+        
+        So. if you want to get session auto-started in MVC\Application::setSession() as it did before, you need to 
+        - either set MVC_SESSION_ENABLE in config to TRUE
+        - or get users cookie consent
 
+        Here is an example how to get a users cookie consent could be accomplished:
+        
+        In the target Class::__preconstruct()
+        -OR better-
+        In the target's Event-Class::__construct()
+        place this Event Listener, which will check if 'mvc_cookieConsent' cookie was set.
+        If so, the necessary value MVC_SESSION_ENABLE is written to the registry with the value of "true".        
+        
+        Target Class Side
+            /**
+            * GDPR cookie consent
+            */
+            \MVC\Event::BIND ('mvc.session.before', function(){
+
+                // get consent to set session cookie
+                if (isset($_COOKIE['myMVC_cookieConsent']) && "true" == $_COOKIE['myMVC_cookieConsent'])
+                {
+                    \MVC\Registry::set('MVC_SESSION_ENABLE', true);
+                }
+            });      
+        
+        Frontend
+            Now you need to place some JS Code to your HTML asking for cookie consent.
+            If user agree, a cookie named "mvc_cookieConsent" with value of "true" is written as cookie to users browser.
+            
+            Example:
+            
+            <script>
+            $( document ).ready(function() {
+
+                // cookie consent
+                if ('undefined' === typeof $.cookie('myMVC_cookieConsent')) {$('#myMVC_cookieConsent').fadeIn();}
+                $('#myMVC_cookieConsent button').on('click', function(oEvent){
+                    if (true === $('#myMVC_cookieConsent input').is(':checked')) {
+                        $.cookie('myMVC_cookieConsent', true, {expires: 365, path:"/"});  
+                        $('#myMVC_cookieConsent').fadeOut();
+                    }       
+                });
+            });
+            </script>            
+        
+        
 
 	Webserver
 	    Apache 
