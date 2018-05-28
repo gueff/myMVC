@@ -117,7 +117,19 @@ class Index implements \MVC\MVCInterface\Controller
 		$this->oStandardViewIndex->assign ('sTitle', $this->_aRoutingCurrent['title']);
 		$this->oStandardViewIndex->assign ('sContent', $this->oStandardViewIndex->loadTemplateAsString ('index/about.tpl'));
 	}
-	
+
+	/**
+	 * dataProtectionDeclaration
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function dataProtectionDeclaration ()
+	{
+		$this->oStandardViewIndex->assign ('sTitle', $this->_aRoutingCurrent['title']);
+		$this->oStandardViewIndex->assign ('sContent', $this->oStandardViewIndex->loadTemplateAsString ('index/dataProtectionDeclaration.tpl'));
+	}	
+    
 	/**
 	 * handles routes which are not declared.<br />
 	 * usually 404

@@ -121,7 +121,7 @@ class Index
 		$aToolbar['aCookie'] = $_COOKIE;
 		$aToolbar['aRequest'] = $_REQUEST;
 		$aToolbar['aEnv'] = $_ENV;        
-		$aToolbar['aSession'] = $_SESSION;
+		$aToolbar['aSession'] = (isset($_SESSION)) ? $_SESSION : array();
 		$aToolbar['aGLOBALS'] = $GLOBALS;
 		$aToolbar['aSmartyTemplateVars'] = $oView->getTemplateVars ();
 		$aConstants = get_defined_constants (true);
@@ -180,7 +180,7 @@ class Index
 		$sMicrotime = sprintf ("%06d", ($iMicrotime - floor ($iMicrotime)) * 1000000);
 		$oDateTime = new \DateTime (date ('Y-m-d H:i:s.' . $sMicrotime, $iMicrotime));
 		$oStart = \MVC\Session::getInstance ()->get ('startDateTime');
-		$dDiff = (date_format ($oDateTime, "s.u") - date_format ($oStart, "s.u"));
+		$dDiff = (!empty($oStart)) ? (date_format ($oDateTime, "s.u") - date_format ($oStart, "s.u")) : 0;
 		$aToolbar['sConstructionTime'] = round ($dDiff, 3);
 		
 		return $aToolbar;
