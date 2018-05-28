@@ -46,17 +46,8 @@ class Index
 		\MVC\Event::BIND ('mvc.invalidRequest', function() {
 			
 			\MVC\Request::REDIRECT ('/');
-		});
-		
-		/*
-		 * What to do if IDS detects an impact
-		 */
-		\MVC\Event::BIND ('mvc.ids.impact', function($oIdsReport) {
-
-			// dispose infected Variables mentioned in report
-			\MVC\IDS::dispose($oIdsReport);
-		});
-		
+		});		
+	
 		/*
 		 * We want to log the end of the request
 		 */
