@@ -36,22 +36,17 @@ class Index
 	 */
 	protected function __construct ()
 	{
-		/*
-		 *  this is not bonded to an event, instead it is executed directly
-		 */
-		\MVC\Request::ENSURECORRECTPROTOCOL ();
+       		/**
+		 * GDPR cookie consent
+        	 */
+       		\MVC\Event::BIND ('mvc.session.before', function(){
 
-        /**
-        * GDPR cookie consent
-        */
-        \MVC\Event::BIND ('mvc.session.before', function(){
-
-            // get consent to set session cookie
-            if (isset($_COOKIE['myMVC_cookieConsent']) && "true" == $_COOKIE['myMVC_cookieConsent'])
-            {
-                \MVC\Registry::set('MVC_SESSION_ENABLE', true);
-            }
-        });        
+            		// get consent to set session cookie
+            		if (isset($_COOKIE['myMVC_cookieConsent']) && "true" == $_COOKIE['myMVC_cookieConsent'])
+            		{
+                		\MVC\Registry::set('MVC_SESSION_ENABLE', true);
+            		}
+       		});        
         
 		/*
 		 * What to do on invalid requets
