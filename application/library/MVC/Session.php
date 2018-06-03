@@ -77,8 +77,6 @@ class Session
             session_cache_limiter ('nocache');
             session_cache_expire (0);
         }
-
-        $_SESSION = null;
         
 		$this->setNamespace ();
 	}
