@@ -33,7 +33,7 @@
     </div>
     
 	<!--[if lt IE 9]><script src="/myMVC/assets/html5shiv/3.7.3/html5shiv.min.js"></script><![endif]-->	
-	<script src="/myMVC/assets/jquery/2.1.1/jquery.min.js" type="text/javascript"></script>
+	<script src="/myMVC/assets/jquery/3.3.1/jquery-3.3.1.min.js" type="text/javascript"></script>
     <script src="/myMVC/assets/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 	<script src="/myMVC/assets/bootstrap-3.3.7-dist/js/bootstrap.min.js" type="text/javascript"></script>
 	<script src="/myMVC/assets/showdown/0.4.0/Showdown.min.js"></script>
