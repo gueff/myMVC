@@ -23,6 +23,10 @@ RedirectMatch 403 /\..*$
 #RewriteCond %{HTTP_HOST} ^mymvc\.org$ [NC]
 #RewriteRule ^(.*)$ https://www.mymvc\.org/$1 [R=301,L]
 
+# deny HTTP TRACE, HTTP TRACK Requests
+RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
+RewriteRule .* - [F]
+
 # pass-through files
 RewriteCond %{REQUEST_FILENAME} !-f
 
