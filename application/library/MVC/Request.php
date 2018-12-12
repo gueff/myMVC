@@ -11,6 +11,7 @@
 /**
  * @name $MVC
  */
+
 namespace MVC;
 
 /**
@@ -19,417 +20,445 @@ namespace MVC;
 class Request
 {
 
-	/**
-	 * Request
-	 * 
-	 * @var Request 
-	 * @access private
-	 * @static
-	 */
-	private static $_oInstance;
+    /**
+     * Request
+     *
+     * @var Request
+     * @access private
+     * @static
+     */
+    private static $_oInstance;
 
-	/**
-	 * request uri
-	 * 
-	 * @var string
-	 * @access private
-	 */
-	private $_sRequestUri = '';
+    /**
+     * request uri
+     *
+     * @var string
+     * @access private
+     */
+    private $_sRequestUri = '';
 
-	/**
-	 * query array
-	 * 
-	 * @var array
-	 * @access private
-	 */
-	private $_aQueryVar = array ();
+    /**
+     * query array
+     *
+     * @var array
+     * @access private
+     */
+    private $_aQueryVar = array();
 
-	/**
-	 * whitelist array defines what chars are allowed
-	 * 
-	 * @var array
-	 * @access private
-	 */
-	private $_aWhitelistParams = array ();
+    /**
+     * whitelist array defines what chars are allowed
+     *
+     * @var array
+     * @access private
+     */
+    private $_aWhitelistParams = array();
 
 
-	/**
-	 * Constructor 
-	 *
-	 * @access protected
-	 * @return void
-	 */
-	protected function __construct ()
-	{
-		$this->_aWhitelistParams = Registry::get('MVC_REQUEST_WHITELIST_PARAMS');
-		
-		// get the request
-		$this->saveRequest ();
-		$this->prepareQueryVarsForUsage ();
-	}
+    /**
+     * Constructor
+     *
+     * @access protected
+     * @return void
+     */
+    protected function __construct()
+    {
+        $this->_aWhitelistParams = Registry::get('MVC_REQUEST_WHITELIST_PARAMS');
 
-	/**
-	 * Singleton instance
-	 *
-	 * @access public
-	 * @static
-	 * @return Request
-	 */
-	public static function getInstance ()
-	{
-		if (null === self::$_oInstance)
-		{
-			self::$_oInstance = new self ();
-		}
+        // get the request
+        $this->saveRequest();
+        $this->prepareQueryVarsForUsage();
+    }
 
-		return self::$_oInstance;
-	}
+    /**
+     * reads the HTTP Request and saves request + query separated
+     *
+     * @access public
+     * @return \MVC\Request
+     */
+    public function saveRequest()
+    {
+        // sanitize + save GET
+        if (isset ($_GET)) {
+            foreach ($_GET as $sKey => $sValue) {
+                if (array_key_exists($sKey, $this->_aWhitelistParams['GET'])) {
+                    $sSub = mb_substr(
+                        $sValue, 0, $this->_aWhitelistParams['GET'][$sKey]['length'], 'UTF8'
+                    );
+                    $sTrim = trim($sSub);
 
-	/**
-	 * prevent any cloning
-	 * 
-	 * @access private
-	 * @return void
-	 */
-	private function __clone ()
-	{
-		;
-	}
+                    $this->_aQueryVar['GET'][$sKey] = preg_replace(
+                        $this->_aWhitelistParams['GET'][$sKey]['regex'], '', $sTrim
+                    );
+                }
+            }
+        }
 
-	/**
-	 * reads the HTTP Request and saves request + query separated
-	 * 
-	 * @access public
-	 * @return \MVC\Request
-	 */
-	public function saveRequest ()
-	{
-		// sanitize + save GET
-		if (isset ($_GET))
-		{
-			foreach ($_GET as $sKey => $sValue)
-			{
-				if (array_key_exists ($sKey, $this->_aWhitelistParams['GET']))
-				{
-					$sSub = mb_substr (
-						$sValue, 0, $this->_aWhitelistParams['GET'][$sKey]['length'], 'UTF8'
-					);
-					$sTrim = trim ($sSub);
+        // etc
+        (isset ($_POST)) ? $this->_aQueryVar['POST'] = $_POST : FALSE;
+        (isset ($_COOKIE)) ? $this->_aQueryVar['COOKIE'] = $_COOKIE : FALSE;
 
-					$this->_aQueryVar['GET'][$sKey] = preg_replace (
-						$this->_aWhitelistParams['GET'][$sKey]['regex'], '', $sTrim
-					);
-				}
-			}
-		}
+        // if queries, split
+        if (array_key_exists('QUERY_STRING', $_SERVER)) {
+            $this->_sRequestUri = str_replace('?' . $_SERVER['QUERY_STRING'], '', $_SERVER['REQUEST_URI']);
+        } else {
+            // requested File
+            $this->_sRequestUri = $_SERVER['REQUEST_URI'];
+        }
 
-		// etc
-		(isset ($_POST)) ? $this->_aQueryVar['POST'] = $_POST : FALSE;
-		(isset ($_COOKIE)) ? $this->_aQueryVar['COOKIE'] = $_COOKIE : FALSE;
+        Event::RUN('mvc.request.saved', $this);
 
-		// if queries, split
-		if (array_key_exists ('QUERY_STRING', $_SERVER))
-		{
-			$this->_sRequestUri = str_replace ('?' . $_SERVER['QUERY_STRING'], '', $_SERVER['REQUEST_URI']);
-		}
-		else
-		{
-			// requested File
-			$this->_sRequestUri = $_SERVER['REQUEST_URI'];
-		}
+        return $this;
+    }
 
-		Event::RUN ('mvc.request.saved', $this);
-
-		return $this;
-	}
-
-	/**
-	 * prepares query vars for usage
-	 * 
-	 * @access public
-	 * @return \MVC\Request
-	 */
-	public function prepareQueryVarsForUsage ()
-	{
-		/*
-		 * serve simple CLI Requests
-		 * Allows calling via CLI without any need of a /route/. 
-		 * Write Parameter separated by spaces.
+    /**
+     * prepares query vars for usage
+     *
+     * @access public
+     * @return \MVC\Request
+     */
+    public function prepareQueryVarsForUsage()
+    {
+        /*
+         * serve simple CLI Requests
+         * Allows calling via CLI without any need of a /route/. 
+         * Write Parameter separated by spaces.
          * When adding JSON in a parameter, encapsulate with single quote `'`
          * Example:
-		 *		$ export MVC_ENV="develop"; php index.php module=standard c=index m=index a='{"foo":"bar","baz":[1,2,3]}'
-		 */
-		if (php_sapi_name() === 'cli' && !empty($GLOBALS['argv']))
-		{
-			for($i = 1; $i <= 4; $i++)
-			{
-                if (array_key_exists($i, $GLOBALS['argv']))
-                {
+         *		$ export MVC_ENV="develop"; php index.php module=standard c=index m=index a='{"foo":"bar","baz":[1,2,3]}'
+         */
+        if (php_sapi_name() === 'cli' && !empty($GLOBALS['argv'])) {
+            for ($i = 1; $i <= 4; $i++) {
+                if (array_key_exists($i, $GLOBALS['argv'])) {
                     $sToken = strtolower(strtok($GLOBALS['argv'][$i], '='));
 
-                    if  (
-                            in_array(
-                                $sToken, 
-                                array(
-                                    Registry::get ('MVC_GET_PARAM_MODULE'), 
-                                    Registry::get ('MVC_GET_PARAM_C'), 
-                                    Registry::get ('MVC_GET_PARAM_M'),
-                                    Registry::get ('MVC_GET_PARAM_A')
-                                )
-                            )
+                    if (
+                    in_array(
+                        $sToken,
+                        array(
+                            Registry::get('MVC_GET_PARAM_MODULE'),
+                            Registry::get('MVC_GET_PARAM_C'),
+                            Registry::get('MVC_GET_PARAM_M'),
+                            Registry::get('MVC_GET_PARAM_A')
                         )
-                    {
+                    )
+                    ) {
                         $this->_aQueryVar['GET'][$sToken] = substr($GLOBALS['argv'][$i], (strpos($GLOBALS['argv'][$i], '=') + 1), strlen($GLOBALS['argv'][$i]));
                     }
                 }
-			}
-		}
-        
-		$aFallback = self::URLQUERYTOARRAY (Registry::get ('MVC_ROUTING_FALLBACK'));
+            }
+        }
 
-		if (array_key_exists ('GET', $this->_aQueryVar))
-		{
-			// add standard module if missing
-			if (!array_key_exists (Registry::get ('MVC_GET_PARAM_MODULE'), $this->_aQueryVar['GET']) || $this->_aQueryVar['GET'][Registry::get ('MVC_GET_PARAM_MODULE')] == '')
-			{
-				$this->_aQueryVar['GET'][Registry::get ('MVC_GET_PARAM_MODULE')] = $aFallback[Registry::get ('MVC_GET_PARAM_MODULE')];
-			}
+        $aFallback = self::URLQUERYTOARRAY(Registry::get('MVC_ROUTING_FALLBACK'));
 
-			// add standard constroller if missing
-			if (!array_key_exists (Registry::get ('MVC_GET_PARAM_C'), $this->_aQueryVar['GET']) || $this->_aQueryVar['GET'][Registry::get ('MVC_GET_PARAM_C')] == '')
-			{
-				$this->_aQueryVar['GET'][Registry::get ('MVC_GET_PARAM_C')] = $aFallback[Registry::get ('MVC_GET_PARAM_C')];
-			}
+        if (array_key_exists('GET', $this->_aQueryVar)) {
+            // add standard module if missing
+            if (!array_key_exists(Registry::get('MVC_GET_PARAM_MODULE'), $this->_aQueryVar['GET']) || $this->_aQueryVar['GET'][Registry::get('MVC_GET_PARAM_MODULE')] == '') {
+                $this->_aQueryVar['GET'][Registry::get('MVC_GET_PARAM_MODULE')] = $aFallback[Registry::get('MVC_GET_PARAM_MODULE')];
+            }
 
-			// add standard method if missing
-			if (!array_key_exists (Registry::get ('MVC_GET_PARAM_M'), $this->_aQueryVar['GET']) || $this->_aQueryVar['GET'][Registry::get ('MVC_GET_PARAM_M')] == '')
-			{
-				$this->_aQueryVar['GET'][Registry::get ('MVC_GET_PARAM_M')] = $aFallback[Registry::get ('MVC_GET_PARAM_M')];
-			}
-		}
-		else
-		{
-			$this->_aQueryVar['GET'][Registry::get ('MVC_GET_PARAM_MODULE')] = $aFallback[Registry::get ('MVC_GET_PARAM_MODULE')];
-			$this->_aQueryVar['GET'][Registry::get ('MVC_GET_PARAM_C')] = $aFallback[Registry::get ('MVC_GET_PARAM_C')];
-			$this->_aQueryVar['GET'][Registry::get ('MVC_GET_PARAM_M')] = $aFallback[Registry::get ('MVC_GET_PARAM_M')];
-		}
+            // add standard constroller if missing
+            if (!array_key_exists(Registry::get('MVC_GET_PARAM_C'), $this->_aQueryVar['GET']) || $this->_aQueryVar['GET'][Registry::get('MVC_GET_PARAM_C')] == '') {
+                $this->_aQueryVar['GET'][Registry::get('MVC_GET_PARAM_C')] = $aFallback[Registry::get('MVC_GET_PARAM_C')];
+            }
 
-		// capitals at beginning
-		$this->_aQueryVar['GET'][Registry::get ('MVC_GET_PARAM_MODULE')] = ucfirst ($this->_aQueryVar['GET'][Registry::get ('MVC_GET_PARAM_MODULE')]);
-		$this->_aQueryVar['GET'][Registry::get ('MVC_GET_PARAM_C')] = ucfirst ($this->_aQueryVar['GET'][Registry::get ('MVC_GET_PARAM_C')]);
+            // add standard method if missing
+            if (!array_key_exists(Registry::get('MVC_GET_PARAM_M'), $this->_aQueryVar['GET']) || $this->_aQueryVar['GET'][Registry::get('MVC_GET_PARAM_M')] == '') {
+                $this->_aQueryVar['GET'][Registry::get('MVC_GET_PARAM_M')] = $aFallback[Registry::get('MVC_GET_PARAM_M')];
+            }
+        } else {
+            $this->_aQueryVar['GET'][Registry::get('MVC_GET_PARAM_MODULE')] = $aFallback[Registry::get('MVC_GET_PARAM_MODULE')];
+            $this->_aQueryVar['GET'][Registry::get('MVC_GET_PARAM_C')] = $aFallback[Registry::get('MVC_GET_PARAM_C')];
+            $this->_aQueryVar['GET'][Registry::get('MVC_GET_PARAM_M')] = $aFallback[Registry::get('MVC_GET_PARAM_M')];
+        }
 
-		Event::RUN ('mvc.request.prepared');
+        // capitals at beginning
+        $this->_aQueryVar['GET'][Registry::get('MVC_GET_PARAM_MODULE')] = ucfirst($this->_aQueryVar['GET'][Registry::get('MVC_GET_PARAM_MODULE')]);
+        $this->_aQueryVar['GET'][Registry::get('MVC_GET_PARAM_C')] = ucfirst($this->_aQueryVar['GET'][Registry::get('MVC_GET_PARAM_C')]);
 
-		return $this;
-	}
+        Event::RUN('mvc.request.prepared');
 
-	/**
-	 * redirects to given URI
-	 * 
-	 * @access public
-	 * @static
-	 * @param string $sLocation
-	 * @param string $sHeader
-	 * @return void
-	 */
-	public static function REDIRECT ($sLocation, $sHeader = '')
-	{
-		// source
-		$aBacktrace = debug_backtrace ();
+        return $this;
+    }
 
-		(array_key_exists ('file', $aBacktrace[0])) ? $sFile = $aBacktrace[0]['file'] : $sFile = '';
-		(array_key_exists ('line', $aBacktrace[0])) ? $sLine = $aBacktrace[0]['line'] : $sLine = '';
-		(array_key_exists ('line', $aBacktrace)) ? $sLine = $aBacktrace['line'] : FALSE;
+    /**
+     * converts the string of an url into an associative array
+     *
+     * @access public
+     * @static
+     * @param string $sQuery
+     * @return array
+     */
+    public static function URLQUERYTOARRAY($sQuery)
+    {
+        $aQueryParts = explode('&', $sQuery);
 
-		// standard
-		Log::WRITE ('Redirect to: ' . $sLocation . ' --> called in: ' . $sFile . ', ' . $sLine);
+        $aParams = array();
+        foreach ($aQueryParts as $sParam) {
+            $aItem = explode('=', $sParam);
+            $aParams[$aItem[0]] = $aItem[1];
+        }
 
-		// CLI
-		if (true === filter_var (Registry::get ('MVC_CLI'), FILTER_VALIDATE_BOOLEAN))
-		{
-			echo shell_exec ('php index.php "' . $sLocation . '"');
-			exit ();
-		}
+        return $aParams;
+    }
 
-		header ('Location: ' . $sLocation);
-		exit ();
-	}
+    /**
+     * Singleton instance
+     *
+     * @access public
+     * @static
+     * @return Request
+     */
+    public static function getInstance()
+    {
+        if (null === self::$_oInstance) {
+            self::$_oInstance = new self ();
+        }
 
-	/**
-	 * converts the string of an url into an associative array
-	 * 
-	 * @access public
-	 * @static
-	 * @param string $sQuery
-	 * @return array
-	 */
-	public static function URLQUERYTOARRAY ($sQuery)
-	{
-		$aQueryParts = explode ('&', $sQuery);
+        return self::$_oInstance;
+    }
 
-		$aParams = array ();
-		foreach ($aQueryParts as $sParam)
-		{
-			$aItem = explode ('=', $sParam);
-			$aParams[$aItem[0]] = $aItem[1];
-		}
+    /**
+     * makes sure the requested page will be
+     * delivered with the correct protocol (http|https)
+     *
+     * @access public
+     * @static
+     * @return void
+     */
+    public static function ENSURECORRECTPROTOCOL()
+    {
+        // auto redirect to ssl/non ssl 
+        // only for web frontend, not for cli usage
+        if (FALSE === filter_var(Registry::get('MVC_CLI'), FILTER_VALIDATE_BOOLEAN)) {
+            $aRequest = self::GETCURRENTREQUEST();
+            $aRouting = Registry::get('MVC_ROUTING_CURRENT');
 
-		return $aParams;
-	}
+            if (!empty($aRouting)) {
+                (isset ($aRouting['ssl'])) ? $sSsl = $aRouting['ssl'] : $sSsl = FALSE;
 
-	/**
-	 * gets whitelist array
-	 * 
-	 * @access public
-	 * @return array
-	 */
-	public function getWhitelistParams ()
-	{
-		return $this->_aWhitelistParams;
-	}
+                if (Helper::DETECTSSL() !== (bool)$sSsl) {
+                    (array_key_exists('ssl', $aRouting) && true === (bool)$aRouting['ssl']) ? $sProtocol = 'https://' : $sProtocol = 'http://';
+                    Request::REDIRECT($sProtocol . $aRequest['host'] . $aRouting['path'] . ((!array_key_exists('query', $aRequest) ? $aRequest['query'] = '' : FALSE)));
+                }
+            }
+        }
+    }
 
-	/**
-	 * gets query array
-	 * 
-	 * @access public
-	 * @return array
-	 */
-	public function getQueryArray ()
-	{
-		return $this->_aQueryVar;
-	}
+    /**
+     * gets current request
+     *
+     * @access public
+     * @static
+     * @return array
+     */
+    public static function GETCURRENTREQUEST()
+    {
+        $aUriInfo = parse_url(Helper::GETURIPROTOCOL() . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+        $aUriInfo['requesturi'] = $_SERVER['REQUEST_URI'];
+        $aUriInfo['protocol'] = Helper::GETURIPROTOCOL();
+        $aUriInfo['full'] = Helper::GETURIPROTOCOL() . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
-	/**
-	 * gets the request uri
-	 * 
-	 * @access public
-	 * @return string request uri
-	 */
-	public function getRequestUri ()
-	{
-		return $this->_sRequestUri;
-	}
+        return $aUriInfo;
+    }
 
-	/**
-	 * gets the requested modulename
-	 * 
-	 * @access public
-	 * @return string module
-	 */
-	public function getModule ()
-	{
-		$aQuery = $this->getQueryArray ();
+    /**
+     * redirects to given URI
+     *
+     * @access public
+     * @static
+     * @param string $sLocation
+     * @param string $sHeader
+     * @return void
+     */
+    public static function REDIRECT($sLocation, $sHeader = '')
+    {
+        // source
+        $aBacktrace = debug_backtrace();
 
-		if (array_key_exists ('GET', $aQuery))
-		{
-			if (array_key_exists (Registry::get ('MVC_GET_PARAM_MODULE'), $aQuery['GET']))
-			{
-				return $aQuery['GET'][Registry::get ('MVC_GET_PARAM_MODULE')];
-			}
-		}
+        (array_key_exists('file', $aBacktrace[0])) ? $sFile = $aBacktrace[0]['file'] : $sFile = '';
+        (array_key_exists('line', $aBacktrace[0])) ? $sLine = $aBacktrace[0]['line'] : $sLine = '';
+        (array_key_exists('line', $aBacktrace)) ? $sLine = $aBacktrace['line'] : FALSE;
 
-		return '';
-	}
+        // standard
+        Log::WRITE('Redirect to: ' . $sLocation . ' --> called in: ' . $sFile . ', ' . $sLine);
 
-	/**
-	 * gets the requested controller name
-	 * 
-	 * @access public
-	 * @return string controllername
-	 */
-	public function getController ()
-	{
-		$aQuery = $this->getQueryArray ();
+        // CLI
+        if (true === filter_var(Registry::get('MVC_CLI'), FILTER_VALIDATE_BOOLEAN)) {
+            echo shell_exec('php index.php "' . $sLocation . '"');
+            exit ();
+        }
 
-		if (array_key_exists ('GET', $aQuery))
-		{
-			if (array_key_exists (Registry::get ('MVC_GET_PARAM_C'), $aQuery['GET']))
-			{
-				return $aQuery['GET'][Registry::get ('MVC_GET_PARAM_C')];
-			}
-		}
+        header('Location: ' . $sLocation);
+        exit ();
+    }
 
-		return '';
-	}
+    /**
+     * gets whitelist array
+     *
+     * @access public
+     * @return array
+     */
+    public function getWhitelistParams()
+    {
+        return $this->_aWhitelistParams;
+    }
 
-	/**
-	 * gets the requested method name
-	 * 
-	 * @access public
-	 * @return string methodname
-	 */
-	public function getMethod ()
-	{
-		$aQuery = $this->getQueryArray ();
+    /**
+     * gets the request uri
+     *
+     * @access public
+     * @return string request uri
+     */
+    public function getRequestUri()
+    {
+        return $this->_sRequestUri;
+    }
 
-		if (array_key_exists ('GET', $aQuery))
-		{
-			if (array_key_exists (Registry::get ('MVC_GET_PARAM_M'), $aQuery['GET']))
-			{
-				return $aQuery['GET'][Registry::get ('MVC_GET_PARAM_M')];
-			}
-		}
+    /**
+     * gets the requested modulename
+     *
+     * @access public
+     * @return string module
+     */
+    public function getModule()
+    {
+        $aQuery = $this->getQueryArray();
 
-		return '';
-	}
+        if (array_key_exists('GET', $aQuery)) {
+            if (array_key_exists(Registry::get('MVC_GET_PARAM_MODULE'), $aQuery['GET'])) {
+                return $aQuery['GET'][Registry::get('MVC_GET_PARAM_MODULE')];
+            }
+        }
 
-	/**
-	 * sets whitelist params
-	 * 
-	 * @access public
-	 * @param array $aWhitelistParams
-	 * @return \MVC\Request
-	 */
-	public function setWhitelistParams (array $aWhitelistParams = array ())
-	{
-		$this->_aWhitelistParams = $aWhitelistParams;
-		return $this;
-	}
+        return '';
+    }
 
-	/**
-	 * gets current request
-	 * 
-	 * @access public
-	 * @static
-	 * @return array
-	 */
-	public static function GETCURRENTREQUEST ()
-	{
-		$aUriInfo = parse_url (Helper::GETURIPROTOCOL () . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
-		$aUriInfo['requesturi'] = $_SERVER['REQUEST_URI'];
-		$aUriInfo['protocol'] = Helper::GETURIPROTOCOL ();
-		$aUriInfo['full'] = Helper::GETURIPROTOCOL () . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+    /**
+     * gets query array
+     *
+     * @access public
+     * @return array
+     */
+    public function getQueryArray()
+    {
+        return $this->_aQueryVar;
+    }
 
-		return $aUriInfo;
-	}
+    /**
+     * gets the requested controller name
+     *
+     * @access public
+     * @return string controllername
+     */
+    public function getController()
+    {
+        $aQuery = $this->getQueryArray();
 
-	/**
-	 * makes sure the requested page will be 
-	 * delivered with the correct protocol (http|https)
-	 * 
-	 * @access public
-	 * @static
-	 * @return void
-	 */
-	public static function ENSURECORRECTPROTOCOL ()
-	{
-		// auto redirect to ssl/non ssl 
-		// only for web frontend, not for cli usage
-		if (FALSE === filter_var (Registry::get ('MVC_CLI'), FILTER_VALIDATE_BOOLEAN))
-		{
-			$aRequest = self::GETCURRENTREQUEST ();
-			$aRouting = Registry::get ('MVC_ROUTING_CURRENT');
+        if (array_key_exists('GET', $aQuery)) {
+            if (array_key_exists(Registry::get('MVC_GET_PARAM_C'), $aQuery['GET'])) {
+                return $aQuery['GET'][Registry::get('MVC_GET_PARAM_C')];
+            }
+        }
 
-			if (!empty($aRouting))
-			{
-				(isset ($aRouting['ssl'])) ? $sSsl = $aRouting['ssl'] : $sSsl = FALSE;			
+        return '';
+    }
 
-				if (Helper::DETECTSSL () !== (bool) $sSsl)
-				{
-					(array_key_exists('ssl', $aRouting) &&  true === (bool) $aRouting['ssl']) ? $sProtocol = 'https://' : $sProtocol = 'http://';
-					Request::REDIRECT ($sProtocol . $aRequest['host'] . $aRouting['path'] . ((!array_key_exists('query', $aRequest) ? $aRequest['query'] = '' : FALSE)));
-				}
-			}
-		}
-	}
+    /**
+     * gets the requested method name
+     *
+     * @access public
+     * @return string methodname
+     */
+    public function getMethod()
+    {
+        $aQuery = $this->getQueryArray();
+
+        if (array_key_exists('GET', $aQuery)) {
+            if (array_key_exists(Registry::get('MVC_GET_PARAM_M'), $aQuery['GET'])) {
+                return $aQuery['GET'][Registry::get('MVC_GET_PARAM_M')];
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * @param string $sModuleName
+     * @return bool success
+     */
+    public function setModule($sModuleName = '')
+    {
+        if ('' !== $sModuleName) {
+            $_GET['module'] = $sModuleName;
+            $this->saveRequest();
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string $sControllerName
+     * @return bool success
+     */
+    public function setController($sControllerName = '')
+    {
+        if ('' !== $sControllerName) {
+            $_GET['c'] = $sControllerName;
+            $this->saveRequest();
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string $sMethodName
+     * @return bool success
+     */
+    public function setMethod($sMethodName = '')
+    {
+        if ('' !== $sMethodName) {
+            $_GET['m'] = $sMethodName;
+            $this->saveRequest();
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string $sArgument
+     * @return bool success
+     */
+    public function setArgument($sArgument = '')
+    {
+        if ('' !== $sArgument) {
+            $_GET['a'] = $sArgument;
+            $this->saveRequest();
+        }
+
+        return $this;
+    }
+
+    /**
+     * sets whitelist params
+     *
+     * @access public
+     * @param array $aWhitelistParams
+     * @return \MVC\Request
+     */
+    public function setWhitelistParams(array $aWhitelistParams = array())
+    {
+        $this->_aWhitelistParams = $aWhitelistParams;
+        return $this;
+    }
+
+    /**
+     * prevent any cloning
+     *
+     * @access private
+     * @return void
+     */
+    private function __clone()
+    {
+        ;
+    }
 }
