@@ -120,7 +120,7 @@ class Request
     {
         /*
          * serve simple CLI Requests
-         * Allows calling via CLI without any need of a /route/. 
+         * Allows calling via CLI without any need of a /route/.
          * Write Parameter separated by spaces.
          * When adding JSON in a parameter, encapsulate with single quote `'`
          * Example:
@@ -227,7 +227,7 @@ class Request
      */
     public static function ENSURECORRECTPROTOCOL()
     {
-        // auto redirect to ssl/non ssl 
+        // auto redirect to ssl/non ssl
         // only for web frontend, not for cli usage
         if (FALSE === filter_var(Registry::get('MVC_CLI'), FILTER_VALIDATE_BOOLEAN)) {
             $aRequest = self::GETCURRENTREQUEST();
@@ -389,7 +389,7 @@ class Request
     public function setModule($sModuleName = '')
     {
         if ('' !== $sModuleName) {
-            $_GET['module'] = $sModuleName;
+            $_GET[Registry::get('MVC_GET_PARAM_MODULE')] = $sModuleName;
             $this->saveRequest();
         }
 
@@ -403,7 +403,7 @@ class Request
     public function setController($sControllerName = '')
     {
         if ('' !== $sControllerName) {
-            $_GET['c'] = $sControllerName;
+            $_GET[Registry::get('MVC_GET_PARAM_C')] = $sControllerName;
             $this->saveRequest();
         }
 
@@ -417,7 +417,7 @@ class Request
     public function setMethod($sMethodName = '')
     {
         if ('' !== $sMethodName) {
-            $_GET['m'] = $sMethodName;
+            $_GET[Registry::get('MVC_GET_PARAM_M')] = $sMethodName;
             $this->saveRequest();
         }
 
@@ -431,7 +431,7 @@ class Request
     public function setArgument($sArgument = '')
     {
         if ('' !== $sArgument) {
-            $_GET['a'] = $sArgument;
+            $_GET[Registry::get('MVC_GET_PARAM_A')] = $sArgument;
             $this->saveRequest();
         }
 
