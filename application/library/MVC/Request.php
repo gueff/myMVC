@@ -58,7 +58,7 @@ class Request
      * Constructor
      *
      * @access protected
-     * @return void
+     * @return \MVC\Request
      */
     protected function __construct()
     {
@@ -384,7 +384,7 @@ class Request
 
     /**
      * @param string $sModuleName
-     * @return bool success
+     * @return \MVC\Request
      */
     public function setModule($sModuleName = '')
     {
@@ -398,7 +398,7 @@ class Request
 
     /**
      * @param string $sControllerName
-     * @return bool success
+     * @return \MVC\Request
      */
     public function setController($sControllerName = '')
     {
@@ -412,7 +412,7 @@ class Request
 
     /**
      * @param string $sMethodName
-     * @return bool success
+     * @return \MVC\Request
      */
     public function setMethod($sMethodName = '')
     {
@@ -426,7 +426,7 @@ class Request
 
     /**
      * @param string $sArgument
-     * @return bool success
+     * @return \MVC\Request
      */
     public function setArgument($sArgument = '')
     {
