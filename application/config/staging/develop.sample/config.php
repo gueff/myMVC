@@ -9,7 +9,7 @@
 
 MVC_RUNTIME_SETTINGS: {
 
-	// show error messages
+    // show error messages
     error_reporting(E_ALL);
 
     /*
@@ -20,8 +20,7 @@ MVC_RUNTIME_SETTINGS: {
      * try to get timezone (ubuntu), or set to UTC
      */
     date_default_timezone_set(((file_exists('/etc/timezone')) ? trim(file_get_contents('/etc/timezone')) : 'UTC'));
-//	date_default_timezone_set('Europe/Berlin');
-	setlocale(LC_ALL, 'de_DE.UTF-8', 'de_DE@euro', 'de_DE', 'deu_deu');
+    setlocale(LC_ALL, 'C');
 
     // enable debug output
     $aConfig['MVC_DEBUG'] = true;
@@ -34,9 +33,9 @@ MVC_APPLICATION_SETTINGS: {
 
     /**
      * reserverd $_GET Params
-     * if you change one of these, take care to change the "query" settings 
-     * of each route inside 
-     * 		/application/config/routing.json
+     * if you change one of these, take care to change the "query" settings
+     * of each route inside
+     *        /application/config/routing.json
      * too.
      */
     $aConfig['MVC_GET_PARAM_MODULE'] = 'module';
@@ -61,9 +60,9 @@ MVC_APPLICATION_SETTINGS: {
 
     /**
      * MVC fallback routing
-     * this routing will be used if none is specified for routing 
+     * this routing will be used if none is specified for routing
      * (see e.g. /application/config/routing.json)
-     * 
+     *
      * Note: Possibility of a direct call (http|cli) of this route is disabled
      */
     $aConfig['MVC_ROUTING_FALLBACK'] = $aConfig['MVC_GET_PARAM_MODULE'] . '=standard&'
@@ -72,14 +71,14 @@ MVC_APPLICATION_SETTINGS: {
 
     /**
      * Name of method to be executed in the Target Controller Class
-     * before session and other main functionalities.
+     * before session, IDS and other main functionalities.
      * It will be called in /application/library/MVC/Application.php:
-     * 		self::runTargetClassPreconstruct (Request::getInstance ()->getQueryArray ());
-     * 
+     *        self::runTargetClassPreconstruct (Request::getInstance ()->getQueryArray ());
+     *
      * This method is also declared via interface MVC_Interface_Controller.
-     * Due to this, you should not edit this name. Otherwise you have to 
+     * Due to this, you should not edit this name. Otherwise you have to
      * rename the method in that interface class, too.
-     * 
+     *
      * default:
      * $aConfig['MVC_METHODNAME_PRECONSTRUCT'] = '__preconstruct';
      */
@@ -124,26 +123,26 @@ MVC_APPLICATION_SETTINGS: {
     $aConfig['MVC_SESSION_PATH'] = $aConfig['MVC_APPLICATION_PATH'] . '/session';
     $aConfig['MVC_SESSION_OPTIONS'] = array(
         'cookie_httponly' => true
-        , 'auto_start' => 0
-        , 'save_path' => $aConfig['MVC_SESSION_PATH']
-        , 'cookie_secure' => $aConfig['MVC_SECURE_REQUEST']
-        , 'name' => 'myMVC' . (($aConfig['MVC_SECURE_REQUEST']) ? '_secure' : '' )
-        , 'save_handler' => 'files'
-        , 'cookie_lifetime' => 0
+    , 'auto_start' => 0
+    , 'save_path' => $aConfig['MVC_SESSION_PATH']
+    , 'cookie_secure' => $aConfig['MVC_SECURE_REQUEST']
+    , 'name' => 'myMVC' . (($aConfig['MVC_SECURE_REQUEST']) ? '_secure' : '')
+    , 'save_handler' => 'files'
+    , 'cookie_lifetime' => 0
 
         // max value for "session.gc_maxlifetime" is 65535. values bigger than this may cause  php session stops working.
-        , 'gc_maxlifetime' => 65535
-        , 'gc_probability' => 1
-        , 'use_strict_mode' => 1
-        , 'use_cookies' => 1
-        , 'use_only_cookies' => 1
-        , 'upload_progress.enabled' => 1
+    , 'gc_maxlifetime' => 65535
+    , 'gc_probability' => 1
+    , 'use_strict_mode' => 1
+    , 'use_cookies' => 1
+    , 'use_only_cookies' => 1
+    , 'upload_progress.enabled' => 1
     );
 
     // default behaviour; session does NOT start
     // means NO cookie is written to users browser
     $aConfig['MVC_SESSION_ENABLE'] = false;
-    
+
     /**
      * Request
      */
@@ -152,22 +151,22 @@ MVC_APPLICATION_SETTINGS: {
             // module
             $aConfig['MVC_GET_PARAM_MODULE'] => array(
                 'regex' => '/[^a-zA-Z0-9]+/'
-                , 'length' => 50
+            , 'length' => 50
             )
             // class
-            , $aConfig['MVC_GET_PARAM_C'] => array(
+        , $aConfig['MVC_GET_PARAM_C'] => array(
                 'regex' => '/[^a-zA-Z0-9]+/'
-                , 'length' => 50
+            , 'length' => 50
             )
             // method
-            , $aConfig['MVC_GET_PARAM_M'] => array(
+        , $aConfig['MVC_GET_PARAM_M'] => array(
                 'regex' => '/[^a-zA-Z0-9]+/'
-                , 'length' => 50
+            , 'length' => 50
             )
             // args
-            , $aConfig['MVC_GET_PARAM_A'] => array(
+        , $aConfig['MVC_GET_PARAM_A'] => array(
                 'regex' => '/[^a-zA-Z0-9üöäÜÖÄß\|\:\[\]\{\},"\']+/'
-                , 'length' => 256
+            , 'length' => 256
             )
         )
     );
@@ -187,7 +186,7 @@ MVC_TEMPLATE_ENGINE_SMARTY: {
     $aConfig['MVC_SMARTY_CACHE_DIR'] = $aConfig['MVC_APPLICATION_PATH'] . '/cache';
 
     $aConfig['MVC_SMARTY_TEMPLATE_DIR'] = $aConfig['MVC_VIEW_TEMPLATES'];
-	$aConfig['MVC_SMARTY_TEMPLATE_DEFAULT'] = 'layout/admin.tpl';
+    $aConfig['MVC_SMARTY_TEMPLATE_DEFAULT'] = 'layout/admin.tpl';
 
     // templates_c folder and
     // templates_c folder access rights, octal mode
@@ -195,6 +194,11 @@ MVC_TEMPLATE_ENGINE_SMARTY: {
 
     // array Location of Smarty PlugIns 
     $aConfig['MVC_SMARTY_PLUGINS_DIR'][] = $aConfig['MVC_APPLICATION_PATH'] . '/smartyPlugins';
+}
+
+MVC_IDS: {
+
+    $aConfig['MVC_IDS_CONFIG'] = $aConfig['MVC_APPLICATION_CONFIG_DIR'] . '/staging/' . getenv('MVC_ENV') . '/ids.ini';
 }
 
 /**
