@@ -140,7 +140,7 @@ class Index implements \MVC\MVCInterface\Controller
      */
     public function fallback()
     {
-        \Standard\View\Index::sendHeader404(); //  $this->oStandardViewIndex->sendHeader404 ();
+        \Standard\View\Index::sendHeader404();
         $this->oStandardViewIndex->assign('sTitle', '404');
         $this->oStandardViewIndex->assign('sContent', $this->oStandardViewIndex->loadTemplateAsString('index/404.tpl'));
     }
@@ -158,3 +158,4 @@ class Index implements \MVC\MVCInterface\Controller
     }
 
 }
+    
