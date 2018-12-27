@@ -11,42 +11,43 @@
 /**
  * @name $StandardView
  */
+
 namespace Standard\View;
 
 /**
  * Index
- * 
+ *
  * @extends \MVC\View
  */
 class Index extends \MVC\View
 {
-	/**
-	 * Constructor
-	 * 
-	 * @access public
-	 * @return void
-	 */
-	public function __construct ()
-	{
-		parent::__construct ();
+    /**
+     * Constructor
+     *
+     * @access public
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
 
-		// Standard Template
-		$this->sTemplate = $this->sTemplateDir . '/layout/index.tpl';
+        // Standard Template
+        $this->sTemplate = $this->sTemplateDir . '/layout/index.tpl';
 
-		// Standard Variable
-		$this->sContentVar = 'sContent';
-	}
+        // Standard Variable
+        $this->sContentVar = 'sContent';
+    }
 
-	/**
-	 * sends a 404 header
-	 * 
-	 * @access public
-	 * @return void
-	 */
-	public function sendHeader404 ()
-	{
-		//@see http://php.net/manual/de/function.header.php#92305
-		header($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
-	}
+    /**
+     * sends a 404 header
+     *
+     * @access public
+     * @return void
+     */
+    public static function sendHeader404()
+    {
+        //@see http://php.net/manual/de/function.header.php#92305
+        header($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
+    }
 
 }
