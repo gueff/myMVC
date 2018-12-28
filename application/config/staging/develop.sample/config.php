@@ -90,6 +90,7 @@ MVC_APPLICATION_SETTINGS: {
     $aConfig['MVC_WEB_ROOT'] = dirname($_SERVER['PHP_SELF']);
     $aConfig['MVC_BASE_PATH'] = realpath(__DIR__ . '/../../../../');
     $aConfig['MVC_APPLICATION_PATH'] = $aConfig['MVC_BASE_PATH'] . '/application';
+    $aConfig['MVC_PUBLIC_PATH'] = $aConfig['MVC_BASE_PATH'] . '/public';
     $aConfig['MVC_LOG_FILE_FOLDER'] = $aConfig['MVC_APPLICATION_PATH'] . '/log/';
     $aConfig['MVC_LOG_FILE_DEFAULT'] = $aConfig['MVC_LOG_FILE_FOLDER'] . 'default.log';
     $aConfig['MVC_APPLICATION_CONFIG_DIR'] = $aConfig['MVC_APPLICATION_PATH'] . '/config';
