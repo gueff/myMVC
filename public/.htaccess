@@ -11,6 +11,12 @@ SetEnv MVC_ENV develop
 # Deactivate session auto start
 php_value session.auto_start 0
 
+# valid for all Cookies
+Header edit Set-Cookie (.*)                 "$1;HttpOnly;SameSite=Strict"
+
+# SSL Cookies
+Header edit Set-Cookie ^(myMVC_secure.*)$   "$1;Secure"
+
 # activate rewrite Rules
 RewriteEngine On
 
