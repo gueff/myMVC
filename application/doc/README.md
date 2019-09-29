@@ -3,44 +3,32 @@
 
 ## myMVC
 an open source MVC tiny framework since 2014 by ueffing.net, info [at] ueffing [dot] net.
-license: GNU GENERAL PUBLIC LICENSE Version 3
+license: "GNU GENERAL PUBLIC LICENSE Version 3"
 
 ## Requirements
-    PHP >= 5.4
-        shell_exec
-        mbstring
-            http://php.net/manual/en/mbstring.installation.php
-        safe_mode_allowed_env_vars
-            to enable to set MVC_ENV as an environment variable
-            you may need to edit this php setting
-            http://php.net/manual/en/function.putenv.php
+- PHP >= 5.4
+    - shell_exec
+    - mbstring; http://php.net/manual/en/mbstring.installation.php
+    - safe_mode_allowed_env_vars; to enable to set MVC_ENV as an environment variable you may need to edit this php setting http://php.net/manual/en/function.putenv.php
+- `MVC_ENV` set as environment variable e.g. `develop | test | live ` or other. This can be done in different ways:  
+    -	webserver (recommended)
+        - `public/.htaccess`; when using apache webserver (also see Section "Webserver")
+        - `fastcgi_param  MVC_ENV production;`
+        - If using nginx webserver (also see Section "Webserver")
+    -	setting a custom config entry inside config (not application/config); e.g.: create a file config/live.php. Inside this file you write: `$aConfig['MVC_ENV'] = 'live'`; this custom config will even overwrite `MVC_ENV` var set by webserver. This is the way to go if you cannot however set webserver environments.
+    -	CLI Command `export MVC_ENV=live;`
 
-    MVC_ENV set as environment variable (develop | test | live)
-        this can be done in different ways:
-        -	webserver (RECOMMENDED)
-            -	public/.htaccess
-                when using apache webserver (also see Section "Webserver")
-            -	fastcgi_param  MVC_ENV production;
-                wen using nginx webserver (also see Section "Webserver")
-        -	setting a custom config entry inside config (not application/config)
-            e.g.: create a file config/live.php. Inside this file you write:
-                $aConfig['MVC_ENV'] = 'live';
-            this custom config will even overwrite MVC_ENV var set by webserver.
-            This is the way to go if you cannot however set webserver environments.
-        -	export MVC_ENV=live;
-            when using console (cli)
-
-        once set, MVC_ENV can be accessed by
-        -	getenv('MVC_ENV')
-        -	\MVC\Registry::get('MVC_ENV')
-
-    write access for the www user
-        /application
-        /application/session
-        /application/cache
-        /application/log
-        /application/templates_c
-
+    once set, `MVC_ENV` can be accessed by
+    -	`getenv('MVC_ENV')` and
+    -	`\MVC\Registry::get('MVC_ENV')`
+- write access for the www user on folder:
+    ~~~
+    /application
+    /application/session
+    /application/cache
+    /application/log
+    /application/templates_c
+    ~~~
 
 Libraries via Composer Packages
     To install Libraries manually:
