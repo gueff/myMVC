@@ -11,6 +11,8 @@
         ,
         "monolog/monolog":
                 "1.23.*"
+        ,
+        "gueff/cachix":"dev-master"
     },
     "require-dev": {
         "phpunit/phpunit":
