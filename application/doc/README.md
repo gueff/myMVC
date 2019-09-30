@@ -4,6 +4,7 @@
 ## myMVC
 an open source MVC tiny framework since 2014 by ueffing.net, info [at] ueffing [dot] net.
 license: "GNU GENERAL PUBLIC LICENSE Version 3"
+____________________________________________________________________
 
 ## Requirements
 - PHP >= 5.4
@@ -12,16 +13,16 @@ license: "GNU GENERAL PUBLIC LICENSE Version 3"
     - safe_mode_allowed_env_vars; to enable to set MVC_ENV as an environment variable you may need to edit this php setting http://php.net/manual/en/function.putenv.php
 - `MVC_ENV` set as environment variable e.g. `develop | test | live ` or other. This can be done in different ways:  
     -	webserver (recommended)
-        - `public/.htaccess`; when using apache webserver (also see Section "Webserver")
-        - `fastcgi_param  MVC_ENV production;`
-        - If using nginx webserver (also see Section "Webserver")
-    -	setting a custom config entry inside config (not application/config); e.g.: create a file config/live.php. Inside this file you write: `$aConfig['MVC_ENV'] = 'live'`; this custom config will even overwrite `MVC_ENV` var set by webserver. This is the way to go if you cannot however set webserver environments.
-    -	CLI Command `export MVC_ENV=live;`
+        - `SetEnv MVC_ENV develop` when using apache webserver (also see Section "Webserver")
+        - `fastcgi_param  MVC_ENV production;` when using nginx webserver (also see Section "Webserver")
+    -	config setting
+        - `$aConfig['MVC_ENV'] = 'live'`; this config will even overwrite `MVC_ENV` var set by webserver. This is the way to go if you cannot however set webserver environments.
+    -	`export MVC_ENV=live;` as CLI command
 
     once set, `MVC_ENV` can be accessed by
     -	`getenv('MVC_ENV')` and
     -	`\MVC\Registry::get('MVC_ENV')`
-- write access for the www user on folder:
+- write access for the webserver user (e.g. www-data) on folder:
     ~~~
     /application
     /application/session
@@ -30,295 +31,364 @@ license: "GNU GENERAL PUBLIC LICENSE Version 3"
     /application/templates_c
     ~~~
 
-Libraries via Composer Packages
-    To install Libraries manually:
-        cd application;
-        php composer.phar self-update; php composer.phar install;
-
-        Further Information about Composer / JSON Config File and Handling
-            https://packagist.org/
-            https://getcomposer.org/doc/01-basic-usage.md
-            https://www.digitalocean.com/community/articles/how-to-install-and-use-composer-on-your-vps-running-ubuntu
-
-    Libs
-        Less
-            http://leafo.net/lessphp/
-            http://lessphp.gpeasy.com/#transitioning-from-leafolessphp
+### Libraries via Composer Packages
+To install Libraries manually:  
+~~~bash
+cd application;
+php composer.phar self-update; php composer.phar install;
+~~~
 
-    Autoloading / PSR-0
-        As of 2014-10-21 PSR-0 has been marked as deprecated
-        @see http://www.php-fig.org/psr/psr-0/
+Further Information about Composer / JSON Config File and Handling  
 
-    ZF1 / ZF2
-        Differences between 1 and 2
-        http://blog.hock.in/2012/09/06/zf2-for-zf1-users-part-1/
-        http://blog.hock.in/2012/09/12/zf2-for-zf1-users-part-2/
+- https://packagist.org/
+- https://getcomposer.org/doc/01-basic-usage.md
+- https://www.digitalocean.com/community/articles/how-to-install-and-use-composer-on-your-vps-running-ubuntu
 
+### Libs
+Less  
 
-Setup
-    Configurations
-        main config
-            /application/config/config.php
+- http://leafo.net/lessphp/
+- http://lessphp.gpeasy.com/#transitioning-from-leafolessphp
 
-            you should *not* edit this config file.
-            Instead, write a new *.php file
-            (you can name that file as you like;
-            it just has to be a php file with .php as suffix)
-            and place it inside folder: /config/
-            (caution: it is not /application/config/, but /config/)
-            it will automatically be loaded.
+### Autoloading / PSR-0
+As of 2014-10-21 PSR-0 has been marked as deprecated. @see http://www.php-fig.org/psr/psr-0/
 
-            There you can extend or overwrite this config.
+____________________________________________________________________
 
-        custom config
-            /config/*.php
+## Setup
+### Configurations
+#### main config
+~~~
+/application/config/staging/{stage}/*
+~~~
 
-            Any file in this directory which has suffix .php
-            will be required automatically.
-            This is the right place to extend or overwrite the default
-            config, place policies and so on.
+`{stage}` here depends on what you have set for `MVC_ENV`:
 
+if you have set `MVC_ENV` to 'developAtHome', the folder /application/config/staging/developAtHome/ would then be created automatically at runtime if it doesn't exist. Therefore a copy from folder `/application/config/staging/develop.sample/*` and its contents will be done.
 
+#### custom config
+~~~
+/config/{whatever}.php
+~~~
 
+Any file in this directory which has suffix .php will be required automatically (Attention: Reading A-Z). This is the right place to extend or overwrite the main config, to place policies and so on.
 
-Usage
-    Request Examples
-        http://{domain}
-        http://{domain}/?m=index
-        http://{domain}/?module=default&c=index&m=index
+____________________________________________________________________
 
-    MVC
-        GET Param "module"
-        -   targets the Module Folder /modules/"module"
+## Usage
 
-        GET Param "c"
-        -   targets the Controller /modules/"module"/Controller/"c".php
+### MVC
 
-        GET Param "m"
-        -   targets a Method inside the requested /modules/"module"/Controller/"c".php
+Request Examples
 
-        GET Param "a"
-            -	contains Arguments which will be given to the target method
-                /modules/"module"/Controller/"c".php -> "m"
-            -	Consider writing Arguments in JSON Syntax
+- http://{domain}/?module=default&c=Index&m=index&a={"json":"whatever"}
+- http://{domain}/?module=default&c=Index&m=index
+- http://{domain}/?m=index
+- http://{domain}
 
-    Controller
-        MVC_BEFORE
-            Each Controller *must* have a method named "MVC_BEFORE" (see main config)
-            which one is called by MVC_Application::__construct() in a very early stage.
+where
 
-            Examples
-                Override the whitelisting behaviour of the request object:
-                    // Override the whitelisting
-                    \MVC\Request::getInstance()->setWhitelistParams(array (
-                        'GET' => array (
-                            'module' => array (
-                                'regex' => '/[^a-zA-Z0-9]+/', 'length' => 50, ),
-                            'c' => array ( 'regex' => '/[^a-zA-Z0-9]+/', 'length' => 50, ),
-                            'm' => array ( 'regex' => '/[^a-zA-Z0-9]+/', 'length' => 50, ),
-                            'a' => array ( 'regex' => '/[^a-zA-Z0-9\\|\\:\\[\\]\\{\\},"\']+/', 'length' => 256, ),
-                        ),
-                    ))->saveRequest()->prepareQueryVarsForUsage ();
+GET Param `module`
 
-                Register Event Bindings
-                    \MVC\Event::BIND ('mvc.invalidRequest', function() {
-                        header ('Location: /?module=default&c=index&m=index');
-                        exit ();
-                    });
+-   targets the Module Folder: /modules/`default`
 
-    Model
+GET Param `c`
 
-    View
+-   targets the Controller: /modules/default/Controller/`Index`.php
 
+GET Param `m`
 
-Registry
-    configuration is saved to the Registry and so systemwide available.
-    E.g. Access:
-        $sMvcBasePath = \MVC\Registry::get('MVC_BASE_PATH');
+-   targets a Method inside the requested: /modules/default/Controller/Index.php -> `method`()
 
+GET Param "a"
 
-Events
-            You can listen to Events in 2 ways:
-            1. Event Names
-            2. Class::method
+-	JSON which will be given to the target method  `/modules/default/Controller/Index.php -> index()`
 
-            ----
+### Controller
+#### __preconstruct
+Name of method to be executed in the Target Controller Class before session, and other main functionalities. It will be called in `/application/library/MVC/Application.php`:
 
-            1. EventNames
+~~~php
+// Run target Controller's __preconstruct()
+self::runTargetClassPreconstruct (Request::getInstance ()->getQueryArray ());
+~~~
 
-                Event Names must be unique!
-                Use an Event only once! (otherwise the event would be overwritten)
+This method is also declared via interface `MVC\MVCInterface\Controller`. Due to this, you should not edit this name. Otherwise you have to rename the method in that interface class, too.
 
-                BIND and RUN
+default:
 
-                        Bind to an Event
-                                \MVC\Event::BIND ('mvc.session', function() {
+~~~php
+$aConfig['MVC_METHODNAME_PRECONSTRUCT'] = '__preconstruct';
+~~~
+    
+Each Controller *must* have a method named `__preconstruct` "MVC_BEFORE" (see main config) which one is called by MVC_Application::__construct() in a very early stage.
 
-                                        $oPackage = \MVC\Event::$aPackage['mvc.session'];
-                                        // see if there is a package relating to that event
-                                        \MVC\Helper::DISPLAY ($oPackage);
-                                });
-
-                        Run an Event
-                                \MVC\Event::RUN ('mvc.session');
-
-                        Run an Event and deploy a Package which could be read inside the Bind/Closure
-                                \MVC\Event::RUN ('mvc.session', $oPackage);
-
-                        Helper Methods
-                                Detect a Closure
-                                        if (true === filter_var (\MVC\Helper::ISCLOSURE ($oPackage), FILTER_VALIDATE_BOOLEAN)) { .. }
-
-                                Call a Closure
-                                        call_user_func ($oPackage)
-
-
-                EventNames
-                in chronological order
-                        The path shows where the event is going to be called (RUN)
-                    mvc.request.saved
-                        /application/library/MVC/Request.php
-                        request is saved as a klassvar to \MVC\Request
-
-                    mvc.request.prepared
-                        /application/library/MVC/Request.php
-                        request is prepared for usage
-
-                    mvc.targetClassBeforeMethod.after
-                        /application/library/MVC/Applicatilogon.php
-                        the "BEFORE" method inside the requested Controller has been run
-
-                    mvc.session.before
-                        /application/library/MVC/Application.php
-                        function which creates the Session is entered, but a Session has not been build yet
-
-                    mvc.session
-                        /application/library/MVC/Application.php
-                        Session Object is built and copied to the registry
-
-                            mvc.policy.before
-                                /application/library/MVC/Policy.php
-
-                            mvc.policy.after
-                                /application/library/MVC/Policy.php
-
-                    mvc.controller.before
-                        /application/library/MVC/Controller.php
-
-                    mvc.reflect.start
-                        /application/library/MVC/Reflex.php
-
-                            mvc.reflect.targetObject.before
-                                /application/library/MVC/Reflex.php
-                                contains the target Class as the already instanciated object
-                                which for sure could be accessed
-                                This event is called immediatly before the target method will be called
-
-                            $sControllerClassName . '::' . $sMethod
-                                /application/library/MVC/Reflex.php
-                                e.g. "\Standard\Controller\Index::home"
-                                run an event which KEY is
-                                        Class::method
-                                of the requested Target
-                                and store the object of the target class within
-
-                            mvc.reflect.targetObject.after
-                                /application/library/MVC/Reflex.php
-                                contains the target Class as the already instanciated object
-                                which for sure could be accessed
-                                This event is called immediatly after the target method was called
-
-                    mvc.invalidRequest
-                        /application/library/MVC/Controller.php
-                        Request could not be handled
-
-                    [..] Concrete Controller / User's Application
-                    please see below, Point "2. Class::method"
-
-                    mvc.view.echoOut.off
-                        /application/library/MVC/View.php
-                        disables the echo out of the rendered view template
-                        view listens here
-
-                    mvc.view.echoOut.on
-                        /application/library/MVC/View.php
-                        enables the echo out of the rendered view template
-                        view listens here
-
-                    mvc.view.render.before
-                        /application/library/MVC/View.php
-                        MVC_View render is called, but not rendered yet
-                        contains MVC_View object
-
-                    mvc.view.renderString.before
-                        /application/library/MVC/View.php
-                        MVC_View renderString is called, but not rendered yet
-                        contains string $sTemplateString
-
-                    mvc.view.renderString.after
-                        /application/library/MVC/View.php
-                        MVC_View renderString has been called, already rendered
-                        contains string $sTemplateString
-
-                    mvc.view.render.after
-                        /application/library/MVC/View.php
-                        MVC_View render has been called, already rendered
-                        contains MVC_View object
-
-                    mvc.reflex.destruct
-                        /application/library/MVC/Reflex.php
-                        MVC_MVC_Reflex end of runtime reached
-
-                    mvc.controller.destruct
-                        /application/library/MVC/Controller.php
-                        MVC_Controller end of runtime reached
-
-                    mvc.application.construct.finished
-                        /application/library/MVC/Application.php
-
-                    mvc.application.destruct
-                        /application/library/MVC/Application.php
-                        MVC_Application end of runtime reached
-
-                    mvc.helper.stop
-                        /application/library/MVC/Helper.php
-                        \MVC\Helper::STOP method has been called.
-                            This Event is fired immediatly before the last command in that method, which is: exit();
-
-                    other
-                        mvc.error
-                            /application/library/MVC/Application.php
-                            /application/library/MVC/Helper.php
-                            /application/library/MVC/Policy.php
-                            \MVC\Event::RUN('mvc.error', 'hereby an error is reported: bla blub...');
-                            Triggered Errors this way will be caught by \MVC\Error class by default
-
-
-            2. Class::method
-
-                Using a Concrete Controller::method  of User's Application.
-                Instead of an Event-Name to listen to you can always address a certain Method of a Controller.
-                That gives you even more flexibility.
-                Example:
-                    If you want to listen to when the Method "\Standard\Controller\Index::home" is being called,
-                    simply note the method as the event name.
-                    Make sure to write it as the method was a static one, even it is not.
-
-                    /*
-                     * redirect if explicitly if the method "home" is requested
-                     */
-                    \MVC\Event::BIND ('\Standard\Controller\Index::home', function ($oObject)
-                    {
-                        \MVC\Request::REDIRECT('/');
-                    });
-
-Helper
-    the helper class methods can be accessed from everywhere by simply call its static methods.
-    e.g.: to show a debug window on the screen (or via CLI):
-    \MVC\Helper::DISPLAY('Hello World');
-    \MVC\Helper::DEBUG($myArray);
-
-Logging
+#### Examples
+_Override the whitelisting behaviour of the request object:_  
+~~~php
+// Override the whitelisting
+\MVC\Request::getInstance()->setWhitelistParams(array (
+    'GET' => array (
+        'module' => array (
+            'regex' => '/[^a-zA-Z0-9]+/', 'length' => 50, ),
+        'c' => array ( 'regex' => '/[^a-zA-Z0-9]+/', 'length' => 50, ),
+        'm' => array ( 'regex' => '/[^a-zA-Z0-9]+/', 'length' => 50, ),
+        'a' => array ( 'regex' => '/[^a-zA-Z0-9\\|\\:\\[\\]\\{\\},"\']+/', 'length' => 256, ),
+    ),
+))->saveRequest()->prepareQueryVarsForUsage ();
+~~~
+
+_Register Event Bindings_  
+~~~php
+\MVC\Event::BIND ('mvc.invalidRequest', function() {
+    header ('Location: /?module=default&c=index&m=index');
+    exit ();
+});
+~~~
+
+
+### Registry
+The complete configuration is saved to the Registry and so it is systemwide available. 
+
+_Access a setting from config by using Registry_  
+~~~php
+$sMvcBasePath = \MVC\Registry::get('MVC_BASE_PATH');
+~~~
+
+_Setting a Value to Registry_  
+~~~php
+\MVC\Registry::set('MY_KEY_NAME', $mMyValue);
+~~~
+
+### Events
+You can listen to Events in 2 ways:
+
+1. Event Names
+2. Class::method
+
+
+#### 1. EventNames
+- Event Names must be unique! 
+- Use an Event only once! (otherwise the event would be overwritten)
+
+
+in chronological order; The path shows where the event is going to be called (RUN)
+
+`mvc.request.saved`
+~~~
+/application/library/MVC/Request.php
+request is saved as a klassvar to \MVC\Request
+~~~
+
+`mvc.request.prepared`
+~~~
+/application/library/MVC/Request.php
+request is prepared for usage
+~~~
+
+`mvc.targetClassBeforeMethod.after`
+~~~
+/application/library/MVC/Applicatilogon.php
+the "BEFORE" method inside the requested Controller has been run
+~~~
+
+`mvc.session.before`
+~~~
+/application/library/MVC/Application.php
+function which creates the Session is entered, but a Session has not been build yet
+~~~
+
+`mvc.session`
+~~~
+/application/library/MVC/Application.php
+Session Object is built and copied to the registry
+~~~
+
+`mvc.policy.before`
+~~~
+/application/library/MVC/Policy.php
+~~~
+
+`mvc.policy.after`
+~~~
+/application/library/MVC/Policy.php
+~~~
+
+`mvc.controller.before`
+~~~
+/application/library/MVC/Controller.php
+~~~
+
+`mvc.reflect.start`
+~~~
+/application/library/MVC/Reflex.php
+~~~
+
+`mvc.reflect.targetObject.before`
+~~~
+/application/library/MVC/Reflex.php
+contains the target Class as the already instanciated object
+which for sure could be accessed
+This event is called immediatly before the target method will be called
+~~~
+
+`$sControllerClassName . '::' . $sMethod`
+~~~
+/application/library/MVC/Reflex.php
+e.g. "\Standard\Controller\Index::home"
+run an event which KEY is
+        Class::method
+of the requested Target
+and store the object of the target class within
+~~~
+
+`mvc.reflect.targetObject.after`
+~~~
+/application/library/MVC/Reflex.php
+contains the target Class as the already instanciated object
+which for sure could be accessed
+This event is called immediatly after the target method was called
+~~~
+
+`mvc.invalidRequest`
+~~~
+/application/library/MVC/Controller.php
+Request could not be handled
+~~~
+
+`mvc.view.echoOut.off`
+~~~
+/application/library/MVC/View.php
+disables the echo out of the rendered view template
+view listens here
+~~~
+
+`mvc.view.echoOut.on`
+~~~
+/application/library/MVC/View.php
+enables the echo out of the rendered view template
+view listens here
+~~~
+
+`mvc.view.render.before`
+~~~
+/application/library/MVC/View.php
+MVC_View render is called, but not rendered yet
+contains MVC_View object
+~~~
+
+`mvc.view.renderString.before`
+~~~
+/application/library/MVC/View.php
+MVC_View renderString is called, but not rendered yet
+contains string $sTemplateString
+~~~
+
+`mvc.view.renderString.after`
+~~~
+/application/library/MVC/View.php
+MVC_View renderString has been called, already rendered
+contains string $sTemplateString
+~~~
+
+`mvc.view.render.after`
+~~~
+/application/library/MVC/View.php
+MVC_View render has been called, already rendered
+contains MVC_View object
+~~~
+
+`mvc.reflex.destruct`
+~~~
+/application/library/MVC/Reflex.php
+MVC_MVC_Reflex end of runtime reached
+~~~
+
+`mvc.controller.destruct`
+~~~
+/application/library/MVC/Controller.php
+MVC_Controller end of runtime reached
+~~~
+
+`mvc.application.construct.finished`
+~~~
+/application/library/MVC/Application.php
+~~~
+
+`mvc.application.destruct`
+~~~
+/application/library/MVC/Application.php
+MVC_Application end of runtime reached
+~~~
+
+`mvc.helper.stop`
+~~~
+/application/library/MVC/Helper.php
+\MVC\Helper::STOP method has been called.
+    This Event is fired immediatly before the last command in that method, which is: exit();
+~~~
+
+other
+`mvc.error`
+~~~
+/application/library/MVC/Application.php
+/application/library/MVC/Helper.php
+/application/library/MVC/Policy.php
+\MVC\Event::RUN('mvc.error', 'hereby an error is reported: bla blub...');
+Triggered Errors this way will be caught by \MVC\Error class by default
+~~~
+
+#### 2. Class::method
+
+Using a Concrete Controller::method  of User's Application. Instead of an Event-Name to listen to you can always address a certain Method of a Controller. That gives you even more flexibility.
+
+Example: If you want to listen to when the Method "\Standard\Controller\Index::home" is being called, simply note the method as the event name. Make sure to write it as the method was a static one, even it is not.
+
+~~~php
+/*
+ * redirect if explicitly if the method "home" is requested
+ */
+\MVC\Event::BIND ('\Standard\Controller\Index::home', function ($oObject) {
+    \MVC\Request::REDIRECT('/');
+});
+~~~
+
+#### BIND and RUN
+
+_Bind to an Event_  
+~~~php
+\MVC\Event::BIND ('mvc.session', function() {
+
+        $oPackage = \MVC\Event::$aPackage['mvc.session'];
+        // see if there is a package relating to that event
+        \MVC\Helper::DISPLAY ($oPackage);
+});
+~~~
+
+_Run an Event_  
+~~~php
+\MVC\Event::RUN ('mvc.session');
+~~~
+
+_Run an Event and deploy a Package which could be read inside the Bind/Closure_  
+~~~php
+\MVC\Event::RUN ('mvc.session', $oPackage);
+~~~
+
+#### Helper Methods
+_Detect a Closure_  
+~~~php
+if (true === filter_var (\MVC\Helper::ISCLOSURE ($oPackage), FILTER_VALIDATE_BOOLEAN)) { .. }
+~~~
+
+_Call a Closure_  
+~~~php
+call_user_func ($oPackage)
+~~~
+
+
+### Logging
+~~~
     Standard
         \MVC\Log::WRITE('My Message');
 
@@ -343,9 +413,20 @@ Logging
     Watching logs during developing is already helpful, so if you are on linux
     you can easily watch it like so:
     tail -f * /var/www/myMVC/application/log/
+~~~
 
 
-Policy
+### Helper
+~~~
+    the helper class methods can be accessed from everywhere by simply call its static methods.
+    e.g.: to show a debug window on the screen (or via CLI):
+    \MVC\Helper::DISPLAY('Hello World');
+    \MVC\Helper::DEBUG($myArray);
+~~~
+
+
+### Policy
+~~~
     Policy Rules are bonded to a specific Controller::Method
 
     Example:
@@ -370,10 +451,12 @@ Policy
             )
         )
     );
+~~~
 
-## Generator for DataType Classes `\MVC\Generator\DataType`
 
-### Instantiation
+### Generator for DataType Classes `\MVC\Generator\DataType`
+
+#### Instantiation
 
 _PHP auto detect compatible_
 ~~~php
@@ -395,12 +478,12 @@ _PHP 7.3 compatible_
 $oDTGenerator = \MVC\Generator\DataType::create(73);
 ~~~
 
-### Init with Config: Object
+#### Init with Config: Object
 ~~~php
 $oDTGenerator = \MVC\Generator\DataType::create()->initConfigObject($oDTConfig);
 ~~~
 
-#### Config `$oDTConfig`
+##### Config `$oDTConfig`
 ~~~php
 $oDTConfig = DTDataTypeGeneratorConfig::create()
     ->set_dir(Registry::get('MVC_MODULES') . '/Foo/DataType/')
@@ -423,12 +506,12 @@ $oDTConfig = DTDataTypeGeneratorConfig::create()
     );
 ~~~
 
-### Init with Config: array
+#### Init with Config: array
 ~~~php
 $oDTGenerator = \MVC\Generator\DataType::create()->initConfigArray($aDataTypeConfig);
 ~~~
 
-#### Config `$aDataTypeConfig`
+##### Config `$aDataTypeConfig`
 
 ~~~php
 
@@ -478,17 +561,19 @@ $aConfig['MODULE_DATATYPE_CONFIG'] = array(
 );
 ~~~
 
-### Hint
+#### Hint
 - use `bool`, not `boolean`
 - use `int`, not `integer`
 
-### Valid types
+#### Valid types
 - https://www.php.net/manual/en/functions.arguments.php#functions.arguments.type-declaration
 
 
-___
+____________________________________________________________________
 
-## Cookie Consent
+
+### Cookie Consent
+~~~
     Due to 2018-05-25 EU-wide GDPR law, it may make sense to get users cookie Consent before setting any session cookie.
     Since Rev. 71 (2018-05-27) there will be no session cookie set automatically, if there MVC_SESSION_ENABLE is NOT SET or has NOT VALUE set to TRUE.
 
@@ -536,10 +621,12 @@ ___
             });
         });
         </script>
+~~~
 
 
 
-Webserver
+### Webserver
+~~~
     Apache
         myMVC is ready to work with a default Apache web server configuration.
         A ".htacces" file is already placed into the myMVC's webroot:
@@ -632,8 +719,10 @@ Webserver
                     log_not_found off;
             }
         }
+~~~
 
-Routing
+### Routing
+~~~
     configure your routing.json file to your needs.
     here is a basic example of how the routing.json could be defined.
 
@@ -674,15 +763,19 @@ CLI Wrapper
                         $ export MVC_ENV="develop"; php index.php '/'
                         $ export MVC_ENV="develop"; php index.php '/about/'
                         $ export MVC_ENV="develop"; php index.php '/about/?a={"foo":"bar"}'
+~~~
 
 
-myMVC manager
+### myMVC manager
+~~~
     you can use this tool to create or delete a module
     the file manager.php is strored in the root directory of this project
 
     Usage:
     $ php manager.php
+~~~
 
+____________________________________________________________________
 
 
 
