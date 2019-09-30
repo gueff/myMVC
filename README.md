@@ -42,3 +42,7 @@ run php's internal webserver:
     cd /var/www/myMVC/public/; php -S localhost:1969;
 
 Call `localhost:1969` in your browser. 
+
+## Usage
+
+see https://github.com/gueff/myMVC/blob/master/application/doc/README.md
