@@ -100,7 +100,7 @@ GET Param `m`
 
 -   targets a Method inside the requested: /modules/default/Controller/Index.php -> `method`()
 
-GET Param "a"
+GET Param `a`
 
 -	JSON which will be given to the target method  `/modules/default/Controller/Index.php -> index()`
 
@@ -778,7 +778,7 @@ CLI Wrapper
 ____________________________________________________________________
 
 
-
+~~~
 Composer Setup
 Default
     {
@@ -878,3 +878,4 @@ Example: with ZF2
                 }
             }
         }
+~~~
