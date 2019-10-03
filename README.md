@@ -37,7 +37,7 @@ ____________________________________________________________________
 
 ## myMVC <a name="myMVC"></a>
 
-A tiny MVC Framework, written in PHP. Open Source and free of charge.
+This is my MVC Framework, written in PHP. Open Source and free of charge.
 - Open Source
 - MVC Structure, +Events, +Policies
 - Smarty Template Engine
@@ -45,8 +45,7 @@ A tiny MVC Framework, written in PHP. Open Source and free of charge.
 - Modular
 - Expandable
 - myMVC InfoTool: an integrated Debug-/Info-Toolbar (Frontend + Browser Console)
-
-Website : https://mymvc.ueffing.net/
+- DataType Creation
 
 ## Installing myMVC <a name="Installing_myMVC"></a>
 
