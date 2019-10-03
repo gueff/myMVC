@@ -2,10 +2,10 @@
 
 namespace MVC\Generator;
 
-use MVC\DataType\DTDataTypeGeneratorClass;
-use MVC\DataType\DTDataTypeGeneratorConfig;
-use MVC\DataType\DTDataTypeGeneratorConstant;
-use MVC\DataType\DTDataTypeGeneratorProperty;
+use MVC\DataType\DTClass;
+use MVC\DataType\DTConfig;
+use MVC\DataType\DTConstant;
+use MVC\DataType\DTProperty;
 use MVC\Registry;
 
 class DataType
@@ -14,6 +14,13 @@ class DataType
      * @var int
      */
     protected $iPhpVersion = 70;
+
+    /**
+     * @var array
+     */
+    protected $aType = array(
+        'string', 'int', 'bool', 'array', 'float', 'double'
+    );
 
     /**
      * DataType constructor.
@@ -50,30 +57,35 @@ class DataType
 
     /**
      * @param array $aConfig
-     * @return DTDataTypeGeneratorConfig
+     * @return DTConfig
      */
     protected function buildDTDataTypeGeneratorConfigObject(array $aConfig = array())
     {
         // Config
-        $oDTDataTypeGeneratorConfig = DTDataTypeGeneratorConfig::create();
+        $oDTDataTypeGeneratorConfig = DTConfig::create();
         $oDTDataTypeGeneratorConfig->set_dir($aConfig['dir']);
         $oDTDataTypeGeneratorConfig->set_unlinkDir($aConfig['unlinkDir']);
 
         // Class
         foreach ($aConfig['class'] as $aDTClass)
         {
-            $oDTDataTypeGeneratorClass = DTDataTypeGeneratorClass::create();
+            $oDTDataTypeGeneratorClass = DTClass::create();
             $oDTDataTypeGeneratorClass->set_name($aDTClass['name']);
-            $oDTDataTypeGeneratorClass->set_file($aDTClass['file']);
+
+            (0 == strlen($oDTDataTypeGeneratorClass->get_file())) ?
+                $oDTDataTypeGeneratorClass->set_file($oDTDataTypeGeneratorClass->get_name() . '.php') :
+                $oDTDataTypeGeneratorClass->set_file($aDTClass['file']);
+
             (isset($aDTClass['namespace'])) ? $oDTDataTypeGeneratorClass->set_namespace($aDTClass['namespace']) : false;
             (isset($aDTClass['extends'])) ? $oDTDataTypeGeneratorClass->set_extends($aDTClass['extends']) : false;
+            (isset($aDTClass['createHelperMethods'])) ? $oDTDataTypeGeneratorClass->set_createHelperMethods($aDTClass['createHelperMethods']) : false;
 
             // Constant
             if (isset($aDTClass['constant']) && !empty($aDTClass['constant']))
             {
                 foreach ($aDTClass['constant'] as $aConstant)
                 {
-                    $oDTDataTypeGeneratorConstant = DTDataTypeGeneratorConstant::create();
+                    $oDTDataTypeGeneratorConstant = DTConstant::create();
                     (isset($aConstant['key'])) ? $oDTDataTypeGeneratorConstant->set_key($aConstant['key']) : false;
                     (isset($aConstant['value'])) ? $oDTDataTypeGeneratorConstant->set_value($aConstant['value']) : false;
                     (isset($aConstant['visibility'])) ? $oDTDataTypeGeneratorConstant->set_visibility($aConstant['visibility']) : false;
@@ -86,11 +98,20 @@ class DataType
             {
                 foreach ($aDTClass['property'] as $aProperty)
                 {
-                    $oDTDataTypeGeneratorProperty = DTDataTypeGeneratorProperty::create();
+                    $oDTDataTypeGeneratorProperty = DTProperty::create();
                     (isset($aProperty['key'])) ? $oDTDataTypeGeneratorProperty->set_key($aProperty['key']) : false;
                     (isset($aProperty['value'])) ? $oDTDataTypeGeneratorProperty->set_value($aProperty['value']) : false;
                     (isset($aProperty['var'])) ? $oDTDataTypeGeneratorProperty->set_var($aProperty['var']) : false;
                     (isset($aProperty['visibility'])) ? $oDTDataTypeGeneratorProperty->set_visibility($aProperty['visibility']) : false;
+                    (isset($aProperty['static'])) ? $oDTDataTypeGeneratorProperty->set_static($aProperty['static']) : false;
+                    (isset($aProperty['setter'])) ? $oDTDataTypeGeneratorProperty->set_setter($aProperty['setter']) : false;
+                    (isset($aProperty['getter'])) ? $oDTDataTypeGeneratorProperty->set_getter($aProperty['getter']) : false;
+
+                    (isset($aProperty['explicitMethodForValue'])) ? $oDTDataTypeGeneratorProperty->set_explicitMethodForValue($aProperty['explicitMethodForValue']) : false;
+                    (isset($aProperty['listProperty'])) ? $oDTDataTypeGeneratorProperty->set_listProperty($aProperty['listProperty']) : false;
+                    (isset($aProperty['createStaticPropertyGetter'])) ? $oDTDataTypeGeneratorProperty->set_createStaticPropertyGetter($aProperty['createStaticPropertyGetter']) : false;
+                    (isset($aProperty['setValueInConstructor'])) ? $oDTDataTypeGeneratorProperty->set_setValueInConstructor($aProperty['setValueInConstructor']) : false;
+
                     $oDTDataTypeGeneratorClass->add_DTProperty($oDTDataTypeGeneratorProperty);
                 }
             }
@@ -102,10 +123,10 @@ class DataType
     }
 
     /**
-     * @param DTDataTypeGeneratorConfig $oDTDataTypeGeneratorConfig
+     * @param DTConfig $oDTDataTypeGeneratorConfig
      * @return null
      */
-    public function initConfigObject(DTDataTypeGeneratorConfig $oDTDataTypeGeneratorConfig)
+    public function initConfigObject(DTConfig $oDTDataTypeGeneratorConfig)
     {
         $sCacheKey = __CLASS__ . '.' . md5(serialize($oDTDataTypeGeneratorConfig));
         $bUnlinkDir = ('' !== $oDTDataTypeGeneratorConfig->get_unlinkDir()) ? (boolean) $oDTDataTypeGeneratorConfig->get_unlinkDir() : false;
@@ -262,10 +283,10 @@ class DataType
     }
 
     /**
-     * @param DTDataTypeGeneratorConfig $oDTDataTypeGeneratorConfig
+     * @param DTConfig $oDTDataTypeGeneratorConfig
      * @return bool
      */
-    private function iterateConfig(DTDataTypeGeneratorConfig $oDTDataTypeGeneratorConfig)
+    private function iterateConfig(DTConfig $oDTDataTypeGeneratorConfig)
     {
         if ('' !== $oDTDataTypeGeneratorConfig->get_dir())
         {
@@ -316,14 +337,14 @@ class DataType
     }
 
     /**
-     * @param DTDataTypeGeneratorConfig $oDTDataTypeGeneratorConfig
+     * @param DTConfig $oDTDataTypeGeneratorConfig
      * @return bool
      */
-    private function createClass(DTDataTypeGeneratorConfig $oDTDataTypeGeneratorConfig)
+    private function createClass(DTConfig $oDTDataTypeGeneratorConfig)
     {
         foreach ($oDTDataTypeGeneratorConfig->get_class() as $oDTDataTypeGeneratorClass)
         {
-            if (0 == strlen($oDTDataTypeGeneratorClass->get_name()) || empty($oDTDataTypeGeneratorClass->get_property()))
+            if (0 == strlen($oDTDataTypeGeneratorClass->get_name()))
             {
                 return false;
             }
@@ -352,7 +373,7 @@ class DataType
 
             // hash constant
             $sContent.= $this->createConst(
-                DTDataTypeGeneratorConstant::create()
+                DTConstant::create()
                     ->set_key('DTHASH')
                     ->set_value("'" . md5(base64_encode(serialize($oDTDataTypeGeneratorClass->get_property()))) . "'")
                     ->set_visibility('public')
@@ -368,7 +389,7 @@ class DataType
                 $sContent.= $this->createProperty($oProperty);
             }
 
-            $sContent.= $this->createConstructor($oDTDataTypeGeneratorClass->get_name());
+            $sContent.= $this->createConstructor($oDTDataTypeGeneratorClass); # ->get_name());
             $sContent.= $this->createStaticCreator($oDTDataTypeGeneratorClass->get_name());
 
             foreach ($oDTDataTypeGeneratorClass->get_property() as $oProperty)
@@ -383,12 +404,27 @@ class DataType
 
             foreach ($oDTDataTypeGeneratorClass->get_property() as $oProperty)
             {
-                $sContent.= $this->createStaticPropertyGetter($oProperty);
+                $sContent.= $this->createExplicitMethodForValue($oProperty);
             }
 
-            $sContent.= $this->createMagics();
-            $sContent.= $this->createHelpfulPropertyGetter();
-            $sContent.= $this->createHelpfulPropertySetter();
+            HELPER_METHODS: {
+
+                // on property
+                foreach ($oDTDataTypeGeneratorClass->get_property() as $oProperty)
+                {
+                    $sContent.= $this->createStaticPropertyGetter($oProperty);
+                }
+
+                // for class
+                if (true === $oDTDataTypeGeneratorClass->get_createHelperMethods())
+                {
+                    $sContent.= $this->createMagics();
+                    $sContent.= $this->createHelpfulPropertyGetter();
+                    $sContent.= $this->createHelpfulConstantGetter();
+                    $sContent.= $this->createHelpfulPropertySetter();
+                }
+            }
+
             $sContent.= "}";
 
             $bSuccess = $this->writeInto(
@@ -406,10 +442,10 @@ class DataType
     }
 
     /**
-     * @param DTDataTypeGeneratorConstant $oDTDataTypeGeneratorConstant
+     * @param DTConstant $oDTDataTypeGeneratorConstant
      * @return string
      */
-    private function createConst(DTDataTypeGeneratorConstant $oDTDataTypeGeneratorConstant)
+    private function createConst(DTConstant $oDTDataTypeGeneratorConstant)
     {
         if (0 == strlen($oDTDataTypeGeneratorConstant->get_key()) OR is_null($oDTDataTypeGeneratorConstant->get_value()))
         {
@@ -431,41 +467,21 @@ class DataType
     }
 
     /**
-     * @param DTDataTypeGeneratorProperty $oProperty
+     * @param DTProperty $oProperty
      * @return string
      */
-    private function createProperty(DTDataTypeGeneratorProperty $oProperty)
+    private function createProperty(DTProperty $oProperty)
     {
+        if (true !== $oProperty->get_listProperty())
+        {
+            return '';
+        }
+
         $sContent = '';
         $sContent.= "\t/**\r\n\t * @var " . $oProperty->get_var() . "\r\n\t */\r\n";
-        $sContent.= "\t" . $oProperty->get_visibility() . " $" . $oProperty->get_key();
-
-        if (null !== $oProperty->get_value())
-        {
-            $sContent.= ' = ';
-
-            if ('string' == strtolower($oProperty->get_var()))
-            {
-                $sContent.= '"' . $oProperty->get_value() . '"';
-            }
-            else
-            {
-                $sContent.= $oProperty->get_value();
-            }
-        }
-        elseif ('string' == strtolower($oProperty->get_var()))
-        {
-            $sContent.= " = ''";
-        }
-        elseif ('int' == substr(strtolower($oProperty->get_var()), 0, 3))
-        {
-            $sContent.= " = 0";
-        }
-        elseif ('array' == strtolower($oProperty->get_var()))
-        {
-            $sContent.= " = array()";
-        }
-
+        $sContent.= "\t" . $oProperty->get_visibility() . " ";
+        (true === $oProperty->get_static()) ? $sContent.= "static " : false;
+        $sContent.= "$" . $oProperty->get_key();
         $sContent.= ';';
         $sContent.= "\r\n\r\n";
 
@@ -473,27 +489,81 @@ class DataType
     }
 
     /**
-     * @param string $sClassName
+     * @param DTClass $oDTDataTypeGeneratorClass
      * @return string
      */
-    private function createConstructor($sClassName = '')
+    private function createConstructor(\MVC\DataType\DTClass $oDTDataTypeGeneratorClass)
     {
-        $sContent = "    /**
-     * " . $sClassName . " constructor.
-     * @param array " . '$aData' . "
-     */
-    public function __construct(array " . '$aData' . " = array())
-    {
-        foreach (" . '$aData' . " as " . '$sKey' . " => " . '$mValue' . ")
-        {
-            " . '$sMethod' . " = 'set_' . " . '$sKey' . ";
+        $sContent = "\t/**\r\n\t * " . $oDTDataTypeGeneratorClass->get_name() . " constructor.\r\n\t * @param array " . '$aData' . "\r\n\t */\r\n\t";
+        $sContent.= "public function __construct(array " . '$aData' . " = array())\r\n\t";
+        $sContent.= "{\r\n";
 
-            if (method_exists(" . '$this' . ", " . '$sMethod' . "))
+        foreach ($oDTDataTypeGeneratorClass->get_property() as $sKey => $oProperty)
+        {
+            if (null === $oProperty->get_value())
             {
-                " . '$this->$sMethod($mValue)' . ";
+                continue;
+            }
+
+            if (true !== $oProperty->get_setValueInConstructor())
+            {
+                continue;
+            }
+
+            if (true === $oProperty->get_static())
+            {
+                $sContent.= "\t\t" . 'self::$' . $oProperty->get_key() . ' = ';
+            }
+            else
+            {
+                $sContent.= "\t\t" . '$this->' . $oProperty->get_key() . ' = ';
+            }
+
+            // regular Types
+            if (in_array($oProperty->get_var(), $this->aType))
+            {
+                if ('string' == strtolower($oProperty->get_var()))
+                {
+                    $sContent.= "'';" . "\r\n";
+                }
+
+                if ('int' == substr(strtolower($oProperty->get_var()), 0, 3))
+                {
+                    $sContent.= "0;" . "\r\n";
+                }
+
+                if ('array' == strtolower($oProperty->get_var()))
+                {
+                    $sContent.= "array();" . "\r\n";
+                }
+
+                if ('bool' == substr(strtolower($oProperty->get_var()), 0, 4))
+                {
+                    ((true === $oProperty->get_value()) ? $sContent.= 'true;' . "\r\n" : $sContent.= 'false;' . "\r\n");
+                }
+
+                if ('float' == strtolower($oProperty->get_var()))
+                {
+                    $sContent.= $oProperty->get_value() . ";\r\n";
+                }
+
+                if ('double' == strtolower($oProperty->get_var()))
+                {
+                    $sContent.= $oProperty->get_value() . ";\r\n";
+                }
+            }
+            else
+            {
+                $sContent.= $oProperty->get_value() . ';' . "\r\n";
             }
         }
-    }\n\n";
+
+        $sContent.= "\r\n\t\tforeach (" . '$aData' . " as " . '$sKey' . " => " . '$mValue' . ")\r\n\t\t";
+        $sContent.= "{\r\n\t\t\t" . '$sMethod' . " = 'set_' . " . '$sKey;' . "\r\n\r\n\t\t\t";
+        $sContent.= "if (method_exists(" . '$this' . ", " . '$sMethod' . "))\r\n\t\t\t";
+        $sContent.= "{\r\n\t\t\t\t" . '$this->$sMethod($mValue);' . "\r\n\t\t\t";
+        $sContent.= "}\r\n\t\t}\r\n\t";
+        $sContent.= "}\r\n\r\n";
 
         return $sContent;
     }
@@ -519,11 +589,73 @@ class DataType
     }
 
     /**
-     * @param DTDataTypeGeneratorProperty $oProperty
+     * @param DTProperty $oProperty
      * @return string
      */
-    private function createStaticPropertyGetter(DTDataTypeGeneratorProperty $oProperty)
+    private function createExplicitMethodForValue (DTProperty $oProperty)
     {
+        if (true !== $oProperty->get_explicitMethodForValue())
+        {
+            return '';
+        }
+
+        $sContent = "\t/**
+     * @param " . '$mValue' . "
+     * @return " . $oProperty->get_var() . "
+     */
+    " . $oProperty->get_visibility() . " " . ((true === $oProperty->get_static()) ? 'static ' : false) . "function " . $oProperty->get_key() . "(" . '$mValue' . ")"; # \r\n\t{";
+
+        ($this->iPhpVersion >= 70) ? $sContent.= ' : ' . $oProperty->get_var() : false;
+
+        $sContent.= "\r\n\t{";
+
+        // regular Types
+        if (in_array($oProperty->get_var(), $this->aType))
+        {
+            $sContent.= "\r\n\t\t" . '$mVar' . " = ";
+
+            if ('string' === strtolower($oProperty->get_var()))
+            {
+                $sContent.= '"' . (string) $oProperty->get_value() . '";' . "\r\n";
+            }
+
+            if ('int' === substr(strtolower($oProperty->get_var()), 0, 3))
+            {
+                $sContent.= (int) $oProperty->get_value() . ";\r\n";
+            }
+
+            if ('bool' === substr(strtolower($oProperty->get_var()), 0, 4))
+            {
+                ((true === $oProperty->get_value()) ? $sContent.= 'true;' . "\r\n" : $sContent.= 'false;' . "\r\n");
+            }
+
+            if (null == substr(strtolower($oProperty->get_var()), 0, 3))
+            {
+                $sContent.= 'null;' . "\r\n";
+            }
+        }
+        // object
+        else
+        {
+            $sContent.= "\r\n\t\t" . '$mVar' . " = new " . $oProperty->get_var() . "(" . '$mValue' . ");\r\n";
+        }
+
+        $sContent.= "\r\n\t\treturn " . '$mVar;' . "\r\n\t}\r\n\r\n";
+
+        return $sContent;
+    }
+
+    /**
+     * @param DTProperty $oProperty
+     * @return string
+     */
+    private function createStaticPropertyGetter(DTProperty $oProperty)
+    {
+        if (true !== $oProperty->get_createStaticPropertyGetter())
+        {
+            return '';
+        }
+
         $sContent = '';
         $sContent.= "\t/**\r\n\t * @return string\r\n\t */\r\n\tpublic static function getPropertyName_" . $oProperty->get_key() . "()\r\n\t{
         return '" . $oProperty->get_key() . "';\r\n\t}\r\n\r\n";
@@ -556,7 +688,21 @@ class DataType
         return " . 'get_object_vars($this);' . "\r\n\t}\r\n\r\n";
 
         return $sContent;
+    }
 
+    /**
+     * @return string
+     */
+    private function createHelpfulConstantGetter()
+    {
+        $sContent = '';
+
+        $sContent.= "\t/**\r\n\t * @return array\r\n\t * @throws \ReflectionException\r\n\t */\r\n\tpublic function getConstantArray()\r\n\t{\r\n\t\t";
+        $sContent.= '$oReflectionClass = new \ReflectionClass($this);' . "\r\n\t\t";
+        $sContent.= '$aConstant = $oReflectionClass->getConstants();' . "\r\n\r\n\t\t";
+        $sContent.= "return " . '$aConstant;' . "\r\n\t}\r\n\r\n";
+
+        return $sContent;
     }
 
     /**
@@ -576,38 +722,94 @@ class DataType
     }
 
     /**
-     * @param DTDataTypeGeneratorProperty $oProperty
+     * @param DTProperty $oProperty
      * @return string
      */
-    private function createSetter(DTDataTypeGeneratorProperty $oProperty)
+    private function createSetter(DTProperty $oProperty)
     {
+        if (false === $oProperty->get_setter())
+        {
+            return '';
+        }
+
+        $sVar = trim(preg_replace("/[^[:alnum:][:space:]_\\\]/ui", '', $oProperty->get_var()));
+        $sRight2 = substr($oProperty->get_var(), -2);
+
         $sContent = '';
-        $sContent.= "\t/**\r\n\t * @param " . $oProperty->get_var() . ' $mValue ' . "\r\n\t * @return " . '$this' . "\r\n\t */\r\n";
-        $sContent.= "\tpublic function set_" . $oProperty->get_key() . '(';
 
-        // place type for php7 and newer
-        (70 <= $this->iPhpVersion) ? $sContent.= $oProperty->get_var() . ' ' : false;
+        if ('[]' !== $sRight2)
+        {
+            $sContent .= "\t/**\r\n\t * @param " . $sVar . ' $mValue ' . "\r\n\t * @return " . '$this' . "\r\n\t */\r\n";
+            $sContent .= "\tpublic function set_" . $oProperty->get_key() . '(';
 
-        $sContent.= '$mValue)' . "\r\n";
-        $sContent.= "\t{\r\n\t\t" . '$this->' . $oProperty->get_key() . ' = $mValue;' . "\r\n\r\n\t\treturn " . '$this;' . "\r\n\t}\r\n\r\n";
+            // place type for php7 and newer
+            (70 <= $this->iPhpVersion) ? $sContent .= $sVar . ' ' : false;
+
+            $sContent .= '$mValue)' . "\r\n";
+            $sContent .= "\t{\r\n\t\t" . '$this->' . $oProperty->get_key() . ' = $mValue;' . "\r\n\r\n\t\treturn " . '$this;' . "\r\n\t}\r\n\r\n";
+        }
+        // type is array
+        else
+        {
+            $sContent .= "\t/**\r\n\t * @param array " . '$aValue ' . "\r\n\t * @return " . '$this' . "\r\n\t */\r\n";
+            $sContent .= "\tpublic function set_" . $oProperty->get_key() . '(';
+
+            // place type for php7 and newer
+            (70 <= $this->iPhpVersion) ? $sContent .= 'array ' : false;
+
+            $sContent .= '$aValue)' . "\r\n";
+            $sContent .= "\t{\r\n\t\t" . '$this->' . $oProperty->get_key() . ' = $aValue;' . "\r\n\r\n\t\treturn " . '$this;' . "\r\n\t}\r\n\r\n";
+
+            $sContent.= $this->createAddFunctionForArray($oProperty);
+        }
 
         return $sContent;
     }
 
     /**
-     * @param DTDataTypeGeneratorProperty $oProperty
+     * @param DTProperty $oProperty
      * @return string
      */
-    private function createGetter(DTDataTypeGeneratorProperty $oProperty)
+    private function createGetter(DTProperty $oProperty)
     {
+        if (false === $oProperty->get_getter())
+        {
+            return '';
+        }
+
+        $sVar = trim(preg_replace("/[^[:alnum:][:space:]_\\\]/ui", ' ', $oProperty->get_var()));
+        $sReturnType = trim(preg_replace("/[^[:alnum:][:space:]_\\\]/ui", ' ', $oProperty->get_var()));
+
         $sContent = '';
         $sContent.= "\t/**\r\n\t * @return " . $oProperty->get_var() . "\r\n\t */\r\n";
         $sContent.= "\tpublic function get_" . $oProperty->get_key() . '()';
-        (70 <= $this->iPhpVersion) ? $sContent.= ' : ' . $oProperty->get_var() : false;
+        (70 <= $this->iPhpVersion && ($sReturnType === $oProperty->get_var())) ? $sContent.= ' : ' . $sVar : false;
         $sContent.= "\r\n";
         $sContent.= "\t{\r\n\t\t" . 'return $this->' . $oProperty->get_key() . ';' . "\r\n\t}\r\n\r\n";
 
         return $sContent;
+    }
+
+    /**
+     * @param DTProperty $oProperty
+     * @return string
+     */
+    private function createAddFunctionForArray(DTProperty $oProperty)
+    {
+        $sVar = trim(preg_replace("/[^[:alnum:][:space:]_\\\]/ui", ' ', $oProperty->get_var()));
+
+        $sContent = '';
+        $sContent.= "\t/**\r\n\t * @param " . $sVar . ' $mValue' . "\r\n";
+        $sContent.= "\t * @return " . '$this' . "\r\n\t */\r\n";
+        $sContent.= "\tpublic function add_" . $oProperty->get_key() . '(' . $sVar . ' $mValue)';
+        $sContent.= "\r\n";
+        $sContent.= "\t{\r\n\t\t" . '$this->' . $oProperty->get_key() . '[] = $mValue;';
+        $sContent.= "\r\n";
+        $sContent.= "\r\n\t\treturn " . '$this;';
+        $sContent.= "\r\n\t}\r\n\r\n";
+
+        return $sContent;
+
     }
 
     /**
