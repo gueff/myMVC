@@ -111,3 +111,17 @@ MVC_AUTOLOADING: {
 
 	spl_autoload_register ("mvcAutoload");
 }
+
+// load MVC classes
+foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($aConfig['MVC_LIBRARY'] . '/MVC/')) as $sMVCFileName)
+{
+    $aPathinfo = pathinfo($sMVCFileName);
+
+    if ('php' === $aPathinfo['extension'])
+    {
+        require_once $sMVCFileName;
+    }
+}
+
+// set to Registry
+foreach ($aConfig as $sKey => $sValue){\MVC\Registry::set ($sKey, $sValue);}
