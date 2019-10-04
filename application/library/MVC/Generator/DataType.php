@@ -178,7 +178,7 @@ class DataType
     {
         if (true === $bCreateDirIfnotExist)
         {
-            if (false === file_exists($sDataTypeClassDir) && false === mkdir($sDataTypeClassDir))
+            if (false === file_exists($sDataTypeClassDir) && false === mkdir($sDataTypeClassDir, 0777, true))
             {
                 return null;
             }
@@ -375,7 +375,7 @@ class DataType
             $sContent.= $this->createConst(
                 DTConstant::create()
                     ->set_key('DTHASH')
-                    ->set_value("'" . md5(base64_encode(serialize($oDTDataTypeGeneratorClass->get_property()))) . "'")
+                    ->set_value("'" . md5(base64_encode(serialize($oDTDataTypeGeneratorClass->get_constant()) . serialize($oDTDataTypeGeneratorClass->get_property()))) . "'")
                     ->set_visibility('public')
             );
 
@@ -422,6 +422,7 @@ class DataType
                     $sContent.= $this->createHelpfulPropertyGetter();
                     $sContent.= $this->createHelpfulConstantGetter();
                     $sContent.= $this->createHelpfulPropertySetter();
+                    $sContent.= $this->createGetDataTypeConfigJSON($oDTDataTypeGeneratorClass);
                 }
             }
 
@@ -600,10 +601,10 @@ class DataType
         }
 
         $sContent = "\t/**
-     * @param " . '$mValue' . "
+     * @param array " . '$aValue' . "
      * @return " . $oProperty->get_var() . "
      */
-    " . $oProperty->get_visibility() . " " . ((true === $oProperty->get_static()) ? 'static ' : false) . "function " . $oProperty->get_key() . "(" . '$mValue' . ")"; # \r\n\t{";
+    " . $oProperty->get_visibility() . " " . ((true === $oProperty->get_static()) ? 'static ' : false) . "function " . $oProperty->get_key() . "(" . '$aValue = array()' . ")"; # \r\n\t{";
 
         ($this->iPhpVersion >= 70) ? $sContent.= ' : ' . $oProperty->get_var() : false;
 
@@ -637,7 +638,7 @@ class DataType
         // object
         else
         {
-            $sContent.= "\r\n\t\t" . '$mVar' . " = new " . $oProperty->get_var() . "(" . '$mValue' . ");\r\n";
+            $sContent.= "\r\n\t\t" . '$mVar' . " = new " . $oProperty->get_var() . "(" . '$aValue' . ");\r\n";
         }
 
         $sContent.= "\r\n\t\treturn " . '$mVar;' . "\r\n\t}\r\n\r\n";
@@ -717,6 +718,47 @@ class DataType
         $sContent.= 'if (method_exists($this, $sMethod)) ' . "\r\n\t\t\t{";
         $sContent.= "\r\n\t\t\t\t" . '$this->$sMethod(\'\');' . "\r\n\t\t\t" . '}';
         $sContent.= "\r\n\t\t}\r\n\r\n\t\t" . 'return $this;' . "\r\n\t}\r\n\r\n";
+
+        return $sContent;
+    }
+
+    /**
+     * @param mixed $mObject
+     * @return array
+     */
+    private function convertObjectToArray($mObject)
+    {
+        (is_object($mObject)) ? $mObject = (array) $mObject : false;
+
+        if(is_array($mObject))
+        {
+            $aNew = array();
+
+            foreach($mObject as $sKey => $mValue)
+            {
+                $sFirstChar = trim(substr(trim($sKey), 0, 1));
+                (('*' === $sFirstChar)) ? $sKey = trim(substr(trim($sKey), 1)) : false;
+                $aNew[$sKey] = $this->convertObjectToArray($mValue);
+            }
+        }
+        else
+        {
+            $aNew = $mObject;
+        }
+
+        return $aNew;
+    }
+
+    /**
+     * @param \MVC\DataType\DTClass $oDTDataTypeGeneratorClass
+     * @return string
+     */
+    private function createGetDataTypeConfigJSON(\MVC\DataType\DTClass $oDTDataTypeGeneratorClass)
+    {
+        $sJson = json_encode($this->convertObjectToArray($oDTDataTypeGeneratorClass));
+        $sContent = '';
+        $sContent.= "\t/**\r\n\t * @return " . 'string JSON' . "\r\n\t */\r\n\tpublic function getDataTypeConfigJSON()\r\n\t{";
+        $sContent.= "\r\n\t\t" . 'return ' . "'" . $sJson . "';" . "\r\n\t}\r\n\r\n";
 
         return $sContent;
     }
