@@ -6,6 +6,7 @@ use MVC\DataType\DTClass;
 use MVC\DataType\DTConfig;
 use MVC\DataType\DTConstant;
 use MVC\DataType\DTProperty;
+use MVC\Helper;
 use MVC\Registry;
 
 class DataType
@@ -389,7 +390,7 @@ class DataType
                 $sContent.= $this->createProperty($oProperty);
             }
 
-            $sContent.= $this->createConstructor($oDTDataTypeGeneratorClass); # ->get_name());
+            $sContent.= $this->createConstructor($oDTDataTypeGeneratorClass);
             $sContent.= $this->createStaticCreator($oDTDataTypeGeneratorClass->get_name());
 
             foreach ($oDTDataTypeGeneratorClass->get_property() as $oProperty)
@@ -520,37 +521,47 @@ class DataType
                 $sContent.= "\t\t" . '$this->' . $oProperty->get_key() . ' = ';
             }
 
+
             // regular Types
             if (in_array($oProperty->get_var(), $this->aType))
             {
                 if ('string' == strtolower($oProperty->get_var()))
                 {
-                    $sContent.= "'';" . "\r\n";
+                    $sContent.= (false === empty($oProperty->get_value())) ? '"' . $oProperty->get_value() . '"' . ";\r\n" : "'';\r\n";
                 }
 
                 if ('int' == substr(strtolower($oProperty->get_var()), 0, 3))
                 {
-                    $sContent.= "0;" . "\r\n";
+                    $sContent.= (int) $oProperty->get_value() . ";\r\n";
                 }
 
                 if ('array' == strtolower($oProperty->get_var()))
                 {
-                    $sContent.= "array();" . "\r\n";
+                    $sContent.= (is_array($oProperty->get_value())) ?
+                        preg_replace(
+                            '!\s+!', '',
+                            str_replace(
+                                "\n",
+                                '',
+                                Helper::VAREXPORT($oProperty->get_value(), true, false)
+                            )
+                        ) . ";\r\n"
+                        : "array();\r\n";
                 }
 
                 if ('bool' == substr(strtolower($oProperty->get_var()), 0, 4))
                 {
-                    ((true === $oProperty->get_value()) ? $sContent.= 'true;' . "\r\n" : $sContent.= 'false;' . "\r\n");
+                    $sContent.= (true === $oProperty->get_value()) ? 'true;' . "\r\n" : 'false;' . "\r\n";
                 }
 
                 if ('float' == strtolower($oProperty->get_var()))
                 {
-                    $sContent.= $oProperty->get_value() . ";\r\n";
+                    $sContent.= (true === is_null($oProperty->get_value())) ? "0;\r\n" : $oProperty->get_value() . ";\r\n";
                 }
 
                 if ('double' == strtolower($oProperty->get_var()))
                 {
-                    $sContent.= $oProperty->get_value() . ";\r\n";
+                    $sContent.= (true === is_null($oProperty->get_value())) ? "0;\r\n" : $oProperty->get_value() . ";\r\n";
                 }
             }
             else
