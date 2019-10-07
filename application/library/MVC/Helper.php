@@ -36,7 +36,7 @@ class Helper
 		var_dump($mData);
 		$mData = ob_get_contents();
 		ob_end_clean();
-			
+
 		// output CLI
 		if (isset ($GLOBALS['argc']))
 		{
@@ -249,7 +249,8 @@ class Helper
 	 * @static
 	 * @param mixed $mClosure name of function or Closure
 	 * @return string
-	 */
+     * @throws \ReflectionException
+     */
 	public static function CLOSUREDUMP ($mClosure)
 	{		
 		$oReflectionFunction = new \ReflectionFunction ($mClosure);
@@ -427,4 +428,39 @@ class Helper
 		
 		return $aData;
 	}
+
+    /**
+     * @param mixed $mData
+     * @param bool $bReturn default=false
+     * @param bool $bShortArraySyntax default=true
+     * @return mixed
+     */
+    public static function VAREXPORT($mData, $bReturn = false, $bShortArraySyntax = true)
+    {
+        $sExport = var_export($mData, true);
+        $sExport = preg_replace("/^([ ]*)(.*)/m", '$1$1$2', $sExport);
+        $aData = preg_split("/\r\n|\n|\r/", $sExport);
+
+        $sTokenLeft = (true === $bShortArraySyntax) ? '[' : 'array(';
+        $sTokenRight = (true === $bShortArraySyntax) ? ']' : ')';
+
+        $aData = preg_replace(
+            ["/\s*array\s\($/", "/\)(,)?$/", "/\s=>\s$/"],
+            [NULL, $sTokenRight . '$1', ' => ' . $sTokenLeft],
+            $aData
+        );
+        $sExport = join(
+            PHP_EOL,
+            array_filter(
+                [$sTokenLeft] + $aData
+            )
+        );
+
+        if (true === $bReturn)
+        {
+            return $sExport;
+        }
+
+        echo $sExport;
+    }
 }
