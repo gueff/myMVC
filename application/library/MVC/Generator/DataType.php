@@ -502,12 +502,7 @@ class DataType
 
         foreach ($oDTDataTypeGeneratorClass->get_property() as $sKey => $oProperty)
         {
-            if (null === $oProperty->get_value())
-            {
-                continue;
-            }
-
-            if (true !== $oProperty->get_setValueInConstructor())
+            if (false === $oProperty->get_setValueInConstructor())
             {
                 continue;
             }
@@ -520,7 +515,6 @@ class DataType
             {
                 $sContent.= "\t\t" . '$this->' . $oProperty->get_key() . ' = ';
             }
-
 
             // regular Types
             if (in_array($oProperty->get_var(), $this->aType))
