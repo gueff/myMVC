@@ -7,7 +7,6 @@ use MVC\DataType\DTConfig;
 use MVC\DataType\DTConstant;
 use MVC\DataType\DTProperty;
 use MVC\Helper;
-use MVC\Registry;
 
 class DataType
 {
@@ -29,10 +28,9 @@ class DataType
      */
     public function __construct($iPhpVersion = 0)
     {
-        \Cachix::init(Registry::get('CACHIX_CONFIG'));
-        $this->iPhpVersion = (0 === $iPhpVersion) ?
-            substr(preg_replace("/[^\d]+/", '', phpversion()), 0, 2) :
-            (int) $iPhpVersion
+        $this->iPhpVersion = (0 === $iPhpVersion)
+            ? substr(preg_replace("/[^\d]+/", '', phpversion()), 0, 2)
+            : (int) $iPhpVersion
         ;
     }
 
@@ -49,18 +47,21 @@ class DataType
 
     /**
      * @param array $aConfig
+     * @return bool
      */
     public function initConfigArray(array $aConfig = array())
     {
         $oDTDataTypeGeneratorConfig = $this->buildDTDataTypeGeneratorConfigObject($aConfig);
-        $this->initConfigObject($oDTDataTypeGeneratorConfig);
+        $bSuccess = $this->initConfigObject($oDTDataTypeGeneratorConfig);
+
+        return $bSuccess;
     }
 
     /**
      * @param array $aConfig
      * @return DTConfig
      */
-    protected function buildDTDataTypeGeneratorConfigObject(array $aConfig = array())
+    public function buildDTDataTypeGeneratorConfigObject(array $aConfig = array())
     {
         // Config
         $oDTDataTypeGeneratorConfig = DTConfig::create();
@@ -125,16 +126,15 @@ class DataType
 
     /**
      * @param DTConfig $oDTDataTypeGeneratorConfig
-     * @return null
+     * @return bool
      */
     public function initConfigObject(DTConfig $oDTDataTypeGeneratorConfig)
     {
-        $sCacheKey = __CLASS__ . '.' . md5(serialize($oDTDataTypeGeneratorConfig));
+        $sCacheKey = __CLASS__ . '.' . basename($oDTDataTypeGeneratorConfig->get_dir()) . '.' . md5(base64_encode(serialize($oDTDataTypeGeneratorConfig)));
         $bUnlinkDir = ('' !== $oDTDataTypeGeneratorConfig->get_unlinkDir()) ? (boolean) $oDTDataTypeGeneratorConfig->get_unlinkDir() : false;
 
-        if ($oDTDataTypeGeneratorConfig !== \Cachix::getCache($sCacheKey))
+        if ($oDTDataTypeGeneratorConfig != \Cachix::getCache($sCacheKey))
         {
-            \Cachix::autoDeleteCache(__CLASS__, 0);
             (true === $bUnlinkDir && file_exists($oDTDataTypeGeneratorConfig->get_dir())) ?
                 $this->unlinkDataTypeClassDir($oDTDataTypeGeneratorConfig->get_dir()) :
                 false
@@ -143,7 +143,7 @@ class DataType
 
             if (false == $bSuccess)
             {
-                return null;
+                return $bSuccess;
             }
 
             \Cachix::saveCache(
@@ -151,6 +151,12 @@ class DataType
                 $oDTDataTypeGeneratorConfig
             );
         }
+
+        $sClass = preg_replace( '/\\\\{1}/', '\\\\\\\\\\', __CLASS__);
+
+        \Cachix::autoDeleteCache($sClass, 0);
+
+        return true;
     }
 
     /**
@@ -761,6 +767,7 @@ class DataType
     private function createGetDataTypeConfigJSON(\MVC\DataType\DTClass $oDTDataTypeGeneratorClass)
     {
         $sJson = json_encode($this->convertObjectToArray($oDTDataTypeGeneratorClass));
+        $sJson = preg_replace( '/\\\\{1}/', '\\\\\\', $sJson);
         $sContent = '';
         $sContent.= "\t/**\r\n\t * @return " . 'string JSON' . "\r\n\t */\r\n\tpublic function getDataTypeConfigJSON()\r\n\t{";
         $sContent.= "\r\n\t\t" . 'return ' . "'" . $sJson . "';" . "\r\n\t}\r\n\r\n";
