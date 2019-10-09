@@ -139,12 +139,22 @@ class DTClass
 	}
 
 	/**
-	 * @param \MVC\DataType\DTProperty[] $aDTDataTypeGeneratorProperty
+	 * @param \MVC\DataType\DTConstant[] $aDTDataTypeGeneratorConstant
 	 * @return $this
 	 */
-	public function set_constant(array $aDTDataTypeGeneratorProperty)
+	public function set_constant(array $aDTDataTypeGeneratorConstant)
 	{
-		$this->constant = $aDTDataTypeGeneratorProperty;
+        foreach ($aDTDataTypeGeneratorConstant as $iKey => $mConstant)
+        {
+            if ($mConstant instanceof DTConstant)
+            {
+                continue;
+            }
+
+            $aDTDataTypeGeneratorConstant[$iKey] = DTConstant::create($mConstant);
+        }
+
+		$this->constant = $aDTDataTypeGeneratorConstant;
 
 		return $this;
 	}
@@ -155,6 +165,16 @@ class DTClass
 	 */
 	public function set_property(array $aDTDataTypeGeneratorProperty)
 	{
+	    foreach ($aDTDataTypeGeneratorProperty as $iKey => $mProperty)
+        {
+            if ($mProperty instanceof DTProperty)
+            {
+                continue;
+            }
+
+            $aDTDataTypeGeneratorProperty[$iKey] = DTProperty::create($mProperty);
+        }
+
 		$this->property = $aDTDataTypeGeneratorProperty;
 
 		return $this;
