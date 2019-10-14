@@ -793,26 +793,39 @@ class DataType
 
         if ('[]' !== $sRight2)
         {
-            $sContent .= "\t/**\r\n\t * @param " . $sVar . ' $mValue ' . "\r\n\t * @return " . '$this' . "\r\n\t */\r\n";
-            $sContent .= "\tpublic function set_" . $oProperty->get_key() . '(';
+            $sContent.= "\t/**\r\n\t * @param " . $sVar . ' $mValue ' . "\r\n\t * @return " . '$this' . "\r\n\t */\r\n";
+            $sContent.= "\tpublic function set_" . $oProperty->get_key() . '(';
 
             // place type for php7 and newer
-            (70 <= $this->iPhpVersion) ? $sContent .= $sVar . ' ' : false;
+            (70 <= $this->iPhpVersion) ? $sContent.= $sVar . ' ' : false;
 
-            $sContent .= '$mValue)' . "\r\n";
-            $sContent .= "\t{\r\n\t\t" . '$this->' . $oProperty->get_key() . ' = $mValue;' . "\r\n\r\n\t\treturn " . '$this;' . "\r\n\t}\r\n\r\n";
+            $sContent.= '$mValue)' . "\r\n";
+            $sContent.= "\t{\r\n\t\t" . '$this->' . $oProperty->get_key() . ' = $mValue;' . "\r\n\r\n\t\treturn " . '$this;' . "\r\n\t}\r\n\r\n";
         }
         // type is array
         else
         {
-            $sContent .= "\t/**\r\n\t * @param array " . '$aValue ' . "\r\n\t * @return " . '$this' . "\r\n\t */\r\n";
-            $sContent .= "\tpublic function set_" . $oProperty->get_key() . '(';
+            $sContent.= "\t/**\r\n\t * @param array " . '$aValue ' . "\r\n\t * @return " . '$this' . "\r\n\t */\r\n";
+            $sContent.= "\tpublic function set_" . $oProperty->get_key() . '(';
 
             // place type for php7 and newer
-            (70 <= $this->iPhpVersion) ? $sContent .= 'array ' : false;
+            (70 <= $this->iPhpVersion) ? $sContent.= 'array ' : false;
 
-            $sContent .= '$aValue)' . "\r\n";
-            $sContent .= "\t{\r\n\t\t" . '$this->' . $oProperty->get_key() . ' = $aValue;' . "\r\n\r\n\t\treturn " . '$this;' . "\r\n\t}\r\n\r\n";
+            $sContent.= '$aValue)' . "\r\n" . "\t{\r\n\t\t";
+
+            // add ArrayType Instancer
+            if (false === in_array(strtolower($sVar), $this->aType))
+            {
+                $sContent.= 'foreach ($aValue as $mKey => $aData)
+        {
+            if (false === ($aData instanceof ' . ucwords($sVar) . '))
+            {
+                $aValue[$mKey] = new ' . ucwords($sVar) . '($aData);
+            }
+        }' . "\n\n\t\t";
+            }
+
+            $sContent.= '$this->' . $oProperty->get_key() . ' = $aValue;' . "\r\n\r\n\t\treturn " . '$this;' . "\r\n\t}\r\n\r\n";
 
             $sContent.= $this->createAddFunctionForArray($oProperty);
         }
