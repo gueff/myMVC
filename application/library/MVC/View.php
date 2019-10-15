@@ -115,11 +115,11 @@ class View extends \Smarty
 
 	/**
 	 * returns a given template rendered as String
-	 * 
-	 * @param string $sTemplate
-	 * @return string rendered template
-	 */
-	public function loadTemplateAsString ($sTemplate)
+     * @param string $sTemplate
+     * @return string
+     * @throws \SmartyException
+     */
+	public function loadTemplateAsString ($sTemplate = '')
 	{
 		return $this->fetch ('string:' . file_get_contents ($sTemplate, true));
 	}
@@ -127,12 +127,11 @@ class View extends \Smarty
 
 	/**
 	 * renders a given string and print it out (depending on self::$_bEchoOut)
-	 * 
-	 * @access public
-	 * @param string $sTemplateString
-	 * @return void
-	 */
-	public function renderString ($sTemplateString)
+     * @access public
+     * @param string $sTemplateString
+     * @throws \SmartyException
+     */
+	public function renderString ($sTemplateString = '')
 	{		
 		\MVC\Event::RUN('mvc.view.renderString.before', $sTemplateString);
 		
@@ -148,10 +147,7 @@ class View extends \Smarty
 
 	/**
 	 * renders the template $this->sTemplate
-	 * 
-	 * @access public
-	 * @static
-	 * @return void
+     * @access public
 	 */
 	public function render ()
 	{		
@@ -159,8 +155,7 @@ class View extends \Smarty
 		
 		// Load Template and render
 		$sTemplate = file_get_contents ($this->sTemplate, true);		
-		
-		$this->renderString ($sTemplate);		
+		$this->renderString ($sTemplate);
 		
 		\MVC\Event::RUN('mvc.view.render.after', $this);
 	}
@@ -171,7 +166,6 @@ class View extends \Smarty
 	 * @access public
 	 * @param string $sValue
 	 * @param string $sVar
-	 * @return void
 	 */
 	public function assignValue ($sValue, $sVar = '')
 	{
