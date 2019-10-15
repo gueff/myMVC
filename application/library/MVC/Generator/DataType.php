@@ -7,6 +7,7 @@ use MVC\DataType\DTConfig;
 use MVC\DataType\DTConstant;
 use MVC\DataType\DTProperty;
 use MVC\Helper;
+use MVC\Log;
 
 class DataType
 {
@@ -153,8 +154,6 @@ class DataType
         }
 
         $sClass = preg_replace( '/\\\\{1}/', '\\\\\\\\\\', __CLASS__);
-
-        \Cachix::autoDeleteCache($sClass, 0);
 
         return true;
     }
@@ -876,7 +875,6 @@ class DataType
         $sContent.= "\r\n\t}\r\n\r\n";
 
         return $sContent;
-
     }
 
     /**
