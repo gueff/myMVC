@@ -7,7 +7,6 @@ use MVC\DataType\DTConfig;
 use MVC\DataType\DTConstant;
 use MVC\DataType\DTProperty;
 use MVC\Helper;
-use MVC\Log;
 
 class DataType
 {
@@ -152,8 +151,6 @@ class DataType
                 $oDTDataTypeGeneratorConfig
             );
         }
-
-        $sClass = preg_replace( '/\\\\{1}/', '\\\\\\\\\\', __CLASS__);
 
         return true;
     }
@@ -796,7 +793,7 @@ class DataType
             $sContent.= "\tpublic function set_" . $oProperty->get_key() . '(';
 
             // place type for php7 and newer
-            (70 <= $this->iPhpVersion) ? $sContent.= $sVar . ' ' : false;
+            (70 <= $this->iPhpVersion && in_array($sVar, $this->aType)) ? $sContent.= $sVar . ' ' : false;
 
             $sContent.= '$mValue)' . "\r\n";
             $sContent.= "\t{\r\n\t\t" . '$this->' . $oProperty->get_key() . ' = $mValue;' . "\r\n\r\n\t\treturn " . '$this;' . "\r\n\t}\r\n\r\n";
@@ -849,7 +846,15 @@ class DataType
         $sContent = '';
         $sContent.= "\t/**\r\n\t * @return " . $oProperty->get_var() . "\r\n\t */\r\n";
         $sContent.= "\tpublic function get_" . $oProperty->get_key() . '()';
-        (70 <= $this->iPhpVersion && ($sReturnType === $oProperty->get_var())) ? $sContent.= ' : ' . $sVar : false;
+
+        (
+            70 <= $this->iPhpVersion
+            && ($sReturnType === $oProperty->get_var())
+            && ($sVar !== 'mixed')
+        )
+            ? $sContent.= ' : ' . $sVar
+            : false;
+
         $sContent.= "\r\n";
         $sContent.= "\t{\r\n\t\t" . 'return $this->' . $oProperty->get_key() . ';' . "\r\n\t}\r\n\r\n";
 
