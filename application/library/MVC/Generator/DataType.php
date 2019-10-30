@@ -502,6 +502,11 @@ class DataType
         $sContent.= "public function __construct(array " . '$aData' . " = array())\r\n\t";
         $sContent.= "{\r\n";
 
+        if (false === empty($oDTDataTypeGeneratorClass->get_extends()))
+        {
+            $sContent.= "\t\t" . 'parent::__construct($aData);' . "\n\n";
+        }
+        
         foreach ($oDTDataTypeGeneratorClass->get_property() as $sKey => $oProperty)
         {
             if (false === $oProperty->get_setValueInConstructor())
