@@ -90,6 +90,29 @@ class DTArrayObject
         return 'aKeyValue';
 	}
 
+    /**
+     * @param string $sKey
+     * @param DTArrayObject|null $oDTArrayObject optional another $oDTArrayObject
+     * @return DTKeyValue
+     */
+    function getDTKeyValueByKey($sKey = '', DTArrayObject $oDTArrayObject = null)
+    {
+        if (null === $oDTArrayObject)
+        {
+            $oDTArrayObject = $this;
+        }
+
+        foreach ($oDTArrayObject->get_aKeyValue() as $iKey => $oDTKeyValue)
+        {
+            if ($sKey === $oDTKeyValue->get_sKey())
+            {
+                return $oDTKeyValue;
+            }
+        }
+
+        return DTKeyValue::create();
+    }
+
 	/**
 	 * @return false|string JSON
 	 */
