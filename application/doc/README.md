@@ -338,6 +338,17 @@ other
 Triggered Errors this way will be caught by \MVC\Error class by default
 ~~~
 
+`mvc.lock.create`
+~~~
+Event::RUN('mvc.lock.create', DTArrayObject::create()
+    ->add_aKeyValue(DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue($aBacktrace))
+    ->add_aKeyValue(DTKeyValue::create()->set_sKey('bLocked')->set_sValue(true))
+    ->add_aKeyValue(DTKeyValue::create()->set_sKey('sFile')->set_sValue($sFile))
+);
+~~~
+
+
+
 #### 2. Class::method
 
 Using a Concrete Controller::method  of User's Application. Instead of an Event-Name to listen to you can always address a certain Method of a Controller. That gives you even more flexibility.
