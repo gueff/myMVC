@@ -267,10 +267,9 @@ class Request
      * @access public
      * @static
      * @param string $sLocation
-     * @param string $sHeader
      * @return void
      */
-    public static function REDIRECT($sLocation, $sHeader = '')
+    public static function REDIRECT($sLocation)
     {
         // source
         $aBacktrace = debug_backtrace();
