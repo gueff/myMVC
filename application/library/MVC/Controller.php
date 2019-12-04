@@ -22,13 +22,11 @@ use MVC\DataType\DTKeyValue;
 class Controller
 {
 
-	/**
-	 * constructor; calls the requested MVC
-	 * 
-	 * @access public
-	 * @param Request $oRequest
-	 * @return void
-	 */
+    /**
+     * Controller constructor.
+     * @param Request $oRequest
+     * @throws \ReflectionException
+     */
 	public function __construct (Request $oRequest)
 	{
 		Event::RUN ('mvc.controller.begin',
@@ -70,10 +68,8 @@ class Controller
 	/**
 	 * Destructor; 
 	 * runs Event mvc.controller.destruct
-	 * 
-	 * @access public
-	 * @return void
-	 */
+     * @throws \ReflectionException
+     */
 	public function __destruct ()
 	{
         Event::RUN ('mvc.controller.destruct',
