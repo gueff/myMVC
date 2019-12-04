@@ -164,12 +164,9 @@ class Event
 
     /**
      * adds a key/value pair to registry
-     *
-     * @access public
-     * @static
-     * @param string $sKey
-     * @param string $sValue
-     * @return void
+     * @param $sKey
+     * @param $sValue
+     * @throws \ReflectionException
      */
     public static function addToRegistry($sKey, $sValue)
     {
