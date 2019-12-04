@@ -51,13 +51,10 @@ class Event
 
     /**
      * binds a callback closure to a an event
-     *
-     * @access public
-     * @static
-     * @param string $sEvent Name of Event
-     * @param \Closure $oClosure Function
-     * @param object $oObject
-     * @return void
+     * @param $sEvent
+     * @param \Closure $oClosure
+     * @param null $oObject
+     * @throws \ReflectionException
      */
     public static function BIND($sEvent, \Closure $oClosure, $oObject = NULL)
     {
@@ -67,7 +64,8 @@ class Event
         (isset ($aBacktrace[0]['line'])) ? $sDebug .= ', ' . $aBacktrace[0]['line'] : FALSE;
         (isset ($aBacktrace[0]['class'])) ? $sDebug .= ' > ' : FALSE;
 
-        if (!isset (self::$aEvent[$sEvent])) {
+        if (!isset (self::$aEvent[$sEvent]))
+        {
             self::$aEvent[$sEvent] = array();
         }
 
@@ -80,12 +78,10 @@ class Event
 
     /**
      * runs an event
-     *
-     * @access public
-     * @static
-     * @param string $sEvent
-     * @param mixed $mPackage
-     * @return boolean bonded
+     * @param $sEvent
+     * @param null $mPackage
+     * @return bool
+     * @throws \ReflectionException
      */
     public static function RUN($sEvent, $mPackage = NULL)
     {
@@ -98,7 +94,8 @@ class Event
         $sPreLog = '(' . $sEvent . ') --> called in: ' . $sDebug;
 
         // nothing bonded
-        if (!isset (self::$aEvent[$sEvent])) {
+        if (!isset (self::$aEvent[$sEvent]))
+        {
             Log::WRITE('RUN  ' . $sPreLog);
             return FALSE;
         }
@@ -108,13 +105,16 @@ class Event
         Event::addToRegistry('RUN', $sPreLog);
 
         // iterate bonded
-        foreach (self::$aEvent[$sEvent] as $sKey => $sCallback) {
+        foreach (self::$aEvent[$sEvent] as $sKey => $sCallback)
+        {
             // run bonded closure
-            if (true === filter_var(Helper::ISCLOSURE($sCallback), FILTER_VALIDATE_BOOLEAN)) {
+            if (true === filter_var(Helper::ISCLOSURE($sCallback), FILTER_VALIDATE_BOOLEAN))
+            {
                 Log::WRITE($sPreLog . ' --> bonded by `' . unserialize($sKey) . ', try to run its Closure: ' . Helper::CLOSUREDUMP($sCallback));
 
                 // error occured
-                if (call_user_func($sCallback, $mPackage) === FALSE) {
+                if (call_user_func($sCallback, $mPackage) === FALSE)
+                {
                     Log::WRITE("ERROR\t" . $sPreLog . ' *** Closure could not be run: ' . serialize($sCallback), 'error.log');
                     #break; // leave the looop at 1st bound
                 }
@@ -143,7 +143,8 @@ class Event
         (isset ($aBacktrace[0]['line'])) ? $sDebug .= ', ' . $aBacktrace[0]['line'] : FALSE;
         (isset ($aBacktrace[0]['class'])) ? $sDebug .= ' > ' : FALSE;
 
-        if (!isset (self::$aEvent[$sEvent])) {
+        if (!isset (self::$aEvent[$sEvent]))
+        {
             Event::addToRegistry('UNBIND', 'UNBIND: All Events deleted --> called in: ' . $sDebug);
 
             self::$aEvent = array();
