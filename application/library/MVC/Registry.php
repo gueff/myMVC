@@ -100,12 +100,10 @@ class Registry
 
 	/**
 	 * gets a value by its key
-	 *
-	 * @access public
-	 * @static
-	 * @param string $sIndex - get the value associated with $index
-	 * @return mixed
-	 */
+     * @param $sIndex
+     * @return mixed
+     * @throws \ReflectionException
+     */
 	public static function get ($sIndex)
 	{
 		if (!array_key_exists ($sIndex, self::$_aStorage))
