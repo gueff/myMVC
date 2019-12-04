@@ -13,17 +13,18 @@
  */
 namespace MVC;
 
+use MVC\DataType\DTArrayObject;
+use MVC\DataType\DTKeyValue;
+
 /**
  * Router
  */
 class Router
 {
-	/**
-	 * Constructor
-	 * 
-	 * @access public
-	 * @return void
-	 */
+    /**
+     * Router constructor.
+     * @throws \ReflectionException
+     */
 	public function __construct ()
 	{
 		// default: class \MVC\RouterJsonfile
@@ -37,16 +38,22 @@ class Router
 
 		if (FALSE === is_subclass_of ($oRouterObject, $sClassToCheck))
 		{
-			$sMsg = 'ERROR: <br />Make sure `' . $sClass . '` <b>extends</b> ' . $sClassToCheck;
-			Error::addERROR ($sMsg);
+			$sMsg = 'ERROR: Make sure `' . $sClass . '` extends ' . $sClassToCheck;
+			Error::addERROR (
+                DTArrayObject::create()
+                    ->add_aKeyValue(DTKeyValue::create()->set_sKey('sMessage')->set_sValue($sMsg))
+            );
 			Log::WRITE (strip_tags ($sMsg));
 			Helper::STOP ($sMsg);
 		}
 
 		if (FALSE === filter_var (($oRouterObject instanceof $sInterfaceToCheck), FILTER_VALIDATE_BOOLEAN))
 		{
-			$sMsg = 'ERROR: <br />Make sure `' . $sClass . '` <b>implements</b> ' . $sInterfaceToCheck;
-			Error::addERROR ($sMsg);
+			$sMsg = 'ERROR: Make sure `' . $sClass . '` implements ' . $sInterfaceToCheck;
+			Error::addERROR (
+                DTArrayObject::create()
+                    ->add_aKeyValue(DTKeyValue::create()->set_sKey('sMessage')->set_sValue($sMsg))
+            );
 			Log::WRITE (strip_tags ($sMsg));
 			Helper::STOP ($sMsg);
 		}
