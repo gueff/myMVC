@@ -13,6 +13,9 @@
  */
 namespace MVC;
 
+use MVC\DataType\DTArrayObject;
+use MVC\DataType\DTKeyValue;
+
 /**
  * Controller
  */
@@ -28,20 +31,40 @@ class Controller
 	 */
 	public function __construct (Request $oRequest)
 	{
-		Event::RUN ('mvc.controller.before');
+		Event::RUN ('mvc.controller.begin',
+            DTArrayObject::create()
+                ->add_aKeyValue(
+                    DTKeyValue::create()->set_sKey('oRequest')->set_sValue($oRequest)
+                )
+        );
 
 		// get Request Array
 		$aQueryArray = $oRequest->getQueryArray ();
 
 		// start requested Module/Class/Method/Arguments
 		$oReflex = new Reflex();
-		$bStatus = $oReflex->reflect ($aQueryArray);
+		$bSuccess = $oReflex->reflect ($aQueryArray);
 
 		// Request not handable
-		if ($bStatus === FALSE)
+		if ($bSuccess === FALSE)
 		{
-			Event::RUN ('mvc.invalidRequest', $oRequest);
+			Event::RUN ('mvc.controller.invalidRequest',
+                DTArrayObject::create()
+                    ->add_aKeyValue(
+                        DTKeyValue::create()->set_sKey('oRequest')->set_sValue($oRequest)
+                    )
+            );
 		}
+
+        Event::RUN ('mvc.controller.done',
+            DTArrayObject::create()
+                ->add_aKeyValue(
+                    DTKeyValue::create()->set_sKey('bStatus')->set_sValue($bSuccess)
+                )
+                ->add_aKeyValue(
+                    DTKeyValue::create()->set_sKey('oRequest')->set_sValue($oRequest)
+                )
+        );
 	}
 
 	/**
@@ -53,7 +76,12 @@ class Controller
 	 */
 	public function __destruct ()
 	{
-		Event::RUN ('mvc.controller.destruct');
+        Event::RUN ('mvc.controller.destruct',
+            DTArrayObject::create()
+                ->add_aKeyValue(
+                    DTKeyValue::create()->set_sKey('oController')->set_sValue($this)
+                )
+        );
 	}
 	
 }
