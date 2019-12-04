@@ -13,6 +13,9 @@
  */
 namespace MVC;
 
+use MVC\DataType\DTArrayObject;
+use MVC\DataType\DTKeyValue;
+
 /**
  * View
  * 
@@ -63,11 +66,10 @@ class View extends \Smarty
 	public $iSmartyVersion;
 
 	/**
+     * View constructor.
 	 * instantiates smarty object and set major smarty configs
-	 * 
-	 * @access public
-	 * @return void
-	 */
+     * @throws \ReflectionException
+     */
 	public function __construct ()
 	{		
 		parent::__construct ();
@@ -97,10 +99,8 @@ class View extends \Smarty
 
 	/**
 	 * checks if required dirs exist. If not, it tries to create them
-	 * 
-	 * @access private
-	 * @return void
-	 */
+     * @throws \ReflectionException
+     */
 	private function checkDirs ()
 	{
 		if (!file_exists (\MVC\Registry::get ('MVC_SMARTY_TEMPLATE_CACHE_DIR')))
@@ -127,37 +127,68 @@ class View extends \Smarty
 
 	/**
 	 * renders a given string and print it out (depending on self::$_bEchoOut)
-     * @access public
      * @param string $sTemplateString
+     * @throws \ReflectionException
      * @throws \SmartyException
      */
 	public function renderString ($sTemplateString = '')
 	{		
-		\MVC\Event::RUN('mvc.view.renderString.before', $sTemplateString);
-		
+        Event::RUN ('mvc.view.renderString.begin',
+            DTArrayObject::create()
+                ->add_aKeyValue(
+                    DTKeyValue::create()->set_sKey('sTemplateString')->set_sValue($sTemplateString)
+                )
+        );
+
 		$sRendered = $this->fetch ('string:' . $sTemplateString);
 		
 		if (true === self::$_bEchoOut)
 		{
 			echo $sRendered;
 		}
-		
-		\MVC\Event::RUN('mvc.view.renderString.after', $sRendered);
+
+        Event::RUN ('mvc.view.renderString.done',
+            DTArrayObject::create()
+                ->add_aKeyValue(
+                    DTKeyValue::create()->set_sKey('sTemplateString')->set_sValue($sTemplateString)
+                )
+                ->add_aKeyValue(
+                    DTKeyValue::create()->set_sKey('sRendered')->set_sValue($sRendered)
+                )
+                ->add_aKeyValue(
+                    DTKeyValue::create()->set_sKey('bEchoOut')->set_sValue(self::$_bEchoOut)
+                )
+        );
 	}
 
 	/**
 	 * renders the template $this->sTemplate
-     * @access public
-	 */
+     * @throws \ReflectionException
+     * @throws \SmartyException
+     */
 	public function render ()
 	{		
-		\MVC\Event::RUN('mvc.view.render.before', $this);
-		
+		\MVC\Event::RUN('mvc.view.render.begin', $this);
+        Event::RUN ('mvc.view.render.begin',
+            DTArrayObject::create()
+                ->add_aKeyValue(
+                    DTKeyValue::create()->set_sKey('oView')->set_sValue($this)
+                )
+        );
+
 		// Load Template and render
 		$sTemplate = file_get_contents ($this->sTemplate, true);		
 		$this->renderString ($sTemplate);
-		
-		\MVC\Event::RUN('mvc.view.render.after', $this);
+
+        Event::RUN ('mvc.view.render.done',
+            DTArrayObject::create()
+                ->add_aKeyValue(
+                    DTKeyValue::create()->set_sKey('oView')->set_sValue($this)
+                )
+                ->add_aKeyValue(
+                    DTKeyValue::create()->set_sKey('sTemplate')->set_sValue($sTemplate)
+                )
+        );
 	}
 
 	/**
@@ -187,11 +218,9 @@ class View extends \Smarty
 
 	/**
 	 * set absolute Path to Smarty Template Dir and saves this into includePath
-	 * 
-	 * @access public
-	 * @param string $sAbsolutePathToTemplateDir
-	 * @return void
-	 */
+     * @param string $sAbsolutePathToTemplateDir
+     * @throws \ReflectionException
+     */
 	public function setAbsolutePathToTemplateDir ($sAbsolutePathToTemplateDir = '')
 	{
 		if ($sAbsolutePathToTemplateDir === '')
