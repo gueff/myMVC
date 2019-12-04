@@ -20,12 +20,10 @@ namespace {module}\View;
  */
 class Index extends \MVC\View
 {
-	/**
-	 * Constructor
-	 * 
-	 * @access public
-	 * @return void
-	 */
+    /**
+     * Index constructor.
+     * @throws ReflectionException
+     */
 	public function __construct ()
 	{
 		parent::__construct ();
