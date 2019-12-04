@@ -13,6 +13,9 @@
  */
 namespace MVC;
 
+use MVC\DataType\DTArrayObject;
+use MVC\DataType\DTKeyValue;
+
 /**
  * Error
  */
@@ -39,9 +42,8 @@ class Error
 		set_error_handler ("\MVC\Error::ERRORHANDLER");
 		set_exception_handler ("\MVC\Error::EXCEPTION");
 
-		Event::BIND ('mvc.error', function($mPackage)
-		{
-			\MVC\Error::addERROR ($mPackage);
+		Event::BIND ('mvc.error', function(DTArrayObject $oDTArrayObject) {
+			\MVC\Error::addERROR ($oDTArrayObject);
 		});
 	}
 
@@ -113,10 +115,17 @@ class Error
 			}
 		}
 
-		
-		
-		$sMsg.= '(Code: ' . $oErrorException->getCode () . ' / Class: ' . get_class ($oErrorException) . '), File: ' . $oErrorException->getFile () . ', Line: ' . $oErrorException->getLine () . ', Message: ' . $oErrorException->getMessage () . ', Trace: ' . $oErrorException->getTraceAsString ();
-		self::addERROR ($sMsg);		
+		$sMsg.= '(Code: ' . $oErrorException->getCode ()
+            . ' / Class: ' . get_class ($oErrorException)
+            . '), File: ' . $oErrorException->getFile ()
+            . ', Line: ' . $oErrorException->getLine ()
+            . ', Message: ' . $oErrorException->getMessage ()
+            . ', Trace: ' . $oErrorException->getTraceAsString ();
+		self::addERROR (
+		    DTArrayObject::create()
+                ->add_aKeyValue(DTKeyValue::create()->set_sKey('sMessage')->set_sValue($sMsg))
+                ->add_aKeyValue(DTKeyValue::create()->set_sKey('$oException')->set_sValue($oErrorException))
+        );
 		Log::WRITE ($sMsg, $sLogfile);
 
 		(true === filter_var (Registry::get ('MVC_DEBUG'), FILTER_VALIDATE_BOOLEAN)) ? Helper::DISPLAY (print_r($oErrorException, true)) : false;			
@@ -152,12 +161,12 @@ class Error
 	 * 
 	 * @access public
 	 * @static
-	 * @param mixed $mData
+	 * @param DTArrayObject $oDTArrayObject
 	 * @return void
 	 */
-	public static function addERROR ($mData)
+	public static function addERROR (DTArrayObject $oDTArrayObject)
 	{
-		self::$_aError[] = $mData;
+		self::$_aError[] = $oDTArrayObject;
 	}
 
 	/**
