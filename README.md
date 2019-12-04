@@ -1,8 +1,8 @@
 ## Overview
 - [myMVC](#myMVC)
 - [Installing myMVC](#Installing_myMVC) 
-	- [Installing via command line (preferred)](#Installing_via_command_line) 
-	- [Installing via Browser](#Installing_via_Browser)
+	- [Installing](#Installing_via_command_line) 
+	- [Create a new Module](#create_module)
 	- [Run myMVC](#Run_myMVC)
 	- [Requirements](#Requirements)
 		- [Libraries via Composer Packages](#Libraries_via_Composer_Packages)
@@ -44,34 +44,29 @@ This is my MVC Framework, written in PHP. Open Source and free of charge.
 - PHP7 ready 
 - Modular
 - Expandable
-- myMVC InfoTool: an integrated Debug-/Info-Toolbar (Frontend + Browser Console)
 - DataType Creation
 
 ## Installing myMVC <a name="Installing_myMVC"></a>
 
-### Installing via command line (preferred) <a name="Installing_via_command_line"></a>
+### Installing via command line <a name="Installing_via_command_line"></a>
 
 e.g. for a `develop` Environment
 
-    $ export MVC_ENV="develop"; svn co https://github.com/gueff/myMVC.git/trunk/ myMVC; cd myMVC/public; php index.php
+~~~bash
+$ export MVC_ENV="develop"; \
+svn co https://github.com/gueff/myMVC.git/trunk/ myMVC; \
+cd myMVC/public; php index.php
+~~~
 
 The Auto-Installer will instantly begin to install all necessary files. (In case of errors, a text will prompt up showing details about what went wrong). 
 
-### Installing via Browser <a name="Installing_via_Browser"></a>
+### Create a new Module <a name="create_module"></a>
 
-**[Download](https://github.com/gueff/myMVC/releases) and extract** myMVC into your www folder (e.g.: `/var/www/myMVC/`), so that you finally get this structure:
+run myMVC.phar, it will show you a menu with options to create a new Module on CLI.
 
-- `/var/www/myMVC/application/`
-- `/var/www/myMVC/modules/`
-- `/var/www/myMVC/public/`
-
-run php's internal webserver:
-
-    cd /var/www/myMVC/public/; php -S localhost:1969;
-
-Call `localhost:1969` in your browser. 
-
-The Auto-Installer will instantly begin to install all necessary files (In case of errors, a text will prompt up showing details about what went wrong). The Page will reload after Installation has succeeded and you should see the myMVC Welcome Webpage.
+~~~bash
+$ php myMVC.phar
+~~~
 
 ### Run myMVC <a name="Run_myMVC"></a>
 
