@@ -73,11 +73,9 @@ class Policy
 
 	/**
 	 * gets the policy rules from registry
-	 * 
-	 * @access public
-	 * @static
-	 * @return array
-	 */
+     * @return mixed
+     * @throws \ReflectionException
+     */
 	public static function getPolicyRules ()
 	{
 		return Registry::get ('MVC_POLICY');
@@ -85,11 +83,9 @@ class Policy
 
 	/**
 	 * gets the matching policy rules on the current request
-	 * 
-	 * @access public
-	 * @static
-	 * @return array Class/Methods to run | empty
-	 */
+     * @return array|mixed
+     * @throws \ReflectionException
+     */
 	public static function getPolicyRuleOnCurrentRequest ()
 	{
 		$aPolicyRule = self::getPolicyRules ();
