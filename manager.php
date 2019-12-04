@@ -7,6 +7,7 @@
  * 
  */
 
+putenv("MVC_ENV=develop");
 
 $sUsage = "
 --------------------------------
@@ -67,14 +68,16 @@ if (isset($_GET['module_create']))
 	}
 	
 	echo "\ncreating module/" . $_GET['module_create'] . "/* with subdirectories and -files\n";
-//	echo "copy(" . $aConfig['MVC_APPLICATION_CONFIG_DIR']  . "/skeleton/Module', " . $aConfig['MVC_MODULES'] . "/" . $_GET['module_create'] . ");\n";
-	
+
 	// copy new module skeleton
 	recursiveCopy($aConfig['MVC_APPLICATION_CONFIG_DIR'] . '/skeleton/Module', $aConfig['MVC_MODULES'] . '/' . $_GET['module_create']);
 
 	// replace placeholder
 	shell_exec('grep -rl "{module}" ' . $aConfig['MVC_MODULES'] . '/' . $_GET['module_create'] . ' | xargs sed -i "s/{module}/' . $_GET['module_create'] . '/g"');
-	
+
+	// rename folder
+    shell_exec('mv "' . $aConfig['MVC_MODULES'] . '/' . $_GET['module_create'] . '/etc/config/{module}" "' . $aConfig['MVC_MODULES'] . '/' . $_GET['module_create'] . '/etc/config/' . $_GET['module_create'] . '"')  ;
+
 	// add route to routing.json
 	$sJson = file_get_contents($aConfig['MVC_APPLICATION_CONFIG_DIR'] . '/staging/' . getenv ('MVC_ENV') . '/routing.json');
 	$aJson = json_decode($sJson, TRUE);	
