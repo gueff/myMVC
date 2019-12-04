@@ -14,6 +14,9 @@
 
 namespace MVC;
 
+use MVC\DataType\DTArrayObject;
+use MVC\DataType\DTKeyValue;
+
 /**
  * Request
  */
@@ -24,41 +27,39 @@ class Request
      * Request
      *
      * @var Request
-     * @access private
+     * @access protected
      * @static
      */
-    private static $_oInstance;
+    protected static $_oInstance;
 
     /**
      * request uri
      *
      * @var string
-     * @access private
+     * @access protected
      */
-    private $_sRequestUri = '';
+    protected $_sRequestUri = '';
 
     /**
      * query array
      *
      * @var array
-     * @access private
+     * @access protected
      */
-    private $_aQueryVar = array();
+    protected $_aQueryVar = array();
 
     /**
      * whitelist array defines what chars are allowed
      *
      * @var array
-     * @access private
+     * @access protected
      */
-    private $_aWhitelistParams = array();
+    protected $_aWhitelistParams = array();
 
 
     /**
-     * Constructor
-     *
-     * @access protected
-     * @return \MVC\Request
+     * Request constructor.
+     * @throws \ReflectionException
      */
     protected function __construct()
     {
@@ -71,16 +72,18 @@ class Request
 
     /**
      * reads the HTTP Request and saves request + query separated
-     *
-     * @access public
-     * @return \MVC\Request
+     * @return $this
+     * @throws \ReflectionException
      */
     public function saveRequest()
     {
         // sanitize + save GET
-        if (isset ($_GET)) {
-            foreach ($_GET as $sKey => $sValue) {
-                if (array_key_exists($sKey, $this->_aWhitelistParams['GET'])) {
+        if (isset ($_GET))
+        {
+            foreach ($_GET as $sKey => $sValue)
+            {
+                if (array_key_exists($sKey, $this->_aWhitelistParams['GET']))
+                {
                     $sSub = mb_substr(
                         $sValue, 0, $this->_aWhitelistParams['GET'][$sKey]['length'], 'UTF8'
                     );
@@ -98,23 +101,33 @@ class Request
         (isset ($_COOKIE)) ? $this->_aQueryVar['COOKIE'] = $_COOKIE : FALSE;
 
         // if queries, split
-        if (array_key_exists('QUERY_STRING', $_SERVER)) {
+        if (array_key_exists('QUERY_STRING', $_SERVER))
+        {
             $this->_sRequestUri = str_replace('?' . $_SERVER['QUERY_STRING'], '', $_SERVER['REQUEST_URI']);
-        } else {
+        }
+        else
+        {
             // requested File
             $this->_sRequestUri = $_SERVER['REQUEST_URI'];
         }
 
-        Event::RUN('mvc.request.saved', $this);
+        Event::RUN('mvc.request.saveRequest.done',
+            DTArrayObject::create()
+                ->add_aKeyValue(
+                    DTKeyValue::create()->set_sKey('_aQueryVar')->set_sValue($this->_aQueryVar)
+                )
+                ->add_aKeyValue(
+                    DTKeyValue::create()->set_sKey('_sRequestUri')->set_sValue($this->_sRequestUri)
+                )
+        );
 
         return $this;
     }
 
     /**
      * prepares query vars for usage
-     *
-     * @access public
-     * @return \MVC\Request
+     * @return $this
+     * @throws \ReflectionException
      */
     public function prepareQueryVarsForUsage()
     {
@@ -126,23 +139,31 @@ class Request
          * Example:
          *		$ export MVC_ENV="develop"; php index.php module=standard c=index m=index a='{"foo":"bar","baz":[1,2,3]}'
          */
-        if (php_sapi_name() === 'cli' && !empty($GLOBALS['argv'])) {
-            for ($i = 1; $i <= 4; $i++) {
-                if (array_key_exists($i, $GLOBALS['argv'])) {
+        if (php_sapi_name() === 'cli' && !empty($GLOBALS['argv']))
+        {
+            for ($i = 1; $i <= 4; $i++)
+            {
+                if (array_key_exists($i, $GLOBALS['argv']))
+                {
                     $sToken = strtolower(strtok($GLOBALS['argv'][$i], '='));
 
                     if (
-                    in_array(
-                        $sToken,
-                        array(
-                            Registry::get('MVC_GET_PARAM_MODULE'),
-                            Registry::get('MVC_GET_PARAM_C'),
-                            Registry::get('MVC_GET_PARAM_M'),
-                            Registry::get('MVC_GET_PARAM_A')
+                        in_array(
+                            $sToken,
+                            array(
+                                Registry::get('MVC_GET_PARAM_MODULE'),
+                                Registry::get('MVC_GET_PARAM_C'),
+                                Registry::get('MVC_GET_PARAM_M'),
+                                Registry::get('MVC_GET_PARAM_A')
+                            )
                         )
                     )
-                    ) {
-                        $this->_aQueryVar['GET'][$sToken] = substr($GLOBALS['argv'][$i], (strpos($GLOBALS['argv'][$i], '=') + 1), strlen($GLOBALS['argv'][$i]));
+                    {
+                        $this->_aQueryVar['GET'][$sToken] = substr(
+                            $GLOBALS['argv'][$i],
+                            (strpos($GLOBALS['argv'][$i], '=') + 1),
+                            strlen($GLOBALS['argv'][$i])
+                        );
                     }
                 }
             }
@@ -150,22 +171,28 @@ class Request
 
         $aFallback = self::URLQUERYTOARRAY(Registry::get('MVC_ROUTING_FALLBACK'));
 
-        if (array_key_exists('GET', $this->_aQueryVar)) {
+        if (array_key_exists('GET', $this->_aQueryVar))
+        {
             // add standard module if missing
-            if (!array_key_exists(Registry::get('MVC_GET_PARAM_MODULE'), $this->_aQueryVar['GET']) || $this->_aQueryVar['GET'][Registry::get('MVC_GET_PARAM_MODULE')] == '') {
+            if (!array_key_exists(Registry::get('MVC_GET_PARAM_MODULE'), $this->_aQueryVar['GET']) || $this->_aQueryVar['GET'][Registry::get('MVC_GET_PARAM_MODULE')] == '')
+            {
                 $this->_aQueryVar['GET'][Registry::get('MVC_GET_PARAM_MODULE')] = $aFallback[Registry::get('MVC_GET_PARAM_MODULE')];
             }
 
             // add standard constroller if missing
-            if (!array_key_exists(Registry::get('MVC_GET_PARAM_C'), $this->_aQueryVar['GET']) || $this->_aQueryVar['GET'][Registry::get('MVC_GET_PARAM_C')] == '') {
+            if (!array_key_exists(Registry::get('MVC_GET_PARAM_C'), $this->_aQueryVar['GET']) || $this->_aQueryVar['GET'][Registry::get('MVC_GET_PARAM_C')] == '')
+            {
                 $this->_aQueryVar['GET'][Registry::get('MVC_GET_PARAM_C')] = $aFallback[Registry::get('MVC_GET_PARAM_C')];
             }
 
             // add standard method if missing
-            if (!array_key_exists(Registry::get('MVC_GET_PARAM_M'), $this->_aQueryVar['GET']) || $this->_aQueryVar['GET'][Registry::get('MVC_GET_PARAM_M')] == '') {
+            if (!array_key_exists(Registry::get('MVC_GET_PARAM_M'), $this->_aQueryVar['GET']) || $this->_aQueryVar['GET'][Registry::get('MVC_GET_PARAM_M')] == '')
+            {
                 $this->_aQueryVar['GET'][Registry::get('MVC_GET_PARAM_M')] = $aFallback[Registry::get('MVC_GET_PARAM_M')];
             }
-        } else {
+        }
+        else
+        {
             $this->_aQueryVar['GET'][Registry::get('MVC_GET_PARAM_MODULE')] = $aFallback[Registry::get('MVC_GET_PARAM_MODULE')];
             $this->_aQueryVar['GET'][Registry::get('MVC_GET_PARAM_C')] = $aFallback[Registry::get('MVC_GET_PARAM_C')];
             $this->_aQueryVar['GET'][Registry::get('MVC_GET_PARAM_M')] = $aFallback[Registry::get('MVC_GET_PARAM_M')];
@@ -175,7 +202,12 @@ class Request
         $this->_aQueryVar['GET'][Registry::get('MVC_GET_PARAM_MODULE')] = ucfirst($this->_aQueryVar['GET'][Registry::get('MVC_GET_PARAM_MODULE')]);
         $this->_aQueryVar['GET'][Registry::get('MVC_GET_PARAM_C')] = ucfirst($this->_aQueryVar['GET'][Registry::get('MVC_GET_PARAM_C')]);
 
-        Event::RUN('mvc.request.prepared');
+        Event::RUN('mvc.request.prepareQueryVarsForUsage.done',
+            DTArrayObject::create()
+                ->add_aKeyValue(
+                    DTKeyValue::create()->set_sKey('_aQueryVar')->set_sValue($this->_aQueryVar)
+                )
+        );
 
         return $this;
     }
@@ -203,10 +235,8 @@ class Request
 
     /**
      * Singleton instance
-     *
-     * @access public
-     * @static
      * @return Request
+     * @throws \ReflectionException
      */
     public static function getInstance()
     {
@@ -220,10 +250,7 @@ class Request
     /**
      * makes sure the requested page will be
      * delivered with the correct protocol (http|https)
-     *
-     * @access public
-     * @static
-     * @return void
+     * @throws \ReflectionException
      */
     public static function ENSURECORRECTPROTOCOL()
     {
@@ -246,10 +273,8 @@ class Request
 
     /**
      * gets current request
-     *
-     * @access public
-     * @static
-     * @return array
+     * @return array|false|int|string|null
+     * @throws \ReflectionException
      */
     public static function GETCURRENTREQUEST()
     {
@@ -263,11 +288,8 @@ class Request
 
     /**
      * redirects to given URI
-     *
-     * @access public
-     * @static
-     * @param string $sLocation
-     * @return void
+     * @param $sLocation
+     * @throws \ReflectionException
      */
     public static function REDIRECT($sLocation)
     {
@@ -315,9 +337,8 @@ class Request
 
     /**
      * gets the requested modulename
-     *
-     * @access public
-     * @return string module
+     * @return mixed|string
+     * @throws \ReflectionException
      */
     public function getModule()
     {
@@ -345,9 +366,8 @@ class Request
 
     /**
      * gets the requested controller name
-     *
-     * @access public
-     * @return string controllername
+     * @return mixed|string
+     * @throws \ReflectionException
      */
     public function getController()
     {
@@ -364,9 +384,8 @@ class Request
 
     /**
      * gets the requested method name
-     *
-     * @access public
-     * @return string methodname
+     * @return mixed|string
+     * @throws \ReflectionException
      */
     public function getMethod()
     {
@@ -383,7 +402,8 @@ class Request
 
     /**
      * @param string $sModuleName
-     * @return \MVC\Request
+     * @return $this
+     * @throws \ReflectionException
      */
     public function setModule($sModuleName = '')
     {
@@ -397,7 +417,8 @@ class Request
 
     /**
      * @param string $sControllerName
-     * @return \MVC\Request
+     * @return $this
+     * @throws \ReflectionException
      */
     public function setController($sControllerName = '')
     {
@@ -411,7 +432,8 @@ class Request
 
     /**
      * @param string $sMethodName
-     * @return \MVC\Request
+     * @return $this
+     * @throws \ReflectionException
      */
     public function setMethod($sMethodName = '')
     {
@@ -425,7 +447,8 @@ class Request
 
     /**
      * @param string $sArgument
-     * @return \MVC\Request
+     * @return $this
+     * @throws \ReflectionException
      */
     public function setArgument($sArgument = '')
     {
@@ -453,10 +476,10 @@ class Request
     /**
      * prevent any cloning
      *
-     * @access private
+     * @access protected
      * @return void
      */
-    private function __clone()
+    protected function __clone()
     {
         ;
     }
