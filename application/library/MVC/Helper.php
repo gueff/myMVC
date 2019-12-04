@@ -326,11 +326,9 @@ class Helper
 
 	/**
 	 * check page is running in ssl mode
-	 * 
-	 * @access public
-	 * @static
-	 * @return boolean 
-	 */
+     * @return bool|mixed
+     * @throws \ReflectionException
+     */
 	public static function DETECTSSL ()
 	{
 		if (Registry::isRegistered ('MVC_SECURE_REQUEST'))
@@ -376,12 +374,8 @@ class Helper
 
 	/**
 	 * makes sure the requested page will be delivered with the correct protocol (http|https)
-	 * 
-	 * @access public
-	 * @static
-	 * @deprecated will be removed in future versions. use instead: \MVC\Request::ENSURECORRECTPROTOCOL();
-	 * @return void
-	 */
+     * @throws \ReflectionException
+     */
 	public static function ENSURECORRECTPROTOCOL ()
 	{
 		$aDebug = self::PREPAREBACKTRACEARRAY (debug_backtrace ());
