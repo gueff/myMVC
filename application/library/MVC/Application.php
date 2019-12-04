@@ -52,7 +52,7 @@ class Application
 		$oRouter = new Router();
 
 		// Run target Controller's __preconstruct()
-		self::runTargetClassPreconstruct ();
+		self::runTargetClassPreconstruct();
 
 		// Set Session
 		self::setSession ();
@@ -138,6 +138,14 @@ class Application
      */
 	private static function runTargetClassPreconstruct ()
 	{
+	    $sTargetModule = Registry::get ('MVC_MODULES') . '/' . Request::getInstance()->getModule();
+
+	    if (false === file_exists($sTargetModule))
+        {
+            Helper::DEBUG("\n\nModule missing: " . Request::getInstance()->getModule() . "\n\n" . $sTargetModule);
+            Helper::STOP();
+        }
+
         $aQueryArray = Request::getInstance ()->getQueryArray ();
 
 		// identify target class
@@ -146,7 +154,6 @@ class Application
 		// identify target class as file
 		$sFile = Registry::get ('MVC_MODULES') . '/' . str_replace ('\\', '/', $sClass) . '.php';
 
-		// Fallback: read "__preconstruct()" method from MVC_ROUTING_FALLBACK (e.g. Standard\Controller\Index)
 		if (!file_exists ($sFile))
 		{
 			parse_str (Registry::get ('MVC_ROUTING_FALLBACK'), $aParse);
