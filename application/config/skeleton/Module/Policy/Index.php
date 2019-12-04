@@ -20,13 +20,9 @@ class Index
 {
 	/**
 	 * method to run on policy rule
-	 * 
-	 * @access public
-	 * @static
-	 * @return void
 	 */
 	public static function policy1 ()
 	{
-//		\MVC\Helper::DISPLAY(\MVC\Policy::getPolicyRules());
+	    ;
 	}
 }
