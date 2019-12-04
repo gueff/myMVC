@@ -23,11 +23,10 @@ class RouterJsonfile extends \MVC\RouterJson
 {
 
     /**
+     * RouterJsonfile constructor.
      * reads the routing.json file and looks for matching routes<br />
      * The Get-Param `a` will be passed through in both cases
-     *
-     * @access public
-     * @return void
+     * @throws \ReflectionException
      */
     public function __construct()
     {
