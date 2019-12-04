@@ -26,7 +26,7 @@ class Session
 	 * @access private
 	 * @static
 	 */
-	private static $_oSession = NULL;
+	private static $oInstance = NULL;
 
 	/**
 	 * Options
@@ -44,16 +44,19 @@ class Session
 	 */
 	private $_sNamespace;
 
+    /**
+     * @var bool
+     */
+	private $bSessionEnable = false;
 
-	/**
-	 * Constructor
-	 * 
-	 * @access protected
-	 * @return void
-	 */
-	protected function __construct ()
+    /**
+     * Session constructor.
+     * @param string $sNamespace
+     * @throws \ReflectionException
+     */
+	protected function __construct ($sNamespace = '')
 	{
-		$this->_sNamespace = Registry::get('MVC_SESSION_NAMESPACE');
+		$this->setNamespace($sNamespace);
 		$this->_aOption = Registry::get ('MVC_SESSION_OPTIONS');
 		
 		foreach ($this->_aOption as $sKey => $mValue)
@@ -77,26 +80,46 @@ class Session
             session_cache_expire (0);
             session_start ();
         }
-        
-		$this->setNamespace ();
 	}
 
-	/**
-	 * Singleton instance
-	 *
-	 * @access public
-	 * @static
-	 * @return \MVC\Session
-	 */
-	public static function getInstance ()
+    /**
+     * @param bool $bEnable
+     * @return Session
+     */
+	public function enable($bEnable = true)
+    {
+        $this->bSessionEnable = $bEnable;
+
+        return self::$oInstance;
+    }
+
+    /**
+     * @deprecated gets killed next version; use create() instead
+     * @param string $sNamespace
+     * @return Session
+     */
+	public static function getInstance ($sNamespace = '')
 	{
-		if (null === self::$_oSession)
-		{
-			self::$_oSession = new self ();
-		}
-
-		return self::$_oSession;
+		return self::is($sNamespace);
 	}
+
+    /**
+     * @param string $sNamespace
+     * @return Session
+     * @throws \ReflectionException
+     */
+    public static function is ($sNamespace = '')
+    {
+        if (null === self::$oInstance)
+        {
+            self::$oInstance = new self ($sNamespace);
+            return self::$oInstance;
+        }
+
+        self::$oInstance->setNamespace($sNamespace);
+
+        return self::$oInstance;
+    }
 
 	/**
 	 * prevent any cloning
@@ -111,26 +134,24 @@ class Session
 
 	/**
 	 * sets namespace
-	 * 
-	 * @access private
-	 * @param string $sNamespace | default=myMVC
-	 * @return void
-	 */
-	private function setNamespace ($sNamespace = 'myMVC')
+     * @param string $sNamespace
+     * @return Session
+     * @throws \ReflectionException
+     */
+	public function setNamespace ($sNamespace = '')
 	{
-		if ('' !== $sNamespace)
-		{
-			$this->_sNamespace = $sNamespace;
-		}
+        ('' === $sNamespace)
+            // fallback
+            ? $sNamespace = ((true === Registry::isRegistered('MVC_SESSION_NAMESPACE')) ? Registry::get('MVC_SESSION_NAMESPACE') : 'myMVC')
+            : false;
 
-		if (!isset($_SESSION[$this->_sNamespace]))
-		{
-			$_SESSION[$this->_sNamespace] = NULL;
-		}
+		$this->_sNamespace = $sNamespace;
+
+        return self::$oInstance;
 	}
 
 	/**
-	 * gets the namescpace
+	 * gets the namespace
 	 * 
 	 * @access public
 	 * @return string namespace
@@ -142,16 +163,30 @@ class Session
 	
 	/**
 	 * sets a value by its key
-	 * 
-	 * @access public
-	 * @param string $sKey
-	 * @param mixed $mValue
-	 * @return void
-	 */
+     * @param $sKey
+     * @param $mValue
+     * @return Session
+     */
 	public function set ($sKey, $mValue)
 	{
 		$_SESSION[$this->_sNamespace][$sKey] = $mValue;
+
+        return self::$oInstance;
 	}
+
+    /**
+     * @param $sKey
+     * @return bool
+     */
+	public function has ($sKey)
+    {
+        if (isset($_SESSION[$this->_sNamespace][$sKey]))
+        {
+            return true;
+        }
+
+        return false;
+    }
 
 	/**
 	 * gets a value by its key
@@ -183,15 +218,15 @@ class Session
 
 	/**
 	 * kills current session
-	 * 
-	 * @access public
-	 * @return void
-	 */
-	public function kill ()
+     * @return Session
+     */
+	public function kill ($bDeleteOldSession = true)
 	{
-		session_regenerate_id ();
+		session_regenerate_id ($bDeleteOldSession);
 		session_destroy ();
 		$_SESSION = NULL;
 		unset ($_SESSION);
+
+        return self::$oInstance;
 	}
 }
