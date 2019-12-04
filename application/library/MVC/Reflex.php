@@ -13,6 +13,9 @@
  */
 namespace MVC;
 
+use MVC\DataType\DTArrayObject;
+use MVC\DataType\DTKeyValue;
+
 /**
  * Reflex
  */
@@ -32,18 +35,22 @@ class Reflex
 
 	/**
 	 * executes the target (requested) controller class and its method
-	 * 
-	 * @access public
-	 * @param array $aQueryArray
-	 * @return boolean
-	 */
+     * @param array $aQueryArray
+     * @return bool
+     * @throws \ReflectionException
+     */
 	public function reflect (array $aQueryArray = array ())
 	{
-		Event::RUN ('mvc.reflect.start');
+		Event::RUN ('mvc.reflex.reflect.begin',
+            DTArrayObject::create()
+                ->add_aKeyValue(
+                    DTKeyValue::create()->set_sKey('aQueryArray')->set_sValue($aQueryArray)
+                )
+        );
 
 		if (empty ($aQueryArray))
 		{
-			return FALSE;
+			return false;
 		}
 
 		(array_key_exists (Registry::get ('MVC_GET_PARAM_MODULE'), $aQueryArray['GET'])) ? $sModule = $aQueryArray['GET'][Registry::get ('MVC_GET_PARAM_MODULE')] : $sModule = '';
@@ -80,7 +87,7 @@ class Reflex
 					$oReflectionObject = new $sControllerClassName ($sArgs);
 				}
 
-				if (FALSE === filter_var (($oReflectionObject instanceof \MVC\MVCInterface\Controller), FILTER_VALIDATE_BOOLEAN))
+				if (false === filter_var (($oReflectionObject instanceof \MVC\MVCInterface\Controller), FILTER_VALIDATE_BOOLEAN))
 				{
 					//@todo ERROR
 					$sMsg = 'ERROR: <br />Make sure `' . $sControllerClassName . '` <b>implements</b> \MVC\MVCInterface\Controller';
@@ -96,17 +103,39 @@ class Reflex
 					}
 					catch (\ReflectionException $oReflectionException)
 					{
-						return FALSE;
+						return false;
 					}
 
 					// run an event and store the object of the target class within
-					Event::RUN ('mvc.reflect.targetObject.before', $oReflectionObject);
+					Event::RUN ('mvc.reflex.reflect.targetObject.before',
+                        DTArrayObject::create()
+                            ->add_aKeyValue(
+                                DTKeyValue::create()->set_sKey('oReflectionObject')->set_sValue($oReflectionObject)
+                            )
+                            ->add_aKeyValue(
+                                DTKeyValue::create()->set_sKey('sMethod')->set_sValue($sMethod)
+                            )
+                            ->add_aKeyValue(
+                                DTKeyValue::create()->set_sKey('sArgs')->set_sValue($sArgs)
+                            )
+                    );
 
 					// run an event which KEY is
 					//		Class::method 
 					// of the requested Target
 					// and store the object of the target class within
-					Event::RUN ($sControllerClassName . '::' . $sMethod, $oReflectionObject);
+					Event::RUN ($sControllerClassName . '::' . $sMethod,
+                        DTArrayObject::create()
+                            ->add_aKeyValue(
+                                DTKeyValue::create()->set_sKey('oReflectionObject')->set_sValue($oReflectionObject)
+                            )
+                            ->add_aKeyValue(
+                                DTKeyValue::create()->set_sKey('sMethod')->set_sValue($sMethod)
+                            )
+                            ->add_aKeyValue(
+                                DTKeyValue::create()->set_sKey('sArgs')->set_sValue($sArgs)
+                            )
+                    );
 					
 					// static Method or not-static
 					if (true === filter_var ($oReflectionMethod->isStatic (), FILTER_VALIDATE_BOOLEAN))
@@ -118,32 +147,47 @@ class Reflex
 						$oReflectionObject->$sMethod ($sArgs);
 					}
 					
-					Event::RUN ('mvc.reflect.targetObject.after', $oReflectionObject);
+					Event::RUN ('mvc.reflex.reflect.targetObject.after',
+                        DTArrayObject::create()
+                            ->add_aKeyValue(
+                                DTKeyValue::create()->set_sKey('oReflectionObject')->set_sValue($oReflectionObject)
+                            )
+                            ->add_aKeyValue(
+                                DTKeyValue::create()->set_sKey('sMethod')->set_sValue($sMethod)
+                            )
+                            ->add_aKeyValue(
+                                DTKeyValue::create()->set_sKey('sArgs')->set_sValue($sArgs)
+                            )
+                    );
+
 					return true;
 				}
 				else
 				{
-					return FALSE;
+					return false;
 				}
 			}
 			else
 			{
-				return FALSE;
+				return false;
 			}
 		}
 
-		return FALSE;
+		return false;
 	}
 
 	/**
 	 * runs event 'mvc.reflex.destruct'
-	 * 
-	 * @access public
-	 * @return void
-	 */
+     * @throws \ReflectionException
+     */
 	public function __destruct ()
 	{
-		Event::RUN ('mvc.reflex.destruct');
+        Event::RUN ('mvc.reflex.destruct',
+            DTArrayObject::create()
+                ->add_aKeyValue(
+                    DTKeyValue::create()->set_sKey('oReflex')->set_sValue($this)
+                )
+        );
 	}
 
 }
