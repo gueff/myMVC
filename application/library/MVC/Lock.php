@@ -23,9 +23,10 @@ use MVC\DataType\DTKeyValue;
 class Lock
 {
     /**
-     * @param $sKey
+     * @param string $sKey
      * @param bool $bReturn
      * @return bool
+     * @throws \ReflectionException
      */
     public static function create($sKey = '', $bReturn = false)
     {
