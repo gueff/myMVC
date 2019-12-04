@@ -13,6 +13,9 @@
  */
 namespace MVC;
 
+use MVC\DataType\DTArrayObject;
+use MVC\DataType\DTKeyValue;
+
 /**
  * Helper
  */
@@ -66,8 +69,8 @@ class Helper
 	}
 
 	/**
-	 * shows a smaller message on the screen right side.<br />
-	 * if you call display more than once, all messages are showed among each other<br />
+	 * shows a smaller message on the screen right side.
+	 * if you call display more than once, all messages are showed among each other
 	 * use it to debug a string or array or whatever
 	 * 
 	 * @access public
@@ -132,16 +135,12 @@ class Helper
 	}
 
 	/**
-	 * Stops any further execution: exits the script.<br />
+	 * Stops any further execution: exits the script.
 	 * Shows a Message from where the STOP command was called (default).
-	 * 
-	 * @access public
-	 * @static
-	 * @staticvar type $iCount
-	 * @param string $sData
-	 * @param boolean $bOccurrence show occurrence of STOP true|FALSE
-	 * @return void
-	 */
+     * @param string $sData
+     * @param bool $bOccurrence
+     * @throws \ReflectionException
+     */
 	public static function STOP ($sData = '', $bOccurrence = true)
 	{
 		static $iCount;
@@ -195,37 +194,20 @@ class Helper
 			echo '</b></div>';
 		}
 
-		Event::RUN ('mvc.helper.stop', $aBacktrace);
-		exit ();
-	}
+		Event::RUN ('mvc.helper.stop',
+            DTArrayObject::create()
+                ->add_aKeyValue(
+                    DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue($aBacktrace)
+                )
+                ->add_aKeyValue(
+                    DTKeyValue::create()->set_sKey('mData')->set_sValue($mData)
+                )
+                ->add_aKeyValue(
+                    DTKeyValue::create()->set_sKey('bOccurrence')->set_sValue($bOccurrence)
+                )
+        );
 
-	/**
-	 * Writes a Message into Logfile 
-	 * 
-	 * @access public
-	 * @static
-	 * @param String $sMessage Meldung
-	 * @param String $sLogfile OPTIONAL Logfilename.<br />
-	 * It is going to be created if it does not exist<br />
-	 * it will be in the same logdir of the default logfile
-	 * 
-	 * @deprecated since version 14.<br />
-	 * Will be removed in future versions<br />
-	 * Use instead: \MVC\Log::WRITE($sMessage, $sLogfile);
-	 * @return void
-	 */
-	public static function LOG ($sMessage = '', $sLogfile = '')
-	{		
-		$aDebug = self::PREPAREBACKTRACEARRAY (debug_backtrace ());
-		Log::WRITE(
-			"DEPRECATED: " . __METHOD__
-			. "\tReplaced by:\t" 
-			. '\MVC\Log::WRITE($sMessage, $sLogfile); --> called in: ' .  $aDebug['sFile'] . ', ' . $aDebug['sLine'] 
-			, 'notice.log'
-		);
-		
-		// Replaced by:
-		Log::WRITE($sMessage, $sLogfile);
+		exit ();
 	}
 
 	/**
@@ -296,20 +278,18 @@ class Helper
 	}
 
 	/**
-	 * gets the uri protocol
-	 *
-	 * @access public
-	 * @static
-	 * @param mixed $mSsl
-	 * @return string http:// | https://
-	 */
-	public static function GETURIPROTOCOL ($mSsl = NULL)
+	 * gets the http uri protocol
+     * @param null $mSsl
+     * @return string|null
+     * @throws \ReflectionException
+     */
+	public static function GETURIPROTOCOL ($mSsl = null)
 	{
 		// detect on ssl or not
 		if (isset ($mSsl))
 		{
 			// http
-			if ((int) $mSsl === 0 || $mSsl == FALSE)
+			if ((int) $mSsl === 0 || $mSsl == false)
 			{
 				return 'http://';
 			}
@@ -323,7 +303,7 @@ class Helper
 		else
 		{
 			// http
-			if (self::DETECTSSL () === FALSE)
+			if (self::DETECTSSL () === false)
 			{
 				return 'http://';
 			}
@@ -334,8 +314,13 @@ class Helper
 			}
 		}
 
-		\MVC\Event::RUN('mvc.error', 'could not detect protocol of requested page.');
-		
+		\MVC\Event::RUN('mvc.error',
+            DTArrayObject::create()
+                ->add_aKeyValue(
+                    DTKeyValue::create()->set_sKey('sMessage')->set_sValue('could not detect protocol of requested page.')
+                )
+        );
+
 		return NULL;
 	}
 
@@ -353,9 +338,10 @@ class Helper
 			return Registry::get('MVC_SECURE_REQUEST');
 		}
 		
-		return (array_key_exists('HTTPS', $_SERVER) && strtolower($_SERVER['HTTPS']) !== 'off') || Registry::isRegistered ('MVC_SSL_PORT') && $_SERVER['SERVER_PORT'] == Registry::get('MVC_SSL_PORT');
-
-		return FALSE;
+		return (
+		        (array_key_exists('HTTPS', $_SERVER) && strtolower($_SERVER['HTTPS']) !== 'off')
+            ||  Registry::isRegistered ('MVC_SSL_PORT') && $_SERVER['SERVER_PORT'] == Registry::get('MVC_SSL_PORT')
+        );
 	}
 
 	/**
