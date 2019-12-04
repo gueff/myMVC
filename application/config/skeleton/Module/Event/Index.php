@@ -8,15 +8,15 @@
  * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
  */
 
-use MVC\DataType\DTArrayObject;
-use MVC\Event;
-use MVC\Registry;
-use MVC\Request;
-
 /**
  * @name ${module}Event
  */
 namespace {module}\Event;
+
+use MVC\DataType\DTArrayObject;
+use MVC\Event;
+use MVC\Registry;
+use MVC\Request;
 
 /**
  * Index
