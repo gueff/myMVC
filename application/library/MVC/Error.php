@@ -30,12 +30,11 @@ class Error
 	protected static $_aError;
 
 	/**
-	 * sets error handlers; 
+     * Error constructor.
+	 * sets error handlers;
 	 * bind event 'mvc.error' to function
-	 * 
-	 * @access public
-	 * @return void
-	 */
+     * @throws \ReflectionException
+     */
 	public function __construct ()
 	{
 		register_shutdown_function ("\MVC\Error::FATAL");
@@ -87,12 +86,9 @@ class Error
 
 	/**
 	 * Uncaught exception handler
-	 * 
-	 * @access public
-	 * @static
-	 * @param $oErrorException 
-	 * @return void
-	 */
+     * @param $oErrorException
+     * @throws \ReflectionException
+     */
 	public static function EXCEPTION ($oErrorException)
 	{		
 		
@@ -133,11 +129,8 @@ class Error
 
 	/**
 	 * Checks for a fatal error, work around for set_error_handler not working on fatal errors.
-	 * 
-	 * @access public
-	 * @static
-	 * @return void
-	 */
+     * @throws \ReflectionException
+     */
 	public static function FATAL ()
 	{
 		$aError = error_get_last ();
