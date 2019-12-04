@@ -37,14 +37,6 @@ class Index implements \MVC\MVCInterface\Controller
 	protected $_aRoutingCurrent = array();
 
 	/**
-	 * Event Object
-	 * 
-	 * @var \{module}\Event\Index
-	 * @access protected
-	 */
-	protected $_o{module}EventIndex;
-	
-	/**
 	 * View Object
 	 * 
 	 * @var \{module}\View\Index
@@ -70,47 +62,40 @@ class Index implements \MVC\MVCInterface\Controller
 	public static function __preconstruct ()
 	{
 		// start event listener
-		\{module}\Event\Index::getInstance ();
+		\{module}\Event\Index::getInstance();
 	}
 	
-	/**
-	 * Constructor
-	 * 
-	 * @access public
-	 * @return void
-	 */
+    /**
+     * Index constructor.
+     * @throws \ReflectionException
+     */
 	public function __construct ()
 	{
 		$this->_oMVCSession = \MVC\Registry::get('MVC_SESSION');
 		$this->_aRoutingCurrent = \MVC\Registry::get('MVC_ROUTING_CURRENT');
 		
-		$this->_o{module}ModelIndex = new \{module}\Model\Index ();
+		$this->_o{module}ModelIndex = new \{module}\Model\Index();
 		$this->o{module}ViewIndex = new \{module}\View\Index();
 
 		// Standard Title
 		$this->o{module}ViewIndex->assign ('sTitle', '{module}');
 	}
 
-	/**
-	 * index
-	 * 
-	 * @access public
-	 * @return void
-	 */
+    /**
+     * @throws \SmartyException
+     */
 	public function index ()
 	{
 		// Set Value in sContent Var
 		$this->o{module}ViewIndex->assignValue ($this->o{module}ViewIndex->loadTemplateAsString ('index/index.tpl'));
 	}
-	
-	/**
-	 * Destructor
-	 * 
-	 * @access public
-	 * @return void
-	 */
+
+    /**
+     * @throws \ReflectionException
+     * @throws \SmartyException
+     */
 	public function __destruct ()
 	{
 		$this->o{module}ViewIndex->render ();
-	}	
+	}
 }
