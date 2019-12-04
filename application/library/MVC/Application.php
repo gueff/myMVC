@@ -13,6 +13,9 @@
  */
 namespace MVC;
 
+use MVC\DataType\DTArrayObject;
+use MVC\DataType\DTKeyValue;
+
 /**
  * Application
  */
@@ -20,16 +23,20 @@ class Application
 {
 
 	/**
-	 * constructor;
+     * Application constructor.
 	 * 
 	 * @access public
 	 * @param array $aConfig configuration array 
 	 * @return void
-	 */
+     * @throws \Exception
+     */
 	public function __construct (array $aConfig = array ())
 	{
 		// write configs into registry
 		$this->saveConfigToRegistry ($aConfig);
+
+        // handle Errors
+        $oError = new Error();
 
 		// add a CLI wrapper to enable requests from command line
 		(true === filter_var (Registry::get ('MVC_CLI'), FILTER_VALIDATE_BOOLEAN)) ? $this->cliWrapper () : false;
@@ -41,14 +48,11 @@ class Application
 			. ' ' . (array_key_exists ('REQUEST_URI', $_SERVER) ? $_SERVER['REQUEST_URI'] : '')
 		);
 
-		// handle Errors
-		new Error();
-
 		// handle Routing
-		new Router();
+		$oRouter = new Router();
 
 		// Run target Controller's __preconstruct()
-		self::runTargetClassPreconstruct (Request::getInstance ()->getQueryArray ());
+		self::runTargetClassPreconstruct ();
 
 		// Set Session
 		self::setSession ();
@@ -56,12 +60,26 @@ class Application
 		// consider Policy Rules
 		// e.g. maybe the requested target controller may not be called due to some reason 
 		// and should be protected from any requesting
-		new Policy();
+		$oPolicy = new Policy();
 
 		// Run the requested target Controller
-		new Controller (Request::getInstance ());
+		$oController = new Controller (Request::getInstance ());
 
-		Event::RUN ('mvc.application.construct.finished');
+		Event::RUN ('mvc.application.construct.done',
+            DTArrayObject::create()
+                ->add_aKeyValue(
+                    DTKeyValue::create()->set_sKey('oError')->set_sValue($oError)
+                )
+                ->add_aKeyValue(
+                    DTKeyValue::create()->set_sKey('oRouter')->set_sValue($oRouter)
+                )
+                ->add_aKeyValue(
+                    DTKeyValue::create()->set_sKey('oPolicy')->set_sValue($oPolicy)
+                )
+                ->add_aKeyValue(
+                    DTKeyValue::create()->set_sKey('oController')->set_sValue($oController)
+                )
+        );
 	}
 
 	/**
@@ -87,16 +105,15 @@ class Application
 	 * @access private
 	 * @static
 	 * @return void
-	 */
+     * @throws \Exception
+     */
 	private static function setSession ()
 	{
-		Event::RUN ('mvc.session.before');
+		Event::RUN ('mvc.setSession.begin', DTArrayObject::create());
 
-        $oSession = null;
-        
         (!file_exists (Registry::get ('MVC_SESSION_PATH'))) ? mkdir (Registry::get ('MVC_SESSION_PATH')) : false;
 
-        $oSession = Session::getInstance ();
+        $oSession = Session::is();
         $iMicrotime = microtime (true);
         $sMicrotime = sprintf ("%06d", ($iMicrotime - floor ($iMicrotime)) * 1000000);
         $oSession->set ('startDateTime', new \DateTime (date ('Y-m-d H:i:s.' . $sMicrotime, $iMicrotime)));
@@ -105,28 +122,34 @@ class Application
         // copy Session Object to registry
         Registry::set ('MVC_SESSION', $oSession);
 
-		Event::RUN ('mvc.session');
+		Event::RUN ('mvc.setSession.done',
+            DTArrayObject::create()
+                ->add_aKeyValue(
+                    DTKeyValue::create()->set_sKey('oSession')->set_sValue($oSession)
+                )
+        );
 	}
 
 	/**
-	 * calls the "BEFORE" method<br />
-	 * inside the requested Controller. To be executed<br />
-	 * before Session, IDS and all the Main Functionalities.<br />
+	 * calls the "BEFORE" method
+	 * inside the requested Controller. To be executed
+	 * before Session, IDS and all the Main Functionalities.
 	 * 
 	 * @access private
 	 * @static
-	 * @param array $aQueryArray
 	 * @return void
 	 */
-	private static function runTargetClassPreconstruct (array $aQueryArray = array ())
+	private static function runTargetClassPreconstruct ()
 	{
+        $aQueryArray = Request::getInstance ()->getQueryArray ();
+
 		// identify target class
 		$sClass = '\\' . $aQueryArray['GET'][Registry::get ('MVC_GET_PARAM_MODULE')] . '\\Controller\\' . $aQueryArray['GET'][Registry::get ('MVC_GET_PARAM_C')];
 
 		// identify target class as file
 		$sFile = Registry::get ('MVC_MODULES') . '/' . str_replace ('\\', '/', $sClass) . '.php';
 
-		// Fallback: read MVC_BEFORE method from MVC_ROUTING_FALLBACK (e.g. Standard\Controller\Index)
+		// Fallback: read "__preconstruct()" method from MVC_ROUTING_FALLBACK (e.g. Standard\Controller\Index)
 		if (!file_exists ($sFile))
 		{
 			parse_str (Registry::get ('MVC_ROUTING_FALLBACK'), $aParse);
@@ -136,23 +159,35 @@ class Application
 
 		if (class_exists ($sClass))
 		{
-			$sBeforeMethod = Registry::get ('MVC_METHODNAME_PRECONSTRUCT');
+			$sMethod = Registry::get ('MVC_METHODNAME_PRECONSTRUCT');
 
-			if (method_exists ($sClass, $sBeforeMethod))
+			if (method_exists ($sClass, $sMethod))
 			{
-				$sClass::$sBeforeMethod ();
+				$sClass::$sMethod ();
 			}
 		}
 		else
 		{
-			//@todo Error
-			Event::RUN ('mvc.error', array (
-				'level' => 1,
-				'message' => __FILE__ . ', ' . __LINE__ . "\t" . 'Class does not exist: `' . $sClass . '`'
-			));
+			Event::RUN ('mvc.error',
+                DTArrayObject::create()
+                    ->add_aKeyValue(
+                        DTKeyValue::create()->set_sKey('iLevel')->set_sValue(1)
+                    )
+                    ->add_aKeyValue(
+                        DTKeyValue::create()->set_sKey('sMessage')->set_sValue(__FILE__ . ', ' . __LINE__ . "\t" . 'Class does not exist: `' . $sClass . '`')
+                    )
+            );
 		}
 
-		Event::RUN ('mvc.targetClassBeforeMethod.after');
+		Event::RUN ('mvc.runTargetClassPreconstruct.done',
+            DTArrayObject::create()
+                ->add_aKeyValue(
+                    DTKeyValue::create()->set_sKey('sClass')->set_sValue($sClass)
+                )
+                ->add_aKeyValue(
+                    DTKeyValue::create()->set_sKey('sMethod')->set_sValue($sMethod)
+                )
+        );
 	}
 
 	/**
@@ -161,7 +196,6 @@ class Application
 	 * 		$ php index.php "/"
 	 * 
 	 * @access private
-	 * @return void
 	 */
 	private function cliWrapper ()
 	{
@@ -204,7 +238,12 @@ class Application
 	 */
 	public function __destruct ()
 	{
-		Event::RUN ('mvc.application.destruct');
+		Event::RUN ('mvc.application.destruct',
+            DTArrayObject::create()
+                ->add_aKeyValue(
+                    DTKeyValue::create()->set_sKey('oController')->set_sValue($this)
+                )
+        );
 	}
 
 }
