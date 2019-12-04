@@ -8,6 +8,11 @@
  * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
  */
 
+use MVC\DataType\DTArrayObject;
+use MVC\Event;
+use MVC\Registry;
+use MVC\Request;
+
 /**
  * @name ${module}Event
  */
@@ -26,59 +31,67 @@ class Index
 	 * @static
 	 */
 	private static $_oInstance = NULL;
-	
-	/**
-	 * Constructor
-	 * 
-	 * @access protected
-	 * @return void
-	 */
-	protected function __construct()
-	{
-		/*
-		 * What to do on invalid requets
-		 */
-		\MVC\Event::BIND ('mvc.invalidRequest', function() {
-			
-			\MVC\Request::REDIRECT ('/');
-		});		
-	
-		/*
-		 * We want to log the end of the request
-		 */
-		\MVC\Event::BIND ('mvc.application.destruct', function () {
-			
-			\MVC\Log::WRITE (str_repeat('*', 25) . "\t" . 'End of Request' . str_repeat ("\n", 6));
-		});	
-	}
 
-	/**
-	 * Singleton instance
-	 *
-	 * @access public
-	 * @static
-	 * @return \{module}\Event\Index
-	 */
-	public static function getInstance ()
-	{
-		if (null === self::$_oInstance)
-		{
-			self::$_oInstance = new self ();
-		}
+    /**
+     * Index constructor.
+     * @throws \ReflectionException
+     */
+    protected function __construct()
+    {
+        $aEvent = Registry::get('MODULE_{module}');
 
-		return self::$_oInstance;
-	}	
-	
-	/**
-	 * prevent any cloning
-	 * 
-	 * @access private
-	 * @return void
-	 */
-	private function __clone ()
-	{
-		;
-	}
+        foreach ($aEvent['EVENT_BIND'] as $sEvent => $oClosure)
+        {
+            Event::BIND($sEvent, $oClosure);
+        }
+    }
+
+    /**
+     * Singleton instance
+     * @return \{module}\Event\Index
+     * @throws \ReflectionException
+     */
+    public static function getInstance()
+    {
+        if (null === self::$_oInstance)
+        {
+            self::$_oInstance = new self ();
+        }
+
+        return self::$_oInstance;
+    }
+
+    /**
+     * prevent any cloning
+     *
+     * @access private
+     * @return void
+     */
+    private function __clone()
+    {
+        ;
+    }
+
+    /**
+     * activates Session for Frontend Calls
+     * @param DTArrayObject $oDTArrayObject
+     * @throws \ReflectionException
+     */
+    public static function enableSession(\MVC\DataType\DTArrayObject $oDTArrayObject)
+    {
+        // Request via GUI
+        $bIsGuiRequest = in_array(
+            Request::getInstance()->getController(),
+            Registry::get('MODULE_{module}')['SESSION']['aEnableSessionForController']
+        );
+
+        if (true === $bIsGuiRequest &&
+            isset($_COOKIE['myMVC_cookieConsent']) &&
+            "true" == $_COOKIE['myMVC_cookieConsent'])
+        {
+            \MVC\Registry::set('MVC_SESSION_ENABLE', true);
+        }
+    }
 	
 	/**
 	 * Destructor
