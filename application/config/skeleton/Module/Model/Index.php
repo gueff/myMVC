@@ -18,23 +18,14 @@ namespace {module}\Model;
  */
 class Index
 {
-	/**
-	 * Construcor
-	 * 
-	 * @access public
-	 * @return void
-	 */
+    /**
+     * Index constructor.
+     */
 	public function __construct ()
 	{
 		;
 	}
 	
-	/**
-	 * Destructor
-	 * 
-	 * @access public
-	 * @return void
-	 */
 	public function __destruct ()
 	{
 		;
