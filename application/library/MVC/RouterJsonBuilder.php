@@ -54,10 +54,9 @@ class RouterJsonBuilder implements \MVC\MVCInterface\RouterJsonBuilder
 
 	/**
 	 * gets routing JSON string
-	 * 
-	 * @access public
-	 * @return string JSON
-	 */
+     * @return false|string
+     * @throws \ReflectionException
+     */
 	public function getRoutingJson ()
 	{
 		return file_get_contents (Registry::get ('MVC_ROUTING_JSON'));
