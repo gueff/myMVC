@@ -1,7 +1,7 @@
 <?php
 
 //-------------------------------------------------------------------------------------
-// Module LCP
+// Module {module}
 
 $aConfig['MODULE_{module}'] = array(
 
@@ -52,7 +52,7 @@ $aConfig['MODULE_{module}'] = array(
         // get consent to set session cookie
         /** @var \MVC\DataType\DTArrayObject $oDTArrayObject */
         'mvc.setSession.begin' => function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \LCP\Event\Index::enableSession($oDTArrayObject);
+            \{module}\Event\Index::enableSession($oDTArrayObject);
         },
     )
 );
