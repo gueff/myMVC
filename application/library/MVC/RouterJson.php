@@ -13,6 +13,9 @@
  */
 namespace MVC;
 
+use MVC\DataType\DTArrayObject;
+use MVC\DataType\DTKeyValue;
+
 /**
  * RouterJson
  * 
@@ -54,12 +57,11 @@ class RouterJson implements \MVC\MVCInterface\RouterJson
 
 
 	/**
-	 * reads the routing.json file and looks for matching routes<br /> 
+     * RouterJson constructor.
+	 * reads the routing.json file and looks for matching routes<br />
 	 * The Get-Param `a` will be passed through in both cases
-	 * 
-	 * @access public
-	 * @return boolean
-	 */
+     * @throws \ReflectionException
+     */
 	public function __construct ()
 	{
 		// call the Routing Json building class to get the proper routing
@@ -68,7 +70,10 @@ class RouterJson implements \MVC\MVCInterface\RouterJson
 
 		if (!isset ($sRoutingBuilder))
 		{
-			Error::addERROR ('config MVC_ROUTING_JSON_BUILDER is not set.');
+			Error::addERROR (
+                DTArrayObject::create()
+                    ->add_aKeyValue(DTKeyValue::create()->set_sKey('sMessage')->set_sValue('config MVC_ROUTING_JSON_BUILDER is not set.'))
+            );
 			return false;
 		}
 
@@ -98,11 +103,11 @@ class RouterJson implements \MVC\MVCInterface\RouterJson
 
 		if (false === filter_var (($this->_oRoutingBuilder instanceof \MVC\MVCInterface\RouterJsonBuilder), FILTER_VALIDATE_BOOLEAN))
 		{
-			/**
-			 * @todo ERROR
-			 */
-			$sMsg = 'ERROR: <br />Make sure `' . $sRoutingBuilder . '` <b>implements</b> \MVC\MVCInterface\RouterJsonBuilder';
-			Error::addERROR ($sMsg);
+			$sMsg = 'ERROR: Make sure `' . $sRoutingBuilder . '` implements \MVC\MVCInterface\RouterJsonBuilder';
+			Error::addERROR (
+                DTArrayObject::create()
+                    ->add_aKeyValue(DTKeyValue::create()->set_sKey('sMessage')->set_sValue($sMsg))
+            );
 			Helper::STOP ($sMsg);
 		}
 		
@@ -127,11 +132,9 @@ class RouterJson implements \MVC\MVCInterface\RouterJson
 
 	/**
 	 * gets routing array
-	 * 
-	 * @access public
-	 * @static
-	 * @return array
-	 */
+     * @return mixed
+     * @throws \ReflectionException
+     */
 	public static function GETROUTINGARRAY ()
 	{
 		return Registry::get ('MVC_ROUTING');
@@ -139,11 +142,9 @@ class RouterJson implements \MVC\MVCInterface\RouterJson
 
 	/**
 	 * gets routing as json string
-	 * 
-	 * @access public
-	 * @static
-	 * @return string JSON
-	 */
+     * @return false|string
+     * @throws \ReflectionException
+     */
 	public static function GETROUTINGJSON ()
 	{
 		return json_encode (Registry::get ('MVC_ROUTING'));
