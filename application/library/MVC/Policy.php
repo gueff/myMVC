@@ -13,46 +13,63 @@
  */
 namespace MVC;
 
+use MVC\DataType\DTArrayObject;
+use MVC\DataType\DTKeyValue;
+
 /**
  * Policy
  */
 class Policy
 {
 	
-	/**
-	 * gets the policy rules; if one matches to the current request, it will be executed
-	 *
-	 * @access public
-	 * @return void
-	 */
+    /**
+     * Policy constructor.
+     */
 	public function __construct ()
 	{
-		Event::RUN ('mvc.policy.before');
-
-		Event::BIND ('mvc.error', function($mPackage)
-		{
-			\MVC\Error::addERROR ($mPackage);
-		});
-
-		$aPolicy = $this->getPolicyRuleOnCurrentRequest ();
-
-		if (!empty ($aPolicy))
-		{
-			foreach ($aPolicy as $sPolicy)
-			{
-				if ('' !== $sPolicy)
-				{
-					// execute policy
-					if (call_user_func ($sPolicy) === FALSE)
-					{
-						\MVC\Event::RUN ('mvc.error', "Policy could not be executed: " . $sPolicy);
-					}
-				}
-			}
-		}
-
-		Event::RUN ('mvc.policy.after');
+        $this->apply();
 	}
+
+    /**
+     * gets the policy rules; if one matches to the current request, it will be executed
+     */
+	protected function apply()
+    {
+        $aPolicy = $this->getPolicyRuleOnCurrentRequest ();
+
+        if (!empty ($aPolicy))
+        {
+            foreach ($aPolicy as $sPolicy)
+            {
+                if ('' !== $sPolicy)
+                {
+                    $bSuccess = true;
+
+                    // execute policy
+                    if (false === call_user_func ($sPolicy))
+                    {
+                        $bSuccess = false;
+                        Event::RUN ('mvc.error',
+                            DTArrayObject::create()
+                                ->add_aKeyValue(
+                                    DTKeyValue::create()->set_sKey('sMessage')->set_sValue("Policy could not be executed: " . $sPolicy)
+                                )
+                        );
+                    }
+
+                    Event::RUN ('mvc.policy.apply.execute',
+                        DTArrayObject::create()
+                            ->add_aKeyValue(
+                                DTKeyValue::create()->set_sKey('bSuccess')->set_sValue($bSuccess)
+                            )
+                            ->add_aKeyValue(
+                                DTKeyValue::create()->set_sKey('sPolicy')->set_sValue($sPolicy)
+                            )
+                    );
+                }
+            }
+        }
+    }
 
 	/**
 	 * gets the policy rules from registry
