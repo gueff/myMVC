@@ -134,11 +134,8 @@ class Application
 	 * calls the "BEFORE" method
 	 * inside the requested Controller. To be executed
 	 * before Session, IDS and all the Main Functionalities.
-	 * 
-	 * @access private
-	 * @static
-	 * @return void
-	 */
+     * @throws \ReflectionException
+     */
 	private static function runTargetClassPreconstruct ()
 	{
         $aQueryArray = Request::getInstance ()->getQueryArray ();
@@ -232,10 +229,8 @@ class Application
 	/**
 	 * Destructor; 
 	 * runs Event mvc.application.destruct
-	 * 
-	 * @access public
-	 * @return void
-	 */
+     * @throws \ReflectionException
+     */
 	public function __destruct ()
 	{
 		Event::RUN ('mvc.application.destruct',
