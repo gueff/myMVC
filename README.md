@@ -364,7 +364,7 @@ enables the echo out of the rendered view template
 view listens here
 ~~~
 
-`mvc.view.render.before`
+`mvc.view.render.begin`
 ~~~
 /application/library/MVC/View.php
 MVC_View render is called, but not rendered yet
@@ -385,7 +385,7 @@ MVC_View renderString has been called, already rendered
 contains string $sTemplateString
 ~~~
 
-`mvc.view.render.after`
+`mvc.view.render.done`
 ~~~
 /application/library/MVC/View.php
 MVC_View render has been called, already rendered
