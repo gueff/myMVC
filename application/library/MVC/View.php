@@ -168,7 +168,6 @@ class View extends \Smarty
      */
 	public function render ()
 	{		
-		\MVC\Event::RUN('mvc.view.render.begin', $this);
         Event::RUN ('mvc.view.render.begin',
             DTArrayObject::create()
                 ->add_aKeyValue(
