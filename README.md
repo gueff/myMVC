@@ -313,12 +313,12 @@ Session Object is built and copied to the registry
 /application/library/MVC/Controller.php
 ~~~
 
-`mvc.reflect.start`
+`mvc.reflex.reflect.begin`
 ~~~
 /application/library/MVC/Reflex.php
 ~~~
 
-`mvc.reflect.targetObject.before`
+`mvc.reflex.reflect.targetObject.before`
 ~~~
 /application/library/MVC/Reflex.php
 contains the target Class as the already instanciated object
@@ -336,7 +336,7 @@ of the requested Target
 and store the object of the target class within
 ~~~
 
-`mvc.reflect.targetObject.after`
+`mvc.reflex.reflect.targetObject.after`
 ~~~
 /application/library/MVC/Reflex.php
 contains the target Class as the already instanciated object
