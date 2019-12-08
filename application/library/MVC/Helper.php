@@ -137,11 +137,12 @@ class Helper
 	/**
 	 * Stops any further execution: exits the script.
 	 * Shows a Message from where the STOP command was called (default).
-     * @param string $sData
-     * @param bool $bOccurrence
+     * @param mixed $mData default=''
+     * @param bool $bShowWhereStop default=true
+     * @param bool $bDump default=true
      * @throws \ReflectionException
      */
-	public static function STOP ($sData = '', $bOccurrence = true)
+	public static function STOP ($mData = '', $bShowWhereStop = true, $bDump = true)
 	{
 		static $iCount;
 		$iCount++;
@@ -149,11 +150,18 @@ class Helper
 		// source
 		$aBacktrace = self::PREPAREBACKTRACEARRAY(debug_backtrace ());
 
-		ob_start();
-		var_dump($sData);
-		$mData = ob_get_contents();
-		ob_end_clean();
-		
+		if (true === $bDump)
+        {
+            ob_start();
+            var_dump($mData);
+            $sEcho = ob_get_contents();
+            ob_end_clean();
+        }
+		else
+        {
+            $sEcho = $mData;
+        }
+
 		// output CLI
 		if (isset ($GLOBALS['argc']))
 		{
@@ -163,12 +171,12 @@ class Helper
 			$sConsultation.= "\nLine:\t\t\t" . $aBacktrace['sLine'] . "";
 			$sConsultation.= "\nClass::function:\t" . $aBacktrace['sClass'] . '::' . $aBacktrace['sFunction'] . "\n";
 
-			echo ($bOccurrence === true) ? $sConsultation : '';
+			echo ($bShowWhereStop === true) ? $sConsultation : '';
 
-			if (isset ($sData) && !empty ($sData))
+			if (isset ($mData) && !empty ($mData))
 			{
-				echo ($bOccurrence === true) ? "\nData:\n" : '';
-				echo $mData . "\n";
+				echo ($bShowWhereStop === true) ? "\nData:\n" : '';
+				echo $sEcho . "\n";
 			}
 			echo "\n---/STOP------------------------\n\n";
 		}
@@ -184,12 +192,12 @@ class Helper
             
 			// display
 			echo '<div class="draggable" style="padding:10px !important;z-index:10000 !important;position:fixed !important;top:10px !important;left:10px !important;background-color:red !important;color:white !important;border:1px solid #333 !important;width:400px !important;height:auto !important;overflow:auto !important;-moz-border-radius: 3px !important; border-radius: 3px !important;"><b>';
-			echo ($bOccurrence === true) ? '<h1 style="font-size:20px !important;">STOP</h1><p>Stopped at:</p>' . $sConsultation : '';
+			echo ($bShowWhereStop === true) ? '<h1 style="font-size:20px !important;">STOP</h1><p>Stopped at:</p>' . $sConsultation : '';
 
-			if (isset ($sData) && !empty ($sData))
+			if (isset ($mData) && !empty ($mData))
 			{
-				echo ($bOccurrence === true) ? '<h2>Data</h2><p>' : '';
-				echo '<pre style="font-size:10px;overflow:auto !important;max-height:300px !important;background-color:transparent !important;color:#fff !important;border: none !important;">' . $mData . '</pre></p>';
+				echo ($bShowWhereStop === true) ? '<h2>Data</h2><p>' : '';
+				echo '<pre style="font-size:10px;overflow:auto !important;max-height:300px !important;background-color:transparent !important;color:#fff !important;border: none !important;">' . $sEcho . '</pre></p>';
 			}
 			echo '</b></div>';
 		}
@@ -200,10 +208,10 @@ class Helper
                     DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue($aBacktrace)
                 )
                 ->add_aKeyValue(
-                    DTKeyValue::create()->set_sKey('mData')->set_sValue($mData)
+                    DTKeyValue::create()->set_sKey('mData')->set_sValue($sEcho)
                 )
                 ->add_aKeyValue(
-                    DTKeyValue::create()->set_sKey('bOccurrence')->set_sValue($bOccurrence)
+                    DTKeyValue::create()->set_sKey('bOccurrence')->set_sValue($bShowWhereStop)
                 )
         );
 

@@ -108,8 +108,13 @@ class Registry
 	{
 		if (!array_key_exists ($sIndex, self::$_aStorage))
 		{
-			$sMsg = "No entry is registered for key '$sIndex'";
-			Helper::STOP ($sMsg);
+		    $aDebug = debug_backtrace();
+			$sMsg = "<h1>Registry Key unknown</h1>\nNo entry is registered\nfor key '$sIndex'\n\nFile:\n"
+                . $aDebug[0]['file']
+                . "\nLine:\n" . $aDebug[0]['line']
+                . "\n\nSTOP\n"
+            ;
+			Helper::STOP ($sMsg, false, false);
 		}
 
 		return self::$_aStorage[$sIndex];
