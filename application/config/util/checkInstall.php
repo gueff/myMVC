@@ -242,6 +242,15 @@ class MyMVCInstaller
 		(!file_exists ($this->_aConfig['MVC_SMARTY_TEMPLATE_CACHE_DIR'])) ? mkdir ($this->_aConfig['MVC_SMARTY_TEMPLATE_CACHE_DIR']) : FALSE;
 		(!file_exists ($this->_aConfig['MVC_APPLICATION_CONFIG_EXTEND_DIR'])) ? mkdir ($this->_aConfig['MVC_APPLICATION_CONFIG_EXTEND_DIR']) : FALSE;
 		(!file_exists ($this->_aConfig['MVC_LOG_FILE_FOLDER'])) ? mkdir ($this->_aConfig['MVC_LOG_FILE_FOLDER']) : FALSE;
+
+		if (!file_exists ($this->_aConfig['MVC_PUBLIC_PATH'] . '/.env'))
+        {
+            $sMsg = "MVC_ENV=" . $this->_sMvcEnv;
+            file_put_contents(
+                $this->_aConfig['MVC_PUBLIC_PATH'] . '/.env',
+                $sMsg
+            );
+        }
 	}
 
 	/**
