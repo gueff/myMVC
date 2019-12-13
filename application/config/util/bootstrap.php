@@ -7,6 +7,25 @@
  * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
  */
 
+// read .env file in the public folder
+if (file_exists('.env'))
+{
+    $aEnvContent = array_values(array_filter(file('.env'), 'trim'));
+
+    foreach ($aEnvContent as $sLine)
+    {
+        // skip comment lines
+        if ('#' === substr(trim($sLine), 0, 1))
+        {
+            continue;
+        }
+
+        // simply set
+        putenv(trim($sLine));
+    }
+}
+
+
 // we need MVC_ENV set.
 // So if MVC_ENV is not already set (e.g. via Webserver, which is the recommended way - see documentation), 
 // this fallback sets a value
