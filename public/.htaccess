@@ -5,9 +5,6 @@
 #
 ################################################################################
 
-# Environment
-SetEnv MVC_ENV develop
-
 # Deactivate session auto start
 php_value session.auto_start 0
 
