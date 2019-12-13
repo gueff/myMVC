@@ -575,7 +575,7 @@ class DataType
             }
             else
             {
-                $sContent.= $oProperty->get_value() . ';' . "\r\n";
+                $sContent.= (true === is_null($oProperty->get_value())) ? "null;\r\n" : $oProperty->get_value() . ';' . "\r\n";
             }
         }
 
