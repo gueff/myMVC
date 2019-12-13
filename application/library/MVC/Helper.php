@@ -128,7 +128,7 @@ class Helper
 			}
 
 			// Display
-			echo '<div class="draggable" style="overflow:auto;z-index:10000 !important;position:fixed !important;bottom:10px !important;right:10px !important;background-color:blue !important;color:white !important;border:1px solid #333 !important;width:500px !important;overflow:y-scroll !important;-moz-border-radius:3px !important; border-radius: 3px !important;font-size:12px !important;font-family: monospace !important;"><b>';
+			echo '<div class="draggable" style="overflow: auto !important;max-height: 90%;z-index:10000 !important;position:fixed !important;bottom:10px !important;right:10px !important;background-color:blue !important;color:white !important;border:1px solid #333 !important;width:500px !important;-moz-border-radius:3px !important; border-radius: 3px !important;font-size:12px !important;font-family: monospace !important;"><b>';
 			echo $sDisplay;
 			echo '</b></div>';
 		}
