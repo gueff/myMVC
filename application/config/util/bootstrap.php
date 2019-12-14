@@ -7,54 +7,54 @@
  * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
  */
 
-// read .env file in the public folder
-if (file_exists('.env'))
-{
-    $aEnvContent = array_values(array_filter(file('.env'), 'trim'));
+READ_ENV: {
 
-    foreach ($aEnvContent as $sLine)
+    // read .env file in the public folder
+    if (file_exists('.env'))
     {
-        // skip comment lines
-        if ('#' === substr(trim($sLine), 0, 1))
-        {
-            continue;
-        }
+        $aEnvContent = array_values(array_filter(file('.env'), 'trim'));
 
-        // simply set
-        putenv(trim($sLine));
+        foreach ($aEnvContent as $sLine)
+        {
+            // skip comment lines
+            if ('#' === substr(trim($sLine), 0, 1))
+            {
+                continue;
+            }
+
+            // simply set
+            putenv(trim($sLine));
+        }
     }
 }
 
+MVC_ENV: {
 
-// we need MVC_ENV set.
-// So if MVC_ENV is not already set (e.g. via Webserver, which is the recommended way - see documentation), 
-// this fallback sets a value
-(false === getenv ('MVC_ENV')) ? putenv('MVC_ENV=develop') : false;
-
-MVC_INSTALL: {
-
-	/**
-	 * check install status
-	 * if necessary,
-	 * auto create folders, run composer, install required libraries
-	 */
-	require_once __DIR__ . '/checkInstall.php';
+    // we need the variable MVC_ENV set.
+    // So if MVC_ENV is not already set this fallback sets it to develop
+    (false === getenv ('MVC_ENV')) ? putenv('MVC_ENV=develop') : false;
+    $aConfig['MVC_ENV'] = getenv('MVC_ENV');
 }
 
 MVC_CONFIG: {
 
-	// load main config
-	require_once __DIR__ . '/stagingLoader.php';
+	// place of main myMVC config
+    $aConfig['MVC_CONFIG_DIR'] = realpath(__DIR__ . '/../../../') . '/config';
 
-	/**
-	 * customize/extend the config:
-	 * scan the webroot/config folder and require all *.php files. 
-	 * You may customize previous settings there and/or declare new ones 
-	 */
-	foreach (glob ($aConfig['MVC_APPLICATION_CONFIG_EXTEND_DIR'] . '/*.php') as $sFile)
+    // load main config
+	foreach (glob ($aConfig['MVC_CONFIG_DIR'] . '/*.php') as $sFile)
 	{
 		require_once $sFile;
 	}
+
+	require_once '_myMVC.php';
+}
+
+MVC_INSTALL: {
+
+    // check install status.
+    // if necessary, auto create folders, run composer, install required libraries
+    require_once __DIR__ . '/checkInstall.php';
 }
 
 MVC_AUTOLOADING: {
@@ -78,9 +78,9 @@ MVC_AUTOLOADING: {
 	 * by $aConfig['MVC_COMPOSER_DIR']
 	 * 
 	 * For example:
-	 * 		$aConfig['MVC_COMPOSER_DIR'] = $aConfig['MVC_APPLICATION_CONFIG_EXTEND_DIR'];
+	 * 		$aConfig['MVC_COMPOSER_DIR'] = $aConfig['MVC_CONFIG_DIR'];
 	 * 		or, even better, using a subdirectory - here, it is called "myMVC":
-	 * 		$aConfig['MVC_COMPOSER_DIR'] = $aConfig['MVC_APPLICATION_CONFIG_EXTEND_DIR'] . '/myMvc/';
+	 * 		$aConfig['MVC_COMPOSER_DIR'] = $aConfig['MVC_CONFIG_DIR'] . '/myMvc/';
 	 */
 	if (isset ($aConfig['MVC_COMPOSER_DIR']) && file_exists ($aConfig['MVC_COMPOSER_DIR'] . '/vendor/autoload.php'))
 	{
