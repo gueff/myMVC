@@ -10,106 +10,53 @@
 /**
  * instantiate MyMVCInstaller
  */
-$oMyMVCInstaller = new MyMVCInstaller();
+$oMyMVCInstaller = new MyMVCInstaller($aConfig);
 
 /**
  * MyMVCInstaller
  */
 class MyMVCInstaller
 {
+    /**
+     * @var array
+     */
+    protected $aConfig;
 
-	/**
-	 *
-	 * @var string
-	 * @access private
-	 */
-	private $_sApplicationDir;
-	
-	/**
-	 *
-	 * @var string
-	 * @access private
-	 */
-	private $_sStagingDir;
-	
-	/**
-	 *
-	 * @var string
-	 * @access private
-	 */
-	private $_sMvcEnv;
-	
-	/**
-	 *
-	 * @var string
-	 * @access private
-	 */
-	private $_sConfigFile;
-	
-	/**
-	 *
-	 * @var array
-	 * @access private
-	 */
-	private $_aConfig;
-	
-	/**
-	 *
-	 * @var array
-	 * @access private
-	 */
-	private $_aBootstrapperFileInfo;
-	
-	/**
-	 *
-	 * @var string
-	 * @access private
-	 */
-	private $_sInstallLock;
-	
-	/**
-	 *
-	 * @var boolean
-	 * @access private
-	 */
-	private $_bPreset = false;
-	
+    /**
+     * @var
+     */
+	protected $aBootstrapperFileInfo;
+
+    /**
+     * @var bool
+     */
+	protected static $bOutputStarted = false;
+
 	/**
 	 * Constructor
 	 * @access public
-	 */
-	public function __construct ()
+	 */ 
+	public function __construct (array $aConfig = array())
 	{
-		$this->_sApplicationDir = realpath (__DIR__ . '/../../');
-		$this->_sStagingDir = realpath (__DIR__ . '/../') . '/staging/';
-		$this->_sStageSample = $this->_sStagingDir . 'develop.sample';
-		$this->_sInstallLock = $this->_sApplicationDir . '/INSTALLER_RUNNING.sh';
-		$this->_sMvcEnv = getenv ('MVC_ENV');
-		$this->_sConfigFile = $this->_sStagingDir . $this->_sMvcEnv . '/config.php';
-		
-		if (false === file_exists ($this->_sConfigFile))
-		{
-			$this->_installingSampleConfig ();
-		}
+        $this->aConfig = $aConfig;
+		$this->setupDirsAndFiles();
+		$this->checkForPHPExtensions();
 
-		include $this->_sConfigFile;
-		$this->_aConfig = $aConfig;
-
-		$this->_setupDirsAndFiles ();
-		$this->_setup ();
+        if (true === $this->installMainLibraries() || true === $this->installModuleLibraries())
+        {
+            $this->_text("\n<hr /><dd><b><i class='fa fa-check text-success'></i></b> Installation completed.\n</dd>");
+            ('cli' !== php_sapi_name()) ? $this->_text("<dd>Page will auto-reload in 5 seconds...</dd>") : '';
+            $sMarkup = '<script>reload();</script>';
+            echo ('cli' !== php_sapi_name()) ? $sMarkup : '';
+            exit();
+        }
 	}
 
-	/**
-	 * @access private
-	 * @return boolean
-	 */
-	private function preset()
+    /**
+     * @return bool
+     */
+	protected function flushOutput()
 	{
-		if (true === $this->_bPreset)
-		{
-			return true;
-		}
-		
 		error_reporting (E_ALL);
 		set_time_limit (0);
 		ini_set('implicit_flush', 1);		
@@ -119,92 +66,81 @@ class MyMVCInstaller
 		return true;
 	}
 
-
-	/**
-	 * 
-	 * @access private
-	 * @return string
-	 */
-	private function checkPhpExtension()
+    /**
+     * @return string
+     */
+	protected function checkPhpExtension()
 	{
-		$aMustHave = array(
-			'Core',
-			'ctype',
-			'curl',
-			'date',
-			'dom',
-			'fileinfo',
-			'filter',
-			'iconv',
-			'json',
-			'mbstring',
-			'Phar',
-			'posix',
-			'Reflection',
-			'session',
-			'SimpleXML',
-			'standard',
-			'SPL',
-		);
-		
 		$aExt = get_loaded_extensions();
+		$aExtMissing = array();
 		$sMsg = '';
 
-		foreach ($aMustHave as $sExt)
+		foreach ($this->aConfig['MVC_CORE']['phpExtensionsRequired'] as $sExt)
 		{
 			if (!in_array ($sExt, $aExt))
 			{
-				$sMsg.= '&bull; the requested PHP extension <b>' . $sExt . '</b> is missing from your system.<br />';
+				$aExtMissing[] = $sExt;
 			}
 		}
 		
-		if ('' !== $sMsg)
+		if (false === empty($aExtMissing))
 		{
-			$sMsg.= '<br />Please install and activate required PHP extensions first.<br />Abort.';
+			$sMsg = "\nPHP extensions are missing on your system: \n";
+            $sMsg.= '<ul>';
+
+			foreach ($aExtMissing as $sMissing)
+            {
+                $sMsg.= '<li>' . $sMissing . "</li>\n";
+            }
+
+			$sMsg.='</ul>' . "\n";
+            $sMsg.= "Required Extensions: \n";
+            $sMsg.= implode(', ', $this->aConfig['MVC_CORE']['phpExtensionsRequired']);
 		}
 		
 		return $sMsg;
 	}
 
-	/**
-	 * @access private
-	 * @return void
-	 */
-	private function checkFunction()
+    /**
+     * @return string
+     */
+	protected function checkFunction()
 	{
-		$aMustHave = array(
-			'mb_strlen',
-			'iconv',
-			'utf8_decode',
-			'posix_isatty',
-		);
-		
-		$sMsg = '';
-		
-		foreach ($aMustHave as $sExt)
-		{
-			if (false === function_exists ($sExt))
-			{
-				$sMsg.= '&bull; the requested PHP function <b>' . $sExt . '</b> is missing from your system.<br />';
-			}
-		}
-		
-		if ('' !== $sMsg)
-		{
-			$sMsg.= '<br />Please install and activate related PHP extensions first.<br />Abort.';
-		}
-		
-		return $sMsg;
+        $aFuncMissing = array();
+        $sMsg = '';
+
+        foreach ($this->aConfig['MVC_CORE']['phpFunctionsRequired'] as $sExt)
+        {
+            if (false === function_exists ($sExt))
+            {
+                $aFuncMissing[] = $sExt;
+            }
+        }
+
+        if (false === empty($aFuncMissing))
+        {
+            $sMsg = "\nPHP functions are missing on your system: \n";
+            $sMsg.= '<ul>';
+
+            foreach ($aFuncMissing as $sMissing)
+            {
+                $sMsg.= '<li>' . $sMissing . "</li>\n";
+            }
+
+            $sMsg.='</ul>' . "\n";
+            $sMsg.= "Required Extensions: \n";
+            $sMsg.= implode(', ', $this->aConfig['MVC_CORE']['phpExtensionsRequired']);
+        }
+
+        return $sMsg;
 	}
 
-	/**
-	 * 
-	 * @access private
-	 * @return void
-	 */
-	private function _getBootstrapperFileInfo()
+    /**
+     * @return array
+     */
+	protected function getBootstrapperFileInfo()
 	{
-		$sFilename = realpath (__DIR__ . '/../../../') . '/public/index.php';
+		$sFilename = $this->aConfig['MVC_PUBLIC_PATH'] . '/index.php';
 		$aUser = posix_getpwuid(fileowner($sFilename));
 		$aGroup = posix_getgrgid(filegroup($sFilename));
 		
@@ -214,197 +150,261 @@ class MyMVCInstaller
 		);
 	}
 
-	/**
-	 * 
-	 * @access private
-	 * @return boolean
-	 */
-	private function _installingSampleConfig ()
+    /**
+     * @return bool
+     */
+	protected function setupDirsAndFiles ()
 	{
-		$this->preset();
-		$sMarkup = '<div style="position:absolute;top: 10px; right: 10px;margin: 0 auto;background-color: #F5F5F5; color: black;border: 1px solid silver;padding: 20px;border-radius: 3px;box-shadow: 0px 0px 10px 0px rgba(50,50,50,1);opacity:0.9;font-family:monospace;"><b>&#x2713;</b> Config for Environment "' . $this->_sMvcEnv . '" installed.</div>';
-		echo ('cli' === php_sapi_name()) ? strip_tags($sMarkup) . "\n" : $sMarkup;
-		$sCmd = 'cp -r ' . $this->_sStageSample . ' ' . $this->_sStagingDir . $this->_sMvcEnv;
-		$sResult = shell_exec ($sCmd);
-		
-		return true;
-	}
+		(!file_exists ($this->aConfig['MVC_CACHE_DIR'])) ? mkdir ($this->aConfig['MVC_CACHE_DIR']) : FALSE;
+		(!file_exists ($this->aConfig['MVC_SESSION_PATH'])) ? mkdir ($this->aConfig['MVC_SESSION_PATH']) : FALSE;
+		(!file_exists ($this->aConfig['MVC_SMARTY_TEMPLATE_CACHE_DIR'])) ? mkdir ($this->aConfig['MVC_SMARTY_TEMPLATE_CACHE_DIR']) : FALSE;
+		(!file_exists ($this->aConfig['MVC_APPLICATION_CONFIG_EXTEND_DIR'])) ? mkdir ($this->aConfig['MVC_APPLICATION_CONFIG_EXTEND_DIR']) : FALSE;
+		(!file_exists ($this->aConfig['MVC_LOG_FILE_FOLDER'])) ? mkdir ($this->aConfig['MVC_LOG_FILE_FOLDER']) : FALSE;
 
-	/**
-	 * 
-	 * @access private
-	 * @return void
-	 */
-	private function _setupDirsAndFiles ()
-	{
-		(!file_exists ($this->_aConfig['MVC_CACHE_DIR'])) ? mkdir ($this->_aConfig['MVC_CACHE_DIR']) : FALSE;
-		(!file_exists ($this->_aConfig['MVC_SESSION_PATH'])) ? mkdir ($this->_aConfig['MVC_SESSION_PATH']) : FALSE;
-		(!file_exists ($this->_aConfig['MVC_SMARTY_TEMPLATE_CACHE_DIR'])) ? mkdir ($this->_aConfig['MVC_SMARTY_TEMPLATE_CACHE_DIR']) : FALSE;
-		(!file_exists ($this->_aConfig['MVC_APPLICATION_CONFIG_EXTEND_DIR'])) ? mkdir ($this->_aConfig['MVC_APPLICATION_CONFIG_EXTEND_DIR']) : FALSE;
-		(!file_exists ($this->_aConfig['MVC_LOG_FILE_FOLDER'])) ? mkdir ($this->_aConfig['MVC_LOG_FILE_FOLDER']) : FALSE;
-
-		if (!file_exists ($this->_aConfig['MVC_PUBLIC_PATH'] . '/.env'))
+		if (!file_exists ($this->aConfig['MVC_PUBLIC_PATH'] . '/.env'))
         {
-            $sMsg = "MVC_ENV=" . $this->_sMvcEnv;
-            file_put_contents(
-                $this->_aConfig['MVC_PUBLIC_PATH'] . '/.env',
+            $sMsg = "# auto generated at " . date('Y-m-d H:i:s') . "\n";
+            $sMsg.= "MVC_ENV=" . $this->aConfig['MVC_ENV'];
+
+            return (boolean) file_put_contents(
+                $this->aConfig['MVC_PUBLIC_PATH'] . '/.env',
                 $sMsg
             );
         }
-	}
 
-	/**
-	 * 
-	 * @access private
-	 * @return boolean
-	 */
-	private function _setup ()
+		return false;
+    }
+
+    protected function placeMarkup()
+    {
+        $sMarkup = '<!DOCTYPE html><html lang="en">'
+            . '<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"><title>myMVC</title><link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"><link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css"><link rel="stylesheet" href="/myMVC/styles/myMVC.css"></head>'
+            . '<body><a name="top"></a>'
+            . '<div class="container">'
+            . '<div class="header"><h3 class="text-muted">myMVC <small>[maɪ ɛm viː siː]</small></h3></div><hr/>'
+            . '<div id="jumboHomepage" class="jumbotron">'
+            . '<noscript><p>please activate Javascript<br />then run this page again.</p></noscript>'
+            . '</div>'
+            . '<footer class="footer"><p>&copy; ueffing.net ' . date('Y') . '</p></footer>'
+            . '</div>'
+            . '<script>function text(sTxt){var sInnerHTML = document.getElementById("jumboHomepage").innerHTML; document.getElementById("jumboHomepage").innerHTML = sInnerHTML + sTxt};function reload(){setTimeout(function(){window.location.reload(1);}, 5000);}</script>'
+            . '</body></html>';
+        echo ('cli' !== php_sapi_name()) ? $sMarkup : '';
+    }
+
+    /**
+     * @param string $sInstallLock
+     * @return bool
+     */
+    protected function writeInstallLock($sInstallLock = '')
+    {
+        if ('' !== $sInstallLock && false === file_exists($sInstallLock))
+        {
+            return touch($sInstallLock);
+        }
+
+        return false;
+    }
+
+    /**
+     * @param string $sInstallLock
+     * @return bool
+     */
+    protected function removeInstallLock($sInstallLock = '')
+    {
+        if ('' !== $sInstallLock && file_exists($sInstallLock))
+        {
+            return unlink($sInstallLock);
+        }
+
+        return false;
+    }
+
+    protected function checkForPHPExtensions()
+    {
+        $sPhpExtensionMissing = $this->checkPhpExtension();
+        $sPhpFunctionMissing = $this->checkFunction();
+
+        if ('' !== $sPhpExtensionMissing)
+        {
+            $this->placeMarkup();
+            $this->_text('<h1>myMVC</h1><h2>Auto-Installer</h2>');
+            $this->_text($sPhpExtensionMissing);
+            exit();
+        }
+
+        if ('' !== $sPhpFunctionMissing)
+        {
+            $this->placeMarkup();
+            $this->_text('<h1>myMVC</h1><h2>Auto-Installer</h2>');
+            $this->_text($sPhpFunctionMissing);
+            exit();
+        }
+    }
+
+    protected function prepareForOutput($sInstallLock = '')
+    {
+        if (false === self::$bOutputStarted)
+        {
+            $this->placeMarkup();
+            $this->flushOutput();
+            $this->aBootstrapperFileInfo = $this->getBootstrapperFileInfo();
+            $this->_text('<h1>myMVC</h1><h2>Auto-Installer</h2>');
+
+            // abort if installer is still running
+            if (file_exists ($sInstallLock))
+            {
+                $this->_text('<dd>The Installer seems to be running in the background. Please wait a few minutes before reloading this page.</dd>');
+                exit();
+            }
+
+            // write installer lock file
+            $this->writeInstallLock($sInstallLock);
+
+            $this->_text('<dd>&bull; MVC_ENV is: <code>' . $this->aConfig['MVC_ENV'] . '</code></dd>');
+            $this->_text('<dd>&bull; User/Group from <code>/public/index.php</code>: <code>'
+                . $this->aBootstrapperFileInfo['aUser']['name']
+                . '</code>(' . $this->aBootstrapperFileInfo['aUser']['uid'] . ') / <code>'
+                . $this->aBootstrapperFileInfo['aGroup']['name']
+                . '</code>(' . $this->aBootstrapperFileInfo['aGroup']['gid'] . ')</dd>');
+
+            // add composer home if missing
+            if (false === getenv ('COMPOSER_HOME'))
+            {
+                putenv ('COMPOSER_HOME=' . $this->aConfig['MVC_APPLICATION_PATH'] . '/.composer');
+            }
+
+            self::$bOutputStarted = true;
+        }
+    }
+
+    /**
+     * @return bool
+     */
+	protected function installMainLibraries()
 	{
+        $sInstallLock = $this->aConfig['MVC_APPLICATION_PATH'] . '/INSTALLER_RUNNING.sh';
+
 		if (
-			file_exists ($this->_sApplicationDir . '/vendor') && file_exists ($this->_sApplicationDir . '/composer.lock') && file_exists ($this->_sApplicationDir . '/.composer')
-		)
+            file_exists ($this->aConfig['MVC_APPLICATION_PATH'] . '/.composer') &&
+            file_exists ($this->aConfig['MVC_APPLICATION_PATH'] . '/composer.json') &&
+            file_exists ($this->aConfig['MVC_APPLICATION_PATH'] . '/composer.lock') &&
+		    file_exists ($this->aConfig['MVC_APPLICATION_PATH'] . '/vendor')
+        )
 		{
-			(file_exists($this->_sInstallLock)) ? unlink($this->_sInstallLock) : false;
-			return true;
+			$this->removeInstallLock($sInstallLock);
+			return false;
 		}
 
-		/**
-		 * customize/extend the config:
-		 * scan the webroot/config folder and require all *.php files. 
-		 * You may customize previous settings there and/or declare new ones 
-		 */
-		foreach (glob ($this->_aConfig['MVC_APPLICATION_CONFIG_EXTEND_DIR'] . '/*.php') as $sFile)
-		{
-			$aConfig = $this->_aConfig;
-			include $sFile;
-			$this->_aConfig = $aConfig;
-		}	
-		
-		$this->preset();		
-		$this->_aBootstrapperFileInfo = $this->_getBootstrapperFileInfo();
+        $aComposerJson = json_decode(file_get_contents($this->aConfig['MVC_APPLICATION_PATH'] . '/composer.json'), true);
 
-		$sMarkup = '<!DOCTYPE html><html lang="en">'
-		. '<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"><title>myMVC</title><link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"><link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css"><link rel="stylesheet" href="/myMVC/styles/myMVC.css"></head>'
-		. '<body><a name="top"></a>'
-			. '<div class="container">'
-			. '<div class="header"><h3 class="text-muted">myMVC <small>[maɪ ɛm viː siː]</small></h3></div><hr/>'
-			. '<div id="jumboHomepage" class="jumbotron">'
-			. '<noscript><p>please activate Javascript<br />then run this page again.</p></noscript>'
-			. '</div>'
-			. '<footer class="footer"><p>&copy; ueffing.net ' . date('Y') . '</p></footer>'
-			. '</div>'
-			. '<script>function text(sTxt){var sInnerHTML = document.getElementById("jumboHomepage").innerHTML; document.getElementById("jumboHomepage").innerHTML = sInnerHTML + sTxt};function reload(){setTimeout(function(){window.location.reload(1);}, 5000);}</script>'
-		. '</body></html>';
-		echo ('cli' !== php_sapi_name()) ? $sMarkup : '';
-		
-		$this->_text('<h1>myMVC</h1><h2>Auto-Installer</h2>');
+        if (empty($aComposerJson))
+        {
+            return false;
+        }
 
-		// abort if installer is still running
-		if (file_exists ($this->_sInstallLock))
-		{
-			$this->_text('<dd>The Installer seems to be running in the background. Please wait a few minutes before reloading this page.</dd>');
-			exit();
-		}
-		
-		// write installer lock file
-		touch($this->_sInstallLock);
-		
-		$sPhpExtensionMissing = $this->checkPhpExtension();		
-		if ('' !== $sPhpExtensionMissing)
-		{
-			$this->_text('<dd>'. trim($sPhpExtensionMissing) . '</dd>');
-			(file_exists($this->_sInstallLock)) ? unlink($this->_sInstallLock) : false;
-			exit();
-		}		
-		
-		$sPhpFunctionMissing = $this->checkFunction();		
-		if ('' !== $sPhpFunctionMissing)
-		{
-			$this->_text('<dd>'. trim($sPhpFunctionMissing) . '</dd>');
-			exit();
-		}		
-		
-		$this->_text('<dd>&bull; MVC_ENV is: <code>' . $this->_sMvcEnv . '</code></dd>');
-		$this->_text('<dd>&bull; User/Group from <code>/public/index.php</code>: <code>' . $this->_aBootstrapperFileInfo['aUser']['name'] . '</code>(' . $this->_aBootstrapperFileInfo['aUser']['uid'] . ') / <code>' . $this->_aBootstrapperFileInfo['aGroup']['name'] . '</code>(' . $this->_aBootstrapperFileInfo['aGroup']['gid'] . ')</dd>');
+        $this->prepareForOutput($sInstallLock);
 
-		// add composer home if missing
-		if (false === getenv ('COMPOSER_HOME'))
-		{
-			putenv ('COMPOSER_HOME=' . $this->_aConfig['MVC_APPLICATION_PATH'] . '/.composer');
-		}
+        // save runfile
+        $sCmd = 'cd ' . $this->aConfig['MVC_APPLICATION_PATH'] . '; '
+            . PHP_BINDIR . '/php ' . $this->aConfig['MVC_APPLICATION_PATH'] . '/composer.phar self-update; '
+            . PHP_BINDIR . '/php ' . $this->aConfig['MVC_APPLICATION_PATH'] . '/composer.phar install --prefer-dist; '
+            . 'rm ' . $sInstallLock . ';';
 
-		// save runfile
-		$sCmd = 'cd ' . $this->_aConfig['MVC_APPLICATION_PATH'] . ';'
-			. PHP_BINDIR . '/php ' . $this->_aConfig['MVC_APPLICATION_PATH'] . '/composer.phar self-update;'
-			. PHP_BINDIR . '/php ' . $this->_aConfig['MVC_APPLICATION_PATH'] . '/composer.phar install --prefer-dist;'
-			. 'rm ' . $this->_sInstallLock . ';';
-		
-		file_put_contents($this->_sInstallLock, "#!/bin/bash\n" . $sCmd);
+        file_put_contents($sInstallLock, "#!/bin/bash\n" . $sCmd);
+        $iPid = $this->_runInBackground ('/bin/bash ' . $sInstallLock);
+        $this->_text('<dd>&bull; Installing required <kbd>Main Application libraries</kbd> via composer in Background with PID <code>' . $iPid . '</code>. Please wait.</dd>');
 
-		$iPid = $this->_runInBackground ('/bin/bash ' . $this->_sInstallLock);		
-		$this->_text('<dd>&bull; Installing required libraries via composer in Background with PID <code>' . $iPid . '</code>. Please wait.</dd>');
-		$this->_text('<pre>' . $sCmd . '</pre>');
+        while ($this->_isProcessRunning ($iPid))
+        {
+            $this->_flush ();
+        }
 
-		while ($this->_isProcessRunning ($iPid))
-		{
-			$this->_flush ();
-		}		
+        $this->removeInstallLock($sInstallLock);
 
-		if (array_key_exists ('MVC_COMPOSER_DIR', $this->_aConfig))
-		{
-			if (file_exists ($this->_aConfig['MVC_COMPOSER_DIR']))
-			{
-				$this->_text("<dd>installing custom libs defined by custom config</dd>");
-				$sCmd = "cd " . $this->_aConfig['MVC_APPLICATION_PATH'] . "; php " . $this->_aConfig['MVC_APPLICATION_PATH'] . "/composer.phar --working-dir=" . $this->_aConfig['MVC_COMPOSER_DIR'] . " install --prefer-dist";
-				$this->_text('<pre>' . $sCmd . "\n" . '</pre>');
-				$iPid = $this->_runInBackground ($sCmd);
-				$this->_text('<dd>PID: ' . $iPid . '</dd>');
-
-				while ($this->_isProcessRunning ($iPid))
-				{
-					$this->_flush ();
-				}
-			}
-		}
-
-		(file_exists($this->_sInstallLock)) ? unlink($this->_sInstallLock) : false;
-		
-		$this->_text("\n<hr /><dd><b><i class='fa fa-check text-success'></i></b> Installation completed.\n</dd>");
-		('cli' !== php_sapi_name()) ? $this->_text("<dd>Page will auto-reload in 5 seconds...</dd>") : '';
-		$sMarkup = '<script>reload();</script>';
-		echo ('cli' !== php_sapi_name()) ? $sMarkup : '';
-		
-		exit ();
+        return true;
 	}
 
-	/**
-	 * 
-	 * @param type $sCommand
-	 * @access private
-	 * @return void
-	 */
-	private function _runInBackground ($sCommand)
+    /**
+     * @return bool
+     */
+    protected function installModuleLibraries()
+    {
+        if (false == file_exists($this->aConfig['MVC_COMPOSER_DIR'] . '/composer.json'))
+        {
+            return false;
+        }
+
+        $sInstallLock = $this->aConfig['MVC_COMPOSER_DIR'] . '/INSTALLER_RUNNING.sh';
+
+        if (
+            file_exists($this->aConfig['MVC_COMPOSER_DIR'] . '/composer.json') &&
+            file_exists ($this->aConfig['MVC_COMPOSER_DIR'] . '/composer.lock') &&
+            file_exists($this->aConfig['MVC_COMPOSER_DIR'] . '/vendor')
+        )
+        {
+            $this->removeInstallLock($sInstallLock);
+            return false;
+        }
+
+        $aComposerJson = json_decode(file_get_contents($this->aConfig['MVC_COMPOSER_DIR'] . '/composer.json'), true);
+
+        if (empty($aComposerJson))
+        {
+            return false;
+        }
+
+        $this->prepareForOutput($sInstallLock);
+
+        // save runfile
+        $sCmd = 'cd ' . $this->aConfig['MVC_COMPOSER_DIR'] . '; '
+            . PHP_BINDIR . '/php ' . $this->aConfig['MVC_APPLICATION_PATH'] . '/composer.phar self-update; '
+            . PHP_BINDIR . '/php ' . $this->aConfig['MVC_APPLICATION_PATH'] . '/composer.phar --working-dir="' . $this->aConfig['MVC_COMPOSER_DIR'] . '" install --prefer-dist; '
+            . 'rm ' . $sInstallLock . ';';
+
+        file_put_contents($sInstallLock, "#!/bin/bash\n" . $sCmd);
+        $iPid = $this->_runInBackground ('/bin/bash ' . $sInstallLock);
+        $this->_text('<dd>&bull; Installing required <kbd>Module libraries</kbd> via composer in Background with PID <code>' . $iPid . '</code>. Please wait.</dd>');
+
+        while ($this->_isProcessRunning ($iPid))
+        {
+            $this->_flush ();
+        }
+
+        $this->removeInstallLock($sInstallLock);
+
+        return true;
+    }
+
+    /**
+     * @param $sCommand
+     * @return string
+     */
+	protected function _runInBackground ($sCommand)
 	{
 		$iPid = trim (shell_exec ($sCommand . ' > /dev/null 2>/dev/null & echo $!'));
+
 		return $iPid;
 	}
 
-	/**
-	 * 
-	 * @param type $iPid
-	 * @access private
-	 * @return void
-	 */
-	private function _isProcessRunning ($iPid)
+    /**
+     * @param $iPid
+     * @return bool
+     */
+	protected function _isProcessRunning ($iPid = 0)
 	{
+	    if (0 === $iPid)
+        {
+            return false;
+        }
+
 		exec ('/bin/ps ' . $iPid, $iProcessState);
-		return(count ($iProcessState) >= 2);
+        $bIsRunning = (count ($iProcessState) >= 2);
+
+		return $bIsRunning;
 	}
 
-	/**
-	 * 
-	 */
-	private function _flush ()
+	protected function _flush ()
 	{
 		$this->_text("<i class='fa fa-asterisk fa-spin text-primary'></i>");
 		
@@ -413,13 +413,10 @@ class MyMVCInstaller
 		sleep (3);
 	}
 
-	/**
-	 * 
-	 * @param type $sText
-	 * @access private
-	 * @return void
-	 */
-	private function _text($sText = '')
+    /**
+     * @param string $sText
+     */
+	protected function _text($sText = '')
 	{
 		if ('cli' === php_sapi_name())
 		{
@@ -428,7 +425,7 @@ class MyMVCInstaller
 		}
 		else
 		{
-			echo '<script>text("' . $sText . '");</script>';
+            echo '<script>text("' . str_replace("\n", '<br>', trim($sText)) . '");</script>';
 		}
 	}
 }
