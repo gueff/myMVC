@@ -8,5 +8,5 @@ MODULENAME="$(basename "$(pwd)")";
 
 
 echo "copying public Data...";
-cp -r ./_INSTALL/public/*			../../public/
+cp -r ./etc/_INSTALL/public/*			../../public/
 echo "...done!";
