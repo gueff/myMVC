@@ -72,7 +72,7 @@ MVC_APPLICATION_SETTINGS: {
 
     /**
      * Name of method to be executed in the Target Controller Class
-     * before session, IDS and other main functionalities.
+     * before session and other main functionalities.
      * It will be called in /application/library/MVC/Application.php:
      *        self::runTargetClassPreconstruct (Request::getInstance ()->getQueryArray ());
      *
@@ -99,8 +99,8 @@ MVC_APPLICATION_SETTINGS: {
     $aConfig['MVC_LIBRARY'] = $aConfig['MVC_APPLICATION_PATH'] . '/library';
     $aConfig['MVC_MODULES'] = $aConfig['MVC_BASE_PATH'] . '/modules';
 
-    // custom config folder
-    $aConfig['MVC_APPLICATION_CONFIG_EXTEND_DIR'] = $aConfig['MVC_BASE_PATH'] . '/config';
+    // Main myMVC config folder
+    $aConfig['MVC_CONFIG_DIR'] = $aConfig['MVC_BASE_PATH'] . '/config';
 
     // cache folder and
     // cache folder access rights, octal mode
@@ -196,11 +196,6 @@ MVC_TEMPLATE_ENGINE_SMARTY: {
 
     // array Location of Smarty PlugIns 
     $aConfig['MVC_SMARTY_PLUGINS_DIR'][] = $aConfig['MVC_APPLICATION_PATH'] . '/smartyPlugins';
-}
-
-MVC_IDS: {
-
-    $aConfig['MVC_IDS_CONFIG'] = $aConfig['MVC_APPLICATION_CONFIG_DIR'] . '/staging/' . getenv('MVC_ENV') . '/ids.ini';
 }
 
 /**
