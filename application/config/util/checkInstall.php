@@ -330,7 +330,7 @@ class MyMVCInstaller
      */
     protected function installModuleLibraries()
     {
-        if (false == file_exists($this->aConfig['MVC_COMPOSER_DIR'] . '/composer.json'))
+        if (false === isset($this->aConfig['MVC_COMPOSER_DIR']) || false == file_exists($this->aConfig['MVC_COMPOSER_DIR'] . '/composer.json'))
         {
             return false;
         }
