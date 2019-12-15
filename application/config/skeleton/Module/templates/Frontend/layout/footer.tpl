@@ -1,3 +1,3 @@
-		<div class="footer">
-		  <p>&copy; Company year</p>
-		</div>
+		<footer class="container">
+			<p>&copy; Company {$smarty.now|date_format:"%Y"}</p>
+		</footer>
