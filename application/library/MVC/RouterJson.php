@@ -79,8 +79,6 @@ class RouterJson implements \MVC\MVCInterface\RouterJson
 
 		$this->_oRoutingBuilder = new $sRoutingBuilder;
 		$this->_sRoutingJson = $this->_oRoutingBuilder->getRoutingJson();
-		var_dump($this->_sRoutingJson);
-
         $this->_aRouting = json_decode ($this->_sRoutingJson, true);
 
         if (0 !== json_last_error())
