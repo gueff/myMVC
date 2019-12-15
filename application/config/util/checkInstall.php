@@ -42,7 +42,7 @@ class MyMVCInstaller
 		$this->setupDirsAndFiles();
 		$this->checkForPHPExtensions();
 
-        if (true === $this->installMainLibraries() || true === $this->installModuleLibraries())
+        if (true === $this->installMainLibraries() || true === $this->installModuleLibraries() || true === $this->checkOnModulesInstalled())
         {
             $this->_text("\n<hr /><dd><b><i class='fa fa-check text-success'></i></b> Installation completed.\n</dd>");
             ('cli' !== php_sapi_name()) ? $this->_text("<dd>Page will auto-reload in 5 seconds...</dd>") : '';
@@ -51,6 +51,24 @@ class MyMVCInstaller
             exit();
         }
 	}
+
+	protected function checkOnModulesInstalled()
+    {
+        $aModule = glob($this->aConfig['MVC_MODULES'] . '/*', GLOB_ONLYDIR);
+
+        if (empty($aModule))
+        {
+            $this->prepareForOutput();
+            $this->_text("\n<br><span class='text-info'><b>🛈</b> You need to install a Module to work on.</span>");
+            $this->_text("\n<br>Open a console and enter:");
+            $this->_text("\n<hr><kbd>cd " . $this->aConfig['MVC_BASE_PATH'] . "; " . PHP_BINDIR . "/php myMVC.phar</kbd>");
+
+            if ('cli' !== php_sapi_name())
+            {
+                exit();
+            }
+        }
+    }
 
     /**
      * @return bool
@@ -249,17 +267,20 @@ class MyMVCInstaller
             $this->placeMarkup();
             $this->flushOutput();
             $this->aBootstrapperFileInfo = $this->getBootstrapperFileInfo();
-            $this->_text('<h1>myMVC</h1><h2>Auto-Installer</h2>');
+            $this->_text('<h2>setup checking</h2>');
 
-            // abort if installer is still running
-            if (file_exists ($sInstallLock))
+            if ('' !== $sInstallLock)
             {
-                $this->_text('<dd>The Installer seems to be running in the background. Please wait a few minutes before reloading this page.</dd>');
-                exit();
-            }
+                // abort if installer is still running
+                if (file_exists ($sInstallLock))
+                {
+                    $this->_text('<dd>The Installer seems to be running in the background. Please wait a few minutes before reloading this page.</dd>');
+                    exit();
+                }
 
-            // write installer lock file
-            $this->writeInstallLock($sInstallLock);
+                // write installer lock file
+                $this->writeInstallLock($sInstallLock);
+            }
 
             $this->_text('<dd>&bull; MVC_ENV is: <code>' . $this->aConfig['MVC_ENV'] . '</code></dd>');
             $this->_text('<dd>&bull; User/Group from <code>/public/index.php</code>: <code>'
