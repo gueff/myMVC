@@ -176,7 +176,7 @@ class MyMVCInstaller
 		(!file_exists ($this->aConfig['MVC_CACHE_DIR'])) ? mkdir ($this->aConfig['MVC_CACHE_DIR']) : FALSE;
 		(!file_exists ($this->aConfig['MVC_SESSION_PATH'])) ? mkdir ($this->aConfig['MVC_SESSION_PATH']) : FALSE;
 		(!file_exists ($this->aConfig['MVC_SMARTY_TEMPLATE_CACHE_DIR'])) ? mkdir ($this->aConfig['MVC_SMARTY_TEMPLATE_CACHE_DIR']) : FALSE;
-		(!file_exists ($this->aConfig['MVC_APPLICATION_CONFIG_EXTEND_DIR'])) ? mkdir ($this->aConfig['MVC_APPLICATION_CONFIG_EXTEND_DIR']) : FALSE;
+		(!file_exists ($this->aConfig['MVC_CONFIG_DIR'])) ? mkdir ($this->aConfig['MVC_CONFIG_DIR']) : FALSE;
 		(!file_exists ($this->aConfig['MVC_LOG_FILE_FOLDER'])) ? mkdir ($this->aConfig['MVC_LOG_FILE_FOLDER']) : FALSE;
 
 		if (!file_exists ($this->aConfig['MVC_PUBLIC_PATH'] . '/.env'))
