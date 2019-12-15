@@ -65,7 +65,8 @@ MVC_APPLICATION_SETTINGS: {
      *
      * Note: Possibility of a direct call (http|cli) of this route is disabled
      */
-    $aConfig['MVC_ROUTING_FALLBACK'] = $aConfig['MVC_GET_PARAM_MODULE'] . '=standard&'
+    $aConfig['MVC_ROUTING_FALLBACK'] =
+          $aConfig['MVC_GET_PARAM_MODULE'] . '=standard&'
         . $aConfig['MVC_GET_PARAM_C'] . '=index&'
         . $aConfig['MVC_GET_PARAM_M'] . '=fallback';
 
@@ -175,7 +176,7 @@ MVC_APPLICATION_SETTINGS: {
     /**
      * routing.json file
      */
-    $aConfig['MVC_ROUTING_JSON'] = $aConfig['MVC_APPLICATION_CONFIG_DIR'] . '/staging/' . getenv('MVC_ENV') . '/routing.json';
+    $aConfig['MVC_ROUTING_JSON'] = '';
 
     // detect if request is done via cli. set boole true|FALSE
     $aConfig['MVC_CLI'] = (('cli' === php_sapi_name()) ? true : FALSE);
