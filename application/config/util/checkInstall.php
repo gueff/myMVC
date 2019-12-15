@@ -246,7 +246,7 @@ class MyMVCInstaller
         if ('' !== $sPhpExtensionMissing)
         {
             $this->placeMarkup();
-            $this->_text('<h1>myMVC</h1><h2>Auto-Installer</h2>');
+            $this->_text('<h2>setup checking</h2>');
             $this->_text($sPhpExtensionMissing);
             exit();
         }
@@ -254,7 +254,7 @@ class MyMVCInstaller
         if ('' !== $sPhpFunctionMissing)
         {
             $this->placeMarkup();
-            $this->_text('<h1>myMVC</h1><h2>Auto-Installer</h2>');
+            $this->_text('<h2>setup checking</h2>');
             $this->_text($sPhpFunctionMissing);
             exit();
         }
