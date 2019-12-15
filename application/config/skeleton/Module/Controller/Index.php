@@ -68,6 +68,7 @@ class Index implements \MVC\MVCInterface\Controller
     /**
      * Index constructor.
      * @throws \ReflectionException
+     * @throws \SmartyException
      */
 	public function __construct ()
 	{
@@ -76,18 +77,12 @@ class Index implements \MVC\MVCInterface\Controller
 		
 		$this->_o{module}ModelIndex = new \{module}\Model\Index();
 		$this->o{module}ViewIndex = new \{module}\View\Index();
-
-		// Standard Title
-		$this->o{module}ViewIndex->assign ('sTitle', '{module}');
+        $this->o{module}ViewIndex->autoAssign($this->_aRoutingCurrent);
 	}
 
-    /**
-     * @throws \SmartyException
-     */
 	public function index ()
 	{
-		// Set Value in sContent Var
-		$this->o{module}ViewIndex->assignValue ($this->o{module}ViewIndex->loadTemplateAsString ('index/index.tpl'));
+		;
 	}
 
     /**
