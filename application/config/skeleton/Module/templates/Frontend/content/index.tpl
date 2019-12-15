@@ -1,7 +1,7 @@
 <div class="jumbotron">
     <div class="container">
 
-        <h1 class="display-3">Webbixx</h1>
+        <h1 class="display-3">{module}</h1>
         <p>
             done by <b>myMVC</b>, the PHP MVC Framework.
         </p>
