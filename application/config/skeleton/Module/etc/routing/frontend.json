@@ -10,12 +10,11 @@
           "sJs": ""
         },
         "load": {
-          "sContent": "index/index.tpl",
-
+          "sMainmenu": "Frontend/layout/menu.tpl",
+          "sContent": "Frontend/content/index.tpl",
           "sHeader": "Frontend/layout/header.tpl",
           "sNoscript": "Frontend/content/_noscript.tpl",
           "sCookieConsent": "Frontend/content/_cookieConsent.tpl",
-          "sMainmenu": "Frontend/layout/menu.tpl",
           "sFooter": "Frontend/layout/footer.tpl"
         }
       },
