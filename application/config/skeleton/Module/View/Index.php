@@ -13,6 +13,8 @@
  */
 namespace {module}\View;
 
+use MVC\Registry;
+
 /**
  * Index
  * 
@@ -28,11 +30,39 @@ class Index extends \MVC\View
 	{
 		parent::__construct ();
 
-		// Standard Template
-		$this->sTemplate = $this->sTemplateDir . '/layout/index.tpl';
-
-		// Standard Variable in Standard Template
 		$this->sContentVar = 'sContent';
 	}
 
+    /**
+     * @param array $aRouting
+     * @throws \SmartyException
+     */
+    public function autoAssign(array $aRouting = array())
+    {
+        $this->sTemplate = $this->sTemplateDir . '/' . $aRouting['template']['layout'];
+        $this->assign ('sLayoutTemplate', $this->sTemplate);
+        $this->assign ('sTitle', $aRouting['title']);
+        $this->assign('aRegistry', Registry::getStorageArray());
+        $this->assign('aRouting', $aRouting);
+
+        foreach ($aRouting['template']['var']['set'] as $sKey => $sValue)
+        {
+            $this->assign($sKey, trim($sValue));
+        }
+
+        foreach ($aRouting['template']['var']['load'] as $sKey => $sValue)
+        {
+            $this->assign($sKey, trim($this->loadTemplateAsString ($sValue)));
+        }
+
+        foreach ($aRouting['template']['sStyle'] as $sKey => $sValue)
+        {
+            $this->assign($sKey, trim($this->loadTemplateAsString ($sValue)));
+        }
+
+        foreach ($aRouting['template']['sScript'] as $sKey => $sValue)
+        {
+            $this->assign($sKey, trim($this->loadTemplateAsString ($sValue)));
+        }
+    }
 }
