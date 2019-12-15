@@ -39,6 +39,11 @@ class RouterJsonfile extends \MVC\RouterJson
             //		http://dev.mvc.de/?module=custom&c=index&m=index
             foreach ($this->_aRouting as $sKey => $aValue)
             {
+                if (false === is_array($aValue))
+                {
+                    continue;
+                }
+
                 // if there is no route sepcified in the routing.json (empty), take the MVC fallback routing
                 if (!array_key_exists('query', $aValue) || $aValue['query'] === '')
                 {

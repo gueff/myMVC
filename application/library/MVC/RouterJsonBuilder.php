@@ -54,12 +54,20 @@ class RouterJsonBuilder implements \MVC\MVCInterface\RouterJsonBuilder
 
 	/**
 	 * gets routing JSON string
-     * @return false|string
+     * @return string
      * @throws \ReflectionException
      */
 	public function getRoutingJson ()
 	{
-		return file_get_contents (Registry::get ('MVC_ROUTING_JSON'));
+        if (false === Registry::isRegistered('MVC_ROUTING_JSON') || false === file_exists(Registry::get ('MVC_ROUTING_JSON')))
+        {
+            return '';
+        }
+
+        $mContent = file_get_contents (Registry::get ('MVC_ROUTING_JSON'));
+        (false === $mContent) ? $mContent = '' : false;
+
+        return $mContent;
 	}
 
 	/**
