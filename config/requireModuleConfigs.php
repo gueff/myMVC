@@ -13,18 +13,17 @@
  */
 
 // get modules
-$aModule = array_diff(scandir ($aConfig['MVC_MODULES']), array('..', '.', '.htaccess', '.htpasswd'));
+$aModule = glob($aConfig['MVC_MODULES'] . '/*', GLOB_ONLYDIR);
 
 // walk modules
 foreach ($aModule as $sModule)
 {
-    if (file_exists($aConfig['MVC_MODULES'] . '/' . $sModule . '/etc/config/'))
+    if (file_exists($sModule . '/etc/config/'))
     {
         // load config file
-        foreach (glob ($aConfig['MVC_MODULES'] . '/' . $sModule . '/etc/config/*.php') as $sFile)
+        foreach (glob ($sModule . '/etc/config/*.php') as $sFile)
         {
             require_once $sFile;
         }
     }
 }
-
