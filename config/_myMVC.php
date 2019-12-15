@@ -188,7 +188,7 @@ MVC_TEMPLATE_ENGINE_SMARTY: {
     $aConfig['MVC_SMARTY_CACHE_DIR'] = $aConfig['MVC_APPLICATION_PATH'] . '/cache';
 
     $aConfig['MVC_SMARTY_TEMPLATE_DIR'] = $aConfig['MVC_VIEW_TEMPLATES'];
-    $aConfig['MVC_SMARTY_TEMPLATE_DEFAULT'] = 'layout/admin.tpl';
+    $aConfig['MVC_SMARTY_TEMPLATE_DEFAULT'] = 'Frontend/layout/index.tpl';
 
     // templates_c folder and
     // templates_c folder access rights, octal mode
