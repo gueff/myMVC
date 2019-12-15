@@ -103,7 +103,6 @@ MVC_APPLICATION_SETTINGS: {
     $aConfig['MVC_CONFIG_DIR'] = $aConfig['MVC_BASE_PATH'] . '/config';
 
     // cache folder and
-    // cache folder access rights, octal mode
     $aConfig['MVC_CACHE_DIR'] = $aConfig['MVC_APPLICATION_PATH'] . '/cache';
 
     /**
@@ -119,30 +118,30 @@ MVC_APPLICATION_SETTINGS: {
      * Session
      */
     // session folder and
-    // session folder access rights, octal mode
     // Session options @see http://php.net/manual/de/session.configuration.php
     $aConfig['MVC_SESSION_NAMESPACE'] = 'myMVC';
     $aConfig['MVC_SESSION_PATH'] = $aConfig['MVC_APPLICATION_PATH'] . '/session';
     $aConfig['MVC_SESSION_OPTIONS'] = array(
-        'cookie_httponly' => true
-    , 'auto_start' => 0
-    , 'save_path' => $aConfig['MVC_SESSION_PATH']
-    , 'cookie_secure' => $aConfig['MVC_SECURE_REQUEST']
-    , 'name' => 'myMVC' . (($aConfig['MVC_SECURE_REQUEST']) ? '_secure' : '')
-    , 'save_handler' => 'files'
-    , 'cookie_lifetime' => 0
+        'cookie_httponly' => true,
+        'auto_start' => 0,
+        'save_path' => $aConfig['MVC_SESSION_PATH'],
+        'cookie_secure' => $aConfig['MVC_SECURE_REQUEST'],
+        'name' => 'myMVC' . (($aConfig['MVC_SECURE_REQUEST']) ? '_secure' : ''),
+        'save_handler' => 'files',
+        'cookie_lifetime' => 0,
 
         // max value for "session.gc_maxlifetime" is 65535. values bigger than this may cause  php session stops working.
-    , 'gc_maxlifetime' => 65535
-    , 'gc_probability' => 1
-    , 'use_strict_mode' => 1
-    , 'use_cookies' => 1
-    , 'use_only_cookies' => 1
-    , 'upload_progress.enabled' => 1
+        'gc_maxlifetime' => 65535,
+        'gc_probability' => 1,
+        'use_strict_mode' => 1,
+        'use_cookies' => 1,
+        'use_only_cookies' => 1,
+        'upload_progress.enabled' => 1,
     );
 
-    // default behaviour; session does NOT start
-    // means NO cookie is written to users browser
+    // default behaviour
+    // false:   session won't start. This means NO cookie is written to client
+    // true:    session will start
     $aConfig['MVC_SESSION_ENABLE'] = false;
 
     /**
@@ -152,24 +151,25 @@ MVC_APPLICATION_SETTINGS: {
         'GET' => array(
             // module
             $aConfig['MVC_GET_PARAM_MODULE'] => array(
-                'regex' => '/[^a-zA-Z0-9]+/'
-            , 'length' => 50
-            )
+                'regex' => "/[^[:alnum:]]+/u",
+                'length' => 50,
+            ),
             // class
-        , $aConfig['MVC_GET_PARAM_C'] => array(
-                'regex' => '/[^a-zA-Z0-9]+/'
-            , 'length' => 50
-            )
+            $aConfig['MVC_GET_PARAM_C'] => array(
+                'regex' => "/[^[:alnum:]]+/u",
+                'length' => 50,
+            ),
             // method
-        , $aConfig['MVC_GET_PARAM_M'] => array(
-                'regex' => '/[^a-zA-Z0-9]+/'
-            , 'length' => 50
-            )
+            $aConfig['MVC_GET_PARAM_M'] => array(
+                'regex' => "/[^[:alnum:]]+/u",
+                'length' => 50,
+            ),
             // args
-        , $aConfig['MVC_GET_PARAM_A'] => array(
-                'regex' => '/[^a-zA-Z0-9üöäÜÖÄß\|\:\[\]\{\},"\']+/'
-            , 'length' => 256
-            )
+            $aConfig['MVC_GET_PARAM_A'] => array(
+                /** @see https://www.regular-expressions.info/unicode.html */
+                'regex' => "/[^\\p{L}\\p{M}\\p{Z}\\p{S}\\p{N}\\p{Pd}\\p{Pc}\\p{Ps}\\p{Pe}\\p{Pi}\\p{Pf}\|']+/u",
+                'length' => 256,
+            ),
         )
     );
 
