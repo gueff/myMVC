@@ -42,7 +42,7 @@ class Index implements \MVC\MVCInterface\Controller
 	 * @var \{module}\View\Index
 	 * @access public
 	 */
-	public $o{module}ViewIndex;
+	public $oView;
 
 	/**
 	 * Model Object
@@ -50,7 +50,7 @@ class Index implements \MVC\MVCInterface\Controller
 	 * @var \{module}\Model\Index 
 	 * @access protected
 	 */
-	protected $_o{module}ModelIndex;
+	protected $_oModel;
 
 	/**
 	 * this method is autom. called by MVC_Application->runTargetClassBeforeMethod()
@@ -75,9 +75,9 @@ class Index implements \MVC\MVCInterface\Controller
 		$this->_oMVCSession = \MVC\Registry::get('MVC_SESSION');
 		$this->_aRoutingCurrent = \MVC\Registry::get('MVC_ROUTING_CURRENT');
 		
-		$this->_o{module}ModelIndex = new \{module}\Model\Index();
-		$this->o{module}ViewIndex = new \{module}\View\Index();
-        $this->o{module}ViewIndex->autoAssign($this->_aRoutingCurrent);
+		$this->_oModel = new \{module}\Model\Index();
+		$this->oView = new \{module}\View\Index();
+        $this->oView->autoAssign($this->_aRoutingCurrent);
 	}
 
 	public function index ()
@@ -91,6 +91,6 @@ class Index implements \MVC\MVCInterface\Controller
      */
 	public function __destruct ()
 	{
-		$this->o{module}ViewIndex->render ();
+		$this->oView->render ();
 	}
 }
