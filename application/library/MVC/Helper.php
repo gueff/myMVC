@@ -451,4 +451,75 @@ class Helper
 
         echo $sExport;
     }
+
+    /**
+     * converts an object into array
+     * @param mixed $mObject
+     * @return array
+     */
+    public static function convertObjectToArray($mObject)
+    {
+        (is_object($mObject)) ? $mObject = (array) $mObject : false;
+
+        if(is_array($mObject))
+        {
+            $aNew = array();
+
+            foreach($mObject as $sKey => $mValue)
+            {
+                $sFirstChar = trim(substr(trim($sKey), 0, 1));
+                (('*' === $sFirstChar)) ? $sKey = trim(substr(trim($sKey), 1)) : false;
+                $aNew[$sKey] = self::convertObjectToArray($mValue);
+            }
+        }
+        else
+        {
+            $aNew = $mObject;
+        }
+
+        return $aNew;
+    }
+
+    /**
+     * removes doubleDot+Slashes (../) from string
+     * replaces multiple forwardSlashes (//) from string by a single forwardSlash
+     * @param string $sAbsoluteFilePath
+     * @return string
+     */
+    public static function secureFilePath($sAbsoluteFilePath = '')
+    {
+        $sAbsoluteFilePath = self::removeDoubleDotSlashesFromString($sAbsoluteFilePath);
+        $sAbsoluteFilePath = self::replaceMultipleForwardSlashesByOneFromString($sAbsoluteFilePath);
+
+        /**@var string */
+        return $sAbsoluteFilePath;
+    }
+
+    /**
+     * removes doubleDot+Slashes (../) from string
+     * @param string $sString
+     * @return string
+     */
+    public static function removeDoubleDotSlashesFromString($sString = '')
+    {
+        // removes any "../"
+        $sString = (string) preg_replace('#(\.\.\/)+#', '', trim($sString));
+
+        /**@var string */
+        return $sString;
+    }
+
+    /**
+     * replaces multiple forwardSlashes (//) from string by a single forwardSlash
+     * @param string $sString
+     * @return string
+     */
+    public static function replaceMultipleForwardSlashesByOneFromString($sString = '')
+    {
+        // removes multiple "/" [e.g.: //, ///, ////, etc.]
+        $sString = (string) preg_replace('#/+#', '/', trim($sString));
+
+        /**@var string */
+        return $sString;
+    }
 }
