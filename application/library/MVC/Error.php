@@ -49,15 +49,13 @@ class Error
 	/**
 	 * this catches an error on runtime, creates a new ErrorException Object of it and passes it to Exception Handler
 	 * 
-	 * @access public
-	 * @static
-	 * @param integer $iCode
-	 * @param string $sMessage
-	 * @param string $sFilename
-	 * @param integer $iLineNr
-	 * @param mixed $mContext
-	 * @return void
-	 */
+     * @param $iCode
+     * @param $sMessage
+     * @param $sFilename
+     * @param $iLineNr
+     * @param string $mContext
+     * @throws \ReflectionException
+     */
 	public static function ERRORHANDLER ($iCode, $sMessage, $sFilename, $iLineNr, $mContext = '')
 	{	
 		$oErrorException = new \ErrorException ($sMessage, (int) $iCode, (int) $iSeverity = 0, $sFilename, (int) $iLineNr );		
@@ -68,15 +66,13 @@ class Error
 	/**
 	 * Error handler, passes flow over the exception logger with new ErrorException.
 	 * 
-	 * @access public
-	 * @static
-	 * @param string $sMessage
-	 * @param integer $iCode
-	 * @param integer $iSeverity
-	 * @param string $sFilename
-	 * @param integer $iLineNr
-	 * @return void
-	 */
+     * @param string $sMessage
+     * @param int $iCode
+     * @param int $iSeverity
+     * @param string $sFilename
+     * @param int $iLineNr
+     * @throws \ReflectionException
+     */
 	public static function ERROR ($sMessage = '', $iCode = E_ERROR, $iSeverity = 0, $sFilename = '', $iLineNr = 0)
 	{	
 		$oErrorException = new \ErrorException ($sMessage, (int) $iCode, (int) $iSeverity, $sFilename, (int) $iLineNr );		
@@ -159,6 +155,8 @@ class Error
 	 */
 	public static function addERROR (DTArrayObject $oDTArrayObject)
 	{
+	    // add time
+        $oDTArrayObject->add_aKeyValue(DTKeyValue::create()->set_sKey('_sErrorTime')->set_sValue((string) microtime(true)));
 		self::$_aError[] = $oDTArrayObject;
 	}
 
