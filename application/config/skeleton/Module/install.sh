@@ -22,5 +22,5 @@ php $MVC_APPLICATION_PATH/composer.phar --working-dir=./etc/config/$MODULENAME/ 
 echo "...done!";
 
 echo "installing Blogimus config for: MVC_ENV=$MVC_ENV...";
-cp etc/config/Blogimus/config/develop.example etc/config/Blogimus/config/$MVC_ENV.php
+cp etc/config/Blogimus/config/_example etc/config/Blogimus/config/$MVC_ENV.php
 echo "...done!";
