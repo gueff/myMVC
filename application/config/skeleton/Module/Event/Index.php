@@ -38,11 +38,17 @@ class Index
      */
     protected function __construct()
     {
-        $aEvent = Registry::get('MODULE_{module}');
-
-        foreach ($aEvent['EVENT_BIND'] as $sEvent => $oClosure)
+        if (true === Registry::isRegistered('MODULE_{module}'))
         {
-            Event::BIND($sEvent, $oClosure);
+            $aEvent = Registry::get('MODULE_{module}');
+
+            if (isset($aEvent['EVENT_BIND']))
+            {
+                foreach ($aEvent['EVENT_BIND'] as $sEvent => $oClosure)
+                {
+                    Event::BIND($sEvent, $oClosure);
+                }
+            }
         }
     }
 
