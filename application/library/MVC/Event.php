@@ -62,6 +62,7 @@ class Event
         $sDebug = '';
         (isset ($aBacktrace[0]['file'])) ? $sDebug .= $aBacktrace[0]['file'] : FALSE;
         (isset ($aBacktrace[0]['line'])) ? $sDebug .= ', ' . $aBacktrace[0]['line'] : FALSE;
+        $sDebug.= ' (' . uniqid() . ') ';
         (isset ($aBacktrace[0]['class'])) ? $sDebug .= ' > ' : FALSE;
 
         if (!isset (self::$aEvent[$sEvent]))
