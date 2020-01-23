@@ -44,10 +44,20 @@ class Index
 
             if (isset($aEvent['EVENT_BIND']))
             {
-                foreach ($aEvent['EVENT_BIND'] as $sEvent => $oClosure)
-                {
-                    Event::BIND($sEvent, $oClosure);
-                }
+				foreach ($aEvent['EVENT_BIND'] as $sEvent => $mData)
+				{
+					if (true === is_array($mData))
+					{
+						foreach ($mData as $oClosure)
+						{
+							Event::BIND($sEvent, $oClosure, null);
+						}
+
+						continue;
+					}
+
+					Event::BIND($sEvent, $mData);
+				}				
             }
         }
     }
