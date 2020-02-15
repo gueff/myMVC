@@ -1,66 +1,75 @@
 <?php
 
-error_reporting(E_ALL);
-//date_default_timezone_set('Europe/Berlin');
+error_reporting(0);
+date_default_timezone_set('Europe/Berlin');
 
 // enable debug output
-$aConfig['MVC_DEBUG'] = true;
+$aConfig['MVC_DEBUG'] = false;
 
 //-------------------------------------------------------------------------------------
 // Module {module}
 
-$aConfig['MODULE_{module}'] = array(
+$aConfig['MODULE_{module}'] = array();
 
-    /**
-     * Module specific
-     * Session Settings
-     */
-    'SESSION' => array(
+/**
+ * Where to activate Session;
+ * name Controllers
+ */
+$aConfig['MODULE_{module}']['SESSION'] = array(
 
-        /**
-         * Where to activate Session;
-         * name Controllers
-         */
-        'aEnableSessionForController' => array(
-            'Index',
-        ),
+    'aEnableSessionForController' => array(
+        'Index',
     ),
+);
 
-    /**
-     * Event Bindings
-     */
-    'EVENT_BIND' => array(
+/**
+ * public CSS and JavaScript folder
+ */
+$aConfig['MODULE_{module}']['MINIFY'] = array(
 
-        /** @var \MVC\DataType\DTArrayObject $oDTArrayObject */
-        'mvc.error' => function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \MVC\Log::WRITE($oDTArrayObject->getDTKeyValueByKey('oException')->get_sValue()->getMessage(), 'error.log');
-        },
-        /** @var \MVC\DataType\DTArrayObject $oDTArrayObject */
-        'mvc.invalidRequest' => function (\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \MVC\Log::WRITE($oDTArrayObject);
-        },
-        /** @var \MVC\DataType\DTArrayObject $oDTArrayObject */
-        'mvc.policy.apply.execute' => function (\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \MVC\Log::WRITE($oDTArrayObject);
-        },
-        /** @var \MVC\DataType\DTArrayObject $oDTArrayObject */
-        'mvc.application.destruct' => function (\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \MVC\Log::WRITE($oDTArrayObject);
-        },
-        /** @var \MVC\DataType\DTArrayObject $oDTArrayObject */
-        'mvc.helper.stop' => function (\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \MVC\Log::WRITE("\n\n*** STOP ***\n" . print_r($oDTArrayObject->get_akeyvalue()[0]->get_sValue(), true));
-        },
-        /** @var \MVC\DataType\DTArrayObject $oDTArrayObject */
-        'mvc.application.construct.done' => function (\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \MVC\Log::WRITE($oDTArrayObject);
-        },
-        // get consent to set session cookie
-        /** @var \MVC\DataType\DTArrayObject $oDTArrayObject */
-        'mvc.setSession.begin' => function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \{module}\Event\Index::enableSession($oDTArrayObject);
-        },
-    )
+    'css' => array(
+        $aConfig['MVC_PUBLIC_PATH'] . '/myMVC/styles/',
+    ),
+    'js' => array(
+        $aConfig['MVC_PUBLIC_PATH'] . '/myMVC/scripts/',
+    ),
+);
+
+/**
+ * Event Bindings
+ */
+$aConfig['MODULE_{module}']['EVENT_BIND'] = array(
+
+    'mvc.error' => function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
+        \MVC\Log::WRITE($oDTArrayObject, 'error.log');
+    },
+    'mvc.invalidRequest' => function (\MVC\DataType\DTArrayObject $oDTArrayObject) {
+        \MVC\Log::WRITE($oDTArrayObject);
+    },
+    'mvc.policy.apply.execute' => function (\MVC\DataType\DTArrayObject $oDTArrayObject) {
+        \MVC\Log::WRITE($oDTArrayObject);
+    },
+    'mvc.application.destruct' => function (\MVC\DataType\DTArrayObject $oDTArrayObject) {
+        \MVC\Log::WRITE($oDTArrayObject);
+    },
+    'mvc.helper.stop' => function (\MVC\DataType\DTArrayObject $oDTArrayObject) {
+        \MVC\Log::WRITE("\n\n*** STOP ***\n" . print_r($oDTArrayObject->get_akeyvalue()[0]->get_sValue(), true));
+    },
+    'mvc.application.construct.done' => function (\MVC\DataType\DTArrayObject $oDTArrayObject) {
+        \MVC\Log::WRITE($oDTArrayObject);
+    },
+    // get consent to set session cookie
+    'mvc.setSession.begin' => function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
+        \{module}\Event\Index::enableSession($oDTArrayObject);
+    },
+    'mvc.reflex.reflect.targetObject.before' => function(\MVC\DataType\DTArrayObject $oDTArrayObject) use ($aConfig) {
+
+        // minify CSS + JS files while on develop Environment on each request
+        ('develop' === \MVC\Registry::get('MVC_ENV'))
+            ? \MVC\Minify::init($aConfig['MODULE_{module}']['MINIFY'])
+            : false
+        ;
+    },
 );
 
 
@@ -89,10 +98,6 @@ $aConfig['CONTENT_SECURITY_POLICY']['Content-Security-Policy'] = ""
      */
     .   "script-src   'self' " .
         "'unsafe-inline' " .
-        "http://cdnjs.cloudflare.com/ " .
-        "https://cdnjs.cloudflare.com/ " .
-        "http://cdn.jsdelivr.net/ " .
-        "https://cdn.jsdelivr.net/ " .
         "; "
 
     /**
@@ -100,12 +105,6 @@ $aConfig['CONTENT_SECURITY_POLICY']['Content-Security-Policy'] = ""
      */
     .   "style-src    'self' " .
         "'unsafe-inline' " .
-        "http://cdnjs.cloudflare.com/ " .
-        "https://cdnjs.cloudflare.com/ " .
-        "http://cdn.jsdelivr.net/ " .
-        "https://cdn.jsdelivr.net/ " .
-        "http://fonts.googleapis.com/ " .
-        "https://fonts.googleapis.com/ " .
         "; "
 
     /**
@@ -125,8 +124,6 @@ $aConfig['CONTENT_SECURITY_POLICY']['Content-Security-Policy'] = ""
      * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/font-src
      */
     .   "font-src     'self' " .
-        "http://cdnjs.cloudflare.com " .
-        "https://cdnjs.cloudflare.com " .
         "; "
 
     /**
@@ -178,6 +175,14 @@ $aConfig['CONTENT_SECURITY_POLICY']['Content-Security-Policy'] = ""
      * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-ancestors
      */
     .   "frame-ancestors " . $aConfig['CONTENT_SECURITY_POLICY']['X-Frame-Options'] . "; "
+
+    /**
+     * frames
+     * that may embed a page using <frame>, <iframe>, <object>, <embed>, or <applet>.
+     */
+    .   "frame-src 'self'; "
+
+    //end
     ;
 
 /**
