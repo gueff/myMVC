@@ -23,19 +23,6 @@ $aConfig['MODULE_{module}']['SESSION'] = array(
 );
 
 /**
- * public CSS and JavaScript folder
- */
-$aConfig['MODULE_{module}']['MINIFY'] = array(
-
-    'css' => array(
-        $aConfig['MVC_PUBLIC_PATH'] . '/myMVC/styles/',
-    ),
-    'js' => array(
-        $aConfig['MVC_PUBLIC_PATH'] . '/myMVC/scripts/',
-    ),
-);
-
-/**
  * Event Bindings
  */
 $aConfig['MODULE_{module}']['EVENT_BIND'] = array(
@@ -64,9 +51,11 @@ $aConfig['MODULE_{module}']['EVENT_BIND'] = array(
     },
     'mvc.reflex.reflect.targetObject.before' => function(\MVC\DataType\DTArrayObject $oDTArrayObject) use ($aConfig) {
 
-        // minify CSS + JS files while on develop Environment on each request
+        // try minify CSS + JS files while on develop Environment on each request
         ('develop' === \MVC\Registry::get('MVC_ENV'))
-            ? \MVC\Minify::init($aConfig['MODULE_{module}']['MINIFY'])
+            ? \MVC\Minify::init(array(
+                $aConfig['MVC_PUBLIC_PATH']
+            ))
             : false
         ;
     },
