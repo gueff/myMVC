@@ -19,79 +19,134 @@ use JSMin\JSMin;
 class Minify
 {
     /**
+     * @var bool
+     */
+    public static $bMinifySuccess = true;
+
+    /**
      * @param array $aContentFilterMinify
      * array(
-            'css' => array(
-                $aConfig['MVC_PUBLIC_PATH'] . '/myMVC/styles/',
-            ),
-            'js' => array(
-                $aConfig['MVC_PUBLIC_PATH'] . '/myMVC/scripts/',
-            ),
+            $aConfig['MVC_PUBLIC_PATH'] . '/myMVC/styles/',
+            $aConfig['MVC_PUBLIC_PATH'] . '/myMVC/scripts/',
         )
-     * @throws ReflectionException
+     * @return bool
+     * @throws \ReflectionException
      */
     public static function init(array $aContentFilterMinify = array())
     {
-        foreach ($aContentFilterMinify as $sType => $aScriptDirAbs)
+        // take config from registry or take fallback config
+        $aCachixConfig = (true === Registry::isRegistered('CACHIX_CONFIG'))
+            ? Registry::get('CACHIX_CONFIG')
+            : array(
+                'bCaching' => true,
+                'sCacheDir' => Registry::get('MVC_CACHE_DIR'),
+                'iDeleteAfterMinutes' => 1440,
+                'sBinRemove' => '/bin/rm',
+                'sBinFind' => '/usr/bin/find',
+                'sBinGrep' => '/bin/grep'
+            );
+        \Cachix::init($aCachixConfig);
+        $bSuccess = true;
+        $aFile = [];
+
+        foreach ($aContentFilterMinify as $sScriptDirAbs)
         {
-            ('js' == $sType) ? self::minifyJs($aScriptDirAbs) : false;
-            ('css' == $sType) ? self::minifyCss($aScriptDirAbs) : false;
+            /** @var \SplFileInfo $oSplFileInfo */
+            foreach(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($sScriptDirAbs)) as $oSplFileInfo)
+            {
+                // handle css + js files only
+                if (in_array(pathinfo($oSplFileInfo->getPathname(), PATHINFO_EXTENSION), array('css', 'js')))
+                {
+                    $aFile[] = $oSplFileInfo;
+                    $oSplFileInfo->md5 = md5_file($oSplFileInfo->getPathname());
+                }
+            }
         }
+
+        $sCacheKey = str_replace('\\', '', __CLASS__);
+        $sCacheContent = md5(json_encode($aFile));
+
+        // nothing to do because of no changes
+        if ($sCacheContent === \Cachix::getCache($sCacheKey))
+        {
+            return self::$bMinifySuccess;
+        }
+
+        /** @var \SplFileInfo $oSplFileInfo */
+        foreach ($aFile as $oSplFileInfo)
+        {
+            $sSuffix = pathinfo($oSplFileInfo->getPathname(), PATHINFO_EXTENSION);
+            $sMinSuffix = '.min.' . $sSuffix;
+            $iMinSuffixLength = strlen($sMinSuffix);
+            $sLastChars = mb_substr($oSplFileInfo->getPathname(), -$iMinSuffixLength);
+
+            // skip .min.* files
+            if ($sLastChars === $sMinSuffix) {continue;}
+
+            ('js' == $sSuffix) ? $bSuccess = self::minifyJs($oSplFileInfo) : false;
+            ('css' == $sSuffix) ? $bSuccess = self::minifyCss($oSplFileInfo) : false;
+
+            // if it only fails once set success to false
+            (false === $bSuccess) ? self::$bMinifySuccess = false : false;
+        }
+
+        // update cache
+        \Cachix::saveCache($sCacheKey, $sCacheContent);
+
+        return self::$bMinifySuccess;
     }
 
     /**
-     * creates minified JS files
-     * @param array $aScriptDirAbs
+     * creates a minified JS file
+     * @param \SplFileInfo $oSplFileInfo
+     * @return bool
      */
-    public static function minifyJs(array $aScriptDirAbs = array())
+    public static function minifyJs(\SplFileInfo $oSplFileInfo)
     {
-        foreach ($aScriptDirAbs as $sScriptDirAbs)
+        if (false === file_exists($oSplFileInfo->getPathname()))
         {
-            $aScript = array_filter(glob($sScriptDirAbs . '*.js'), function($sValue){return ('.min.js' !== mb_substr($sValue, -7));});
-
-            foreach ($aScript as $sScript)
-            {
-                if (false === file_exists($sScript)) {continue;}
-
-                 $sJsMin = JSMin::minify(file_get_contents($sScript));
-                file_put_contents(
-                    $sScriptDirAbs . pathinfo($sScript, PATHINFO_FILENAME) . '.min.js',
-                    $sJsMin
-                );
-            }
+            return false;
         }
+
+        $sContent = JSMin::minify(file_get_contents($oSplFileInfo->getPathname()));
+        $aPathInfo = pathinfo($oSplFileInfo->getPathname());
+        $bSuccess = (boolean) file_put_contents(
+            $aPathInfo['dirname'] . '/' . $aPathInfo['filename'] . '.min.js',
+            $sContent
+        );
+
+        return $bSuccess;
     }
 
     /**
-     * creates minified css files
-     * @param array $aScriptDirAbs
+     * @param \SplFileInfo $oSplFileInfo
+     * @return bool
+     * @throws \ReflectionException
      */
-    public static function minifyCss(array $aScriptDirAbs = array())
+    public static function minifyCss(\SplFileInfo $oSplFileInfo)
     {
-        foreach ($aScriptDirAbs as $sScriptDirAbs)
+        if (false === file_exists($oSplFileInfo->getPathname()))
         {
-            $aStyle = array_filter(glob($sScriptDirAbs . '*.css'), function($sValue){return ('.min.css' !== mb_substr($sValue, -8));});
-
-            foreach ($aStyle as $sStyle)
-            {
-                if (false === file_exists($sStyle)) {continue;}
-
-                $sContent = file_get_contents($sStyle);
-
-                // Remove comments
-                $sContent  = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $sContent);
-
-                // Remove space after colons
-                $sContent = str_replace(': ', ':', $sContent);
-
-                // Remove whitespace
-                $sContent = str_replace(array("\r\n", "\r", "\n", "\t", '  ', '    ', '    '), '', $sContent);
-
-                file_put_contents(
-                    $sScriptDirAbs . pathinfo($sStyle, PATHINFO_FILENAME) . '.min.css',
-                    $sContent
-                );
-            }
+            return false;
         }
+
+        $sContent = file_get_contents($oSplFileInfo->getPathname());
+
+        // Remove comments
+        $sContent  = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $sContent);
+
+        // Remove space after colons
+        $sContent = str_replace(': ', ':', $sContent);
+
+        // Remove whitespace
+        $sContent = str_replace(array("\r\n", "\r", "\n", "\t", '  ', '    ', '    '), '', $sContent);
+
+        $aPathInfo = pathinfo($oSplFileInfo->getPathname());
+        $bSuccess = (boolean) file_put_contents(
+            $aPathInfo['dirname'] . '/' . $aPathInfo['filename'] . '.min.css',
+            $sContent
+        );
+
+        return $bSuccess;
     }
 }
