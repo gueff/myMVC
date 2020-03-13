@@ -29,7 +29,7 @@ class Controller
      */
 	public function __construct (Request $oRequest)
 	{
-		Event::RUN ('mvc.controller.begin',
+		Event::RUN ('mvc.controller.construct.before',
             DTArrayObject::create()
                 ->add_aKeyValue(
                     DTKeyValue::create()->set_sKey('oRequest')->set_sValue($oRequest)
@@ -46,7 +46,7 @@ class Controller
 		// Request not handable
 		if ($bSuccess === FALSE)
 		{
-			Event::RUN ('mvc.controller.invalidRequest',
+			Event::RUN ('mvc.controller.construct.invalidRequest',
                 DTArrayObject::create()
                     ->add_aKeyValue(
                         DTKeyValue::create()->set_sKey('oRequest')->set_sValue($oRequest)
@@ -54,7 +54,7 @@ class Controller
             );
 		}
 
-        Event::RUN ('mvc.controller.done',
+        Event::RUN ('mvc.controller.construct.after',
             DTArrayObject::create()
                 ->add_aKeyValue(
                     DTKeyValue::create()->set_sKey('bStatus')->set_sValue($bSuccess)
@@ -72,7 +72,7 @@ class Controller
      */
 	public function __destruct ()
 	{
-        Event::RUN ('mvc.controller.destruct',
+        Event::RUN ('mvc.controller.destruct.before',
             DTArrayObject::create()
                 ->add_aKeyValue(
                     DTKeyValue::create()->set_sKey('oController')->set_sValue($this)

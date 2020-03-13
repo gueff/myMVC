@@ -133,7 +133,7 @@ class View extends \Smarty
      */
 	public function renderString ($sTemplateString = '')
 	{		
-        Event::RUN ('mvc.view.renderString.begin',
+        Event::RUN ('mvc.view.renderString.before',
             DTArrayObject::create()
                 ->add_aKeyValue(
                     DTKeyValue::create()->set_sKey('sTemplateString')->set_sValue($sTemplateString)
@@ -147,7 +147,7 @@ class View extends \Smarty
 			echo $sRendered;
 		}
 
-        Event::RUN ('mvc.view.renderString.done',
+        Event::RUN ('mvc.view.renderString.after',
             DTArrayObject::create()
                 ->add_aKeyValue(
                     DTKeyValue::create()->set_sKey('sTemplateString')->set_sValue($sTemplateString)
@@ -168,7 +168,7 @@ class View extends \Smarty
      */
 	public function render ()
 	{		
-        Event::RUN ('mvc.view.render.begin',
+        Event::RUN ('mvc.view.render.before',
             DTArrayObject::create()
                 ->add_aKeyValue(
                     DTKeyValue::create()->set_sKey('oView')->set_sValue($this)
@@ -179,7 +179,7 @@ class View extends \Smarty
 		$sTemplate = file_get_contents ($this->sTemplate, true);		
 		$this->renderString ($sTemplate);
 
-        Event::RUN ('mvc.view.render.done',
+        Event::RUN ('mvc.view.render.after',
             DTArrayObject::create()
                 ->add_aKeyValue(
                     DTKeyValue::create()->set_sKey('oView')->set_sValue($this)

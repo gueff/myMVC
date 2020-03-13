@@ -41,7 +41,7 @@ class Reflex
      */
 	public function reflect (array $aQueryArray = array ())
 	{
-		Event::RUN ('mvc.reflex.reflect.begin',
+		Event::RUN ('mvc.reflex.reflect.before',
             DTArrayObject::create()
                 ->add_aKeyValue(
                     DTKeyValue::create()->set_sKey('aQueryArray')->set_sValue($aQueryArray)
@@ -120,11 +120,11 @@ class Reflex
                             )
                     );
 
-					// run an event which KEY is
-					//		Class::method 
-					// of the requested Target
-					// and store the object of the target class within
-					Event::RUN ($sControllerClassName . '::' . $sMethod,
+                    // run an event which KEY is
+                    //		Class::method
+                    // of the requested Target
+                    // and store the object of the target class within
+                    Event::RUN ($sControllerClassName . '::' . $sMethod,
                         DTArrayObject::create()
                             ->add_aKeyValue(
                                 DTKeyValue::create()->set_sKey('oReflectionObject')->set_sValue($oReflectionObject)
@@ -182,7 +182,7 @@ class Reflex
      */
 	public function __destruct ()
 	{
-        Event::RUN ('mvc.reflex.destruct',
+        Event::RUN ('mvc.reflex.destruct.before',
             DTArrayObject::create()
                 ->add_aKeyValue(
                     DTKeyValue::create()->set_sKey('oReflex')->set_sValue($this)

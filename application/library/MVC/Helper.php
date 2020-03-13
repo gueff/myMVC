@@ -202,7 +202,7 @@ class Helper
 			echo '</b></div>';
 		}
 
-		Event::RUN ('mvc.helper.stop',
+		Event::RUN ('mvc.helper.stop.after',
             DTArrayObject::create()
                 ->add_aKeyValue(
                     DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue($aBacktrace)
