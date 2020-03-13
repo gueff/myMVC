@@ -24,8 +24,9 @@ class Minify
     public static $bMinifySuccess = true;
 
     /**
-     * @param array $aContentFilterMinify
-     * array(
+     * minifies all *css and *.js files found in the given folder and beneath (recursively!)
+     * @param array $aContentFilterMinify [optional] default=MVC_PUBLIC_PATH
+     * example: array(
             $aConfig['MVC_PUBLIC_PATH'] . '/myMVC/styles/',
             $aConfig['MVC_PUBLIC_PATH'] . '/myMVC/scripts/',
         )
@@ -34,6 +35,8 @@ class Minify
      */
     public static function init(array $aContentFilterMinify = array())
     {
+        (true === empty($aContentFilterMinify)) ? $aContentFilterMinify = array(Registry::get('MVC_PUBLIC_PATH')) : false;
+
         // take config from registry or take fallback config
         $aCachixConfig = (true === Registry::isRegistered('CACHIX_CONFIG'))
             ? Registry::get('CACHIX_CONFIG')
@@ -63,7 +66,7 @@ class Minify
             }
         }
 
-        $sCacheKey = str_replace('\\', '', __CLASS__);
+        $sCacheKey = str_replace('\\', '', __CLASS__) . '.' . md5(json_encode($aContentFilterMinify));
         $sCacheContent = md5(json_encode($aFile));
 
         // nothing to do because of no changes

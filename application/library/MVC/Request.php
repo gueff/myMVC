@@ -111,7 +111,7 @@ class Request
             $this->_sRequestUri = $_SERVER['REQUEST_URI'];
         }
 
-        Event::RUN('mvc.request.saveRequest.done',
+        Event::RUN('mvc.request.saveRequest.after',
             DTArrayObject::create()
                 ->add_aKeyValue(
                     DTKeyValue::create()->set_sKey('_aQueryVar')->set_sValue($this->_aQueryVar)
@@ -202,7 +202,7 @@ class Request
         $this->_aQueryVar['GET'][Registry::get('MVC_GET_PARAM_MODULE')] = ucfirst($this->_aQueryVar['GET'][Registry::get('MVC_GET_PARAM_MODULE')]);
         $this->_aQueryVar['GET'][Registry::get('MVC_GET_PARAM_C')] = ucfirst($this->_aQueryVar['GET'][Registry::get('MVC_GET_PARAM_C')]);
 
-        Event::RUN('mvc.request.prepareQueryVarsForUsage.done',
+        Event::RUN('mvc.request.prepareQueryVarsForUsage.after',
             DTArrayObject::create()
                 ->add_aKeyValue(
                     DTKeyValue::create()->set_sKey('_aQueryVar')->set_sValue($this->_aQueryVar)

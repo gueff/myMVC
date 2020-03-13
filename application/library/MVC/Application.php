@@ -65,7 +65,7 @@ class Application
 		// Run the requested target Controller
 		$oController = new Controller (Request::getInstance ());
 
-		Event::RUN ('mvc.application.construct.done',
+		Event::RUN ('mvc.application.construct.after',
             DTArrayObject::create()
                 ->add_aKeyValue(
                     DTKeyValue::create()->set_sKey('oError')->set_sValue($oError)
@@ -109,7 +109,7 @@ class Application
      */
 	private static function setSession ()
 	{
-		Event::RUN ('mvc.setSession.begin', DTArrayObject::create());
+		Event::RUN ('mvc.setSession.before', DTArrayObject::create());
 
         (!file_exists (Registry::get ('MVC_SESSION_PATH'))) ? mkdir (Registry::get ('MVC_SESSION_PATH')) : false;
 
@@ -122,7 +122,7 @@ class Application
         // copy Session Object to registry
         Registry::set ('MVC_SESSION', $oSession);
 
-		Event::RUN ('mvc.setSession.done',
+		Event::RUN ('mvc.setSession.after',
             DTArrayObject::create()
                 ->add_aKeyValue(
                     DTKeyValue::create()->set_sKey('oSession')->set_sValue($oSession)
@@ -183,7 +183,7 @@ class Application
             );
 		}
 
-		Event::RUN ('mvc.runTargetClassPreconstruct.done',
+		Event::RUN ('mvc.runTargetClassPreconstruct.after',
             DTArrayObject::create()
                 ->add_aKeyValue(
                     DTKeyValue::create()->set_sKey('sClass')->set_sValue($sClass)
@@ -240,7 +240,7 @@ class Application
      */
 	public function __destruct ()
 	{
-		Event::RUN ('mvc.application.destruct',
+		Event::RUN ('mvc.application.destruct.before',
             DTArrayObject::create()
                 ->add_aKeyValue(
                     DTKeyValue::create()->set_sKey('oController')->set_sValue($this)
