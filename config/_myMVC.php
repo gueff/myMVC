@@ -161,7 +161,7 @@ MVC_APPLICATION_SETTINGS: {
             ),
             // method
             $aConfig['MVC_GET_PARAM_M'] => array(
-                'regex' => "/[^[:alnum:]]+/u",
+                'regex' => "/[^[:alnum:_]]+/u",
                 'length' => 50,
             ),
             // args
