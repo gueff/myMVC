@@ -15,6 +15,7 @@ use MVC\DataType\DTConfig;
 use MVC\DataType\DTConstant;
 use MVC\DataType\DTProperty;
 use MVC\Helper;
+use MVC\Lock;
 
 class DataType
 {
@@ -56,6 +57,7 @@ class DataType
     /**
      * @param array $aConfig
      * @return bool
+     * @throws \ReflectionException
      */
     public function initConfigArray(array $aConfig = array())
     {
@@ -135,18 +137,23 @@ class DataType
     /**
      * @param DTConfig $oDTDataTypeGeneratorConfig
      * @return bool
+     * @throws \ReflectionException
      */
     public function initConfigObject(DTConfig $oDTDataTypeGeneratorConfig)
     {
-        $sCacheKey = __CLASS__ . '.' . basename($oDTDataTypeGeneratorConfig->get_dir()) . '.' . md5(base64_encode(serialize($oDTDataTypeGeneratorConfig)));
+        $sCacheKey = __CLASS__ . '.' . md5(base64_encode(serialize($oDTDataTypeGeneratorConfig)));
         $bUnlinkDir = ('' !== $oDTDataTypeGeneratorConfig->get_unlinkDir()) ? (boolean) $oDTDataTypeGeneratorConfig->get_unlinkDir() : false;
 
         if ($oDTDataTypeGeneratorConfig != \Cachix::getCache($sCacheKey))
         {
+            // protect generating DT Classes
+            Lock::create($sCacheKey);
+
             (true === $bUnlinkDir && file_exists($oDTDataTypeGeneratorConfig->get_dir())) ?
                 $this->unlinkDataTypeClassDir($oDTDataTypeGeneratorConfig->get_dir()) :
                 false
             ;
+
             $bSuccess = $this->iterateConfig($oDTDataTypeGeneratorConfig);
 
             if (false == $bSuccess)
