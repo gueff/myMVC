@@ -528,12 +528,20 @@ class Helper
     /**
      * replaces multiple forwardSlashes (//) from string by a single forwardSlash
      * @param string $sString
+     * @param bool   $bIgnoreProtocols default=false; on true leaves :// as it is
      * @return string
      */
-    public static function replaceMultipleForwardSlashesByOneFromString($sString = '')
+    public static function replaceMultipleForwardSlashesByOneFromString($sString = '', $bIgnoreProtocols = false)
     {
         // removes multiple "/" [e.g.: //, ///, ////, etc.]
-        $sString = (string)preg_replace('#([^:])(\/{2,})#', '/', trim($sString));
+        if (true === $bIgnoreProtocols)
+        {
+            $sString = (string) preg_replace('#([^:])(\/{2,})#', '$1/', trim($sString));
+        }
+        else
+        {
+            $sString = (string) preg_replace('#/+#', '/', trim($sString));
+        }
 
         /**@var string */
         return $sString;
