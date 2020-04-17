@@ -500,12 +500,13 @@ class Helper
      * removes doubleDot+Slashes (../) from string
      * replaces multiple forwardSlashes (//) from string by a single forwardSlash
      * @param string $sAbsoluteFilePath
+     * @param bool   $bIgnoreProtocols default=false; on true leaves :// as it is
      * @return string
      */
-    public static function secureFilePath($sAbsoluteFilePath = '')
+    public static function secureFilePath($sAbsoluteFilePath = '', $bIgnoreProtocols = false)
     {
         $sAbsoluteFilePath = self::removeDoubleDotSlashesFromString($sAbsoluteFilePath);
-        $sAbsoluteFilePath = self::replaceMultipleForwardSlashesByOneFromString($sAbsoluteFilePath);
+        $sAbsoluteFilePath = self::replaceMultipleForwardSlashesByOneFromString($sAbsoluteFilePath, $bIgnoreProtocols);
 
         /**@var string */
         return $sAbsoluteFilePath;
