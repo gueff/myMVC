@@ -88,12 +88,12 @@ class View extends \Smarty
 		
 		\MVC\Event::BIND('mvc.view.echoOut.off', function () {
 			
-			MVC_View::$bEchoOut = false;
+			\MVC\View::$_bEchoOut = false;
 		});		
 		
 		\MVC\Event::BIND('mvc.view.echoOut.on', function () {
 			
-			MVC_View::$bEchoOut = true;
+			\MVC\View::$_bEchoOut = true;
 		});				
 	}
 
