@@ -1,11 +1,10 @@
 <?php
 /**
  * DTProperty.php
- *
- * @package myMVC
+ * @package   myMVC
  * @copyright ueffing.net
- * @author Guido K.B.W. Üffing <info@ueffing.net>
- * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
+ * @author    Guido K.B.W. Üffing <info@ueffing.net>
+ * @license   GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
  */
 
 /**
@@ -15,41 +14,41 @@ namespace MVC\DataType;
 
 class DTProperty
 {
-	const DTHASH = 'ea51e4827f6a00eed609212fe6bc7461';
+    const DTHASH = 'ea51e4827f6a00eed609212fe6bc7461';
 
-	const STRING = "string";
+    const STRING = "string";
 
-	const BOOLEAN = "bool";
+    const BOOLEAN = "bool";
 
-	const INTEGER = "int";
+    const INTEGER = "int";
 
-	const FLOAT = "float";
+    const FLOAT = "float";
 
-	const CALLABLE = "callable";
+    const CALLABLE = "callable";
 
-	const ITERABLE = "iterable";
+    const ITERABLE = "iterable";
 
-	const OBJECT = "object";
+    const OBJECT = "object";
 
-	/**
-	 * @var string
-	 */
-	protected $key = '';
+    /**
+     * @var string
+     */
+    protected $key = '';
 
-	/**
-	 * @var string
-	 */
-	protected $var = 'string';
+    /**
+     * @var string
+     */
+    protected $var = 'string';
 
     /**
      * @var mixed
      */
-	protected $value = null;
+    protected $value = null;
 
-	/**
-	 * @var string
-	 */
-	protected $visibility = 'protected';
+    /**
+     * @var string
+     */
+    protected $visibility = 'protected';
 
     /**
      * @var bool
@@ -59,7 +58,7 @@ class DTProperty
     /**
      * @var bool
      */
-	protected $setter = true;
+    protected $setter = true;
 
     /**
      * @var bool
@@ -85,6 +84,11 @@ class DTProperty
      * @var bool
      */
     protected $setValueInConstructor = true;
+
+    /**
+     * @var bool
+     */
+    protected $forceCasting = false;
 
     /**
      * DTDataTypeGeneratorProperty constructor.
@@ -114,49 +118,49 @@ class DTProperty
         return $oObject;
     }
 
-	/**
-	 * @param string $sValue
-	 * @return $this
-	 */
-	public function set_key(string $sValue)
-	{
-		$this->key = $sValue;
+    /**
+     * @param string $sValue
+     * @return $this
+     */
+    public function set_key(string $sValue)
+    {
+        $this->key = $sValue;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * @param string $sValue
-	 * @return $this
-	 */
-	public function set_var(string $sValue)
-	{
-		$this->var = $sValue;
+    /**
+     * @param string $sValue
+     * @return $this
+     */
+    public function set_var(string $sValue)
+    {
+        $this->var = $sValue;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * @param $mValue
-	 * @return $this
-	 */
-	public function set_value($mValue)
-	{
-		$this->value = $mValue;
+    /**
+     * @param $mValue
+     * @return $this
+     */
+    public function set_value($mValue)
+    {
+        $this->value = $mValue;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * @param string $sValue
-	 * @return $this
-	 */
-	public function set_visibility(string $sValue)
-	{
-		$this->visibility = $sValue;
+    /**
+     * @param string $sValue
+     * @return $this
+     */
+    public function set_visibility(string $sValue)
+    {
+        $this->visibility = $sValue;
 
-		return $this;
-	}
+        return $this;
+    }
 
     /**
      * @param bool $bValue
@@ -235,37 +239,48 @@ class DTProperty
         return $this;
     }
 
-	/**
-	 * @return string
-	 */
-	public function get_key() : string
-	{
-		return $this->key;
-	}
+    /**
+     * @param bool $bValue
+     * @return $this
+     */
+    public function set_forceCasting(bool $bValue)
+    {
+        $this->forceCasting = $bValue;
 
-	/**
-	 * @return string
-	 */
-	public function get_var() : string
-	{
-		return $this->var;
-	}
+        return $this;
+    }
 
-	/**
-	 * @return mixed
-	 */
-	public function get_value()
-	{
-		return $this->value;
-	}
+    /**
+     * @return string
+     */
+    public function get_key(): string
+    {
+        return $this->key;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function get_visibility() : string
-	{
-		return $this->visibility;
-	}
+    /**
+     * @return string
+     */
+    public function get_var(): string
+    {
+        return $this->var;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function get_value()
+    {
+        return $this->value;
+    }
+
+    /**
+     * @return string
+     */
+    public function get_visibility(): string
+    {
+        return $this->visibility;
+    }
 
     /**
      * @return bool
@@ -323,46 +338,54 @@ class DTProperty
         return $this->setValueInConstructor;
     }
 
-	/**
-	 * @return false|string JSON
-	 */
-	public function __toString()
-	{
+    /**
+     * @return bool
+     */
+    public function get_forceCasting()
+    {
+        return $this->forceCasting;
+    }
+
+    /**
+     * @return false|string JSON
+     */
+    public function __toString()
+    {
         return $this->getPropertyJson();
-	}
+    }
 
-	/**
-	 * @return false|string
-	 */
-	public function getPropertyJson()
-	{
+    /**
+     * @return false|string
+     */
+    public function getPropertyJson()
+    {
         return json_encode($this->getPropertyArray());
-	}
+    }
 
-	/**
-	 * @return array
-	 */
-	public function getPropertyArray()
-	{
+    /**
+     * @return array
+     */
+    public function getPropertyArray()
+    {
         return get_object_vars($this);
-	}
+    }
 
-	/**
-	 * @return $this
-	 */
-	public function flushProperties()
-	{
-		foreach ($this->getPropertyArray() as $sKey => $aValue)
-		{
-			$sMethod = 'set_' . $sKey;
+    /**
+     * @return $this
+     */
+    public function flushProperties()
+    {
+        foreach ($this->getPropertyArray() as $sKey => $aValue)
+        {
+            $sMethod = 'set_' . $sKey;
 
-			if (method_exists($this, $sMethod)) 
-			{
-				$this->$sMethod('');
-			}
-		}
+            if (method_exists($this, $sMethod))
+            {
+                $this->$sMethod('');
+            }
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 
 }
