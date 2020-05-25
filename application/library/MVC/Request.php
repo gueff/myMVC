@@ -1,11 +1,10 @@
 <?php
 /**
  * Request.php
- *
- * @package myMVC
+ * @package   myMVC
  * @copyright ueffing.net
- * @author Guido K.B.W. Üffing <info@ueffing.net>
- * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
+ * @author    Guido K.B.W. Üffing <info@ueffing.net>
+ * @license   GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
  */
 
 /**
@@ -25,7 +24,6 @@ class Request
 
     /**
      * Request
-     *
      * @var Request
      * @access protected
      * @static
@@ -34,7 +32,6 @@ class Request
 
     /**
      * request uri
-     *
      * @var string
      * @access protected
      */
@@ -42,7 +39,6 @@ class Request
 
     /**
      * query array
-     *
      * @var array
      * @access protected
      */
@@ -50,7 +46,6 @@ class Request
 
     /**
      * whitelist array defines what chars are allowed
-     *
      * @var array
      * @access protected
      */
@@ -84,21 +79,21 @@ class Request
             {
                 if (array_key_exists($sKey, $this->_aWhitelistParams['GET']))
                 {
-                    $sSub = mb_substr(
-                        $sValue, 0, $this->_aWhitelistParams['GET'][$sKey]['length'], 'UTF8'
-                    );
+                    $sSub = mb_substr($sValue, 0, $this->_aWhitelistParams['GET'][$sKey]['length'], 'UTF8');
                     $sTrim = trim($sSub);
 
-                    $this->_aQueryVar['GET'][$sKey] = preg_replace(
-                        $this->_aWhitelistParams['GET'][$sKey]['regex'], '', $sTrim
-                    );
+                    $this->_aQueryVar['GET'][$sKey] = preg_replace($this->_aWhitelistParams['GET'][$sKey]['regex'], '', $sTrim);
                 }
             }
         }
 
         // etc
-        (isset ($_POST)) ? $this->_aQueryVar['POST'] = $_POST : FALSE;
-        (isset ($_COOKIE)) ? $this->_aQueryVar['COOKIE'] = $_COOKIE : FALSE;
+        (isset ($_POST))
+            ? $this->_aQueryVar['POST'] = $_POST
+            : false;
+        (isset ($_COOKIE))
+            ? $this->_aQueryVar['COOKIE'] = $_COOKIE
+            : false;
 
         // if queries, split
         if (array_key_exists('QUERY_STRING', $_SERVER))
@@ -111,15 +106,13 @@ class Request
             $this->_sRequestUri = $_SERVER['REQUEST_URI'];
         }
 
-        Event::RUN('mvc.request.saveRequest.after',
-            DTArrayObject::create()
-                ->add_aKeyValue(
-                    DTKeyValue::create()->set_sKey('_aQueryVar')->set_sValue($this->_aQueryVar)
-                )
-                ->add_aKeyValue(
-                    DTKeyValue::create()->set_sKey('_sRequestUri')->set_sValue($this->_sRequestUri)
-                )
-        );
+        Event::RUN('mvc.request.saveRequest.after', DTArrayObject::create()
+            ->add_aKeyValue(DTKeyValue::create()
+                ->set_sKey('_aQueryVar')
+                ->set_sValue($this->_aQueryVar))
+            ->add_aKeyValue(DTKeyValue::create()
+                ->set_sKey('_sRequestUri')
+                ->set_sValue($this->_sRequestUri)));
 
         return $this;
     }
@@ -147,23 +140,14 @@ class Request
                 {
                     $sToken = strtolower(strtok($GLOBALS['argv'][$i], '='));
 
-                    if (
-                        in_array(
-                            $sToken,
-                            array(
-                                Registry::get('MVC_GET_PARAM_MODULE'),
-                                Registry::get('MVC_GET_PARAM_C'),
-                                Registry::get('MVC_GET_PARAM_M'),
-                                Registry::get('MVC_GET_PARAM_A')
-                            )
-                        )
-                    )
+                    if (in_array($sToken, array(
+                            Registry::get('MVC_GET_PARAM_MODULE'),
+                            Registry::get('MVC_GET_PARAM_C'),
+                            Registry::get('MVC_GET_PARAM_M'),
+                            Registry::get('MVC_GET_PARAM_A'),
+                        )))
                     {
-                        $this->_aQueryVar['GET'][$sToken] = substr(
-                            $GLOBALS['argv'][$i],
-                            (strpos($GLOBALS['argv'][$i], '=') + 1),
-                            strlen($GLOBALS['argv'][$i])
-                        );
+                        $this->_aQueryVar['GET'][$sToken] = substr($GLOBALS['argv'][$i], (strpos($GLOBALS['argv'][$i], '=') + 1), strlen($GLOBALS['argv'][$i]));
                     }
                 }
             }
@@ -202,19 +186,16 @@ class Request
         $this->_aQueryVar['GET'][Registry::get('MVC_GET_PARAM_MODULE')] = ucfirst($this->_aQueryVar['GET'][Registry::get('MVC_GET_PARAM_MODULE')]);
         $this->_aQueryVar['GET'][Registry::get('MVC_GET_PARAM_C')] = ucfirst($this->_aQueryVar['GET'][Registry::get('MVC_GET_PARAM_C')]);
 
-        Event::RUN('mvc.request.prepareQueryVarsForUsage.after',
-            DTArrayObject::create()
-                ->add_aKeyValue(
-                    DTKeyValue::create()->set_sKey('_aQueryVar')->set_sValue($this->_aQueryVar)
-                )
-        );
+        Event::RUN('mvc.request.prepareQueryVarsForUsage.after', DTArrayObject::create()
+            ->add_aKeyValue(DTKeyValue::create()
+                ->set_sKey('_aQueryVar')
+                ->set_sValue($this->_aQueryVar)));
 
         return $this;
     }
 
     /**
      * converts the string of an url into an associative array
-     *
      * @access public
      * @static
      * @param string $sQuery
@@ -225,7 +206,8 @@ class Request
         $aQueryParts = explode('&', $sQuery);
 
         $aParams = array();
-        foreach ($aQueryParts as $sParam) {
+        foreach ($aQueryParts as $sParam)
+        {
             $aItem = explode('=', $sParam);
             $aParams[$aItem[0]] = $aItem[1];
         }
@@ -240,7 +222,8 @@ class Request
      */
     public static function getInstance()
     {
-        if (null === self::$_oInstance) {
+        if (null === self::$_oInstance)
+        {
             self::$_oInstance = new self ();
         }
 
@@ -256,16 +239,25 @@ class Request
     {
         // auto redirect to ssl/non ssl
         // only for web frontend, not for cli usage
-        if (FALSE === filter_var(Registry::get('MVC_CLI'), FILTER_VALIDATE_BOOLEAN)) {
+        if (false === filter_var(Registry::get('MVC_CLI'), FILTER_VALIDATE_BOOLEAN))
+        {
             $aRequest = self::GETCURRENTREQUEST();
             $aRouting = Registry::get('MVC_ROUTING_CURRENT');
 
-            if (!empty($aRouting)) {
-                (isset ($aRouting['ssl'])) ? $sSsl = $aRouting['ssl'] : $sSsl = FALSE;
+            if (!empty($aRouting))
+            {
+                (isset ($aRouting['ssl']))
+                    ? $sSsl = $aRouting['ssl']
+                    : $sSsl = false;
 
-                if (Helper::DETECTSSL() !== (bool)$sSsl) {
-                    (array_key_exists('ssl', $aRouting) && true === (bool)$aRouting['ssl']) ? $sProtocol = 'https://' : $sProtocol = 'http://';
-                    Request::REDIRECT($sProtocol . $aRequest['host'] . $aRouting['path'] . ((!array_key_exists('query', $aRequest) ? $aRequest['query'] = '' : FALSE)));
+                if (Helper::DETECTSSL() !== (bool)$sSsl)
+                {
+                    (array_key_exists('ssl', $aRouting) && true === (bool)$aRouting['ssl'])
+                        ? $sProtocol = 'https://'
+                        : $sProtocol = 'http://';
+                    Request::REDIRECT($sProtocol . $aRequest['host'] . $aRouting['path'] . ((!array_key_exists('query', $aRequest)
+                            ? $aRequest['query'] = ''
+                            : false)));
                 }
             }
         }
@@ -296,31 +288,44 @@ class Request
         // source
         $aBacktrace = debug_backtrace();
 
-        (array_key_exists('file', $aBacktrace[0])) ? $sFile = $aBacktrace[0]['file'] : $sFile = '';
-        (array_key_exists('line', $aBacktrace[0])) ? $sLine = $aBacktrace[0]['line'] : $sLine = '';
-        (array_key_exists('line', $aBacktrace)) ? $sLine = $aBacktrace['line'] : FALSE;
+        (array_key_exists('file', $aBacktrace[0]))
+            ? $sFile = $aBacktrace[0]['file']
+            : $sFile = '';
+        (array_key_exists('line', $aBacktrace[0]))
+            ? $sLine = $aBacktrace[0]['line']
+            : $sLine = '';
+        (array_key_exists('line', $aBacktrace))
+            ? $sLine = $aBacktrace['line']
+            : false;
 
         // standard
         Log::WRITE('Redirect to: ' . $sLocation . ' --> called in: ' . $sFile . ', ' . $sLine);
 
         // CLI
-        if (true === filter_var(Registry::get('MVC_CLI'), FILTER_VALIDATE_BOOLEAN)) {
+        if (true === filter_var(Registry::get('MVC_CLI'), FILTER_VALIDATE_BOOLEAN))
+        {
             echo shell_exec('php index.php "' . $sLocation . '"');
 
             // Event
             \MVC\Event::RUN('mvc.request.redirect', DTArrayObject::create()
-                ->add_aKeyValue(DTKeyValue::create()->set_sKey('sLocation')->set_sValue('[CLI] php index.php "' . $sLocation . '"'))
-                ->add_aKeyValue(DTKeyValue::create()->set_sKey('aDebug')->set_sValue(Helper::PREPAREBACKTRACEARRAY((debug_backtrace()[0]??array()))))
-            );
+                ->add_aKeyValue(DTKeyValue::create()
+                    ->set_sKey('sLocation')
+                    ->set_sValue('[CLI] php index.php "' . $sLocation . '"'))
+                ->add_aKeyValue(DTKeyValue::create()
+                    ->set_sKey('aDebug')
+                    ->set_sValue(Helper::PREPAREBACKTRACEARRAY((debug_backtrace()[0] ?? array())))));
 
             exit ();
         }
 
         // Event
         \MVC\Event::RUN('mvc.request.redirect', DTArrayObject::create()
-            ->add_aKeyValue(DTKeyValue::create()->set_sKey('sLocation')->set_sValue($sLocation))
-            ->add_aKeyValue(DTKeyValue::create()->set_sKey('aDebug')->set_sValue(Helper::PREPAREBACKTRACEARRAY((debug_backtrace()[0]??array()))))
-        );
+            ->add_aKeyValue(DTKeyValue::create()
+                ->set_sKey('sLocation')
+                ->set_sValue($sLocation))
+            ->add_aKeyValue(DTKeyValue::create()
+                ->set_sKey('aDebug')
+                ->set_sValue(Helper::PREPAREBACKTRACEARRAY((debug_backtrace()[0] ?? array())))));
 
         header('Location: ' . $sLocation);
         exit ();
@@ -328,7 +333,6 @@ class Request
 
     /**
      * gets whitelist array
-     *
      * @access public
      * @return array
      */
@@ -339,7 +343,6 @@ class Request
 
     /**
      * gets the request uri
-     *
      * @access public
      * @return string request uri
      */
@@ -357,8 +360,10 @@ class Request
     {
         $aQuery = $this->getQueryArray();
 
-        if (array_key_exists('GET', $aQuery)) {
-            if (array_key_exists(Registry::get('MVC_GET_PARAM_MODULE'), $aQuery['GET'])) {
+        if (array_key_exists('GET', $aQuery))
+        {
+            if (array_key_exists(Registry::get('MVC_GET_PARAM_MODULE'), $aQuery['GET']))
+            {
                 return $aQuery['GET'][Registry::get('MVC_GET_PARAM_MODULE')];
             }
         }
@@ -368,7 +373,6 @@ class Request
 
     /**
      * gets query array
-     *
      * @access public
      * @return array
      */
@@ -386,8 +390,10 @@ class Request
     {
         $aQuery = $this->getQueryArray();
 
-        if (array_key_exists('GET', $aQuery)) {
-            if (array_key_exists(Registry::get('MVC_GET_PARAM_C'), $aQuery['GET'])) {
+        if (array_key_exists('GET', $aQuery))
+        {
+            if (array_key_exists(Registry::get('MVC_GET_PARAM_C'), $aQuery['GET']))
+            {
                 return $aQuery['GET'][Registry::get('MVC_GET_PARAM_C')];
             }
         }
@@ -404,8 +410,10 @@ class Request
     {
         $aQuery = $this->getQueryArray();
 
-        if (array_key_exists('GET', $aQuery)) {
-            if (array_key_exists(Registry::get('MVC_GET_PARAM_M'), $aQuery['GET'])) {
+        if (array_key_exists('GET', $aQuery))
+        {
+            if (array_key_exists(Registry::get('MVC_GET_PARAM_M'), $aQuery['GET']))
+            {
                 return $aQuery['GET'][Registry::get('MVC_GET_PARAM_M')];
             }
         }
@@ -420,7 +428,8 @@ class Request
      */
     public function setModule($sModuleName = '')
     {
-        if ('' !== $sModuleName) {
+        if ('' !== $sModuleName)
+        {
             $_GET[Registry::get('MVC_GET_PARAM_MODULE')] = $sModuleName;
             $this->saveRequest();
         }
@@ -435,7 +444,8 @@ class Request
      */
     public function setController($sControllerName = '')
     {
-        if ('' !== $sControllerName) {
+        if ('' !== $sControllerName)
+        {
             $_GET[Registry::get('MVC_GET_PARAM_C')] = $sControllerName;
             $this->saveRequest();
         }
@@ -450,7 +460,8 @@ class Request
      */
     public function setMethod($sMethodName = '')
     {
-        if ('' !== $sMethodName) {
+        if ('' !== $sMethodName)
+        {
             $_GET[Registry::get('MVC_GET_PARAM_M')] = $sMethodName;
             $this->saveRequest();
         }
@@ -465,7 +476,8 @@ class Request
      */
     public function setArgument($sArgument = '')
     {
-        if ('' !== $sArgument) {
+        if ('' !== $sArgument)
+        {
             $_GET[Registry::get('MVC_GET_PARAM_A')] = $sArgument;
             $this->saveRequest();
         }
@@ -475,7 +487,6 @@ class Request
 
     /**
      * sets whitelist params
-     *
      * @access public
      * @param array $aWhitelistParams
      * @return \MVC\Request
@@ -483,12 +494,12 @@ class Request
     public function setWhitelistParams(array $aWhitelistParams = array())
     {
         $this->_aWhitelistParams = $aWhitelistParams;
+
         return $this;
     }
 
     /**
      * prevent any cloning
-     *
      * @access protected
      * @return void
      */
