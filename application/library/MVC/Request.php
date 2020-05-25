@@ -306,8 +306,21 @@ class Request
         // CLI
         if (true === filter_var(Registry::get('MVC_CLI'), FILTER_VALIDATE_BOOLEAN)) {
             echo shell_exec('php index.php "' . $sLocation . '"');
+
+            // Event
+            \MVC\Event::RUN('mvc.request.redirect', DTArrayObject::create()
+                ->add_aKeyValue(DTKeyValue::create()->set_sKey('sLocation')->set_sValue('[CLI] php index.php "' . $sLocation . '"'))
+                ->add_aKeyValue(DTKeyValue::create()->set_sKey('aDebug')->set_sValue(Helper::PREPAREBACKTRACEARRAY((debug_backtrace()[0]??array()))))
+            );
+
             exit ();
         }
+
+        // Event
+        \MVC\Event::RUN('mvc.request.redirect', DTArrayObject::create()
+            ->add_aKeyValue(DTKeyValue::create()->set_sKey('sLocation')->set_sValue($sLocation))
+            ->add_aKeyValue(DTKeyValue::create()->set_sKey('aDebug')->set_sValue(Helper::PREPAREBACKTRACEARRAY((debug_backtrace()[0]??array()))))
+        );
 
         header('Location: ' . $sLocation);
         exit ();
