@@ -32,6 +32,11 @@ $aConfig['MODULE_{module}']['EVENT_BIND'] = array(
             \MVC\Log::WRITE($oDTArrayObject, 'mvc.log');
         }
     ),
+    'mvc.request.redirect' => array(
+        function (\MVC\DataType\DTArrayObject $oDTArrayObject) {
+            \MVC\Log::WRITE($oDTArrayObject, 'mvc.log');
+        },
+    ),
     'mvc.request.prepareQueryVarsForUsage.after' => array(
         function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
             \MVC\Log::WRITE($oDTArrayObject, 'mvc.log');
