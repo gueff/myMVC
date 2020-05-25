@@ -305,7 +305,7 @@ class Helper
     /**
      * gets the http uri protocol
      * @param null $mSsl
-     * @return string|null
+     * @return string
      * @throws \ReflectionException
      */
     public static function GETURIPROTOCOL($mSsl = null)
@@ -344,7 +344,7 @@ class Helper
                 ->set_sKey('sMessage')
                 ->set_sValue('could not detect protocol of requested page.')));
 
-        return null;
+        return '';
     }
 
     /**
