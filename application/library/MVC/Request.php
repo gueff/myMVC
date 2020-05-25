@@ -265,12 +265,13 @@ class Request
 
     /**
      * gets current request
-     * @return array|false|int|string|null
+     * @return array
      * @throws \ReflectionException
      */
     public static function GETCURRENTREQUEST()
     {
         $aUriInfo = parse_url(Helper::GETURIPROTOCOL() . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+        (false === is_array($aUriInfo)) ? $aUriInfo = array() : false;
         $aUriInfo['requesturi'] = $_SERVER['REQUEST_URI'];
         $aUriInfo['protocol'] = Helper::GETURIPROTOCOL();
         $aUriInfo['full'] = Helper::GETURIPROTOCOL() . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
@@ -349,6 +350,30 @@ class Request
     public function getRequestUri()
     {
         return $this->_sRequestUri;
+    }
+
+    /**
+     * @param string $sUrl
+     * @param bool   $bReverse
+     * @return array|false|string[]
+     * @throws \ReflectionException
+     */
+    public function getPathArray($sUrl = '', $bReverse = false)
+    {
+        if ('' === $sUrl)
+        {
+            $sUrl = Request::GETCURRENTREQUEST()['full'];
+        }
+
+        $aUrl = parse_url($sUrl);
+        $aPath = preg_split('~/~', $aUrl['path'], NULL, PREG_SPLIT_NO_EMPTY);
+
+        if (true === $bReverse)
+        {
+            $aPath = array_reverse($aPath);
+        }
+
+        return $aPath;
     }
 
     /**
