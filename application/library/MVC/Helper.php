@@ -368,11 +368,11 @@ class Helper
      * @static
      * @param string $sFile file
      * @param string $sKey  (optional) if $sKey is given, only this info wil be returned
-     * @return array
+     * @return array|mixed
      */
     public static function GETFILEINFO($sFile = null, $sKey = null)
     {
-        if (!isset($sFile) || !isset($sKey))
+        if (false === isset($sFile))
         {
             return array();
         }
@@ -380,7 +380,7 @@ class Helper
         $aStat = stat($sFile);
         $aInfo = posix_getpwuid($aStat['uid']);
 
-        if (!empty ($sKey))
+        if (false === empty ($sKey))
         {
             if (array_key_exists($sKey, $aInfo))
             {
