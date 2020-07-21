@@ -107,25 +107,42 @@ class DTArrayObject
     }
 
     /**
-     * overrides an existing DTKeyValue Object
-     * or adds for new if it does not exist
+     * overrides an existing DTKeyValue Object or adds for new if it does not exist.
+     * if parameter $bUnset = true, the DTKeyValue match entry will be deleted
      * @param \MVC\DataType\DTKeyValue|null $oDTKeyValueNew
+     * @param bool                          $bUnset
      * @return $this
      */
-    function setDTKeyValueByKey(DTKeyValue $oDTKeyValueNew = null)
+    function setDTKeyValueByKey(DTKeyValue $oDTKeyValueNew = null, $bUnset = false)
     {
+        if (null === $oDTKeyValueNew)
+        {
+            return $this;
+        }
+
         $oDTKeyValueOld = $this->getDTKeyValueByKey($oDTKeyValueNew->get_sKey());
 
         // override
         if (true === isset($this->aKeyValue[$oDTKeyValueOld->get_iIndex()]))
         {
-            $oDTKeyValueNew->set_iIndex($oDTKeyValueOld->get_iIndex());
-            $this->aKeyValue[$oDTKeyValueOld->get_iIndex()] = $oDTKeyValueNew;
+            if (false === $bUnset)
+            {
+                $oDTKeyValueNew->set_iIndex($oDTKeyValueOld->get_iIndex());
+                $this->aKeyValue[$oDTKeyValueOld->get_iIndex()] = $oDTKeyValueNew;
+            }
+            else
+            {
+                $this->aKeyValue[$oDTKeyValueOld->get_iIndex()] = null;
+                unset($this->aKeyValue[$oDTKeyValueOld->get_iIndex()]);
+            }
         }
         // add
         else
         {
-            $this->add_aKeyValue($oDTKeyValueNew);
+            if (false === $bUnset)
+            {
+                $this->add_aKeyValue($oDTKeyValueNew);
+            }
         }
 
         return $this;
