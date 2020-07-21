@@ -23,6 +23,11 @@ class DTKeyValue
     protected $sKey;
 
     /**
+     * @var integer
+     */
+    protected $iIndex;
+
+    /**
      * @var mixed
      */
     protected $sValue;
@@ -88,6 +93,17 @@ class DTKeyValue
     }
 
     /**
+     * @param integer $iIndex
+     * @return $this
+     */
+    public function set_iIndex($iIndex = null)
+    {
+        $this->iIndex = $iIndex;
+
+        return $this;
+    }
+
+    /**
      * @param mixed $mValue
      * @return $this
      */
@@ -137,6 +153,14 @@ class DTKeyValue
     public function get_sKey()
     {
         return $this->sKey;
+    }
+
+    /**
+     * @return integer
+     */
+    public function get_iIndex()
+    {
+        return $this->iIndex;
     }
 
     /**
