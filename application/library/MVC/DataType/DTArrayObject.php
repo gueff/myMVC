@@ -13,6 +13,8 @@
 
 namespace MVC\DataType;
 
+use MVC\Helper;
+
 class DTArrayObject
 {
     const DTHASH = '75575fbb25ada598d5a34e03168fbfa7';
@@ -105,6 +107,31 @@ class DTArrayObject
     }
 
     /**
+     * overrides an existing DTKeyValue Object
+     * or adds for new if it does not exist
+     * @param \MVC\DataType\DTKeyValue|null $oDTKeyValueNew
+     * @return $this
+     */
+    function setDTKeyValueByKey(DTKeyValue $oDTKeyValueNew = null)
+    {
+        $oDTKeyValueOld = $this->getDTKeyValueByKey($oDTKeyValueNew->get_sKey());
+
+        // override
+        if (true === isset($this->aKeyValue[$oDTKeyValueOld->get_iIndex()]))
+        {
+            $oDTKeyValueNew->set_iIndex($oDTKeyValueOld->get_iIndex());
+            $this->aKeyValue[$oDTKeyValueOld->get_iIndex()] = $oDTKeyValueNew;
+        }
+        // add
+        else
+        {
+            $this->add_aKeyValue($oDTKeyValueNew);
+        }
+
+        return $this;
+    }
+
+    /**
      * @param string             $sKey
      * @param DTArrayObject|null $oDTArrayObject optional another $oDTArrayObject
      * @return DTKeyValue
@@ -120,6 +147,7 @@ class DTArrayObject
         {
             if ($sKey === $oDTKeyValue->get_sKey())
             {
+                $oDTKeyValue->set_iIndex($iKey);
                 return $oDTKeyValue;
             }
         }
