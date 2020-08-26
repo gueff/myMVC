@@ -108,7 +108,7 @@ class DataType
                 {
                     $oDTDataTypeGeneratorConstant = DTConstant::create();
                     (isset($aConstant['key']))
-                        ? $oDTDataTypeGeneratorConstant->set_key($aConstant['key'])
+                        ? $oDTDataTypeGeneratorConstant->set_key(preg_replace('!\s+!', '_', $aConstant['key']))
                         : false;
                     (isset($aConstant['value']))
                         ? $oDTDataTypeGeneratorConstant->set_value($aConstant['value'])
@@ -127,7 +127,7 @@ class DataType
                 {
                     $oDTDataTypeGeneratorProperty = DTProperty::create();
                     (isset($aProperty['key']))
-                        ? $oDTDataTypeGeneratorProperty->set_key($aProperty['key'])
+                        ? $oDTDataTypeGeneratorProperty->set_key(preg_replace('!\s+!', '_', $aProperty['key']))
                         : false;
                     (isset($aProperty['value']))
                         ? $oDTDataTypeGeneratorProperty->set_value($aProperty['value'])
