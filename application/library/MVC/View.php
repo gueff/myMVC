@@ -24,6 +24,12 @@ use MVC\DataType\DTKeyValue;
 class View extends \Smarty
 {
     /**
+     * switch rendering on/off
+     * @var bool render
+     */
+    public static $_bRender = true;
+
+    /**
      * switch echo out
      *
      * @var boolean
@@ -148,11 +154,16 @@ class View extends \Smarty
                 )
         );
 
-        $sRendered = $this->fetch ('string:' . $sTemplateString);
+        $sRendered = '';
 
-        if (true === self::$_bEchoOut)
+        if (true === self::$_bRender)
         {
-            echo $sRendered;
+            $sRendered = $this->fetch ('string:' . $sTemplateString);
+
+            if (true === self::$_bEchoOut)
+            {
+                echo $sRendered;
+            }
         }
 
         Event::RUN ('mvc.view.renderString.after',
