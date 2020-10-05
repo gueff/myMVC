@@ -141,6 +141,3 @@ foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($aConfig
         require_once $sMVCFileName;
     }
 }
-
-// set to Registry
-foreach ($aConfig as $sKey => $sValue){\MVC\Registry::set ($sKey, $sValue);}
