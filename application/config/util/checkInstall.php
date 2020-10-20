@@ -52,6 +52,9 @@ class MyMVCInstaller
         }
 	}
 
+    /**
+     *
+     */
 	protected function checkOnModulesInstalled()
     {
         $aModule = glob($this->aConfig['MVC_MODULES'] . '/*', GLOB_ONLYDIR);

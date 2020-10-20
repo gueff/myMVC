@@ -50,6 +50,11 @@ MVC_CONFIG: {
 	require_once '_myMVC.php';
 }
 
+MVC_FUNCTIONS: {
+
+	require_once 'functions.php';
+}
+
 MVC_INSTALL: {
 
     // check install status.
