@@ -17,6 +17,7 @@ use MVC\DataType\DTArrayObject;
 use MVC\DataType\DTKeyValue;
 use MVC\DataType\DTRoute;
 
+
 /**
  * Router
  */
@@ -85,15 +86,15 @@ class Router
         foreach ($aRouting as $sKey => $aRoute)
         {
             $aFinal[$sKey] = DTRoute::create()
-                ->set_path($aRoute['path'])
-                ->set_query($aRoute['query'])
-                ->set_title($aRoute['title'])
-                ->set_class($aRoute['class'])
-                ->set_method($aRoute['method'])
-                ->set_layout($aRoute['template']['layout'])
-                ->set_style($aRoute['template']['style'])
-                ->set_load($aRoute['template']['load'])
-                ->set_script($aRoute['template']['script'])
+                ->set_path(get($aRoute['path']))
+                ->set_query(get($aRoute['query']))
+                ->set_title(get($aRoute['title']))
+                ->set_class(get($aRoute['class']))
+                ->set_method(get($aRoute['method']))
+                ->set_layout(get($aRoute['template']['layout']))
+                ->set_style(get($aRoute['template']['style'], array()))
+                ->set_load(get($aRoute['template']['load'], array()))
+                ->set_script(get($aRoute['template']['script'], array()))
             ;
         }
 

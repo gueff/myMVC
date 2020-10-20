@@ -195,7 +195,7 @@ class View extends \Smarty
         );
 
         // Load Template and render
-        $sTemplate = file_get_contents ($this->sTemplate, true);
+        $sTemplate = (true === is_file($this->sTemplate)) ? file_get_contents ($this->sTemplate, true) : '';
         $this->renderString ($sTemplate);
 
         Event::RUN ('mvc.view.render.after',

@@ -13,6 +13,9 @@
  */
 namespace MVC;
 
+use MVC\DataType\DTArrayObject;
+use MVC\DataType\DTKeyValue;
+
 /**
  * Registry
  */
@@ -108,13 +111,13 @@ class Registry
 	{
 		if (!array_key_exists ($sIndex, self::$_aStorage))
 		{
-		    $aDebug = debug_backtrace();
-			$sMsg = "<h1>Registry Key unknown</h1>\nNo entry is registered\nfor key '$sIndex'\n\nFile:\n"
-                . $aDebug[0]['file']
-                . "\nLine:\n" . $aDebug[0]['line']
-                . "\n\nSTOP\n"
+            $aDebug = debug_backtrace();
+            $sMsg = "Registry Key unknown. No entry is registered for key '$sIndex'."
+                . ' ' . $aDebug[0]['file']
+                . ', ' . $aDebug[0]['line']
             ;
-			Helper::STOP ($sMsg, false, false);
+
+            Error::EXCEPTION(new \ErrorException ($sMsg, 0, E_USER_ERROR, __FILE__, __LINE__));
 		}
 
 		return self::$_aStorage[$sIndex];
