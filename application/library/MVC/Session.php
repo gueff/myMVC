@@ -227,6 +227,7 @@ class Session
         {
             session_regenerate_id ($bDeleteOldSession);
             session_destroy ();
+            self::$oInstance = null;
             $_SESSION = NULL;
             unset ($_SESSION);
         }
