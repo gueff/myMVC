@@ -66,6 +66,17 @@ class DTConfig
         return $oObject;
     }
 
+    /**
+     * @param \MVC\DataType\DTClass $oDTClass
+     * @return $this
+     */
+    public function add_DTClass(\MVC\DataType\DTClass $oDTClass)
+    {
+        $this->class[] = $oDTClass;
+
+        return $this;
+    }
+
 	/**
 	 * @param string $mValue 
 	 * @return $this
