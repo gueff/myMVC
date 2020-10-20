@@ -55,28 +55,28 @@ class Index extends \MVC\View
      */
     public function autoAssign(array $aRouting = array())
     {
-        $this->sTemplate = $this->sTemplateDir . '/' . $aRouting['template']['layout'];
+        $this->sTemplate = $this->sTemplateDir . '/' . get($aRouting['template']['layout'], Registry::get('MVC_SMARTY_TEMPLATE_DEFAULT'));
         $this->assign ('sLayoutTemplate', $this->sTemplate);
-        $this->assign ('sTitle', $aRouting['title']);
+        $this->assign ('sTitle', get($aRouting['title'], ''));
         $this->assign('aRegistry', Registry::getStorageArray());
         $this->assign('aRouting', $aRouting);
 
-        foreach ($aRouting['template']['var']['set'] as $sKey => $sValue)
+        foreach (get($aRouting['template']['var']['set'], array()) as $sKey => $sValue)
         {
             $this->assign($sKey, trim($sValue));
         }
 
-        foreach ($aRouting['template']['var']['load'] as $sKey => $sValue)
+        foreach (get($aRouting['template']['var']['load'], array()) as $sKey => $sValue)
         {
             $this->assign($sKey, trim($this->loadTemplateAsString ($sValue)));
         }
 
-        foreach ($aRouting['template']['sStyle'] as $sKey => $sValue)
+        foreach (get($aRouting['template']['sStyle'], array()) as $sKey => $sValue)
         {
             $this->assign($sKey, trim($this->loadTemplateAsString ($sValue)));
         }
 
-        foreach ($aRouting['template']['sScript'] as $sKey => $sValue)
+        foreach (get($aRouting['template']['sScript'], array()) as $sKey => $sValue)
         {
             $this->assign($sKey, trim($this->loadTemplateAsString ($sValue)));
         }
