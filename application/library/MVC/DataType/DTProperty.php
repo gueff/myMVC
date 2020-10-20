@@ -1,391 +1,620 @@
 <?php
-/**
- * DTProperty.php
- * @package   myMVC
- * @copyright ueffing.net
- * @author    Guido K.B.W. Üffing <info@ueffing.net>
- * @license   GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
- */
 
 /**
- * @name $DataTypeDataType
+ * @name $MVCDataType
  */
 namespace MVC\DataType;
 
 class DTProperty
 {
-    const DTHASH = 'ea51e4827f6a00eed609212fe6bc7461';
+	public const DTHASH = '098dbe6ceb5a5f19694af22f7101658d';
 
-    const STRING = "string";
+	/**
+	 * @var string
+	 */
+	protected $key;
 
-    const BOOLEAN = "bool";
+	/**
+	 * @var string
+	 */
+	protected $var;
 
-    const INTEGER = "int";
+	/**
+	 * @var mixed
+	 */
+	protected $value;
 
-    const FLOAT = "float";
+	/**
+	 * @var string
+	 */
+	protected $visibility;
 
-    const CALLABLE = "callable";
+	/**
+	 * @var bool
+	 */
+	protected $static;
 
-    const ITERABLE = "iterable";
+	/**
+	 * @var bool
+	 */
+	protected $setter;
 
-    const OBJECT = "object";
+	/**
+	 * @var bool
+	 */
+	protected $getter;
 
-    /**
-     * @var string
-     */
-    protected $key = '';
+	/**
+	 * @var bool
+	 */
+	protected $explicitMethodForValue;
 
-    /**
-     * @var string
-     */
-    protected $var = 'string';
+	/**
+	 * @var bool
+	 */
+	protected $listProperty;
 
-    /**
-     * @var mixed
-     */
-    protected $value = null;
+	/**
+	 * @var bool
+	 */
+	protected $createStaticPropertyGetter;
 
-    /**
-     * @var string
-     */
-    protected $visibility = 'protected';
+	/**
+	 * @var bool
+	 */
+	protected $setValueInConstructor;
 
-    /**
-     * @var bool
-     */
-    protected $static = false;
+	/**
+	 * @var bool
+	 */
+	protected $forceCasting;
 
-    /**
-     * @var bool
-     */
-    protected $setter = true;
+	/**
+	 * @var bool
+	 */
+	protected $addMyMVCEvents;
 
-    /**
-     * @var bool
-     */
-    protected $getter = true;
+	/**
+	 * DTProperty constructor.
+	 * @param array $aData
+	 * @throws \ReflectionException 
+	 */
+	public function __construct(array $aData = array())
+	{
+		\MVC\Event::RUN ('DTProperty.__construct.before', \MVC\DataType\DTArrayObject::create($aData)->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));
 
-    /**
-     * @var bool
-     */
-    protected $explicitMethodForValue = false;
+		$this->key = '';
+		$this->var = "string";
+		$this->value = null;
+		$this->visibility = "protected";
+		$this->static = false;
+		$this->setter = true;
+		$this->getter = true;
+		$this->explicitMethodForValue = false;
+		$this->listProperty = true;
+		$this->createStaticPropertyGetter = true;
+		$this->setValueInConstructor = true;
+		$this->forceCasting = false;
+		$this->addMyMVCEvents = true;
 
-    /**
-     * @var bool
-     */
-    protected $listProperty = true;
+		foreach ($aData as $sKey => $mValue)
+		{
+			$sMethod = 'set_' . $sKey;
 
-    /**
-     * @var bool
-     */
-    protected $createStaticPropertyGetter = true;
+			if (method_exists($this, $sMethod))
+			{
+				$this->$sMethod($mValue);
+			}
+		}
 
-    /**
-     * @var bool
-     */
-    protected $setValueInConstructor = true;
-
-    /**
-     * @var bool
-     */
-    protected $forceCasting = false;
-
-    /**
-     * DTDataTypeGeneratorProperty constructor.
-     * @param array $aData
-     */
-    public function __construct(array $aData = array())
-    {
-        foreach ($aData as $sKey => $mValue)
-        {
-            $sMethod = 'set_' . $sKey;
-
-            if (method_exists($this, $sMethod))
-            {
-                $this->$sMethod($mValue);
-            }
-        }
-    }
+		\MVC\Event::RUN ('DTProperty.__construct.after', \MVC\DataType\DTArrayObject::create($aData));
+	}
 
     /**
      * @param array $aData
      * @return DTProperty
+     * @throws \ReflectionException
      */
     public static function create(array $aData = array())
     {
+        \MVC\Event::RUN ('DTProperty.create.before', \MVC\DataType\DTArrayObject::create($aData)->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));
+        
         $oObject = new self($aData);
 
+        \MVC\Event::RUN ('DTProperty.create.after', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('DTProperty')->set_sValue($oObject)));
+        
         return $oObject;
     }
 
-    /**
-     * @param string $sValue
-     * @return $this
-     */
-    public function set_key(string $sValue)
-    {
-        $this->key = $sValue;
+	/**
+	 * @param string $mValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
+	public function set_key(string $mValue)
+	{
+		\MVC\Event::RUN ('DTProperty.set_key.before', \MVC\DataType\DTArrayObject::create(array('key' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));
 
-        return $this;
-    }
+		$this->key = $mValue;
 
-    /**
-     * @param string $sValue
-     * @return $this
-     */
-    public function set_var(string $sValue)
-    {
-        $this->var = $sValue;
+		return $this;
+	}
 
-        return $this;
-    }
+	/**
+	 * @param string $mValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
+	public function set_var(string $mValue)
+	{
+		\MVC\Event::RUN ('DTProperty.set_var.before', \MVC\DataType\DTArrayObject::create(array('var' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));
 
-    /**
-     * @param $mValue
-     * @return $this
-     */
-    public function set_value($mValue)
-    {
-        $this->value = $mValue;
+		$this->var = $mValue;
 
-        return $this;
-    }
+		return $this;
+	}
 
-    /**
-     * @param string $sValue
-     * @return $this
-     */
-    public function set_visibility(string $sValue)
-    {
-        $this->visibility = $sValue;
+	/**
+	 * @param mixed $mValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
+	public function set_value($mValue)
+	{
+		\MVC\Event::RUN ('DTProperty.set_value.before', \MVC\DataType\DTArrayObject::create(array('value' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));
 
-        return $this;
-    }
+		$this->value = $mValue;
 
-    /**
-     * @param bool $bValue
-     * @return $this
-     */
-    public function set_static(bool $bValue)
-    {
-        $this->static = $bValue;
+		return $this;
+	}
 
-        return $this;
-    }
+	/**
+	 * @param string $mValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
+	public function set_visibility(string $mValue)
+	{
+		\MVC\Event::RUN ('DTProperty.set_visibility.before', \MVC\DataType\DTArrayObject::create(array('visibility' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));
 
-    /**
-     * @param bool $bValue
-     * @return $this
-     */
-    public function set_setter(bool $bValue)
-    {
-        $this->setter = $bValue;
+		$this->visibility = $mValue;
 
-        return $this;
-    }
+		return $this;
+	}
 
-    /**
-     * @param bool $bValue
-     * @return $this
-     */
-    public function set_getter(bool $bValue)
-    {
-        $this->getter = $bValue;
+	/**
+	 * @param bool $mValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
+	public function set_static(bool $mValue)
+	{
+		\MVC\Event::RUN ('DTProperty.set_static.before', \MVC\DataType\DTArrayObject::create(array('static' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));
 
-        return $this;
-    }
+		$this->static = $mValue;
 
-    /**
-     * @param boolean $bValue
-     * @return $this
-     */
-    public function set_explicitMethodForValue(bool $bValue)
-    {
-        $this->explicitMethodForValue = $bValue;
+		return $this;
+	}
 
-        return $this;
-    }
+	/**
+	 * @param bool $mValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
+	public function set_setter(bool $mValue)
+	{
+		\MVC\Event::RUN ('DTProperty.set_setter.before', \MVC\DataType\DTArrayObject::create(array('setter' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));
 
-    /**
-     * @param bool $bValue
-     * @return $this
-     */
-    public function set_listProperty(bool $bValue)
-    {
-        $this->listProperty = $bValue;
+		$this->setter = $mValue;
 
-        return $this;
-    }
+		return $this;
+	}
 
-    /**
-     * @param bool $bValue
-     * @return $this
-     */
-    public function set_createStaticPropertyGetter(bool $bValue)
-    {
-        $this->createStaticPropertyGetter = $bValue;
+	/**
+	 * @param bool $mValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
+	public function set_getter(bool $mValue)
+	{
+		\MVC\Event::RUN ('DTProperty.set_getter.before', \MVC\DataType\DTArrayObject::create(array('getter' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));
 
-        return $this;
-    }
+		$this->getter = $mValue;
 
-    /**
-     * @param bool $bValue
-     * @return $this
-     */
-    public function set_setValueInConstructor(bool $bValue)
-    {
-        $this->setValueInConstructor = $bValue;
+		return $this;
+	}
 
-        return $this;
-    }
+	/**
+	 * @param bool $mValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
+	public function set_explicitMethodForValue(bool $mValue)
+	{
+		\MVC\Event::RUN ('DTProperty.set_explicitMethodForValue.before', \MVC\DataType\DTArrayObject::create(array('explicitMethodForValue' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));
 
-    /**
-     * @param bool $bValue
-     * @return $this
-     */
-    public function set_forceCasting(bool $bValue)
-    {
-        $this->forceCasting = $bValue;
+		$this->explicitMethodForValue = $mValue;
 
-        return $this;
-    }
+		return $this;
+	}
 
-    /**
-     * @return string
-     */
-    public function get_key(): string
-    {
-        return $this->key;
-    }
+	/**
+	 * @param bool $mValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
+	public function set_listProperty(bool $mValue)
+	{
+		\MVC\Event::RUN ('DTProperty.set_listProperty.before', \MVC\DataType\DTArrayObject::create(array('listProperty' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));
 
-    /**
-     * @return string
-     */
-    public function get_var(): string
-    {
-        return $this->var;
-    }
+		$this->listProperty = $mValue;
 
-    /**
-     * @return mixed
-     */
-    public function get_value()
-    {
-        return $this->value;
-    }
+		return $this;
+	}
 
-    /**
-     * @return string
-     */
-    public function get_visibility(): string
-    {
-        return $this->visibility;
-    }
+	/**
+	 * @param bool $mValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
+	public function set_createStaticPropertyGetter(bool $mValue)
+	{
+		\MVC\Event::RUN ('DTProperty.set_createStaticPropertyGetter.before', \MVC\DataType\DTArrayObject::create(array('createStaticPropertyGetter' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));
 
-    /**
-     * @return bool
-     */
-    public function get_static()
-    {
-        return $this->static;
-    }
+		$this->createStaticPropertyGetter = $mValue;
 
-    /**
-     * @return bool
-     */
-    public function get_setter()
-    {
-        return $this->setter;
-    }
+		return $this;
+	}
 
-    /**
-     * @return bool
-     */
-    public function get_getter()
-    {
-        return $this->getter;
-    }
+	/**
+	 * @param bool $mValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
+	public function set_setValueInConstructor(bool $mValue)
+	{
+		\MVC\Event::RUN ('DTProperty.set_setValueInConstructor.before', \MVC\DataType\DTArrayObject::create(array('setValueInConstructor' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));
 
-    /**
-     * @return bool
-     */
-    public function get_explicitMethodForValue()
-    {
-        return $this->explicitMethodForValue;
-    }
+		$this->setValueInConstructor = $mValue;
 
-    /**
-     * @return bool
-     */
-    public function get_listProperty()
-    {
-        return $this->listProperty;
-    }
+		return $this;
+	}
 
-    /**
-     * @return bool
-     */
-    public function get_createStaticPropertyGetter()
-    {
-        return $this->createStaticPropertyGetter;
-    }
+	/**
+	 * @param bool $mValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
+	public function set_forceCasting(bool $mValue)
+	{
+		\MVC\Event::RUN ('DTProperty.set_forceCasting.before', \MVC\DataType\DTArrayObject::create(array('forceCasting' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));
 
-    /**
-     * @return bool
-     */
-    public function get_setValueInConstructor()
-    {
-        return $this->setValueInConstructor;
-    }
+		$this->forceCasting = $mValue;
 
-    /**
-     * @return bool
-     */
-    public function get_forceCasting()
-    {
-        return $this->forceCasting;
-    }
+		return $this;
+	}
 
-    /**
-     * @return false|string JSON
-     */
-    public function __toString()
-    {
+	/**
+	 * @param bool $mValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
+	public function set_addMyMVCEvents(bool $mValue)
+	{
+		\MVC\Event::RUN ('DTProperty.set_addMyMVCEvents.before', \MVC\DataType\DTArrayObject::create(array('addMyMVCEvents' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));
+
+		$this->addMyMVCEvents = $mValue;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 * @throws \ReflectionException
+	 */
+	public function get_key() : string
+	{
+		\MVC\Event::RUN ('DTProperty.get_key.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('key')->set_sValue($this->key))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));
+
+		return $this->key;
+	}
+
+	/**
+	 * @return string
+	 * @throws \ReflectionException
+	 */
+	public function get_var() : string
+	{
+		\MVC\Event::RUN ('DTProperty.get_var.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('var')->set_sValue($this->var))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));
+
+		return $this->var;
+	}
+
+	/**
+	 * @return mixed
+	 * @throws \ReflectionException
+	 */
+	public function get_value()
+	{
+		\MVC\Event::RUN ('DTProperty.get_value.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('value')->set_sValue($this->value))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));
+
+		return $this->value;
+	}
+
+	/**
+	 * @return string
+	 * @throws \ReflectionException
+	 */
+	public function get_visibility() : string
+	{
+		\MVC\Event::RUN ('DTProperty.get_visibility.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('visibility')->set_sValue($this->visibility))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));
+
+		return $this->visibility;
+	}
+
+	/**
+	 * @return bool
+	 * @throws \ReflectionException
+	 */
+	public function get_static() : bool
+	{
+		\MVC\Event::RUN ('DTProperty.get_static.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('static')->set_sValue($this->static))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));
+
+		return $this->static;
+	}
+
+	/**
+	 * @return bool
+	 * @throws \ReflectionException
+	 */
+	public function get_setter() : bool
+	{
+		\MVC\Event::RUN ('DTProperty.get_setter.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('setter')->set_sValue($this->setter))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));
+
+		return $this->setter;
+	}
+
+	/**
+	 * @return bool
+	 * @throws \ReflectionException
+	 */
+	public function get_getter() : bool
+	{
+		\MVC\Event::RUN ('DTProperty.get_getter.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('getter')->set_sValue($this->getter))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));
+
+		return $this->getter;
+	}
+
+	/**
+	 * @return bool
+	 * @throws \ReflectionException
+	 */
+	public function get_explicitMethodForValue() : bool
+	{
+		\MVC\Event::RUN ('DTProperty.get_explicitMethodForValue.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('explicitMethodForValue')->set_sValue($this->explicitMethodForValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));
+
+		return $this->explicitMethodForValue;
+	}
+
+	/**
+	 * @return bool
+	 * @throws \ReflectionException
+	 */
+	public function get_listProperty() : bool
+	{
+		\MVC\Event::RUN ('DTProperty.get_listProperty.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('listProperty')->set_sValue($this->listProperty))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));
+
+		return $this->listProperty;
+	}
+
+	/**
+	 * @return bool
+	 * @throws \ReflectionException
+	 */
+	public function get_createStaticPropertyGetter() : bool
+	{
+		\MVC\Event::RUN ('DTProperty.get_createStaticPropertyGetter.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('createStaticPropertyGetter')->set_sValue($this->createStaticPropertyGetter))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));
+
+		return $this->createStaticPropertyGetter;
+	}
+
+	/**
+	 * @return bool
+	 * @throws \ReflectionException
+	 */
+	public function get_setValueInConstructor() : bool
+	{
+		\MVC\Event::RUN ('DTProperty.get_setValueInConstructor.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('setValueInConstructor')->set_sValue($this->setValueInConstructor))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));
+
+		return $this->setValueInConstructor;
+	}
+
+	/**
+	 * @return bool
+	 * @throws \ReflectionException
+	 */
+	public function get_forceCasting() : bool
+	{
+		\MVC\Event::RUN ('DTProperty.get_forceCasting.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('forceCasting')->set_sValue($this->forceCasting))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));
+
+		return $this->forceCasting;
+	}
+
+	/**
+	 * @return bool
+	 * @throws \ReflectionException
+	 */
+	public function get_addMyMVCEvents() : bool
+	{
+		\MVC\Event::RUN ('DTProperty.get_addMyMVCEvents.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('addMyMVCEvents')->set_sValue($this->addMyMVCEvents))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));
+
+		return $this->addMyMVCEvents;
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getPropertyName_key()
+	{
+        return 'key';
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getPropertyName_var()
+	{
+        return 'var';
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getPropertyName_value()
+	{
+        return 'value';
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getPropertyName_visibility()
+	{
+        return 'visibility';
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getPropertyName_static()
+	{
+        return 'static';
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getPropertyName_setter()
+	{
+        return 'setter';
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getPropertyName_getter()
+	{
+        return 'getter';
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getPropertyName_explicitMethodForValue()
+	{
+        return 'explicitMethodForValue';
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getPropertyName_listProperty()
+	{
+        return 'listProperty';
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getPropertyName_createStaticPropertyGetter()
+	{
+        return 'createStaticPropertyGetter';
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getPropertyName_setValueInConstructor()
+	{
+        return 'setValueInConstructor';
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getPropertyName_forceCasting()
+	{
+        return 'forceCasting';
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getPropertyName_addMyMVCEvents()
+	{
+        return 'addMyMVCEvents';
+	}
+
+	/**
+	 * @return false|string JSON
+	 */
+	public function __toString()
+	{
         return $this->getPropertyJson();
-    }
+	}
 
-    /**
-     * @return false|string
-     */
-    public function getPropertyJson()
-    {
+	/**
+	 * @return false|string
+	 */
+	public function getPropertyJson()
+	{
         return json_encode($this->getPropertyArray());
-    }
+	}
 
-    /**
-     * @return array
-     */
-    public function getPropertyArray()
-    {
+	/**
+	 * @return array
+	 */
+	public function getPropertyArray()
+	{
         return get_object_vars($this);
-    }
+	}
 
-    /**
-     * @return $this
-     */
-    public function flushProperties()
-    {
-        foreach ($this->getPropertyArray() as $sKey => $aValue)
-        {
-            $sMethod = 'set_' . $sKey;
+	/**
+	 * @return array
+	 * @throws \ReflectionException
+	 */
+	public function getConstantArray()
+	{
+		$oReflectionClass = new \ReflectionClass($this);
+		$aConstant = $oReflectionClass->getConstants();
 
-            if (method_exists($this, $sMethod))
-            {
-                $this->$sMethod('');
-            }
-        }
+		return $aConstant;
+	}
 
-        return $this;
-    }
+	/**
+	 * @return $this
+	 */
+	public function flushProperties()
+	{
+		foreach ($this->getPropertyArray() as $sKey => $aValue)
+		{
+			$sMethod = 'set_' . $sKey;
+
+			if (method_exists($this, $sMethod)) 
+			{
+				$this->$sMethod('');
+			}
+		}
+
+		return $this;
+	}
+
+	/**
+	 * @return string JSON
+	 */
+	public function getDataTypeConfigJSON()
+	{
+		return '{"name":"DTProperty","file":"DTProperty.php","extends":"","namespace":"MVC\\\\DataType","constant":[],"property":[{"key":"key","var":"string","value":"","visibility":"protected","static":false,"setter":true,"getter":true,"explicitMethodForValue":false,"listProperty":true,"createStaticPropertyGetter":true,"setValueInConstructor":true,"forceCasting":false},{"key":"var","var":"string","value":"string","visibility":"protected","static":false,"setter":true,"getter":true,"explicitMethodForValue":false,"listProperty":true,"createStaticPropertyGetter":true,"setValueInConstructor":true,"forceCasting":false},{"key":"value","var":"mixed","value":"null","visibility":"protected","static":false,"setter":true,"getter":true,"explicitMethodForValue":false,"listProperty":true,"createStaticPropertyGetter":true,"setValueInConstructor":true,"forceCasting":false},{"key":"visibility","var":"string","value":"protected","visibility":"protected","static":false,"setter":true,"getter":true,"explicitMethodForValue":false,"listProperty":true,"createStaticPropertyGetter":true,"setValueInConstructor":true,"forceCasting":false},{"key":"static","var":"bool","value":false,"visibility":"protected","static":false,"setter":true,"getter":true,"explicitMethodForValue":false,"listProperty":true,"createStaticPropertyGetter":true,"setValueInConstructor":true,"forceCasting":false},{"key":"setter","var":"bool","value":true,"visibility":"protected","static":false,"setter":true,"getter":true,"explicitMethodForValue":false,"listProperty":true,"createStaticPropertyGetter":true,"setValueInConstructor":true,"forceCasting":false},{"key":"getter","var":"bool","value":true,"visibility":"protected","static":false,"setter":true,"getter":true,"explicitMethodForValue":false,"listProperty":true,"createStaticPropertyGetter":true,"setValueInConstructor":true,"forceCasting":false},{"key":"explicitMethodForValue","var":"bool","value":false,"visibility":"protected","static":false,"setter":true,"getter":true,"explicitMethodForValue":false,"listProperty":true,"createStaticPropertyGetter":true,"setValueInConstructor":true,"forceCasting":false},{"key":"listProperty","var":"bool","value":true,"visibility":"protected","static":false,"setter":true,"getter":true,"explicitMethodForValue":false,"listProperty":true,"createStaticPropertyGetter":true,"setValueInConstructor":true,"forceCasting":false},{"key":"createStaticPropertyGetter","var":"bool","value":true,"visibility":"protected","static":false,"setter":true,"getter":true,"explicitMethodForValue":false,"listProperty":true,"createStaticPropertyGetter":true,"setValueInConstructor":true,"forceCasting":false},{"key":"setValueInConstructor","var":"bool","value":true,"visibility":"protected","static":false,"setter":true,"getter":true,"explicitMethodForValue":false,"listProperty":true,"createStaticPropertyGetter":true,"setValueInConstructor":true,"forceCasting":false},{"key":"forceCasting","var":"bool","value":false,"visibility":"protected","static":false,"setter":true,"getter":true,"explicitMethodForValue":false,"listProperty":true,"createStaticPropertyGetter":true,"setValueInConstructor":true,"forceCasting":false},{"key":"addMyMVCEvents","var":"bool","value":true,"visibility":"protected","static":false,"setter":true,"getter":true,"explicitMethodForValue":false,"listProperty":true,"createStaticPropertyGetter":true,"setValueInConstructor":true,"forceCasting":false}],"createHelperMethods":true}';
+	}
 
 }
