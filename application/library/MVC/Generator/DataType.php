@@ -181,7 +181,7 @@ class DataType
      */
     public function initConfigObject(DTConfig $oDTDataTypeGeneratorConfig)
     {
-        $sCacheKey = __CLASS__ . '.' . md5(base64_encode(serialize($oDTDataTypeGeneratorConfig)));
+        $sCacheKey = preg_replace('/[^a-zA-Z0-9\.]+/', '_', trim(__CLASS__) . '.' . md5(base64_encode(serialize($oDTDataTypeGeneratorConfig))));
         $bUnlinkDir = ('' !== $oDTDataTypeGeneratorConfig->get_unlinkDir())
             ? (boolean)$oDTDataTypeGeneratorConfig->get_unlinkDir()
             : false;
