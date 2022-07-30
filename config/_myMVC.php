@@ -94,6 +94,9 @@ MVC_APPLICATION_SETTINGS: {
     $aConfig['MVC_PUBLIC_PATH'] = $aConfig['MVC_BASE_PATH'] . '/public';
     $aConfig['MVC_LOG_FILE_FOLDER'] = $aConfig['MVC_APPLICATION_PATH'] . '/log/';
     $aConfig['MVC_LOG_FILE_DEFAULT'] = $aConfig['MVC_LOG_FILE_FOLDER'] . 'default.log';
+    $aConfig['MVC_LOG_FILE_ERROR'] = $aConfig['MVC_LOG_FILE_FOLDER'] . 'error.log';
+    $aConfig['MVC_LOG_FILE_WARNING'] = $aConfig['MVC_LOG_FILE_FOLDER'] . 'warning.log';
+    $aConfig['MVC_LOG_FILE_NOTICE'] = $aConfig['MVC_LOG_FILE_FOLDER'] . 'notice.log';
     $aConfig['MVC_APPLICATION_CONFIG_DIR'] = $aConfig['MVC_APPLICATION_PATH'] . '/config';
     $aConfig['MVC_VIEW_TEMPLATES'] = $aConfig['MVC_BASE_PATH'] . '/modules/Default/templates';
     $aConfig['MVC_LIBRARY'] = $aConfig['MVC_APPLICATION_PATH'] . '/library';
@@ -178,13 +181,13 @@ MVC_APPLICATION_SETTINGS: {
      */
     $aConfig['MVC_ROUTING_JSON'] = '';
 
-    // detect if request is done via cli. set boole true|FALSE
-    $aConfig['MVC_CLI'] = (('cli' === php_sapi_name()) ? true : FALSE);
+    // detect if request is done via cli. set boole true|false
+    $aConfig['MVC_CLI'] = (('cli' === php_sapi_name()) ? true : false);
 }
 
 MVC_TEMPLATE_ENGINE_SMARTY: {
 
-    $aConfig['MVC_SMARTY_CACHE_STATUS'] = FALSE;
+    $aConfig['MVC_SMARTY_CACHE_STATUS'] = false;
     $aConfig['MVC_SMARTY_CACHE_DIR'] = $aConfig['MVC_APPLICATION_PATH'] . '/cache';
 
     $aConfig['MVC_SMARTY_TEMPLATE_DIR'] = $aConfig['MVC_VIEW_TEMPLATES'];
@@ -211,4 +214,10 @@ MVC_POLICY: {
 MVC_MISC: {
 
     $aConfig['MVC_UNIQUE_ID'] = uniqid();
+}
+
+MVC_DATATYPE: {
+
+    $aConfig['MVC_DATATYPE_CONFIG'] = $aConfig['MVC_APPLICATION_CONFIG_DIR'] . '/datatype.php';
+
 }

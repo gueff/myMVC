@@ -10,4 +10,4 @@
 require_once '../application/config/util/bootstrap.php';
 
 // run
-$oMVCApplication = new \MVC\Application($aConfig);
+$oMVCApplication = new \MVC\Application();

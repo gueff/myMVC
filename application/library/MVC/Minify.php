@@ -9,9 +9,6 @@
  * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
  */
 
-/**
- * @name $MVC
- */
 namespace MVC;
 
 use JSMin\JSMin;
@@ -35,14 +32,14 @@ class Minify
      */
     public static function init(array $aContentFilterMinify = array())
     {
-        (true === empty($aContentFilterMinify)) ? $aContentFilterMinify = array(Registry::get('MVC_PUBLIC_PATH')) : false;
+        (true === empty($aContentFilterMinify)) ? $aContentFilterMinify = array(Config::get_MVC_PUBLIC_PATH()) : false;
 
         // take config from registry or take fallback config
         $aCachixConfig = (true === Registry::isRegistered('CACHIX_CONFIG'))
             ? Registry::get('CACHIX_CONFIG')
             : array(
                 'bCaching' => true,
-                'sCacheDir' => Registry::get('MVC_CACHE_DIR'),
+                'sCacheDir' => Config::get_MVC_CACHE_DIR(),
                 'iDeleteAfterMinutes' => 1440,
                 'sBinRemove' => '/bin/rm',
                 'sBinFind' => '/usr/bin/find',

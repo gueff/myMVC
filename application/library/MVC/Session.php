@@ -8,9 +8,6 @@
  * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
  */
 
-/**
- * @name $MVC
- */
 namespace MVC;
 
 /**
@@ -18,36 +15,28 @@ namespace MVC;
  */
 class Session
 {
-
     /**
      * Session object provides storage for shared objects.
-     *
      * @var \MVC\Session
-     * @access private
-     * @static
      */
-    private static $oInstance = NULL;
+    protected static $_oInstance = NULL;
 
     /**
      * Options
-     *
      * @var array
-     * @access private
      */
-    private $_aOption = array ();
+    protected $_aOption = array ();
 
     /**
      * namespace
-     *
      * @var string
-     * @access private
      */
-    private $_sNamespace;
+    protected $_sNamespace;
 
     /**
      * @var bool
      */
-    private $bSessionEnable = false;
+    protected $_bSessionEnable = false;
 
     /**
      * Session constructor.
@@ -57,12 +46,12 @@ class Session
     protected function __construct ($sNamespace = '')
     {
         $this->setNamespace($sNamespace);
-        $this->_aOption = Registry::get ('MVC_SESSION_OPTIONS');
+        $this->_aOption = Config::get_MVC_SESSION_OPTIONS();
 
         foreach ($this->_aOption as $sKey => $mValue)
         {
             ini_set ('session.' . $sKey, $mValue);
-            Log::WRITE ('ini_set("session.' . $sKey . '", ' . $mValue . ');');
+            Log::write ('ini_set("session.' . $sKey . '", ' . $mValue . ');');
         }
 
         // Start a default Session, if no session was started before
@@ -70,10 +59,7 @@ class Session
         // if MVC_SESSION_ENABLE is explicitely set to true
         if  (
             !session_id ()
-            &&  (
-                true === Registry::isRegistered('MVC_SESSION_ENABLE')
-                &&  true === Registry::get('MVC_SESSION_ENABLE')
-            )
+            &&  (true === Config::get_MVC_SESSION_ENABLE())
         )
         {
             session_cache_limiter ('nocache');
@@ -83,18 +69,38 @@ class Session
     }
 
     /**
+     * @return false|mixed
+     * @throws \ReflectionException
+     */
+    public static function getSessionEnable()
+    {
+        return Config::get_MVC_SESSION_ENABLE();
+    }
+
+    /**
+     * @deprecated use: Config::set_MVC_SESSION_ENABLE();
+     * @param $bEnable
+     * @return void
+     */
+    public static function setSessionEnable($bEnable = true)
+    {
+        Config::set_MVC_SESSION_ENABLE($bEnable);
+    }
+
+    /**
      * @param bool $bEnable
      * @return Session
      */
     public function enable($bEnable = true)
     {
-        $this->bSessionEnable = $bEnable;
+        $this->_bSessionEnable = $bEnable;
+        Config::set_MVC_SESSION_ENABLE($bEnable);
 
-        return self::$oInstance;
+        return self::$_oInstance;
     }
 
     /**
-     * @deprecated gets killed next version; use create() instead
+     * @deprecated use: Session:is()
      * @param string $sNamespace
      * @return Session
      * @throws \ReflectionException
@@ -111,24 +117,36 @@ class Session
      */
     public static function is ($sNamespace = '')
     {
-        if (null === self::$oInstance)
+        if (null === self::$_oInstance)
         {
-            self::$oInstance = new self ($sNamespace);
-            return self::$oInstance;
+            self::$_oInstance = new self ($sNamespace);
+        }
+        else
+        {
+            self::$_oInstance->setNamespace($sNamespace);
         }
 
-        self::$oInstance->setNamespace($sNamespace);
+        // copy Session Object to registry
+        Config::set_MVC_SESSION(self::$_oInstance);
 
-        return self::$oInstance;
+        return self::$_oInstance;
+    }
+
+    /**
+     * @deprecated use: Config::set_MVC_SESSION();
+     * @param \MVC\Session $oSession
+     * @return void
+     */
+    public static function saveToRegistry(Session $oSession)
+    {
+        Config::set_MVC_SESSION($oSession);
     }
 
     /**
      * prevent any cloning
-     *
-     * @access private
      * @return void
      */
-    private function __clone ()
+    protected function __clone ()
     {
         ;
     }
@@ -143,18 +161,16 @@ class Session
     {
         ('' === $sNamespace)
             // fallback
-            ? $sNamespace = ((true === Registry::isRegistered('MVC_SESSION_NAMESPACE')) ? Registry::get('MVC_SESSION_NAMESPACE') : 'myMVC')
+            ? $sNamespace = Config::get_MVC_SESSION_NAMESPACE()
             : false;
 
         $this->_sNamespace = $sNamespace;
 
-        return self::$oInstance;
+        return self::$_oInstance;
     }
 
     /**
      * gets the namespace
-     *
-     * @access public
      * @return string namespace
      */
     public function getNamespace ()
@@ -172,7 +188,7 @@ class Session
     {
         $_SESSION[$this->_sNamespace][$sKey] = $mValue;
 
-        return self::$oInstance;
+        return self::$_oInstance;
     }
 
     /**
@@ -191,8 +207,6 @@ class Session
 
     /**
      * gets a value by its key
-     *
-     * @access public
      * @param string $sKey
      * @return string value
      */
@@ -207,14 +221,25 @@ class Session
     }
 
     /**
+     * @return false|string
+     */
+    public function getSessionId()
+    {
+        return session_id();
+    }
+
+    /**
      * gets session key/values on the current namespace
-     *
-     * @access public
-     * @return array
+     * @return array|mixed
      */
     public function getAll ()
     {
-        return (isset($_SESSION[$this->_sNamespace])) ? $_SESSION[$this->_sNamespace] : array();
+        $aData = (isset($_SESSION[$this->_sNamespace]))
+            ? $_SESSION[$this->_sNamespace]
+            : array()
+        ;
+
+        return $aData;
     }
 
     /**
@@ -227,11 +252,21 @@ class Session
         {
             session_regenerate_id ($bDeleteOldSession);
             session_destroy ();
-            self::$oInstance = null;
+            self::$_oInstance = null;
             $_SESSION = NULL;
             unset ($_SESSION);
         }
 
-        return self::$oInstance;
+        return self::$_oInstance;
+    }
+
+    /**
+     * @deprecated use: Config::get_MVC_SESSION_PATH();
+     * @return mixed|string
+     * @throws \ReflectionException
+     */
+    public static function getSessionPath()
+    {
+        return Config::get_MVC_SESSION_PATH();
     }
 }

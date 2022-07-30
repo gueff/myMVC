@@ -58,13 +58,13 @@ class DataType
     }
 
     /**
-     * @param array $aConfig
+     * @param array $aDataType
      * @return bool
      * @throws \ReflectionException
      */
-    public function initConfigArray(array $aConfig = array())
+    public function initConfigArray(array $aDataType = array())
     {
-        $oDTDataTypeGeneratorConfig = $this->buildDTDataTypeGeneratorConfigObject($aConfig);
+        $oDTDataTypeGeneratorConfig = $this->buildDTDataTypeGeneratorConfigObject($aDataType);
         $bSuccess = $this->initConfigObject($oDTDataTypeGeneratorConfig);
 
         return $bSuccess;
@@ -72,7 +72,8 @@ class DataType
 
     /**
      * @param array $aConfig
-     * @return DTConfig
+     * @return \MVC\DataType\DTConfig
+     * @throws \ReflectionException
      */
     public function buildDTDataTypeGeneratorConfigObject(array $aConfig = array())
     {
@@ -181,14 +182,14 @@ class DataType
      */
     public function initConfigObject(DTConfig $oDTDataTypeGeneratorConfig)
     {
-        $sCacheKey = preg_replace('/[^a-zA-Z0-9\.]+/', '_', trim(__CLASS__) . '.' . md5(base64_encode(serialize($oDTDataTypeGeneratorConfig))));
+        $sCacheKey = preg_replace('/[^a-zA-Z0-9\.]+/', '_', trim(__CLASS__) . '.' . md5(serialize(base64_encode($oDTDataTypeGeneratorConfig))));
+
         $bUnlinkDir = ('' !== $oDTDataTypeGeneratorConfig->get_unlinkDir())
-            ? (boolean)$oDTDataTypeGeneratorConfig->get_unlinkDir()
+            ? (boolean) $oDTDataTypeGeneratorConfig->get_unlinkDir()
             : false;
 
-        if ($oDTDataTypeGeneratorConfig != \Cachix::getCache($sCacheKey))
+        if ($sCacheKey != \Cachix::getCache($sCacheKey))
         {
-            // protect generating DT Classes
             Lock::create($sCacheKey);
 
             (true === $bUnlinkDir && file_exists($oDTDataTypeGeneratorConfig->get_dir()))
@@ -202,7 +203,7 @@ class DataType
                 return $bSuccess;
             }
 
-            \Cachix::saveCache($sCacheKey, $oDTDataTypeGeneratorConfig);
+            \Cachix::saveCache($sCacheKey, $sCacheKey);
         }
 
         return true;
@@ -397,8 +398,9 @@ class DataType
     }
 
     /**
-     * @param DTConfig $oDTDataTypeGeneratorConfig
+     * @param \MVC\DataType\DTConfig $oDTDataTypeGeneratorConfig
      * @return bool
+     * @throws \ReflectionException
      */
     private function createClass(DTConfig $oDTDataTypeGeneratorConfig)
     {
@@ -473,7 +475,6 @@ class DataType
 
             HELPER_METHODS:
             {
-
                 // on property
                 foreach ($oDTDataTypeGeneratorClass->get_property() as $oProperty)
                 {
@@ -487,7 +488,9 @@ class DataType
                     $sContent .= $this->createHelpfulPropertyGetter();
                     $sContent .= $this->createHelpfulConstantGetter();
                     $sContent .= $this->createHelpfulPropertySetter();
-                    $sContent .= $this->createGetDataTypeConfigJSON($oDTDataTypeGeneratorClass);
+
+                    /** @todo buggy */
+                    #$sContent .= $this->createGetDataTypeConfigJSON($oDTDataTypeGeneratorClass);
                 }
             }
 
@@ -505,8 +508,9 @@ class DataType
     }
 
     /**
-     * @param DTConstant $oDTDataTypeGeneratorConstant
+     * @param \MVC\DataType\DTConstant $oDTDataTypeGeneratorConstant
      * @return string
+     * @throws \ReflectionException
      */
     private function createConst(DTConstant $oDTDataTypeGeneratorConstant)
     {
@@ -517,11 +521,12 @@ class DataType
 
         $sContent = '';
         $sContent .= "\t";
+
         (true === ($this->iPhpVersion >= 71))
             ? $sContent .= $oDTDataTypeGeneratorConstant->get_visibility() . ' '
             : false;
-        $sContent .= 'const ' . $oDTDataTypeGeneratorConstant->get_key() . ' = ';
 
+        $sContent .= 'const ' . $oDTDataTypeGeneratorConstant->get_key() . ' = ';
         $sContent .= ('boolean' === gettype($oDTDataTypeGeneratorConstant->get_value()))
             ? (true === $oDTDataTypeGeneratorConstant->get_value())
                 ? 'true'
@@ -534,8 +539,9 @@ class DataType
     }
 
     /**
-     * @param DTProperty $oProperty
+     * @param \MVC\DataType\DTProperty $oProperty
      * @return string
+     * @throws \ReflectionException
      */
     private function createProperty(DTProperty $oProperty)
     {
@@ -558,8 +564,9 @@ class DataType
     }
 
     /**
-     * @param DTClass $oDTDataTypeGeneratorClass
+     * @param \MVC\DataType\DTClass $oDTDataTypeGeneratorClass
      * @return string
+     * @throws \ReflectionException
      */
     private function createConstructor(\MVC\DataType\DTClass $oDTDataTypeGeneratorClass)
     {
@@ -607,7 +614,7 @@ class DataType
                 if ('array' == strtolower($oProperty->get_var()))
                 {
                     $sContent .= (is_array($oProperty->get_value()))
-                        ? preg_replace('!\s+!', '', str_replace("\n", '', Helper::VAREXPORT($oProperty->get_value(), true, false))) . ";\r\n"
+                        ? preg_replace('!\s+!', '', str_replace("\n", '', Helper::varExport($oProperty->get_value(), true, false))) . ";\r\n"
                         : "array();\r\n";
                 }
 
@@ -648,7 +655,6 @@ class DataType
         $sContent .= "\t\t\MVC\Event::RUN ('" . $oDTDataTypeGeneratorClass->get_name() . ".__construct.after', \MVC\DataType\DTArrayObject::create(" . '$aData' . "));\r\n";
         $sContent .= "\t}\r\n\r\n";
 
-
         return $sContent;
     }
 
@@ -678,8 +684,9 @@ class DataType
     }
 
     /**
-     * @param DTProperty $oProperty
+     * @param \MVC\DataType\DTProperty $oProperty
      * @return string
+     * @throws \ReflectionException
      */
     private function createExplicitMethodForValue(DTProperty $oProperty)
     {
@@ -741,8 +748,9 @@ class DataType
     }
 
     /**
-     * @param DTProperty $oProperty
+     * @param \MVC\DataType\DTProperty $oProperty
      * @return string
+     * @throws \ReflectionException
      */
     private function createStaticPropertyGetter(DTProperty $oProperty)
     {
@@ -864,8 +872,9 @@ class DataType
 
     /**
      * @param \MVC\DataType\DTProperty $oProperty
-     * @param string                   $sClassName
+     * @param                          $sClassName
      * @return string
+     * @throws \ReflectionException
      */
     private function createSetter(DTProperty $oProperty, $sClassName = '')
     {
@@ -934,8 +943,9 @@ class DataType
 
     /**
      * @param \MVC\DataType\DTProperty $oProperty
-     * @param string                   $sClassName
+     * @param                          $sClassName
      * @return string
+     * @throws \ReflectionException
      */
     private function createGetter(DTProperty $oProperty, $sClassName = '')
     {
@@ -962,13 +972,13 @@ class DataType
     }
 
     /**
-     * @param DTProperty $oProperty
+     * @param \MVC\DataType\DTProperty $oProperty
      * @return string
+     * @throws \ReflectionException
      */
     private function createAddFunctionForArray(DTProperty $oProperty)
     {
         $sVar = trim(preg_replace("/[^[:alnum:][:space:]_\\\]/ui", ' ', $oProperty->get_var()));
-
         $sContent = '';
         $sContent .= "\t/**\r\n\t * @param " . $sVar . ' $mValue' . "\r\n";
         $sContent .= "\t * @return " . '$this' . "\r\n\t */\r\n";

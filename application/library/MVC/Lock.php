@@ -7,10 +7,6 @@
  * @license   GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
  */
 
-/**
- * @name $MVC
- */
-
 namespace MVC;
 
 use MVC\DataType\DTArrayObject;
@@ -30,13 +26,14 @@ class Lock
      */
     public static function create($sKey = '', $bReturn = false)
     {
-        $aBacktrace = Helper::PREPAREBACKTRACEARRAY(debug_backtrace());
-        $sCacheDir = (true === Registry::isRegistered('MVC_CACHE_DIR'))
-            ? Registry::get('MVC_CACHE_DIR')
-            : false;
-        (false === file_exists($sCacheDir))
-            ? $sCacheDir = sys_get_temp_dir()
-            : false;
+        $aBacktrace = Helper::prepareBacktraceArray(debug_backtrace());
+        $sCacheDir = Config::get_MVC_CACHE_DIR();
+
+        if (false === file_exists($sCacheDir))
+        {
+            $sCacheDir = sys_get_temp_dir();
+            Config::set_MVC_CACHE_DIR($sCacheDir);
+        }
 
         $sPrefix = preg_replace('/[^\\pL\d_]+/u', '-', $sKey);
         $sPrefix = trim($sPrefix, "-");
@@ -48,7 +45,7 @@ class Lock
         $sKey = $sPrefix . '.' . str_pad(strlen($sKey), 2, '_', STR_PAD_LEFT) . '.' . md5($sKey) . '.' . md5(serialize($aBacktrace)) . '.lock';
         $sFile = $sCacheDir . '/' . $sKey;
 
-        Log::WRITE('Lock: ' . $aBacktrace['sFile'] . ', ' . $aBacktrace['sLine']);
+        Log::write('Lock: ' . $aBacktrace['sFile'] . ', ' . $aBacktrace['sLine']);
 
         $oDTArrayObject = DTArrayObject::create()
             ->add_aKeyValue(DTKeyValue::create()
@@ -63,7 +60,7 @@ class Lock
             $oDTArrayObject->add_aKeyValue(DTKeyValue::create()
                 ->set_sKey('bLocked')
                 ->set_sValue(true));
-            Event::RUN('mvc.lock.create', $oDTArrayObject);
+            Event::run('mvc.lock.create', $oDTArrayObject);
 
             if (true === $bReturn)
             {
@@ -78,7 +75,7 @@ class Lock
         $oDTArrayObject->add_aKeyValue(DTKeyValue::create()
             ->set_sKey('bLocked')
             ->set_sValue(false));
-        Event::RUN('mvc.lock.create', $oDTArrayObject);
+        Event::run('mvc.lock.create', $oDTArrayObject);
 
         if (true === $bReturn)
         {

@@ -36,6 +36,7 @@ MVC_ENV: {
     $aConfig['MVC_ENV'] = getenv('MVC_ENV');
 }
 
+
 MVC_CONFIG: {
 
 	// place of main myMVC config
@@ -81,7 +82,7 @@ MVC_AUTOLOADING: {
 	 * custom composer libraries
 	 * which may defined via your custom config
 	 * by $aConfig['MVC_COMPOSER_DIR']
-	 * 
+	 *
 	 * For example:
 	 * 		$aConfig['MVC_COMPOSER_DIR'] = $aConfig['MVC_CONFIG_DIR'];
 	 * 		or, even better, using a subdirectory - here, it is called "myMVC":
@@ -123,7 +124,7 @@ MVC_AUTOLOADING: {
 			if (true === $GLOBALS['aConfig']['MVC_LOG_AUTOLOADER'])
 			{
 				file_put_contents (
-					$GLOBALS['aConfig']['MVC_LOG_FILE_DEFAULT'], MVC\Log::PREPARE_MESSAGE (
+					$GLOBALS['aConfig']['MVC_LOG_FILE_DEFAULT'], MVC\Log::prepareMessage (
 						'AUTOLOADING' . "\t" . $sFileName, __FILE__ . ', ' . __LINE__ . ' >', 100
 					), FILE_APPEND
 				);

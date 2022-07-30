@@ -8,9 +8,6 @@
  * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
  */
 
-/**
- * @name $MVC
- */
 namespace MVC;
 
 /**
@@ -18,54 +15,47 @@ namespace MVC;
  */
 class Log
 {
-
 	/**
 	 * counter
-	 * 
 	 * @var integer
-	 * @access public
-	 * @static
 	 */
 	public static $iCount = 0;
 
 	/**
 	 * prepares debug output string
-	 * 
-	 * @access public
-	 * @static
 	 * @param array $aBacktrace
 	 * @return string $sDebug
 	 */
-	public static function PREPARE_DEBUG (array $aBacktrace = array ())
+	public static function prepareDebug (array $aBacktrace = array ())
 	{
 		$sDebug = '';
-		(isset ($aBacktrace[0]['file'])) ? $sDebug.= $aBacktrace[0]['file'] : FALSE;
-		(isset ($aBacktrace[0]['line'])) ? $sDebug.= ', ' . $aBacktrace[0]['line'] : FALSE;
-		(isset ($aBacktrace[0]['class'])) ? $sDebug.= ' > ' : FALSE;
+		(isset ($aBacktrace[0]['file'])) ? $sDebug.= $aBacktrace[0]['file'] : false;
+		(isset ($aBacktrace[0]['line'])) ? $sDebug.= ', ' . $aBacktrace[0]['line'] : false;
+		(isset ($aBacktrace[0]['class'])) ? $sDebug.= ' > ' : false;
 
 		return $sDebug;
 	}
 
 	/**
 	 * prepares logfile
-	 * 
-	 * @access public
-	 * @static
-	 * @param string $sLogfile
-	 * @return string $sLogfile
-	 */
-	public static function PREPARE_LOGFILE ($sLogfile = '')
+     * @param $sLogfile
+     * @return mixed|string
+     * @throws \ReflectionException
+     */
+	public static function prepareLogfile ($sLogfile = '')
 	{
 		// make sure it is a logfile inside the configured log directory
-		($sLogfile === '') ? $sLogfile = Registry::get ('MVC_LOG_FILE_DEFAULT') : ($sLogfile = pathinfo (Registry::get ('MVC_LOG_FILE_DEFAULT'), PATHINFO_DIRNAME) . '/' . basename ($sLogfile));
+		($sLogfile === '')
+            ? $sLogfile = self::getLogFileDefault()
+            : ($sLogfile = pathinfo (self::getLogFileDefault(), PATHINFO_DIRNAME) . '/' . basename ($sLogfile));
 
 		if (!file_exists ($sLogfile))
 		{
-			shell_exec ('touch ' . $sLogfile);
+            touch($sLogfile);
 
 			if (!file_exists ($sLogfile))
 			{
-				//@todo ERROR
+				Error::addERROR('cannot create logfile: ' . $sLogfile);
 			}
 		}
 
@@ -74,14 +64,11 @@ class Log
 
 	/**
 	 * prepares message 
-	 * 
-	 * @access public
-	 * @static
 	 * @param string $sMessage
 	 * @param string $sDebug
 	 * @return string $sMessage
 	 */
-	public static function PREPARE_MESSAGE ($sMessage = '', $sDebug = '')
+	public static function prepareMessage ($sMessage = '', $sDebug = '')
 	{
 		if (is_array ($sMessage))
 		{
@@ -117,25 +104,36 @@ class Log
 
 	/**
 	 * Writes a Message into Logfile 
-	 * 
-	 * @access public
-	 * @static
-	 * @param mixed $mMessage
-	 * @param String $sLogfile OPTIONAL Logfilename.<br />
-	 * It is going to be created if it does not exist<br />
-	 * it will be in the same logdir of the default logfile
-	 * @return void
-	 */
-	public static function WRITE ($mMessage, $sLogfile = '')
+     * @param $mMessage
+     * @param $sLogfile OPTIONAL Logfilename. It is going to be created if it does not exist, it will be in the same logdir of the default logfile
+     * @return void
+     * @throws \ReflectionException
+     */
+	public static function write ($mMessage, $sLogfile = '')
 	{
 		file_put_contents (
-			self::PREPARE_LOGFILE($sLogfile), 
-			self::PREPARE_MESSAGE(
+			self::prepareLogfile($sLogfile),
+			self::prepareMessage(
 				$mMessage, 
-				self::PREPARE_DEBUG(debug_backtrace())
+				self::prepareDebug(debug_backtrace())
 			), 
 			FILE_APPEND
 		);        		
 	}
 
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function getLogFileDefault()
+    {
+        $sLogFileDefault = Config::get_MVC_LOG_FILE_DEFAULT();
+
+        if (false === file_exists($sLogFileDefault))
+        {
+            $sLogFileDefault = realpath(__DIR__ . '/../../') . '/log/default.log';
+        }
+
+        return $sLogFileDefault;
+    }
 }

@@ -9,6 +9,9 @@ $aConfig['MVC_DEBUG'] = false;
 //-------------------------------------------------------------------------------------
 // Module {module}
 
+// MVC fallback routing
+$aConfig['MVC_ROUTING_FALLBACK'] = 'module={module}&c=index&m=notFound'; # query
+
 $aConfig['MODULE_{module}'] = array();
 
 /**
@@ -17,8 +20,15 @@ $aConfig['MODULE_{module}'] = array();
  */
 $aConfig['MODULE_{module}']['SESSION'] = array(
 
+    // enable session for these controllers
     'aEnableSessionForController' => array(
-        'Index',
+        '*', # any
+        #'Index',
+    ),
+    // disable session for these controllers
+    'aDisableSessionForController' => array(
+        #'*', # any
+        #'Index',
     ),
 );
 
@@ -47,12 +57,12 @@ $aConfig['MODULE_{module}']['EVENT_BIND'] = array(
             \MVC\Log::WRITE($oDTArrayObject, 'mvc.log');
         }
     ),
-    'mvc.setSession.before' => array(
+    'mvc.application.setSession.before' => array(
         function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
             \MVC\Log::WRITE($oDTArrayObject, 'mvc.log');
         }
     ),
-    'mvc.setSession.after' => array(
+    'mvc.application.setSession.after' => array(
         function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
             \MVC\Log::WRITE($oDTArrayObject, 'mvc.log');
         }
@@ -62,7 +72,7 @@ $aConfig['MODULE_{module}']['EVENT_BIND'] = array(
             \MVC\Log::WRITE($oDTArrayObject, 'mvc.log');
         }
     ),
-    'mvc.controller.construct.before' => array(
+    'mvc.controller.init.before' => array(
         function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
             \MVC\Log::WRITE($oDTArrayObject, 'mvc.log');
         }
@@ -78,14 +88,12 @@ $aConfig['MODULE_{module}']['EVENT_BIND'] = array(
         },
         function(\MVC\DataType\DTArrayObject $oDTArrayObject) use ($aConfig) {
             \MVC\Minify::init();
+        },
+        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
+            \MVC\Router::createFinalJson();
         }
     ),
     'mvc.reflex.reflect.targetObject.after' => array(
-        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \MVC\Log::WRITE($oDTArrayObject, 'mvc.log');
-        }
-    ),
-    'mvc.controller.construct.invalidRequest' => array(
         function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
             \MVC\Log::WRITE($oDTArrayObject, 'mvc.log');
         }

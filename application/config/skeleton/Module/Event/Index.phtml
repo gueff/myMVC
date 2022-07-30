@@ -13,6 +13,7 @@
  */
 namespace {module}\Event;
 
+use MVC\Config;
 use MVC\DataType\DTArrayObject;
 use MVC\Event;
 use MVC\Registry;
@@ -25,10 +26,7 @@ class Index
 {
 	/**
 	 * \{module}\Event\Index
-	 * 
 	 * @var \{module}\Event\Index
-	 * @access private
-	 * @static
 	 */
 	private static $_oInstance = NULL;
 
@@ -50,13 +48,13 @@ class Index
 					{
 						foreach ($mData as $oClosure)
 						{
-							Event::BIND($sEvent, $oClosure, null);
+							Event::bind($sEvent, $oClosure, null);
 						}
 
 						continue;
 					}
 
-					Event::BIND($sEvent, $mData);
+					Event::bind($sEvent, $mData);
 				}				
             }
         }
@@ -79,8 +77,6 @@ class Index
 
     /**
      * prevent any cloning
-     *
-     * @access private
      * @return void
      */
     private function __clone()
@@ -89,30 +85,45 @@ class Index
     }
 
     /**
-     * activates Session for Frontend Calls
+     * activates Session
+     * gets active by triggered event "mvc.application.setSession.before"
+     * @see /modules/{module}/etc/config/{module}/config/{env}.php
      * @param DTArrayObject $oDTArrayObject
      * @throws \ReflectionException
      */
     public static function enableSession(\MVC\DataType\DTArrayObject $oDTArrayObject)
     {
-        // Request via GUI
-        $bIsGuiRequest = in_array(
-            Request::getInstance()->getController(),
-            Registry::get('MODULE_{module}')['SESSION']['aEnableSessionForController']
+        $aEnableSessionForController = Registry::get('MODULE_{module}')['SESSION']['aEnableSessionForController'];
+        $aDisableSessionForController = Registry::get('MODULE_{module}')['SESSION']['aDisableSessionForController'];
+
+        $bEnable = (
+            // current controller
+            in_array(Request::getControllerName(), $aEnableSessionForController)
+            ||
+            // any
+            in_array('*', $aEnableSessionForController)
         );
 
-        if (true === $bIsGuiRequest &&
-            isset($_COOKIE['myMVC_cookieConsent']) &&
-            "true" == $_COOKIE['myMVC_cookieConsent'])
+        $bDisable = (
+            // current controller
+            in_array(Request::getControllerName(), $aDisableSessionForController)
+            ||
+            // any
+            in_array('*', $aDisableSessionForController)
+        );
+
+        if (true == $bEnable
+            && false == $bDisable
+            && isset($_COOKIE['myMVC_cookieConsent'])
+            && "true" == $_COOKIE['myMVC_cookieConsent']
+        )
         {
-            \MVC\Registry::set('MVC_SESSION_ENABLE', true);
+            Config::set_MVC_SESSION_ENABLE();
         }
     }
 	
 	/**
 	 * Destructor
-	 * 
-	 * @access public
 	 * @return void
 	 */
 	public function __destruct()

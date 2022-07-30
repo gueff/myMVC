@@ -1,18 +1,47 @@
 <?php
 
-$aConfig = array(
-    'dir' => \MVC\Registry::get("MVC_MODULES") . '/{module}/DataType/',
+#-------------------------------
+# init
+$aConfig['aDataType'] = array(
+    'dir' => \MVC\Config::get_MVC_MODULES() . '/{module}/DataType/',
     'unlinkDir' => false,
-    'class' => array(
-        array(
-            'name' => 'Foo',
-            'file' => 'Foo.php',
-            'namespace' => '{module}\\DataType',
-            'constant' => array(
-            ),
-            'property' => array(
-                array('key' => 'sFoo',),
-            ),
-        ),
+    'class' => array()
+);
+
+#-------------------------------
+# DTExample
+$aConfig['aDataType']['class'][] = array(
+    'name' => 'DTExample',
+    'file' => 'DTExample.php',
+    'namespace' => '{module}\\DataType',
+    'constant' => array(),
+    'property' => array(
+        array('key' => 'sFoo', 'var' => 'string', 'value' => 'bar'),
     ),
 );
+
+#-------------------------------
+# DTConfig
+$aDTConfig = array(
+    'name' => 'DTConfig',
+    'file' => 'DTConfig.php',
+    'namespace' => '{module}\\DataType',
+    'createHelperMethods' => false,
+    'constant' => array(),
+    'property' => array(),
+);
+
+// put all global MVC_*key*/values as properties into Class
+foreach ($GLOBALS['aConfig'] as $sKey => $mValue)
+{
+    if ('MVC_' == substr($sKey, 0, 4))
+    {
+        $aDTConfig['property'][] = array(
+            'key' => $sKey,
+            'var' => gettype($mValue),
+            'value' => (('boolean' === gettype($mValue)) ? (int) $mValue : $mValue)
+        );
+    }
+}
+
+$aConfig['aDataType']['class'][] = $aDTConfig;

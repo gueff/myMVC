@@ -13,11 +13,11 @@
  */
 namespace {module}\View;
 
+use MVC\Config;
 use MVC\Registry;
 
 /**
  * Index
- * 
  * @extends \MVC\View
  */
 class Index extends \MVC\View
@@ -29,9 +29,7 @@ class Index extends \MVC\View
 	public function __construct ()
 	{
 		parent::__construct ();
-
         $this->sendSecurityHeader();
-
 		$this->sContentVar = 'sContent';
 	}
 
@@ -43,7 +41,7 @@ class Index extends \MVC\View
     {
         header("Content-Security-Policy: " . \MVC\Registry::get('CONTENT_SECURITY_POLICY')['Content-Security-Policy']);         // Default
         header("X-Content-Security-Policy: " . \MVC\Registry::get('CONTENT_SECURITY_POLICY')['Content-Security-Policy']);       // IE
-        header("X-Webkit-CSP: " . \MVC\Registry::get('CONTENT_SECURITY_POLICY')['Content-Security-Policy']);                    // Chrome und Safari
+        header("X-Webkit-CSP: " . \MVC\Registry::get('CONTENT_SECURITY_POLICY')['Content-Security-Policy']);                    // Chrome, Safari
         header("X-Frame-Options: allow-from " . \MVC\Registry::get('CONTENT_SECURITY_POLICY')['X-Frame-Options']);
         header("X-XSS-Protection: " . \MVC\Registry::get('CONTENT_SECURITY_POLICY')['X-XSS-Protection']);
         header("Strict-Transport-Security: " . \MVC\Registry::get('CONTENT_SECURITY_POLICY')['Strict-Transport-Security']);
@@ -51,13 +49,15 @@ class Index extends \MVC\View
 
     /**
      * @param array $aRouting
+     * @return void
+     * @throws \ReflectionException
      * @throws \SmartyException
      */
     public function autoAssign(array $aRouting = array())
     {
-        $this->sTemplate = $this->sTemplateDir . '/' . get($aRouting['template']['layout'], Registry::get('MVC_SMARTY_TEMPLATE_DEFAULT'));
-        $this->assign ('sLayoutTemplate', $this->sTemplate);
-        $this->assign ('sTitle', get($aRouting['title'], ''));
+        $this->sTemplate = $this->sTemplateDir . '/' . get($aRouting['template']['layout'], Config::get_MVC_SMARTY_TEMPLATE_DEFAULT());
+        $this->assign('sLayoutTemplate', $this->sTemplate);
+        $this->assign('sTitle', get($aRouting['title'], ''));
         $this->assign('aRegistry', Registry::getStorageArray());
         $this->assign('aRouting', $aRouting);
 
@@ -71,14 +71,20 @@ class Index extends \MVC\View
             $this->assign($sKey, trim($this->loadTemplateAsString ($sValue)));
         }
 
+        $sStyle = '';
+        $sScript = '';
+
         foreach (get($aRouting['template']['sStyle'], array()) as $sKey => $sValue)
         {
-            $this->assign($sKey, trim($this->loadTemplateAsString ($sValue)));
+            $sStyle.= '<link href="' . $sValue . '" rel="stylesheet" type="text/css">' . "\n";
         }
 
         foreach (get($aRouting['template']['sScript'], array()) as $sKey => $sValue)
         {
-            $this->assign($sKey, trim($this->loadTemplateAsString ($sValue)));
+            $sScript.='<script src="' . $sValue . '" type="text/javascript"></script>' . "\n";
         }
+
+        $this->assign('sStyle', $sStyle);
+        $this->assign('sScript', $sScript);
     }
 }

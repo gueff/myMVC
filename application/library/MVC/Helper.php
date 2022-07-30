@@ -7,10 +7,6 @@
  * @license   GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
  */
 
-/**
- * @name $MVC
- */
-
 namespace MVC;
 
 use MVC\DataType\DTArrayObject;
@@ -21,18 +17,15 @@ use MVC\DataType\DTKeyValue;
  */
 class Helper
 {
-
     /**
-     * Mini OnScreen Debugger shows one bigger window bottom left on screen
-     * @access public
-     * @static
+     * Mini OnScreen Debugger
      * @param string|array $mData
      * @return void
      */
-    public static function DEBUG($mData = '')
+    public static function debug($mData = '')
     {
         // source
-        $aBacktrace = self::PREPAREBACKTRACEARRAY(debug_backtrace());
+        $aBacktrace = self::prepareBacktraceArray(debug_backtrace());
 
         ob_start();
         var_dump($mData);
@@ -76,7 +69,7 @@ class Helper
      * @param mixed $mData
      * @return void
      */
-    public static function DISPLAY($mData = '')
+    public static function display($mData = '')
     {
         static $sDisplay;
         static $iCount;
@@ -84,7 +77,7 @@ class Helper
         $iCount++;
 
         // Source
-        $aBacktrace = self::PREPAREBACKTRACEARRAY(debug_backtrace());
+        $aBacktrace = self::prepareBacktraceArray(debug_backtrace());
 
         ob_start();
         var_dump($mData);
@@ -146,13 +139,13 @@ class Helper
      * @param bool  $bDump          default=true
      * @throws \ReflectionException
      */
-    public static function STOP($mData = '', $bShowWhereStop = true, $bDump = true)
+    public static function stop($mData = '', $bShowWhereStop = true, $bDump = true)
     {
         static $iCount;
         $iCount++;
 
         // source
-        $aBacktrace = self::PREPAREBACKTRACEARRAY(debug_backtrace());
+        $aBacktrace = self::prepareBacktraceArray(debug_backtrace());
 
         if (true === $bDump)
         {
@@ -220,7 +213,7 @@ class Helper
             echo '</b></div>';
         }
 
-        Event::RUN('mvc.helper.stop.after', DTArrayObject::create()
+        Event::run('mvc.helper.stop.after', DTArrayObject::create()
             ->add_aKeyValue(DTKeyValue::create()
                 ->set_sKey('aBacktrace')
                 ->set_sValue($aBacktrace))
@@ -241,57 +234,86 @@ class Helper
      * @param mixed $mUnknown
      * @return boolean
      */
-    public static function ISCLOSURE($mUnknown)
+    public static function isClosure($mUnknown)
     {
         return is_object($mUnknown) && ($mUnknown instanceof \Closure);
     }
 
     /**
      * Dumps a Closure
-     * taken from http://www.metashock.de/2013/05/dump-source-code-of-closure-in-php/
      * @access public
      * @static
      * @param mixed $mClosure name of function or Closure
      * @return string
      * @throws \ReflectionException
      */
-    public static function CLOSUREDUMP($mClosure)
+    public static function closureDump($mClosure)
     {
         $oReflectionFunction = new \ReflectionFunction ($mClosure);
         $aParam = array();
 
-        foreach ($oReflectionFunction->getParameters() as $mValue)
+        /** @var ReflectionParameter $oReflectionParameter */
+        foreach ($oReflectionFunction->getParameters() as $oReflectionParameter)
         {
             $sTemp = '';
+            $oRflectionType = $oReflectionParameter->getType();
+            $aType = $oRflectionType instanceof ReflectionUnionType
+                ? $oRflectionType->getTypes()
+                : [$oRflectionType];
 
-            if ($mValue->isArray())
+            $aType = array_filter(
+                $aType,
+                function($value)
+                {
+                    return !is_null($value) && $value !== '' && 'NULL' != gettype($value);
+                }
+            );
+
+            if (empty($aType))
+            {
+                continue;
+            }
+
+            /**
+             * @see https://www.php.net/manual/de/reflectionparameter.isarray.php
+             *      https://www.php.net/manual/de/functions.arrow.php
+             */
+            $bIsArray = in_array(
+                'array',
+                array_map(
+                    fn(\ReflectionNamedType $oReflectionNamedType) => $oReflectionNamedType->getName(),
+                    $aType
+                )
+            );
+
+            if (true === $bIsArray)
             {
                 $sTemp .= 'array ';
             }
             else
             {
-                if ($mValue->getClass())
+                if ($oReflectionParameter->getName())
                 {
-                    $sTemp .= $mValue->getClass()->name . ' ';
+                    $sTemp .= $oReflectionParameter->getName() . ' ';
                 }
             }
 
-            if ($mValue->isPassedByReference())
+            if ($oReflectionParameter->isPassedByReference())
             {
                 $sTemp .= '&';
             }
 
-            $sTemp .= '$' . $mValue->name;
+            $sTemp .= '$' . $oReflectionParameter->name;
 
-            if ($mValue->isOptional())
+            if ($oReflectionParameter->isOptional())
             {
-                $sTemp .= ' = ' . var_export($mValue->getDefaultValue(), true);
+                $sTemp .= ' = ' . var_export($oReflectionParameter->getDefaultValue(), true);
             }
 
             $aParam [] = $sTemp;
         }
 
-        $sString = 'function (' . implode(', ', $aParam) . '){' . PHP_EOL;
+        $sString = 'function (' . preg_replace('!\s+!', ' ', implode(', ', $aParam)) . '){' . PHP_EOL;
         $aLine = file($oReflectionFunction->getFileName());
 
         for ($iCount = $oReflectionFunction->getStartLine(); $iCount < $oReflectionFunction->getEndLine(); $iCount++)
@@ -304,104 +326,36 @@ class Helper
 
     /**
      * gets the http uri protocol
+     * @deprecated use Request::getUriProtocol()
      * @param null $mSsl
      * @return string
      * @throws \ReflectionException
      */
-    public static function GETURIPROTOCOL($mSsl = null)
+    public static function getUriProtocol($mSsl = null)
     {
-        // detect on ssl or not
-        if (isset ($mSsl))
-        {
-            // http
-            if ((int)$mSsl === 0 || $mSsl == false)
-            {
-                return 'http://';
-            }
-            // https
-            elseif ((int)$mSsl === 1 || $mSsl == true)
-            {
-                return 'https://';
-            }
-        }
-        // autodetect
-        else
-        {
-            // http
-            if (self::DETECTSSL() === false)
-            {
-                return 'http://';
-            }
-            // http
-            elseif (self::DETECTSSL() === true)
-            {
-                return 'https://';
-            }
-        }
-
-        \MVC\Event::RUN('mvc.error', DTArrayObject::create()
-            ->add_aKeyValue(DTKeyValue::create()
-                ->set_sKey('sMessage')
-                ->set_sValue('could not detect protocol of requested page.')));
-
-        return '';
+        return Request::getUriProtocol();
     }
 
     /**
      * check page is running in ssl mode
+     * @deprecated use: Request::detectSsl()
      * @return bool|mixed
      * @throws \ReflectionException
      */
-    public static function DETECTSSL()
+    public static function detectSsl()
     {
-        if (Registry::isRegistered('MVC_SECURE_REQUEST'))
-        {
-            return Registry::get('MVC_SECURE_REQUEST');
-        }
-
-        return ((array_key_exists('HTTPS', $_SERVER) && strtolower($_SERVER['HTTPS']) !== 'off') || Registry::isRegistered('MVC_SSL_PORT') && $_SERVER['SERVER_PORT'] == Registry::get('MVC_SSL_PORT'));
-    }
-
-    /**
-     * get infos about a file via stat
-     * @access public
-     * @static
-     * @param string $sFile file
-     * @param string $sKey  (optional) if $sKey is given, only this info wil be returned
-     * @return array|mixed
-     */
-    public static function GETFILEINFO($sFile = null, $sKey = null)
-    {
-        if (false === isset($sFile))
-        {
-            return array();
-        }
-
-        $aStat = stat($sFile);
-        $aInfo = posix_getpwuid($aStat['uid']);
-
-        if (false === empty ($sKey))
-        {
-            if (array_key_exists($sKey, $aInfo))
-            {
-                return $aInfo[$sKey];
-            }
-        }
-
-        return $aInfo;
+        return Request::detectSsl();
     }
 
     /**
      * makes sure the requested page will be delivered with the correct protocol (http|https)
+     * @deprecated use: Request::ensureCorrectProtocol();
+     * @return void
      * @throws \ReflectionException
      */
-    public static function ENSURECORRECTPROTOCOL()
+    public static function ensureCorrectProtocol()
     {
-        $aDebug = self::PREPAREBACKTRACEARRAY(debug_backtrace());
-        Log::WRITE("DEPRECATED: " . __METHOD__ . "\tReplaced by:\t" . '\MVC\Request::ENSURECORRECTPROTOCOL(); --> called in: ' . $aDebug['sFile'] . ', ' . $aDebug['sLine'], 'notice.log');
-
-        // Replaced by:
-        Request::ENSURECORRECTPROTOCOL();
+        Request::ensureCorrectProtocol();
     }
 
     /**
@@ -411,7 +365,7 @@ class Helper
      * @param array $aBacktrace
      * @return array
      */
-    public static function PREPAREBACKTRACEARRAY(array $aBacktrace = array())
+    public static function prepareBacktraceArray(array $aBacktrace = array())
     {
         $aData = array();
         $aData['sFile'] = (isset($aBacktrace[0]['file']))
@@ -436,7 +390,7 @@ class Helper
      * @param bool  $bShortArraySyntax default=true
      * @return mixed
      */
-    public static function VAREXPORT($mData, $bReturn = false, $bShortArraySyntax = true)
+    public static function varExport($mData, $bReturn = false, $bShortArraySyntax = true)
     {
         $sExport = var_export($mData, true);
         $sExport = preg_replace("/^([ ]*)(.*)/m", '$1$1$2', $sExport);
@@ -499,17 +453,14 @@ class Helper
     /**
      * removes doubleDot+Slashes (../) from string
      * replaces multiple forwardSlashes (//) from string by a single forwardSlash
+     * @deprecated use File::secureFilePath
      * @param string $sAbsoluteFilePath
      * @param bool   $bIgnoreProtocols default=false; on true leaves :// as it is
      * @return string
      */
     public static function secureFilePath($sAbsoluteFilePath = '', $bIgnoreProtocols = false)
     {
-        $sAbsoluteFilePath = self::removeDoubleDotSlashesFromString($sAbsoluteFilePath);
-        $sAbsoluteFilePath = self::replaceMultipleForwardSlashesByOneFromString($sAbsoluteFilePath, $bIgnoreProtocols);
-
-        /**@var string */
-        return $sAbsoluteFilePath;
+        return File::secureFilePath($sAbsoluteFilePath, $bIgnoreProtocols);
     }
 
     /**

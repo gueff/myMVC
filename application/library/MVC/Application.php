@@ -8,9 +8,6 @@
  * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
  */
 
-/**
- * @name $MVC
- */
 namespace MVC;
 
 use MVC\DataType\DTArrayObject;
@@ -21,108 +18,73 @@ use MVC\DataType\DTKeyValue;
  */
 class Application
 {
-
 	/**
-     * Application constructor.
-	 * 
-	 * @access public
-	 * @param array $aConfig configuration array 
-	 * @return void
-     * @throws \Exception
+     * Application constructor
+     * @throws \ReflectionException
      */
-	public function __construct (array $aConfig = array ())
+	public function __construct()
 	{
+        // get config via global
 		// write configs into registry
-		$this->saveConfigToRegistry ($aConfig);
+        Config::init($GLOBALS['aConfig']);
 
         // handle Errors
-        $oError = new Error();
+        Error::init();
 
 		// add a CLI wrapper to enable requests from command line
-		(true === filter_var (Registry::get ('MVC_CLI'), FILTER_VALIDATE_BOOLEAN)) ? $this->cliWrapper () : false;
+		(true === Request::isCli()) ? Request::cliWrapper() : false;
 
-		Log::WRITE (
+		Log::write (
 			str_repeat ('#', 10) . "\tnew Request"
 			. "\t" . php_sapi_name ()
-			. "\t" . (array_key_exists ('REQUEST_METHOD', $_SERVER) ? $_SERVER['REQUEST_METHOD'] : '')
-			. ' ' . (array_key_exists ('REQUEST_URI', $_SERVER) ? $_SERVER['REQUEST_URI'] : '')
+			. "\t" . Request::getServerRequestMethod()
+			. ' ' . Request::getServerRequestUri()
 		);
 
-		// handle Routing
-		$oRouter = new Router();
+        // save + prepare Request
+        Request::init();
+
+        // handle Routing
+		Router::init();
 
 		// Run target Controller's __preconstruct()
-		self::runTargetClassPreconstruct();
+		Controller::runTargetClassPreconstruct();
 
-		// Set Session
-		self::setSession ();
+		// Session
+		self::initSession();
 
 		// consider Policy Rules
 		// e.g. maybe the requested target controller may not be called due to some reason 
 		// and should be protected from any requesting
-		$oPolicy = new Policy();
+		Policy::apply();
 
-		// Run the requested target Controller
-		$oController = new Controller (Request::getInstance ());
+        // Run the requested target Controller
+        Controller::init();
 
-		Event::RUN ('mvc.application.construct.after',
-            DTArrayObject::create()
-                ->add_aKeyValue(
-                    DTKeyValue::create()->set_sKey('oError')->set_sValue($oError)
-                )
-                ->add_aKeyValue(
-                    DTKeyValue::create()->set_sKey('oRouter')->set_sValue($oRouter)
-                )
-                ->add_aKeyValue(
-                    DTKeyValue::create()->set_sKey('oPolicy')->set_sValue($oPolicy)
-                )
-                ->add_aKeyValue(
-                    DTKeyValue::create()->set_sKey('oController')->set_sValue($oController)
-                )
-        );
+		Event::run ('mvc.application.construct.after', DTArrayObject::create());
 	}
 
 	/**
-	 * save config array to registry in key value manner
-	 * 
-	 * @access private
-	 * @param array $aConfig
-	 * @return void
-	 */
-	private function saveConfigToRegistry (array $aConfig = array ())
-	{
-		// save config array to registry in key value manner
-		foreach ($aConfig as $sKey => $sValue)
-		{
-			Registry::set ($sKey, $sValue);
-		}
-	}
-
-	/**
-	 * inits a session if MVC_SESSION_ENABLE is set to 1 
-     * and copies it to the registry
-	 * 
-	 * @access private
-	 * @static
-	 * @return void
-     * @throws \Exception
+	 * inits a session and copies it to the registry
+     * @return void
+     * @throws \ReflectionException
      */
-	private static function setSession ()
+	private static function initSession ()
 	{
-		Event::RUN ('mvc.setSession.before', DTArrayObject::create());
+		Event::run ('mvc.application.setSession.before', DTArrayObject::create());
 
-        (!file_exists (Registry::get ('MVC_SESSION_PATH'))) ? mkdir (Registry::get ('MVC_SESSION_PATH')) : false;
+        (!file_exists (Config::get_MVC_SESSION_PATH())) ? mkdir (Config::get_MVC_SESSION_PATH()) : false;
 
         $oSession = Session::is();
         $iMicrotime = microtime (true);
         $sMicrotime = sprintf ("%06d", ($iMicrotime - floor ($iMicrotime)) * 1000000);
         $oSession->set ('startDateTime', new \DateTime (date ('Y-m-d H:i:s.' . $sMicrotime, $iMicrotime)));
-        $oSession->set ('uniqueid', Registry::get ('MVC_UNIQUE_ID'));
+        $oSession->set ('uniqueid', Config::get_MVC_UNIQUE_ID());
         
         // copy Session Object to registry
-        Registry::set ('MVC_SESSION', $oSession);
+        Config::set_MVC_SESSION($oSession);
 
-		Event::RUN ('mvc.setSession.after',
+		Event::run ('mvc.application.setSession.after',
             DTArrayObject::create()
                 ->add_aKeyValue(
                     DTKeyValue::create()->set_sKey('oSession')->set_sValue($oSession)
@@ -130,122 +92,18 @@ class Application
         );
 	}
 
-	/**
-	 * calls the "BEFORE" method
-	 * inside the requested Controller. To be executed
-	 * before Session, IDS and all the Main Functionalities.
+    /**
+     * Destructor;
+     * runs Event mvc.application.destruct
      * @throws \ReflectionException
      */
-	private static function runTargetClassPreconstruct ()
-	{
-	    $sTargetModule = Registry::get ('MVC_MODULES') . '/' . Request::getInstance()->getModule();
-
-	    if (false === file_exists($sTargetModule))
-        {
-            Helper::DEBUG("\n\nModule missing: " . Request::getInstance()->getModule() . "\n\n" . $sTargetModule);
-            Helper::STOP();
-        }
-
-        $aQueryArray = Request::getInstance ()->getQueryArray ();
-
-		// identify target class
-		$sClass = '\\' . $aQueryArray['GET'][Registry::get ('MVC_GET_PARAM_MODULE')] . '\\Controller\\' . $aQueryArray['GET'][Registry::get ('MVC_GET_PARAM_C')];
-
-		// identify target class as file
-		$sFile = Registry::get ('MVC_MODULES') . '/' . str_replace ('\\', '/', $sClass) . '.php';
-
-		if (!file_exists ($sFile))
-		{
-			parse_str (Registry::get ('MVC_ROUTING_FALLBACK'), $aParse);
-			$sClass = '\\' . ucfirst ($aParse[Registry::get ('MVC_GET_PARAM_MODULE')]) . '\\' . ucfirst ($aParse[Registry::get ('MVC_GET_PARAM_C')]);
-			$sFile = Registry::get ('MVC_MODULES') . '/' . str_replace ('\\', '/', $sClass) . '.php';
-		}
-
-		if (class_exists ($sClass))
-		{
-			$sMethod = Registry::get ('MVC_METHODNAME_PRECONSTRUCT');
-
-			if (method_exists ($sClass, $sMethod))
-			{
-				$sClass::$sMethod ();
-			}
-		}
-		else
-		{
-			Event::RUN ('mvc.error',
-                DTArrayObject::create()
-                    ->add_aKeyValue(
-                        DTKeyValue::create()->set_sKey('iLevel')->set_sValue(1)
-                    )
-                    ->add_aKeyValue(
-                        DTKeyValue::create()->set_sKey('sMessage')->set_sValue(__FILE__ . ', ' . __LINE__ . "\t" . 'Class does not exist: `' . $sClass . '`')
-                    )
-            );
-		}
-
-		Event::RUN ('mvc.runTargetClassPreconstruct.after',
-            DTArrayObject::create()
-                ->add_aKeyValue(
-                    DTKeyValue::create()->set_sKey('sClass')->set_sValue($sClass)
-                )
-                ->add_aKeyValue(
-                    DTKeyValue::create()->set_sKey('sMethod')->set_sValue($sMethod)
-                )
-        );
-	}
-
-	/**
-	 * enables using myMvc via commandline
-	 * example usage
-	 * 		$ php index.php "/"
-	 * 
-	 * @access private
-	 */
-	private function cliWrapper ()
-	{
-		// check user/file permission
-		$sIndex = realpath (__DIR__ . '/../../../public') . '/index.php';
-
-		if (posix_getuid () != Helper::GETFILEINFO ($sIndex, 'uid'))
-		{
-			$aUser = posix_getpwuid (posix_getuid ());
-			$aFileInfo = Helper::GETFILEINFO ($sIndex);
-
-			die (
-				"\n\tERROR\tCLI - access granted for User `" . $aFileInfo['name'] . "` only "
-				. "(User `" . $aUser['name'] . "`, uid:" . $aUser['uid'] . ", not granted).\t"
-				. __FILE__ . ', ' . __LINE__ . "\n\n"
-			);
-		}
-
-		(!array_key_exists (1, $GLOBALS['argv'])) ? $GLOBALS['argv'][1] = '' : false;
-		$aParseUrl = parse_url ($GLOBALS['argv'][1]);
-
-		$_SERVER = array ();
-		$_SERVER['REQUEST_URI'] = $GLOBALS['argv'][1];
-		$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
-		$_SERVER['HTTP_HOST'] = 'localhost';
-
-		if (array_key_exists ('query', $aParseUrl))
-		{
-			$_SERVER['QUERY_STRING'] = $aParseUrl['query'];
-			parse_str ($aParseUrl['query'], $_GET);
-		}
-	}
-
-	/**
-	 * Destructor; 
-	 * runs Event mvc.application.destruct
-     * @throws \ReflectionException
-     */
-	public function __destruct ()
-	{
-		Event::RUN ('mvc.application.destruct.before',
+    public function __destruct ()
+    {
+        Event::run ('mvc.application.destruct.before',
             DTArrayObject::create()
                 ->add_aKeyValue(
                     DTKeyValue::create()->set_sKey('oController')->set_sValue($this)
                 )
         );
-	}
-
+    }
 }
