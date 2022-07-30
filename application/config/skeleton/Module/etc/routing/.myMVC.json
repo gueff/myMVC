@@ -1,0 +1,66 @@
+{
+  "/": {
+    "query": "module={module}&c=index&m=index",
+    "title": "{module}",
+    "template": {
+      "layout": "Frontend\/layout\/index.tpl",
+      "var": {
+        "set": {
+          "sCss": "",
+          "sJs": ""
+        },
+        "load": {
+          "sMainmenu": "Frontend/layout/menu.tpl",
+          "sContent": "Frontend/content/index.tpl",
+          "sHeader": "Frontend/layout/header.tpl",
+          "sNoscript": "Frontend/content/_noscript.tpl",
+          "sCookieConsent": "Frontend/content/_cookieConsent.tpl",
+          "sFooter": "Frontend/layout/footer.tpl"
+        }
+      },
+      "sStyle": [
+        "\/myMVC\/assets\/bootstrap-4.4.1-dist\/css\/bootstrap.min.css",
+        "\/myMVC\/assets\/font-awesome-4.7.0\/css\/font-awesome.min.css",
+        "\/myMVC\/styles\/myMVC.min.css"
+      ],
+      "sScript": [
+        "\/myMVC\/assets\/jquery\/3.4.1\/jquery-3.4.1.min.js",
+        "\/myMVC\/assets\/jquery-cookie\/1.4.1\/jquery.cookie.min.js",
+        "\/myMVC\/assets\/bootstrap-4.4.1-dist\/js\/bootstrap.min.js",
+        "\/myMVC\/scripts\/cookieConsent.min.js"
+      ]
+    }
+  },
+  "/404/": {
+    "query": "module={module}&c=index&m=notFound",
+    "title": "{module} - 404",
+    "template": {
+      "layout": "Frontend\/layout\/index.tpl",
+      "var": {
+        "set": {
+          "sCss": "",
+          "sJs": ""
+        },
+        "load": {
+          "sMainmenu": "Frontend/layout/menu.tpl",
+          "sContent": "Frontend/content/404.tpl",
+          "sHeader": "Frontend/layout/header.tpl",
+          "sNoscript": "Frontend/content/_noscript.tpl",
+          "sCookieConsent": "Frontend/content/_cookieConsent.tpl",
+          "sFooter": "Frontend/layout/footer.tpl"
+        }
+      },
+      "sStyle": [
+        "\/myMVC\/assets\/bootstrap-4.4.1-dist\/css\/bootstrap.min.css",
+        "\/myMVC\/assets\/font-awesome-4.7.0\/css\/font-awesome.min.css",
+        "\/myMVC\/styles\/myMVC.min.css"
+      ],
+      "sScript": [
+        "\/myMVC\/assets\/jquery\/3.4.1\/jquery-3.4.1.min.js",
+        "\/myMVC\/assets\/jquery-cookie\/1.4.1\/jquery.cookie.min.js",
+        "\/myMVC\/assets\/bootstrap-4.4.1-dist\/js\/bootstrap.min.js",
+        "\/myMVC\/scripts\/cookieConsent.min.js"
+      ]
+    }
+  }
+}
