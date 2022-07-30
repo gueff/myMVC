@@ -26,7 +26,7 @@ interface RouterJson
 	/**
 	 * returns the routing as array
 	 */
-	public static function GETROUTINGARRAY();
+	public static function getRoutingArray();
 	
 	/**
 	 * returns the routing as JSON
@@ -40,7 +40,7 @@ interface RouterJson
 	 * @param array $aRouting Routing Array
 	 * @param string $sRequestUri Request URI
 	 */
-	public static function SAVEROUTINGTOREGISTRY (array $aRouting, $sRequestUri);
+	public static function saveRoutingToRegistry (array $aRouting, $sRequestUri);
 	
 	/**
 	 * Destructor

@@ -8,9 +8,6 @@
  * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
  */
 
-/**
- * @name $MVC
- */
 namespace MVC;
 
 use MVC\DataType\DTArrayObject;
@@ -18,47 +15,37 @@ use MVC\DataType\DTKeyValue;
 
 /**
  * RouterJson
- * 
  * @implements \MVC\MVCInterface\RouterJson
  */
 class RouterJson implements \MVC\MVCInterface\RouterJson
 {
 	/**
 	 * object routing builder
-	 * 
 	 * @var object
-	 * @access protected
 	 */
 	protected $_oRoutingBuilder;
 
 	/**
 	 * routing JSON
-	 * 
 	 * @var string
-	 * @access protected
 	 */
 	protected $_sRoutingJson;
 
 	/**
 	 * routing array
-	 * 
 	 * @var array
-	 * @access public
 	 */
-	public $_aRouting = array ();
+	public $aRouting = array ();
 
 	/**
-	 * Request Uri
-	 * 
+	 * $_SERVER['REQUEST_URI']
 	 * @var string
-	 * @access public
 	 */
-	public $_sRequestUri;
-
+	public $sRequestUri;
 
 	/**
      * RouterJson constructor.
-	 * reads the routing.json file and looks for matching routes<br />
+	 * reads the routing.json file and looks for matching routes
 	 * The Get-Param `a` will be passed through in both cases
      * @throws \ReflectionException
      */
@@ -66,9 +53,9 @@ class RouterJson implements \MVC\MVCInterface\RouterJson
 	{
 		// call the Routing Json building class to get the proper routing
 		// @see config
-		(Registry::isRegistered ('MVC_ROUTING_JSON_BUILDER')) ? $sRoutingBuilder = Registry::get ('MVC_ROUTING_JSON_BUILDER') : false;
+        $sRoutingJsonBuilder = Config::get_MVC_ROUTING_JSON_BUILDER();
 
-		if (!isset ($sRoutingBuilder))
+		if (true === empty($sRoutingJsonBuilder))
 		{
 			Error::addERROR (
                 DTArrayObject::create()
@@ -77,44 +64,44 @@ class RouterJson implements \MVC\MVCInterface\RouterJson
 			return false;
 		}
 
-		$this->_oRoutingBuilder = new $sRoutingBuilder;
+		$this->_oRoutingBuilder = new $sRoutingJsonBuilder;
 		$this->_sRoutingJson = $this->_oRoutingBuilder->getRoutingJson();
-        $this->_aRouting = json_decode ($this->_sRoutingJson, true);
+        $this->aRouting = json_decode ($this->_sRoutingJson, true);
 
         if (0 !== json_last_error())
         {
-            $this->_aRouting = array();
+            $this->aRouting = array();
         }
 
-		$this->_sRequestUri = Request::getInstance ()->getRequestUri ();
-		
-		// add path
-		(isset ($this->_aRouting[$this->_sRequestUri])) ? $this->_aRouting[$this->_sRequestUri]['path'] = $this->_sRequestUri : false;
+		$this->sRequestUri = Request::getServerRequestUri(); #  Request::getInstance()->getRequestUri();
+
+        // add path
+		(isset ($this->aRouting[$this->sRequestUri])) ? $this->aRouting[$this->sRequestUri]['path'] = $this->sRequestUri : false;
 
 		// add class, method
-		if (array_key_exists ($this->_sRequestUri, $this->_aRouting))
+		if (array_key_exists ($this->sRequestUri, $this->aRouting))
 		{
-			if (array_key_exists ('query', $this->_aRouting[$this->_sRequestUri]))
+			if (array_key_exists ('query', $this->aRouting[$this->sRequestUri]))
 			{
 				// add Target Class
-				parse_str ($this->_aRouting[$this->_sRequestUri]['query'], $sQuery);
-				$this->_aRouting[$this->_sRequestUri]['class'] = ucfirst ($sQuery[Registry::get ('MVC_GET_PARAM_MODULE')]) . '\\Controller\\' . ucfirst ($sQuery[Registry::get ('MVC_GET_PARAM_C')]);
-				$this->_aRouting[$this->_sRequestUri]['method'] = Request::getInstance ()->getMethod ();
+				parse_str ($this->aRouting[$this->sRequestUri]['query'], $sQuery);
+                $this->aRouting[$this->sRequestUri]['class'] = ucfirst ($sQuery[Config::get_MVC_GET_PARAM_MODULE()]) . '\\Controller\\' . ucfirst ($sQuery[Config::get_MVC_GET_PARAM_C()]);
+                $this->aRouting[$this->sRequestUri]['method'] = Request::getMethodName();
 			}
 		}
-		
-		Log::WRITE ('routing table built by: ' . $sRoutingBuilder);
-		Log::WRITE ('routing handling done by: ' . Registry::get ('MVC_ROUTING_HANDLING'));
-		Log::WRITE ('routes (cutout): ' . substr (preg_replace ('/\s+/', '', $this->_sRoutingJson), 0, 25) . ' [..]');
+
+        Log::write ('routing table built by: ' . $sRoutingJsonBuilder);
+		Log::write ('routing handling done by: ' . Config::get_MVC_ROUTING_HANDLING());
+		Log::write ('routes (cutout): ' . substr (preg_replace ('/\s+/', '', $this->_sRoutingJson), 0, 25) . ' [..]');
 
 		if (false === filter_var (($this->_oRoutingBuilder instanceof \MVC\MVCInterface\RouterJsonBuilder), FILTER_VALIDATE_BOOLEAN))
 		{
-			$sMsg = 'ERROR: Make sure `' . $sRoutingBuilder . '` implements \MVC\MVCInterface\RouterJsonBuilder';
+			$sMsg = 'ERROR: Make sure `' . $sRoutingJsonBuilder . '` implements \MVC\MVCInterface\RouterJsonBuilder';
 			Error::addERROR (
                 DTArrayObject::create()
                     ->add_aKeyValue(DTKeyValue::create()->set_sKey('sMessage')->set_sValue($sMsg))
             );
-			Helper::STOP ($sMsg);
+			Helper::stop ($sMsg);
 		}
 		
 		return true;
@@ -122,48 +109,48 @@ class RouterJson implements \MVC\MVCInterface\RouterJson
 
 	/**
 	 * saves routing to the registry
-	 * 
+	 * @deprecated use => Router::setRoutingCurrent, Router::setRouting
 	 * @access public
 	 * @static
 	 * @param array $aRouting
 	 * @param string $sRequestUri
 	 * @return void
 	 */
-	public static function SAVEROUTINGTOREGISTRY (array $aRouting, $sRequestUri)
-	{		
-		// save routing array to registry
-		Registry::set ('MVC_ROUTING', $aRouting);
-		Registry::set ('MVC_ROUTING_CURRENT', ((isset ($aRouting[$sRequestUri])) ? $aRouting[$sRequestUri] : array ()));
+	public static function saveRoutingToRegistry (array $aRouting, $sRequestUri)
+	{
+        Router::setRouting($aRouting);
+        Router::setRoutingCurrent(((isset ($aRouting[$sRequestUri])) ? $aRouting[$sRequestUri] : array ()));
 	}
 
 	/**
 	 * gets routing array
+     * @deprecated use => Router::getRouting()
      * @return mixed
      * @throws \ReflectionException
      */
-	public static function GETROUTINGARRAY ()
+	public static function getRoutingArray ()
 	{
-		return Registry::get ('MVC_ROUTING');
+		return Router::getRouting();
 	}
 
 	/**
 	 * gets routing as json string
+     * @deprecated use => Router::getRoutingJson();
      * @return false|string
      * @throws \ReflectionException
      */
-	public static function GETROUTINGJSON ()
+	public static function getRoutingJson()
 	{
-		return json_encode (Registry::get ('MVC_ROUTING'));
+        return Router::getRoutingJson();
 	}
 		
 	/**
-	 * Destrucor
-	 * 
+	 * Destructor
 	 * @access public
 	 * @return void
 	 */
 	public function __destruct ()
 	{
-		
+		;
 	}
 }

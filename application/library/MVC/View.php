@@ -8,9 +8,6 @@
  * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
  */
 
-/**
- * @name $MVC
- */
 namespace MVC;
 
 use MVC\DataType\DTArrayObject;
@@ -27,39 +24,30 @@ class View extends \Smarty
      * switch rendering on/off
      * @var bool render
      */
-    public static $_bRender = true;
+    public static $bRender = true;
 
     /**
      * switch echo out
-     *
      * @var boolean
-     * @access public
-     * @static
      */
-    public static $_bEchoOut = true;
+    public static $bEchoOut = true;
 
     /**
      * Current Template Directory
-     *
      * @var string
-     * @access public
      */
     public $sTemplateDir;
 
     /**
      * Standard Template / Layout
-     *
      * @var string
-     * @access public
      */
     public $sTemplate;
 
     /**
      * Defines the Content Variable,
      * which represents the Content in the Layout
-     *
      * @var string
-     * @access public
      */
     public $sContentVar = 'sContent';
 
@@ -67,7 +55,6 @@ class View extends \Smarty
      * smarty version
      *
      * @var integer
-     * @access public
      */
     public $iSmartyVersion;
 
@@ -80,34 +67,30 @@ class View extends \Smarty
     {
         parent::__construct ();
 
-        if (true === Registry::isRegistered('MVC_VIEW_TEMPLATES'))
+        $this->sTemplateDir = Config::get_MVC_VIEW_TEMPLATES();
+
+        if (false === file_exists($this->sTemplateDir))
         {
-            $this->sTemplateDir = Registry::get('MVC_VIEW_TEMPLATES');
-        }
-        else
-        {
-            $this->sTemplateDir = \MVC\Registry::get('MVC_MODULES') . '/' . \MVC\Request::getInstance ()->getModule() . '/templates';
+            $this->sTemplateDir = Config::get_MVC_MODULES() . '/' . Request::getModuleName() . '/templates';
         }
 
         $this->setAbsolutePathToTemplateDir ($this->sTemplateDir);
-        $this->sTemplate = Registry::get('MVC_SMARTY_TEMPLATE_DEFAULT');
+        $this->sTemplate = Config::get_MVC_SMARTY_TEMPLATE_DEFAULT();
         $this->iSmartyVersion = (int) preg_replace ('/[^0-9]+/', '', self::SMARTY_VERSION);
-        $this->setCompileDir (\MVC\Registry::get ('MVC_SMARTY_TEMPLATE_CACHE_DIR'));
-        $this->setCacheDir (\MVC\Registry::get ('MVC_SMARTY_CACHE_DIR'));
-        $this->caching = \MVC\Registry::get ('MVC_SMARTY_CACHE_STATUS');
-        $aPlugInDir = array(\MVC\Registry::get ('MVC_APPLICATION_PATH') . '/vendor/smarty/smarty/libs/plugins/');
-        (\MVC\Registry::isRegistered('MVC_SMARTY_PLUGINS_DIR')) ? $aPlugInDir = array_merge ($aPlugInDir, \MVC\Registry::get ('MVC_SMARTY_PLUGINS_DIR')) : false;
+        $this->setCompileDir (Config::get_MVC_SMARTY_TEMPLATE_CACHE_DIR());
+        $this->setCacheDir (Config::get_MVC_SMARTY_CACHE_DIR());
+        $this->caching = Config::get_MVC_SMARTY_CACHE_STATUS();
+        $aPlugInDir = array(Config::get_MVC_APPLICATION_PATH() . '/vendor/smarty/smarty/libs/plugins/');
+        (!empty(Config::get_MVC_SMARTY_PLUGINS_DIR())) ? $aPlugInDir = array_merge ($aPlugInDir, Config::get_MVC_SMARTY_PLUGINS_DIR()) : false;
         $this->setPluginsDir ($aPlugInDir);
-        $this->checkDirs ();
+        $this->checkDirs();
 
-        \MVC\Event::BIND('mvc.view.echoOut.off', function () {
-
-            \MVC\View::$_bEchoOut = false;
+        \MVC\Event::bind('mvc.view.echoOut.off', function () {
+            \MVC\View::$bEchoOut = false;
         });
 
-        \MVC\Event::BIND('mvc.view.echoOut.on', function () {
-
-            \MVC\View::$_bEchoOut = true;
+        \MVC\Event::bind('mvc.view.echoOut.on', function () {
+            \MVC\View::$bEchoOut = true;
         });
     }
 
@@ -117,13 +100,13 @@ class View extends \Smarty
      */
     private function checkDirs ()
     {
-        if (!file_exists (\MVC\Registry::get ('MVC_SMARTY_TEMPLATE_CACHE_DIR')))
+        if (!file_exists (Config::get_MVC_SMARTY_TEMPLATE_CACHE_DIR()))
         {
-            mkdir (\MVC\Registry::get ('MVC_SMARTY_TEMPLATE_CACHE_DIR'));
+            mkdir (Config::get_MVC_SMARTY_TEMPLATE_CACHE_DIR());
         }
-        if (!file_exists (\MVC\Registry::get ('MVC_SMARTY_CACHE_DIR')))
+        if (!file_exists (Config::get_MVC_SMARTY_CACHE_DIR()))
         {
-            mkdir (\MVC\Registry::get ('MVC_SMARTY_CACHE_DIR'));
+            mkdir (Config::get_MVC_SMARTY_CACHE_DIR());
         }
     }
 
@@ -138,7 +121,6 @@ class View extends \Smarty
         return $this->fetch ('string:' . file_get_contents ($sTemplate, true));
     }
 
-
     /**
      * renders a given string and print it out (depending on self::$_bEchoOut)
      * @param string $sTemplateString
@@ -147,7 +129,7 @@ class View extends \Smarty
      */
     public function renderString ($sTemplateString = '')
     {
-        Event::RUN ('mvc.view.renderString.before',
+        Event::run ('mvc.view.renderString.before',
             DTArrayObject::create()
                 ->add_aKeyValue(
                     DTKeyValue::create()->set_sKey('sTemplateString')->set_sValue($sTemplateString)
@@ -156,17 +138,17 @@ class View extends \Smarty
 
         $sRendered = '';
 
-        if (true === self::$_bRender)
+        if (true === self::$bRender)
         {
             $sRendered = $this->fetch ('string:' . $sTemplateString);
 
-            if (true === self::$_bEchoOut)
+            if (true === self::$bEchoOut)
             {
                 echo $sRendered;
             }
         }
 
-        Event::RUN ('mvc.view.renderString.after',
+        Event::run ('mvc.view.renderString.after',
             DTArrayObject::create()
                 ->add_aKeyValue(
                     DTKeyValue::create()->set_sKey('sTemplateString')->set_sValue($sTemplateString)
@@ -175,7 +157,7 @@ class View extends \Smarty
                     DTKeyValue::create()->set_sKey('sRendered')->set_sValue($sRendered)
                 )
                 ->add_aKeyValue(
-                    DTKeyValue::create()->set_sKey('bEchoOut')->set_sValue(self::$_bEchoOut)
+                    DTKeyValue::create()->set_sKey('bEchoOut')->set_sValue(self::$bEchoOut)
                 )
         );
     }
@@ -187,7 +169,7 @@ class View extends \Smarty
      */
     public function render ()
     {
-        Event::RUN ('mvc.view.render.before',
+        Event::run ('mvc.view.render.before',
             DTArrayObject::create()
                 ->add_aKeyValue(
                     DTKeyValue::create()->set_sKey('oView')->set_sValue($this)
@@ -198,7 +180,7 @@ class View extends \Smarty
         $sTemplate = (true === is_file($this->sTemplate)) ? file_get_contents ($this->sTemplate, true) : '';
         $this->renderString ($sTemplate);
 
-        Event::RUN ('mvc.view.render.after',
+        Event::run ('mvc.view.render.after',
             DTArrayObject::create()
                 ->add_aKeyValue(
                     DTKeyValue::create()->set_sKey('oView')->set_sValue($this)
@@ -211,8 +193,6 @@ class View extends \Smarty
 
     /**
      * assigns a value to a Template Variable
-     *
-     * @access public
      * @param string $sValue
      * @param string $sVar
      */
@@ -224,8 +204,6 @@ class View extends \Smarty
 
     /**
      * Sets the given Template
-     *
-     * @access public
      * @param string $sTemplate
      * @return void
      */
@@ -243,8 +221,11 @@ class View extends \Smarty
     {
         if ($sAbsolutePathToTemplateDir === '')
         {
-            $aQueryArray = \MVC\Request::getInstance ()->getQueryArray ();
-            (array_key_exists (Registry::get ('MVC_GET_PARAM_MODULE'), $aQueryArray['GET'])) ? $sAbsolutePathToTemplateDir = realpath (\MVC\Registry::get ('MVC_MODULES') . '/' . $aQueryArray['GET'][Registry::get ('MVC_GET_PARAM_MODULE')] . '/templates/') : false;
+            $aQueryArray = Request::getQueryVarArray();
+            (array_key_exists (Config::get_MVC_GET_PARAM_MODULE(), $aQueryArray['GET']))
+                ? $sAbsolutePathToTemplateDir = realpath (Config::get_MVC_MODULES() . '/' . $aQueryArray['GET'][Config::get_MVC_GET_PARAM_MODULE()] . '/templates/')
+                : false
+            ;
         }
 
         if (is_dir ($sAbsolutePathToTemplateDir))
@@ -266,13 +247,56 @@ class View extends \Smarty
 
     /**
      * sets the content variable $this->sContentVar (which is per default="sContent")
-     *
-     * @access public
      * @param string $sContentVar
      * @return void
      */
     public function setContentVar ($sContentVar)
     {
         $this->sContentVar = $sContentVar;
+    }
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function getSmartyTemplateDefault()
+    {
+        return Config::get_MVC_SMARTY_TEMPLATE_DEFAULT();
+    }
+
+    /**
+     * @return array
+     * @throws \ReflectionException
+     */
+    public static function getSmartyPlugInsDir()
+    {
+        return Config::get_MVC_SMARTY_PLUGINS_DIR();
+    }
+
+    /**
+     * @return mixed|string
+     * @throws \ReflectionException
+     */
+    public static function getSmartyTemplateCacheDir()
+    {
+        return Config::get_MVC_SMARTY_TEMPLATE_CACHE_DIR();
+    }
+
+    /**
+     * @return mixed|string
+     * @throws \ReflectionException
+     */
+    public static function getSmartyCacheDir()
+    {
+        return Config::get_MVC_SMARTY_CACHE_DIR();
+    }
+
+    /**
+     * @return mixed|string
+     * @throws \ReflectionException
+     */
+    public static function getSmartyCacheStatus()
+    {
+        return Config::get_MVC_SMARTY_CACHE_STATUS();
     }
 }

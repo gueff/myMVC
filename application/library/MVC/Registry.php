@@ -8,52 +8,27 @@
  * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
  */
 
-/**
- * @name $MVC
- */
 namespace MVC;
-
-use MVC\DataType\DTArrayObject;
-use MVC\DataType\DTKeyValue;
 
 /**
  * Registry
  */
 class Registry
 {
-
-	/**
-	 * Class name of the singleton registry object.
-	 * 
-	 * @var string default='MVC_Registry'
-	 * @access private
-	 * @static
-	 */
-	private static $_sRegistryClassName = 'MVC_Registry';
-
 	/**
 	 * Registry object provides storage for shared objects.
-	 * 
 	 * @var \MVC\Registry
-	 * @access private
-	 * @static
 	 */
-	private static $_oRegistry = NULL;
+    protected static $_oRegistry = null;
 
 	/**
 	 * Storage
-	 * 
 	 * @var array
-	 * @access private
-	 * @static
 	 */
-	private static $_aStorage = array();
-
+    protected static $_aStorage = array();
 
 	/**
 	 * Constructor
-	 * 
-	 * @access protected
 	 * @return void
 	 */
 	protected function __construct ()
@@ -63,9 +38,6 @@ class Registry
 
 	/**
 	 * Singleton instance
-	 *
-	 * @access public
-	 * @static
 	 * @return \MVC\Registry
 	 */
 	public static function getInstance ()
@@ -80,20 +52,16 @@ class Registry
 
 	/**
 	 *  prevent any cloning
-	 * 
-	 * @access private
 	 * @return void
 	 */
 	private function __clone ()
 	{
-		
+		;
 	}
 
 	/**
 	 * Unset the default registry instance.
 	 * Primarily used in tearDown() in unit tests.
-	 * 
-	 * @access public
 	 * @return void
 	 */
 	public static function _unsetInstance ()
@@ -117,7 +85,7 @@ class Registry
                 . ', ' . $aDebug[0]['line']
             ;
 
-            Error::EXCEPTION(new \ErrorException ($sMsg, 0, E_USER_ERROR, __FILE__, __LINE__));
+            Error::exception(new \ErrorException ($sMsg, 0, E_USER_ERROR, __FILE__, __LINE__));
 		}
 
 		return self::$_aStorage[$sIndex];
@@ -125,9 +93,6 @@ class Registry
 
 	/**
 	 * saves a key/value pair to registry storage
-	 *
-	 * @access public
-	 * @static
 	 * @param string $sIndex Index of the Storage
 	 * @param mixed $mValue The Value ti be set
 	 * @return void
@@ -137,14 +102,10 @@ class Registry
 		self::$_aStorage[$sIndex] = $mValue;
 	}
 
-
 	/**
 	 * gets the storage array
-	 *
-	 * @access public
-	 * @static
-	 * @return array $_aStorage
-	 */
+     * @return array
+     */
 	public static function getStorageArray ()
 	{
 		return self::$_aStorage;
@@ -153,17 +114,14 @@ class Registry
 	/**
 	 * Returns true if the $index is a named value in the registry,
 	 * or FALSE if $index was not found in the registry.
-	 *
-	 * @access public
-	 * @static
-	 * @param  string $sIndex
-	 * @return boolean success
-	 */
+     * @param $sIndex
+     * @return bool
+     */
 	public static function isRegistered ($sIndex)
 	{
-		if (NULL === self::getInstance ())
+		if (null === self::getInstance())
 		{
-			return FALSE;
+			return false;
 		}
 
 		return array_key_exists ($sIndex, self::$_aStorage);

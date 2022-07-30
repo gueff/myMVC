@@ -8,9 +8,6 @@
  * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
  */
 
-/**
- * @name $MVC
- */
 namespace MVC;
 
 use MVC\DataType\DTArrayObject;
@@ -21,11 +18,8 @@ use MVC\DataType\DTKeyValue;
  */
 class Reflex
 {
-
 	/**
 	 * Constructor
-	 * 
-	 * @access public
 	 * @return void
 	 */
 	public function __construct ()
@@ -41,7 +35,7 @@ class Reflex
      */
 	public function reflect (array $aQueryArray = array ())
 	{
-		Event::RUN ('mvc.reflex.reflect.before',
+		Event::run ('mvc.reflex.reflect.before',
             DTArrayObject::create()
                 ->add_aKeyValue(
                     DTKeyValue::create()->set_sKey('aQueryArray')->set_sValue($aQueryArray)
@@ -53,16 +47,16 @@ class Reflex
 			return false;
 		}
 
-		(array_key_exists (Registry::get ('MVC_GET_PARAM_MODULE'), $aQueryArray['GET'])) ? $sModule = $aQueryArray['GET'][Registry::get ('MVC_GET_PARAM_MODULE')] : $sModule = '';
-		(array_key_exists (Registry::get('MVC_GET_PARAM_C'), $aQueryArray['GET'])) ? $sClass = $aQueryArray['GET'][Registry::get('MVC_GET_PARAM_C')] : $sClass = '';
-		(array_key_exists (Registry::get ('MVC_GET_PARAM_M'), $aQueryArray['GET'])) ? $sMethod = $aQueryArray['GET'][Registry::get ('MVC_GET_PARAM_M')] : $sMethod = '';
-		(array_key_exists (Registry::get ('MVC_GET_PARAM_A'), $aQueryArray['GET'])) ? $sArgs = $aQueryArray['GET'][Registry::get ('MVC_GET_PARAM_A')] : $sArgs = '';
+		(array_key_exists (Config::get_MVC_GET_PARAM_MODULE(), $aQueryArray['GET'])) ? $sModule = $aQueryArray['GET'][Config::get_MVC_GET_PARAM_MODULE()] : $sModule = '';
+		(array_key_exists (Config::get_MVC_GET_PARAM_C(), $aQueryArray['GET'])) ? $sClass = $aQueryArray['GET'][Config::get_MVC_GET_PARAM_C()] : $sClass = '';
+		(array_key_exists (Config::get_MVC_GET_PARAM_M(), $aQueryArray['GET'])) ? $sMethod = $aQueryArray['GET'][Config::get_MVC_GET_PARAM_M()] : $sMethod = '';
+		(array_key_exists (Config::get_MVC_GET_PARAM_A(), $aQueryArray['GET'])) ? $sArgs = $aQueryArray['GET'][Config::get_MVC_GET_PARAM_A()] : $sArgs = '';
 
 		// Fallback Target
 		if ($sModule == '' && $sClass == '')
 		{
-			parse_str (Registry::get ('MVC_ROUTING_FALLBACK'), $aParse);
-			$sControllerClassName = '\\' . ucfirst ($aParse[Registry::get ('MVC_GET_PARAM_MODULE')]) . '\\Controller\\' . ucfirst ($aParse[Registry::get('MVC_GET_PARAM_C')]);
+			parse_str (Router::getRoutingFallback(), $aParse);
+			$sControllerClassName = '\\' . ucfirst ($aParse[Config::get_MVC_GET_PARAM_MODULE()]) . '\\Controller\\' . ucfirst ($aParse[Config::get_MVC_GET_PARAM_C()]);
 		}
 		// Regular Target
 		else
@@ -70,8 +64,7 @@ class Reflex
 			$sControllerClassName = '\\' . ucfirst ($sModule) . '\\Controller\\' . ucfirst ($sClass);
 		}
 		
-		$sControllerFilename = Registry::get ('MVC_MODULES') . '/' . $sModule . '/Controller/' . $sClass . '.php';
-		$sFile = Registry::get ('MVC_MODULES') . '/' . str_replace ('\\', '/', $sControllerClassName) . '.php';
+		$sControllerFilename = Config::get_MVC_MODULES() . '/' . $sModule . '/Controller/' . $sClass . '.php';
 
 		if (file_exists ($sControllerFilename))
 		{
@@ -86,7 +79,7 @@ class Reflex
                     //		Class::method
                     // of the requested Target
                     // and store the object of the target class within
-                    Event::RUN ($sControllerClassName . '::getInstance',
+                    Event::run ($sControllerClassName . '::getInstance',
                         DTArrayObject::create()
                             ->add_aKeyValue(
                                 DTKeyValue::create()->set_sKey('oReflectionObject')->set_sValue($oReflectionObject)
@@ -107,7 +100,7 @@ class Reflex
                     //		Class::method
                     // of the requested Target
                     // and store the object of the target class within
-                    Event::RUN ($sControllerClassName . '::__construct',
+                    Event::run ($sControllerClassName . '::__construct',
                         DTArrayObject::create()
                             ->add_aKeyValue(
                                 DTKeyValue::create()->set_sKey('oReflectionObject')->set_sValue($oReflectionObject)
@@ -125,8 +118,8 @@ class Reflex
 				{
 					//@todo ERROR
 					$sMsg = 'ERROR: <br />Make sure `' . $sControllerClassName . '` <b>implements</b> \MVC\MVCInterface\Controller';
-					Log::WRITE (strip_tags ($sMsg));
-					Helper::STOP ($sMsg);
+					Log::write (strip_tags ($sMsg));
+					Helper::stop ($sMsg);
 				}
 
 				if ($sMethod != '')
@@ -141,7 +134,7 @@ class Reflex
 					}
 
 					// run an event and store the object of the target class within
-					Event::RUN ('mvc.reflex.reflect.targetObject.before',
+					Event::run ('mvc.reflex.reflect.targetObject.before',
                         DTArrayObject::create()
                             ->add_aKeyValue(
                                 DTKeyValue::create()->set_sKey('oReflectionObject')->set_sValue($oReflectionObject)
@@ -158,7 +151,7 @@ class Reflex
                     //		Class::method
                     // of the requested Target
                     // and store the object of the target class within
-                    Event::RUN ($sControllerClassName . '::' . $sMethod,
+                    Event::run ($sControllerClassName . '::' . $sMethod,
                         DTArrayObject::create()
                             ->add_aKeyValue(
                                 DTKeyValue::create()->set_sKey('oReflectionObject')->set_sValue($oReflectionObject)
@@ -181,7 +174,7 @@ class Reflex
 						$oReflectionObject->$sMethod ($sArgs);
 					}
 					
-					Event::RUN ('mvc.reflex.reflect.targetObject.after',
+					Event::run ('mvc.reflex.reflect.targetObject.after',
                         DTArrayObject::create()
                             ->add_aKeyValue(
                                 DTKeyValue::create()->set_sKey('oReflectionObject')->set_sValue($oReflectionObject)
@@ -216,7 +209,7 @@ class Reflex
      */
 	public function __destruct ()
 	{
-        Event::RUN ('mvc.reflex.destruct.before',
+        Event::run ('mvc.reflex.destruct.before',
             DTArrayObject::create()
                 ->add_aKeyValue(
                     DTKeyValue::create()->set_sKey('oReflex')->set_sValue($this)

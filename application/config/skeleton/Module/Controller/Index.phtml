@@ -8,6 +8,7 @@
  * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
  */
 
+
 /**
  * @name ${module}Controller
  */
@@ -15,50 +16,39 @@ namespace {module}\Controller;
 
 /**
  * Index
- * 
  * @implements \MVC\MVCInterface\Controller
  */
 class Index implements \MVC\MVCInterface\Controller
 {
 	/**
 	 * Session Object
-	 * 
 	 * @var \MVC\Session
-	 * @access protected
 	 */
 	protected $_oMVCSession;
 	
 	/**
 	 * routing array for current page
-	 * 
 	 * @var array
-	 * @access protected
 	 */
 	protected $_aRoutingCurrent = array();
 
 	/**
 	 * View Object
-	 * 
 	 * @var \{module}\View\Index
-	 * @access public
 	 */
 	public $oView;
 
 	/**
 	 * Model Object
-	 * 
-	 * @var \{module}\Model\Index 
-	 * @access protected
+	 * @var \{module}\Model\Index
 	 */
 	protected $_oModel;
 
 	/**
 	 * this method is autom. called by MVC_Application->runTargetClassBeforeMethod()
 	 * in very early stage
-	 * 
-	 * @access public
-	 * @static
-	 */
+     * @return void
+     */
 	public static function __preconstruct ()
 	{
 		// start event listener
@@ -72,18 +62,29 @@ class Index implements \MVC\MVCInterface\Controller
      */
 	public function __construct ()
 	{
-		$this->_oMVCSession = \MVC\Registry::get('MVC_SESSION');
-		$this->_aRoutingCurrent = \MVC\Registry::get('MVC_ROUTING_CURRENT');
-		
+        \MVC\Request::handleFallback();
+		$this->_oMVCSession = \MVC\Session::is();
+		$this->_aRoutingCurrent = \MVC\Router::getRoutingCurrent();
 		$this->_oModel = new \{module}\Model\Index();
 		$this->oView = new \{module}\View\Index();
         $this->oView->autoAssign($this->_aRoutingCurrent);
 	}
 
+    /**
+     * @return void
+     */
 	public function index ()
 	{
 		;
 	}
+
+    /**
+     * @return void
+     */
+    public function notFound()
+    {
+        http_response_code(404);
+    }
 
     /**
      * @throws \ReflectionException

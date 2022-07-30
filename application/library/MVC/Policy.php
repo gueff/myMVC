@@ -8,9 +8,6 @@
  * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
  */
 
-/**
- * @name $MVC
- */
 namespace MVC;
 
 use MVC\DataType\DTArrayObject;
@@ -21,21 +18,12 @@ use MVC\DataType\DTKeyValue;
  */
 class Policy
 {
-	
-    /**
-     * Policy constructor.
-     */
-	public function __construct ()
-	{
-        $this->apply();
-	}
-
     /**
      * gets the policy rules; if one matches to the current request, it will be executed
      */
-	protected function apply()
+	public static function apply()
     {
-        $aPolicy = $this->getPolicyRuleOnCurrentRequest ();
+        $aPolicy = self::getPolicyRuleOnCurrentRequest ();
 
         if (!empty ($aPolicy))
         {
@@ -49,7 +37,7 @@ class Policy
                     if (false === call_user_func ($sPolicy))
                     {
                         $bSuccess = false;
-                        Event::RUN ('mvc.error',
+                        Event::run ('mvc.error',
                             DTArrayObject::create()
                                 ->add_aKeyValue(
                                     DTKeyValue::create()->set_sKey('sMessage')->set_sValue("Policy could not be executed: " . $sPolicy)
@@ -57,7 +45,7 @@ class Policy
                         );
                     }
 
-                    Event::RUN ('mvc.policy.apply.execute',
+                    Event::run ('mvc.policy.apply.execute',
                         DTArrayObject::create()
                             ->add_aKeyValue(
                                 DTKeyValue::create()->set_sKey('bSuccess')->set_sValue($bSuccess)
@@ -72,35 +60,25 @@ class Policy
     }
 
 	/**
-	 * gets the policy rules from registry
-     * @return mixed
-     * @throws \ReflectionException
-     */
-	public static function getPolicyRules ()
-	{
-		return Registry::get ('MVC_POLICY');
-	}
-
-	/**
 	 * gets the matching policy rules on the current request
      * @return array|mixed
      * @throws \ReflectionException
      */
 	public static function getPolicyRuleOnCurrentRequest ()
 	{
-		$aPolicyRule = self::getPolicyRules ();
-		$aCurrent = Registry::get ('MVC_ROUTING_CURRENT');
+		$aPolicyRule = Config::get_MVC_POLICY();
+		$aRoutingCurrent = Router::getRoutingCurrent();
 
 		// check if there is a policy for this request
-		if (array_key_exists ('class', $aCurrent))
+		if (array_key_exists ('class', $aRoutingCurrent))
 		{
-			$sClass = (substr ($aCurrent['class'], 0, 1) !== '\\') ? '\\' . $aCurrent['class'] : $aCurrent['class'];
+			$sClass = (substr ($aRoutingCurrent['class'], 0, 1) !== '\\') ? '\\' . $aRoutingCurrent['class'] : $aRoutingCurrent['class'];
 
 			if (array_key_exists ($sClass, $aPolicyRule))
 			{
-				if (array_key_exists (Request::getInstance ()->getMethod (), $aPolicyRule[$sClass]))
+				if (array_key_exists (Request::getMethodName(), $aPolicyRule[$sClass]))
 				{
-					$aPolicy = $aPolicyRule[$sClass][Request::getInstance ()->getMethod ()];
+					$aPolicy = $aPolicyRule[$sClass][Request::getMethodName()];
 
 					return $aPolicy;
 				}

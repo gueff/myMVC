@@ -8,20 +8,14 @@
  * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
  */
 
-/**
- * @name $MVC
- */
 namespace MVC;
-
 
 /**
  * RouterJsonfile
- *
  * @extends \MVC\RouterJson
  */
 class RouterJsonfile extends \MVC\RouterJson
 {
-
     /**
      * RouterJsonfile constructor.
      * reads the routing.json file and looks for matching routes<br />
@@ -32,12 +26,12 @@ class RouterJsonfile extends \MVC\RouterJson
     {
         parent::__construct();
 
-        if (is_array($this->_aRouting) && array_key_exists('QUERY_STRING', $_SERVER))
+        if (is_array($this->aRouting) && array_key_exists('QUERY_STRING', $_SERVER))
         {
             // right found (GET Params String)
             // means a request as e.g.
             //		http://dev.mvc.de/?module=custom&c=index&m=index
-            foreach ($this->_aRouting as $sKey => $aValue)
+            foreach ($this->aRouting as $sKey => $aValue)
             {
                 if (false === is_array($aValue))
                 {
@@ -47,10 +41,10 @@ class RouterJsonfile extends \MVC\RouterJson
                 // if there is no route sepcified in the routing.json (empty), take the MVC fallback routing
                 if (!array_key_exists('query', $aValue) || $aValue['query'] === '')
                 {
-                    $aValue['query'] = Registry::get('MVC_ROUTING_FALLBACK');
+                    $aValue['query'] = Router::getRoutingFallback();
                     // add Target Class
                     parse_str($aValue['query'], $sQuery);
-                    $this->_aRouting[$this->_sRequestUri]['class'] = '\\' . ucfirst($sQuery[Registry::get('MVC_GET_PARAM_MODULE')]) . '\\Controller\\' . ucfirst($sQuery[Registry::get('MVC_GET_PARAM_C')]);
+                    $this->aRouting[$this->sRequestUri]['class'] = '\\' . ucfirst($sQuery[Config::get_MVC_GET_PARAM_MODULE()]) . '\\Controller\\' . ucfirst($sQuery[Config::get_MVC_GET_PARAM_C()]);
                 }
 
                 DETECT_APPENDINGS:
@@ -59,9 +53,9 @@ class RouterJsonfile extends \MVC\RouterJson
                     $sAppend = trim(substr($_SERVER['QUERY_STRING'], strlen($aValue['query'])));
 
                     // if query string contains the fallback string, cut it out
-                    if (substr($sAppend, 0, strlen(Registry::get('MVC_ROUTING_FALLBACK'))) == Registry::get('MVC_ROUTING_FALLBACK'))
+                    if (substr($sAppend, 0, strlen(Router::getRoutingFallback())) == Router::getRoutingFallback())
                     {
-                        $sAppend = substr($sAppend, (strlen(Registry::get('MVC_ROUTING_FALLBACK'))));
+                        $sAppend = substr($sAppend, (strlen(Router::getRoutingFallback())));
                     }
 
                     $sAppend = '?' . trim(substr($sAppend, 1, strlen($sAppend)));
@@ -71,21 +65,21 @@ class RouterJsonfile extends \MVC\RouterJson
                 // redirect to the SEO Url, which is $sKey here
                 if ($aValue['query'] === substr($_SERVER['QUERY_STRING'], 0, strlen($aValue['query'])))
                 {
-                    Request::REDIRECT($sKey . $sAppend);
+                    Request::redirect($sKey . $sAppend);
                 }
             }
         }
 
         // SEO Url 1:1 Match
-        if (array_key_exists($this->_sRequestUri, $this->_aRouting))
+        if (array_key_exists($this->sRequestUri, $this->aRouting))
         {
-            $aQueryString = $this->_aRouting[$this->_sRequestUri];
+            $aQueryString = $this->aRouting[$this->sRequestUri];
 
             // use the MVC fallback routing if none is specified in routing.json. @see config
             if (empty ($aQueryString['query']))
             {
-                $aQueryString['query'] = Registry::get('MVC_ROUTING_FALLBACK');
-                Log::WRITE('MVC Fallback: ' . $aQueryString['query']);
+                $aQueryString['query'] = Router::getRoutingFallback();
+                Log::write('MVC Fallback: ' . $aQueryString['query']);
             }
 
             // copy to QUERY_STRING
@@ -98,25 +92,25 @@ class RouterJsonfile extends \MVC\RouterJson
             {
                 $aPiece = explode('=', $aValue['query']);
                 (array_key_exists(1, $aPiece)) ? $_GET[$aPiece[0]] = $aPiece[1] : FALSE;
-                (array_key_exists(Registry::get('MVC_GET_PARAM_MODULE'), $_GET)) ? $_GET[Registry::get('MVC_GET_PARAM_MODULE')] = ucfirst($_GET[Registry::get('MVC_GET_PARAM_MODULE')]) : FALSE;
-                (array_key_exists(Registry::get('MVC_GET_PARAM_C'), $_GET)) ? $_GET[Registry::get('MVC_GET_PARAM_C')] = ucfirst($_GET[Registry::get('MVC_GET_PARAM_C')]) : FALSE;
+                (array_key_exists(Config::get_MVC_GET_PARAM_MODULE(), $_GET)) ? $_GET[Config::get_MVC_GET_PARAM_MODULE()] = ucfirst($_GET[Config::get_MVC_GET_PARAM_MODULE()]) : FALSE;
+                (array_key_exists(Config::get_MVC_GET_PARAM_C(), $_GET)) ? $_GET[Config::get_MVC_GET_PARAM_C()] = ucfirst($_GET[Config::get_MVC_GET_PARAM_C()]) : FALSE;
             }
 
-            Request::getInstance()->saveRequest()->prepareQueryVarsForUsage();
-        } 
+            Request::init();
+        }
         // SEO Url Wildcard (/*) Match
         else
         {
-            foreach ($this->_aRouting as $sIndex => $aValue)
+            foreach ($this->aRouting as $sIndex => $aValue)
             {
                 if (substr($sIndex, -1) === '*')
                 {
                     $sWildcard = substr($sIndex, 0, -1);
 
-                    if (substr($_SERVER['REQUEST_URI'], 0, strlen($sWildcard)) === $sWildcard)
+                    if (substr(Request::getServerRequestUri(), 0, strlen($sWildcard)) === $sWildcard)
                     {
                         // e.g.: module=default&c=index&m=action
-                        $aQuery = explode('&', $this->_aRouting[$sIndex]['query']);
+                        $aQuery = explode('&', $this->aRouting[$sIndex]['query']);
 
                         foreach ($aQuery as $sValue)
                         {
@@ -124,16 +118,15 @@ class RouterJsonfile extends \MVC\RouterJson
                             $_GET[$aEx[0]] = $aEx[1];
                         }
 
-                        $this->_aRouting[$sIndex]['path'] = $sIndex;
-                        $this->_aRouting[$sIndex]['class'] = ucfirst($_GET['module']) . '\\Controller\\' . ucfirst($_GET['c']);
-                        $this->_aRouting[$sIndex]['index'] = $sIndex;
-                        $this->_sRequestUri = $sIndex;
+                        $this->aRouting[$sIndex]['path'] = $sIndex;
+                        $this->aRouting[$sIndex]['class'] = ucfirst($_GET['module']) . '\\Controller\\' . ucfirst($_GET['c']);
+                        $this->aRouting[$sIndex]['index'] = $sIndex;
+                        $this->sRequestUri = $sIndex;
                         $this->_addParam();
 
-                        Request::getInstance()->saveRequest()->prepareQueryVarsForUsage();
+                        Request::init();
 
                         return true;
-                        break;
                     }
                 }
             }
@@ -142,10 +135,11 @@ class RouterJsonfile extends \MVC\RouterJson
 
     /**
      * adds params from query to $_GET
+     * @return void
      */
     private function _addParam()
     {
-        $aParseUrl = parse_url($_SERVER['REQUEST_URI']);
+        $aParseUrl = parse_url(Request::getServerRequestUri());
 
         if (array_key_exists('query', $aParseUrl))
         {
@@ -160,7 +154,6 @@ class RouterJsonfile extends \MVC\RouterJson
 
     /**
      * Destructor
-     *
      * @access public
      * @return void
      */
