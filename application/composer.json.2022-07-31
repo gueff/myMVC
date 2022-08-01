@@ -1,0 +1,15 @@
+{
+  "require": {
+    "php": ">=7.0",
+    "smarty/smarty": ">=3.1.34",
+    "ezyang/htmlpurifier": "v4.14.0",
+    "monolog/monolog": "1.23.*",
+    "gueff/cachix": "1.0.0",
+    "mrclay/jsmin-php": "2.4.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "*",
+    "facebook/webdriver": "dev-master",
+    "phpunit/phpunit-selenium": "2.0.3"
+  }
+}

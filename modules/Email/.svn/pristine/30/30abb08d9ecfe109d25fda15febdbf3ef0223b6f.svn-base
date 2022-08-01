@@ -1,0 +1,61 @@
+<?php
+
+//-------------------------------------------------------------------------------------
+// Module Email
+
+$aConfig['MODULE_EMAIL_CONFIG'] = array(
+
+    // Spooler Folder
+    'sAbsolutePathToFolderSpooler' => realpath(__DIR__ . '/../../../') . '/data/spooler/',
+
+    // Attachment Folder
+    'sAbsolutePathToFolderAttachment' => realpath(__DIR__ . '/../../../') . '/data/attachment/',
+
+    // Number of e-mails to be processed simultaneously
+    'iAmountToSpool' => 50,
+
+    // max. time span for new delivery attempts (from "retry")
+    'iMaxSecondsOfRetry' => (60 * 60 * 24), // 24h
+
+    // what to do on "send"
+    'oCallback' => function(\Email\DataType\Email $oEmail) {
+
+        /**
+         * e-mail sending via SMTP
+         * -----------------------
+         * Just keep this activated for sending email via smtp.
+         */
+        return \Email\Model\Smtp::sendViaPhpMailer($oEmail);
+
+        /**
+         * For Testing
+         * -----------------------
+         * This is for not delivering any mail.
+         * instead of sending via smtp, the subject of each individual e-mail
+         * is written to "test.log"
+         *
+         * This is good for running tests with lots of email sweeps.
+         * So the SMTP mail server is not loaded.
+         *
+         * Simply deactivate the upper "e-mail sending via SMTP" line (comment out).
+         */
+        \MVC\Log::WRITE($oEmail, 'email.log');
+
+        $oResponse = \MVC\DataType\DTArrayObject::create()
+            ->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('bSuccess')->set_sValue(true))
+            ->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('sMessage')->set_sValue("TEST\t" . ' *** Closure *** '))
+            ->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('oException')->set_sValue(new \Exception("TEST\t" . ' *** Closure *** ')));
+
+        return $oResponse;
+    },
+
+    /**
+     * SMTP account settings
+     */
+    'sHost' => '',
+    'iPort' => 465, # ssl=465 | tls=587
+    'sSecure' => 'ssl', # ssl | tls
+    'bAuth' => true,
+    'sUsername' => '',
+    'sPassword' => '',
+);

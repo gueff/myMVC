@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="WEB_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/spec" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
+      <excludeFolder url="file://$MODULE_DIR$/application/vendor/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/application/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/application/vendor/doctrine" />
+      <excludeFolder url="file://$MODULE_DIR$/application/vendor/ezyang" />
+      <excludeFolder url="file://$MODULE_DIR$/application/vendor/facebook" />
+      <excludeFolder url="file://$MODULE_DIR$/application/vendor/gueff" />
+      <excludeFolder url="file://$MODULE_DIR$/application/vendor/monolog" />
+      <excludeFolder url="file://$MODULE_DIR$/application/vendor/mrclay" />
+      <excludeFolder url="file://$MODULE_DIR$/application/vendor/phpdocumentor" />
+      <excludeFolder url="file://$MODULE_DIR$/application/vendor/phpspec" />
+      <excludeFolder url="file://$MODULE_DIR$/application/vendor/phpunit" />
+      <excludeFolder url="file://$MODULE_DIR$/application/vendor/psr" />
+      <excludeFolder url="file://$MODULE_DIR$/application/vendor/sebastian" />
+      <excludeFolder url="file://$MODULE_DIR$/application/vendor/smarty" />
+      <excludeFolder url="file://$MODULE_DIR$/application/vendor/symfony" />
+      <excludeFolder url="file://$MODULE_DIR$/application/vendor/webmozart" />
+      <excludeFolder url="file://$MODULE_DIR$/CliDialogue" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
