@@ -1,0 +1,8 @@
+.env
+application/cache/*
+application/log/*
+application/session/*
+application/templates_c/*
+application/vendor/*
+*.min.css
+*.min.js
