@@ -5,6 +5,7 @@ application/templates_c/*
 application/vendor/*
 application/clearTmpFiles.sh
 CliDialogue
+modules/*
 public/.env
 _createPhar.php
 _createMVCDataTypes.php
