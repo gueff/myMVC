@@ -35,57 +35,56 @@ $aConfig['MODULE_{module}']['SESSION'] = array(
 /**
  * Event Bindings
  */
-$aConfig['MODULE_{module}']['EVENT_BIND'] = array(
+$aConfig['MODULE_Webbixx']['EVENT_BIND'] = array(
 
-    'mvc.request.saveRequest.after' => array(
-        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \MVC\Log::WRITE($oDTArrayObject, 'mvc.log');
-        }
-    ),
-    'mvc.request.redirect' => array(
-        function (\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \MVC\Log::WRITE($oDTArrayObject, 'mvc.log');
-        },
-    ),
-    'mvc.request.prepareQueryVarsForUsage.after' => array(
-        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \MVC\Log::WRITE($oDTArrayObject, 'mvc.log');
-        }
-    ),
-    'mvc.runTargetClassPreconstruct.after' => array(
-        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \MVC\Log::WRITE($oDTArrayObject, 'mvc.log');
-        }
-    ),
-    'mvc.application.setSession.before' => array(
-        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \MVC\Log::WRITE($oDTArrayObject, 'mvc.log');
-        }
-    ),
-    'mvc.application.setSession.after' => array(
-        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \MVC\Log::WRITE($oDTArrayObject, 'mvc.log');
-        }
-    ),
-    'mvc.policy.apply.execute' => array(
-        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \MVC\Log::WRITE($oDTArrayObject, 'mvc.log');
-        }
-    ),
-    'mvc.controller.init.before' => array(
-        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \MVC\Log::WRITE($oDTArrayObject, 'mvc.log');
-        }
-    ),
-    'mvc.reflex.reflect.before' => array(
-        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \MVC\Log::WRITE($oDTArrayObject, 'mvc.log');
-        }
-    ),
+//    'mvc.request.saveRequest.after' => array(
+//        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
+//            \MVC\Log::write($oDTArrayObject, 'mvc.log');
+//        }
+//    ),
+//    'mvc.request.prepareQueryVarsForUsage.after' => array(
+//        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
+//            \MVC\Log::write($oDTArrayObject, 'mvc.log');
+//        }
+//    ),
+//    'mvc.runTargetClassPreconstruct.after' => array(
+//        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
+//            \MVC\Log::write($oDTArrayObject, 'mvc.log');
+//        }
+//    ),
+//    'mvc.application.setSession.before' => array(
+//        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
+//            \MVC\Log::write($oDTArrayObject, 'mvc.log');
+//        },
+//        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
+//            \Webbixx\Event\Index::enableSession($oDTArrayObject);
+//        }
+//    ),
+//    'mvc.application.setSession.after' => array(
+//        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
+//            \MVC\Log::write($oDTArrayObject, 'mvc.log');
+//        }
+//    ),
+//    'mvc.policy.apply.execute' => array(
+//        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
+//            \MVC\Log::write($oDTArrayObject, 'mvc.log');
+//        }
+//    ),
+//
+//    'mvc.controller.init.before' => array(
+//        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
+//            \MVC\Log::write($oDTArrayObject, 'mvc.log');
+//        }
+//    ),
+//    'mvc.reflex.reflect.before' => array(
+//        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
+//            \MVC\Log::write($oDTArrayObject, 'mvc.log');
+//        }
+//    ),
     'mvc.reflex.reflect.targetObject.before' => array(
-        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \MVC\Log::WRITE($oDTArrayObject, 'mvc.log');
-        },
+//        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
+//            \MVC\Log::write($oDTArrayObject, 'mvc.log');
+//        },
         function(\MVC\DataType\DTArrayObject $oDTArrayObject) use ($aConfig) {
             \MVC\Minify::init();
         },
@@ -93,69 +92,69 @@ $aConfig['MODULE_{module}']['EVENT_BIND'] = array(
             \MVC\Router::createFinalJson();
         }
     ),
-    'mvc.reflex.reflect.targetObject.after' => array(
-        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \MVC\Log::WRITE($oDTArrayObject, 'mvc.log');
-        }
-    ),
-    'mvc.controller.construct.after' => array(
-        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \MVC\Log::WRITE($oDTArrayObject, 'mvc.log');
-        }
-    ),
-    'mvc.view.render.before' => array(
-        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \MVC\Log::WRITE($oDTArrayObject, 'mvc.log');
-        }
-    ),
-    'mvc.view.renderString.before' => array(
-        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \MVC\Log::WRITE($oDTArrayObject, 'mvc.log');
-        }
-    ),
-    'mvc.view.renderString.after' => array(
-        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \MVC\Log::WRITE($oDTArrayObject, 'mvc.log');
-        }
-    ),
-    'mvc.view.render.after' => array(
-        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \MVC\Log::WRITE($oDTArrayObject, 'mvc.log');
-        }
-    ),
-    'mvc.reflex.destruct.before' => array(
-        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \MVC\Log::WRITE($oDTArrayObject, 'mvc.log');
-        }
-    ),
-    'mvc.controller.destruct.before' => array(
-        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \MVC\Log::WRITE($oDTArrayObject, 'mvc.log');
-        }
-    ),
-    'mvc.application.construct.after' => array(
-        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \MVC\Log::WRITE($oDTArrayObject, 'mvc.log');
-        }
-    ),
-    'mvc.application.destruct.before' => array(
-        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \MVC\Log::WRITE($oDTArrayObject, 'mvc.log');
-        }
-    ),
+//    'mvc.reflex.reflect.targetObject.after' => array(
+//        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
+//            \MVC\Log::write($oDTArrayObject, 'mvc.log');
+//        }
+//    ),
+//    'mvc.controller.construct.after' => array(
+//        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
+//            \MVC\Log::write($oDTArrayObject, 'mvc.log');
+//        }
+//    ),
+//    'mvc.view.render.before' => array(
+//        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
+//            \MVC\Log::write($oDTArrayObject, 'mvc.log');
+//        }
+//    ),
+//    'mvc.view.renderString.before' => array(
+//        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
+//            \MVC\Log::write($oDTArrayObject, 'mvc.log');
+//        }
+//    ),
+//    'mvc.view.renderString.after' => array(
+//        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
+//            \MVC\Log::write($oDTArrayObject, 'mvc.log');
+//        }
+//    ),
+//    'mvc.view.render.after' => array(
+//        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
+//            \MVC\Log::write($oDTArrayObject, 'mvc.log');
+//        }
+//    ),
+//    'mvc.reflex.destruct.before' => array(
+//        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
+//            \MVC\Log::write($oDTArrayObject, 'mvc.log');
+//        }
+//    ),
+//    'mvc.controller.destruct.before' => array(
+//        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
+//            \MVC\Log::write($oDTArrayObject, 'mvc.log');
+//        }
+//    ),
+//    'mvc.application.construct.after' => array(
+//        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
+//            \MVC\Log::write($oDTArrayObject, 'mvc.log');
+//        }
+//    ),
+//    'mvc.application.destruct.before' => array(
+//        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
+//            \MVC\Log::write($oDTArrayObject, 'mvc.log');
+//        }
+//    ),
     'mvc.helper.stop.after' => array(
         function (\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \MVC\Log::WRITE("\n\n*** STOP ***\n" . print_r($oDTArrayObject->get_akeyvalue()[0]->get_sValue(), true));
+            \MVC\Log::write("\n\n*** STOP ***\n" . print_r($oDTArrayObject->get_akeyvalue()[0]->get_sValue(), true));
         }
     ),
-    'mvc.lock.create' => array(
-        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \MVC\Log::WRITE($oDTArrayObject, 'mvc.log');
-        }
-    ),
+//    'mvc.lock.create' => array(
+//        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
+//            \MVC\Log::write($oDTArrayObject, 'mvc.log');
+//        }
+//    ),
     'mvc.error' => array(
         function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \MVC\Log::WRITE($oDTArrayObject, 'error.log');
+            \MVC\Log::write($oDTArrayObject, 'error.log');
         }
     ),
 );
