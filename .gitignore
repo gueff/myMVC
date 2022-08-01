@@ -1,3 +1,4 @@
+application/.composer
 application/cache/*
 application/log/*
 application/session/*
