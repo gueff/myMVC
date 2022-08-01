@@ -1,0 +1,32 @@
+<?php
+
+//-------------------------------------------------------------------------------------
+// Module DB
+
+$aConfig['MODULE_DB_CONFIG'] = array(
+
+    'db' => array(
+        'type' => 'mysql',
+        'host' => '127.0.0.1',
+        'port' => 3306,
+        'username' => '',
+        'password' => '',
+        'dbname' => '',
+        'charset' => 'utf8'
+    ),
+    'caching' => array(
+        'enabled' => true,
+        'lifetime' => '7200'
+    ),
+    'logging' => array(
+        'log_output' => 'FILE',
+
+        // consider to turn it on for develop and test environments only
+        'general_log' => 'ON',
+
+        // 1) make sure write access is given to the folder
+        // as long as the db user is going to write and not the webserver user
+        // 2) consider a logrotate mechanism for this logfile as it may grow quickly
+        'general_log_file' => '/tmp/db.log'
+    )
+);

@@ -1,0 +1,22 @@
+{
+    "name": "gueff/idolon",
+    "description": "PHP Image Server",
+    "keywords": ["php","php7","image","serve","resize"],
+    "homepage": "https://github.com/gueff/Idolon",
+    "type": "library",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Guido K.B.W. Ueffing"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=7.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "Idolon": ""
+        }
+    }
+} 

@@ -9,23 +9,40 @@
 
 READ_ENV: {
 
+    $sEnvFile = realpath(__DIR__ . '/../../../') . '/public/.env';
+
     // read .env file in the public folder
-    if (file_exists('.env'))
+    if (file_exists($sEnvFile))
     {
-        $aEnvContent = array_values(array_filter(file('.env'), 'trim'));
+        $aEnvContent = array_values(array_filter(file($sEnvFile), 'trim'));
 
         foreach ($aEnvContent as $sLine)
         {
+            $sLine = trim($sLine);
+
             // skip comment lines
-            if ('#' === substr(trim($sLine), 0, 1))
+            if ('#' === substr($sLine, 0, 1))
             {
                 continue;
             }
 
             // simply set
-            putenv(trim($sLine));
+            putenv($sLine);
+            $sLine = null;
+            unset ($sLine);
         }
+
+        $aEnvContent = null;
+        unset($aEnvContent);
     }
+    else
+    {
+        $sMessage = "missing file:\n/public/.env\n\n";
+        die(('cli' != php_sapi_name()) ? nl2br($sMessage) : $sMessage);
+    }
+
+    $sEnvFile = null;
+    unset($sEnvFile);
 }
 
 MVC_ENV: {
@@ -36,24 +53,49 @@ MVC_ENV: {
     $aConfig['MVC_ENV'] = getenv('MVC_ENV');
 }
 
-
 MVC_CONFIG: {
 
-	// place of main myMVC config
+    // place of main myMVC config
     $aConfig['MVC_CONFIG_DIR'] = realpath(__DIR__ . '/../../../') . '/config';
 
-    // load main config
-	foreach (glob ($aConfig['MVC_CONFIG_DIR'] . '/*.php') as $sFile)
-	{
-		require_once $sFile;
-	}
+    // load main config from /application/config/*.php
+    foreach (glob ($aConfig['MVC_CONFIG_DIR'] . '/*.php') as $sFile)
+    {
+        require_once $sFile;
+        $sFile = null;
+        unset ($sFile);
+    }
 
-	require_once '_myMVC.php';
+    // load requirements from /application/config/util/_myMVC.php
+    require_once __DIR__ . '/_myMVC.php';
+}
+
+FIRST_LOG_ENTRY_ON_NEW_REQUEST: {
+
+    $sMessage = __FILE__ . ', ' . __LINE__ . ' > '
+                . "\t" . str_repeat ('#', 10) . "\tnew Request"
+                . "\t" . php_sapi_name ()
+                . "\t" . (array_key_exists ('REQUEST_METHOD', $_SERVER) ? (string) $_SERVER['REQUEST_METHOD'] : '')
+                . ' ' . (array_key_exists ('REQUEST_URI', $_SERVER) ? (string) $_SERVER['REQUEST_URI'] : '');
+    $sMessage = ''
+                . date ("Y-m-d H:i:s")
+                . "\t" . ((false !== getenv('MVC_ENV')) ? getenv('MVC_ENV') : '---?---')
+                . "\t" . ((array_key_exists('REMOTE_ADDR', $_SERVER)) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1')
+                . "\t" . ((array_key_exists('MVC_UNIQUE_ID', $GLOBALS['aConfig'])) ? $GLOBALS['aConfig']['MVC_UNIQUE_ID'] : '---')
+                . "\t" . (('' !== session_id ()) ? session_id () : str_pad ('...no session', 26, '.'))
+                . "\t" . 0
+                . "\t" . $sMessage
+                . "\n";
+
+    file_put_contents ($GLOBALS['aConfig']['MVC_LOG_FILE_DEFAULT'], $sMessage,FILE_APPEND);
+    $sMessage = null;
+    unset($sMessage);
 }
 
 MVC_FUNCTIONS: {
 
-	require_once 'functions.php';
+    // load requirements from /application/config/util/functions.php
+	require_once __DIR__ . '/functions.php';
 }
 
 MVC_INSTALL: {
@@ -125,7 +167,8 @@ MVC_AUTOLOADING: {
 			{
 				file_put_contents (
 					$GLOBALS['aConfig']['MVC_LOG_FILE_DEFAULT'], MVC\Log::prepareMessage (
-						'AUTOLOADING' . "\t" . $sFileName, __FILE__ . ', ' . __LINE__ . ' >', 100
+						'AUTOLOADING' . "\t" . $sFileName,
+                        __FILE__ . ', ' . __LINE__ . ' >'
 					), FILE_APPEND
 				);
 			}
@@ -137,13 +180,15 @@ MVC_AUTOLOADING: {
 	spl_autoload_register ("mvcAutoload");
 }
 
-// load MVC classes
-foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($aConfig['MVC_LIBRARY'] . '/MVC/')) as $sMVCFileName)
-{
-    $aPathinfo = pathinfo($sMVCFileName);
+LOAD_MVC_CLASSES: {
 
-    if ('php' === $aPathinfo['extension'])
+    foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($aConfig['MVC_LIBRARY'] . '/MVC/')) as $sMVCFileName)
     {
-        require_once $sMVCFileName;
+        if ('php' === strtolower(pathinfo($sMVCFileName)['extension']))
+        {
+            require_once $sMVCFileName;
+            $sMVCFileName = null;
+            unset ($sMVCFileName);
+        }
     }
 }

@@ -50,7 +50,7 @@ class DataType
      * @param int $iPhpVersion
      * @return DataType
      */
-    public static function create($iPhpVersion = 0)
+    public static function create($iPhpVersion = 56)
     {
         $oObject = new self($iPhpVersion);
 
