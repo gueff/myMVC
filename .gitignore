@@ -1,8 +1,13 @@
-.env
 application/cache/*
 application/log/*
 application/session/*
 application/templates_c/*
 application/vendor/*
-*.min.css
-*.min.js
+application/clearTmpFiles.sh
+CliDialogue
+public/.env
+_createPhar.php
+_createMVCDataTypes.php
+_push.sh
+#**/*.min.css
+#**/*.min.js

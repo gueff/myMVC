@@ -34,13 +34,6 @@ class Application
 		// add a CLI wrapper to enable requests from command line
 		(true === Request::isCli()) ? Request::cliWrapper() : false;
 
-		Log::write (
-			str_repeat ('#', 10) . "\tnew Request"
-			. "\t" . php_sapi_name ()
-			. "\t" . Request::getServerRequestMethod()
-			. ' ' . Request::getServerRequestUri()
-		);
-
         // save + prepare Request
         Request::init();
 
