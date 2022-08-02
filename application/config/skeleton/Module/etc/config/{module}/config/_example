@@ -35,11 +35,7 @@ $aConfig['MODULE_{module}']['SESSION'] = array(
 /**
  * Event Bindings
  */
-<<<<<<< HEAD
 $aConfig['MODULE_{module}']['EVENT_BIND'] = array(
-=======
-$aConfig['MODULE_Webbixx']['EVENT_BIND'] = array(
->>>>>>> 9862ea9531681da664e1e8a937225cbd3a961137
 
 //    'mvc.request.saveRequest.after' => array(
 //        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
