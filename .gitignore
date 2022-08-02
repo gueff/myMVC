@@ -11,5 +11,5 @@ public/.env
 _createPhar.php
 _createMVCDataTypes.php
 _push.sh
-#**/*.min.css
-#**/*.min.js
+**/*.min.css
+**/*.min.js
