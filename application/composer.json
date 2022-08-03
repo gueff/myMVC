@@ -8,6 +8,7 @@
   },
   "require-dev": {
     "phpunit/phpunit": "*",
+    "ext-zip": "*",
     "php-webdriver/webdriver": "1.12.1",
     "phpunit/phpunit-selenium": "^9.0"
   }

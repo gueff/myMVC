@@ -3,8 +3,9 @@ application/cache/*
 application/log/*
 application/session/*
 application/templates_c/*
-application/vendor/*
+application/vendor
 application/clearTmpFiles.sh
+application/composer.lock
 CliDialogue
 modules/*
 public/.env

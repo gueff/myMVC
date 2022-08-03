@@ -24,6 +24,7 @@ $aConfig['MVC_CORE'] = array(
         'SimpleXML',
         'standard',
         'SPL',
+        'zip'
     ),
 
     'phpFunctionsRequired' => array(
