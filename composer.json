@@ -1,10 +1,13 @@
 {
     "name": "gueff/mymvc",
-    "description": "MVC Framework, written in PHP. MVC Structure, +Events, +Policies, +DataTypes, Smarty Template Engine, Modular, Expandable. https://mymvc.ueffing.net/",
-    "keywords": ["PHP","MVC","Framework","Smarty","Model","View","Controller","Event","Policy","DataType"],
-    "homepage": "https://mymvc.ueffing.net/",
     "type": "framework",
+    "description": "MVC Framework, written in PHP. MVC Structure, +Events, +Policies, +DataTypes, Smarty Template Engine, Modular, Expandable. https://mymvc.ueffing.net/",
+    "keywords": ["framework","mymvc"],
     "license": "GPL-3.0-or-later",
+    "homepage": "https://mymvc.ueffing.net/",
+    "require": {
+        "php": ">=7.4"
+    },
     "authors": [
         {
             "name": "Guido K.B.W. Ueffing"

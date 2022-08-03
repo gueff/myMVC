@@ -1,3 +1,4 @@
+.idea
 application/.composer
 application/cache/*
 application/log/*

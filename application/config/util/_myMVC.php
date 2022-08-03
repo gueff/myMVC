@@ -3,7 +3,7 @@
 $aConfig['MVC_CORE'] = array(
 
     // myMVC
-    'version' => 'dev-master',
+    'version' => '2.x-dev',
 
     // These PHP extensions are required
     'phpExtensionsRequired' => array(
