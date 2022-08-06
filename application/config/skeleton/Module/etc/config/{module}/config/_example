@@ -54,6 +54,17 @@ $aConfig['MODULE_{module}']['EVENT_BIND'] = array(
             \MVC\Router::createFinalJson();
         }
     ),
+    'mvc.reflex.reflect.targetObject.after' => array(
+        function (\MVC\DataType\DTArrayObject $oDTArrayObject) {
+            require_once Config::get_MVC_APPLICATION_PATH() . '/vendor/gueff/mymvc_module_infotool/Model/Index.php';
+            $oView = $oDTArrayObject
+                ->getDTKeyValueByKey('oReflectionObject')
+                ->get_sValue()
+                ->oView;
+            // switch on InfoTool
+            new \InfoTool\Model\Index ($oView);
+        },
+    ),
     'mvc.helper.stop.after' => array(
         function (\MVC\DataType\DTArrayObject $oDTArrayObject) {
             \MVC\Log::write("\n\n*** STOP ***\n" . print_r($oDTArrayObject->get_akeyvalue()[0]->get_sValue(), true));
