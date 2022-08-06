@@ -23,14 +23,22 @@ class Log
 
 	/**
 	 * prepares debug output string
-	 * @param array $aBacktrace
-	 * @return string $sDebug
-	 */
+     * @param array $aBacktrace
+     * @return string
+     * @throws \ReflectionException
+     */
 	public static function prepareDebug (array $aBacktrace = array ())
 	{
+        $sFile = get($aBacktrace[0]['file'], '?');
+
+        if (substr(get($aBacktrace[0]['file'], ''), 0, strlen(Registry::get('MVC_BASE_PATH'))) === Registry::get('MVC_BASE_PATH'))
+        {
+            $sFile = substr(get($aBacktrace[0]['file'], '?'), strlen(Registry::get('MVC_BASE_PATH')));
+        }
+
 		$sDebug = '';
-		(isset ($aBacktrace[0]['file'])) ? $sDebug.= $aBacktrace[0]['file'] : false;
-		(isset ($aBacktrace[0]['line'])) ? $sDebug.= ', ' . $aBacktrace[0]['line'] : false;
+		$sDebug.= $sFile;
+		$sDebug.= ', ' . get($aBacktrace[0]['line'], '?');
 		(isset ($aBacktrace[0]['class'])) ? $sDebug.= ' > ' : false;
 
 		return $sDebug;
@@ -93,7 +101,7 @@ class Log
 			. "\t" . ((false !== getenv('MVC_ENV')) ? getenv('MVC_ENV') : '---?---')
 			. "\t" . ((array_key_exists('REMOTE_ADDR', $_SERVER)) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1')
 			. "\t" . ((array_key_exists('MVC_UNIQUE_ID', $GLOBALS['aConfig'])) ? $GLOBALS['aConfig']['MVC_UNIQUE_ID'] : '---')
-			. "\t" . (('' !== session_id ()) ? session_id () : str_pad ('...no session', 26, '.'))
+			. "\t" . (('' !== session_id ()) ? session_id () : str_pad ('...........no session', 32, '.'))
 			. "\t" . self::$iCount
 			. "\t" . print_r ($sDebug, true)
 			. "\t" . $sMessage

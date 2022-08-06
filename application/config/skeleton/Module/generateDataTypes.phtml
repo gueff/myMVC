@@ -7,10 +7,11 @@ require_once realpath(__DIR__ . '/../../') . '/application/config/util/bootstrap
 
 \MVC\Config::init(get($GLOBALS['aConfig'], array()));
 \Cachix::init(\MVC\Registry::get('CACHIX_CONFIG'));
+\Cachix::autoDeleteCache('DataType', 0);
 
 // Generate!
 foreach (glob ('./etc/config/DataType/*.php') as $sFile)
 {
     require_once $sFile;
-    \MVC\Generator\DataType::create(56)->initConfigArray($aConfig['aDataType']);
+    \MVC\Generator\DataType::create(56)->initConfigArray($aConfig['MODULE_{module}']['aDataType']);
 }

@@ -72,7 +72,7 @@ MVC_CONFIG: {
 
 FIRST_LOG_ENTRY_ON_NEW_REQUEST: {
 
-    $sMessage = __FILE__ . ', ' . __LINE__ . ' > '
+    $sMessage = substr(__FILE__, strlen(realpath(__DIR__ . '/../../../'))) . ', ' . __LINE__ . ' > '
                 . "\t" . str_repeat ('#', 10) . "\tnew Request"
                 . "\t" . php_sapi_name ()
                 . "\t" . (array_key_exists ('REQUEST_METHOD', $_SERVER) ? (string) $_SERVER['REQUEST_METHOD'] : '')
@@ -82,7 +82,7 @@ FIRST_LOG_ENTRY_ON_NEW_REQUEST: {
                 . "\t" . ((false !== getenv('MVC_ENV')) ? getenv('MVC_ENV') : '---?---')
                 . "\t" . ((array_key_exists('REMOTE_ADDR', $_SERVER)) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1')
                 . "\t" . ((array_key_exists('MVC_UNIQUE_ID', $GLOBALS['aConfig'])) ? $GLOBALS['aConfig']['MVC_UNIQUE_ID'] : '---')
-                . "\t" . (('' !== session_id ()) ? session_id () : str_pad ('...no session', 26, '.'))
+                . "\t" . (('' !== session_id ()) ? session_id () : str_pad ('...........no session', 32, '.'))
                 . "\t" . 0
                 . "\t" . $sMessage
                 . "\n";
@@ -168,7 +168,7 @@ MVC_AUTOLOADING: {
 				file_put_contents (
 					$GLOBALS['aConfig']['MVC_LOG_FILE_DEFAULT'], MVC\Log::prepareMessage (
 						'AUTOLOADING' . "\t" . $sFileName,
-                        __FILE__ . ', ' . __LINE__ . ' >'
+                    substr(__FILE__, strlen(realpath(__DIR__ . '/../../../'))) . ', ' . __LINE__ . ' >'
 					), FILE_APPEND
 				);
 			}

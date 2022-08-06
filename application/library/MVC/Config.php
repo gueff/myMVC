@@ -237,7 +237,7 @@ class Config
     {
         if (Registry::isRegistered('MVC_BASE_PATH'))
         {
-            return (string) Registry::get('MVC_WEBMVC_BASE_PATH_ROOT');
+            return (string) Registry::get('MVC_BASE_PATH');
         }
 
         return '';
@@ -703,20 +703,6 @@ class Config
         }
 
         return '---';
-    }
-
-    /**
-     * @return string
-     * @throws \ReflectionException
-     */
-    public static function get_MVC_DATATYPE_CONFIG()
-    {
-        if (Registry::isRegistered('MVC_DATATYPE_CONFIG'))
-        {
-            return (string) Registry::get('MVC_DATATYPE_CONFIG');
-        }
-
-        return '';
     }
 
     /**

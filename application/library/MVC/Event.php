@@ -44,12 +44,7 @@ class Event
      */
     public static function bind($sEvent, \Closure $oClosure, $oObject = NULL)
     {
-        $aBacktrace = debug_backtrace();
-        $sDebug = '';
-        (isset ($aBacktrace[0]['file'])) ? $sDebug .= $aBacktrace[0]['file'] : false;
-        (isset ($aBacktrace[0]['line'])) ? $sDebug .= ', ' . $aBacktrace[0]['line'] : false;
-        $sDebug.= ' (' . uniqid() . ') ';
-        (isset ($aBacktrace[0]['class'])) ? $sDebug .= ' > ' : false;
+        $sDebug = Log::prepareDebug(debug_backtrace());
 
         if (!isset (self::$aEvent[$sEvent]))
         {
@@ -92,12 +87,7 @@ class Event
             $mPackage = DTArrayObject::create();
         }
 
-        $aBacktrace = debug_backtrace();
-        $sDebug = '';
-        (isset ($aBacktrace[0]['file'])) ? $sDebug .= $aBacktrace[0]['file'] : false;
-        (isset ($aBacktrace[0]['line'])) ? $sDebug .= ', ' . $aBacktrace[0]['line'] : false;
-        (isset ($aBacktrace[0]['class'])) ? $sDebug .= ' > ' : false;
-
+        $sDebug = Log::prepareDebug(debug_backtrace());
         $sPreLog = '(' . $sEvent . ') --> called in: ' . $sDebug;
 
         // nothing bonded
@@ -139,12 +129,7 @@ class Event
      */
     public static function unbind($sEvent = '')
     {
-        $aBacktrace = debug_backtrace();
-        $sDebug = '';
-
-        (isset ($aBacktrace[0]['file'])) ? $sDebug .= $aBacktrace[0]['file'] : false;
-        (isset ($aBacktrace[0]['line'])) ? $sDebug .= ', ' . $aBacktrace[0]['line'] : false;
-        (isset ($aBacktrace[0]['class'])) ? $sDebug .= ' > ' : false;
+        $sDebug = Log::prepareDebug(debug_backtrace());
 
         if (!isset (self::$aEvent[$sEvent]))
         {

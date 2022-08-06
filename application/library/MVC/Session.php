@@ -69,7 +69,7 @@ class Session
     }
 
     /**
-     * @return false|mixed
+     * @return bool
      * @throws \ReflectionException
      */
     public static function getSessionEnable()
@@ -221,10 +221,17 @@ class Session
     }
 
     /**
-     * @return false|string
+     * @return string
      */
     public function getSessionId()
     {
+        $sSessionId = session_id();
+
+        if (false === is_string($sSessionId) || true === empty($sSessionId))
+        {
+            return '';
+        }
+
         return session_id();
     }
 
@@ -262,7 +269,7 @@ class Session
 
     /**
      * @deprecated use: Config::get_MVC_SESSION_PATH();
-     * @return mixed|string
+     * @return string
      * @throws \ReflectionException
      */
     public static function getSessionPath()

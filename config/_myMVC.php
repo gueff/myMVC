@@ -215,9 +215,3 @@ MVC_MISC: {
 
     $aConfig['MVC_UNIQUE_ID'] = uniqid();
 }
-
-MVC_DATATYPE: {
-
-    $aConfig['MVC_DATATYPE_CONFIG'] = $aConfig['MVC_APPLICATION_CONFIG_DIR'] . '/datatype.php';
-
-}

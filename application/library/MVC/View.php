@@ -39,7 +39,13 @@ class View extends \Smarty
     public $sTemplateDir;
 
     /**
-     * Standard Template / Layout
+     * default Template / Layout; relative path
+     * @var string
+     */
+    public $sTemplateRelative;
+
+    /**
+     * default Template / Layout; absolute path
      * @var string
      */
     public $sTemplate;

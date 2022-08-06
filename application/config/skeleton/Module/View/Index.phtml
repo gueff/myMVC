@@ -35,16 +35,30 @@ class Index extends \MVC\View
 
     /**
      * set HTTP Security Header
+     * @return bool
      * @throws \ReflectionException
      */
     public function sendSecurityHeader()
     {
-        header("Content-Security-Policy: " . \MVC\Registry::get('CONTENT_SECURITY_POLICY')['Content-Security-Policy']);         // Default
-        header("X-Content-Security-Policy: " . \MVC\Registry::get('CONTENT_SECURITY_POLICY')['Content-Security-Policy']);       // IE
-        header("X-Webkit-CSP: " . \MVC\Registry::get('CONTENT_SECURITY_POLICY')['Content-Security-Policy']);                    // Chrome, Safari
-        header("X-Frame-Options: allow-from " . \MVC\Registry::get('CONTENT_SECURITY_POLICY')['X-Frame-Options']);
-        header("X-XSS-Protection: " . \MVC\Registry::get('CONTENT_SECURITY_POLICY')['X-XSS-Protection']);
-        header("Strict-Transport-Security: " . \MVC\Registry::get('CONTENT_SECURITY_POLICY')['Strict-Transport-Security']);
+        if (null === get(\MVC\Registry::get('MODULE_{module}')['CSP']) || null === get(\MVC\Registry::get('MODULE_{module}')['CSP']['aMapping']))
+        {
+            return false;
+        }
+
+        $aCSP = \MVC\Registry::get('MODULE_{module}')['CSP'];
+        $aCSPMapping = \MVC\Registry::get('MODULE_{module}')['CSP']['aMapping'];
+
+        foreach ($aCSPMapping as $sKey => $sValue)
+        {
+            if (null === get($aCSP[$sKey]))
+            {
+                continue;
+            }
+
+            header($sKey . ': ' . trim(preg_replace('!\s+!', ' ', $aCSP[$sKey])));
+        }
+
+        return true;
     }
 
     /**
@@ -55,8 +69,10 @@ class Index extends \MVC\View
      */
     public function autoAssign(array $aRouting = array())
     {
-        $this->sTemplate = $this->sTemplateDir . '/' . get($aRouting['template']['layout'], Config::get_MVC_SMARTY_TEMPLATE_DEFAULT());
-        $this->assign('sLayoutTemplate', $this->sTemplate);
+        $this->sTemplateRelative = get($aRouting['template']['layout'], Config::get_MVC_SMARTY_TEMPLATE_DEFAULT());
+        $this->sTemplate = $this->sTemplateDir . '/' . $this->sTemplateRelative;
+        $this->assign('sTemplateRelative', $this->sTemplateRelative);
+        $this->assign('sTemplate', $this->sTemplate);
         $this->assign('sTitle', get($aRouting['title'], ''));
         $this->assign('aRegistry', Registry::getStorageArray());
         $this->assign('aRouting', $aRouting);

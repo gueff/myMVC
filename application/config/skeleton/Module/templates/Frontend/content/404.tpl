@@ -8,19 +8,7 @@
 </div>
 
 <div class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <h2>Layout Template</h2>
-            <small>
-                {$sLayoutTemplate}
-            </small>
-        </div>
-        <div class="col-md-6">
-            <h2>Content Template</h2>
-            <small>{$aRouting.template.var.load.sContent}</small>
-        </div>
-    </div>
-
+    {include file="content/info.tpl"}
     <hr>
 </div> <!-- /container -->
 
