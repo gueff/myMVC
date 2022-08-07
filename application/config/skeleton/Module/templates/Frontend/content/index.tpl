@@ -15,7 +15,7 @@
 </div>
 
 <div class="container">
-    {include file="content/info.tpl"}
+    {include file="Frontend/content/info.tpl"}
     <hr>
 </div> <!-- /container -->
 
