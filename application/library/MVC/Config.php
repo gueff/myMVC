@@ -805,4 +805,18 @@ class Config
             $aRouting
         );
     }
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_INFOTOOL_ENABLE()
+    {
+        if (Registry::isRegistered('MVC_INFOTOOL_ENABLE'))
+        {
+            return (boolean) filter_var(Registry::get('MVC_INFOTOOL_ENABLE'), FILTER_VALIDATE_BOOLEAN);
+        }
+
+        return false;
+    }
 }

@@ -25,6 +25,9 @@ MVC_RUNTIME_SETTINGS: {
     // enable debug output
     $aConfig['MVC_DEBUG'] = true;
 
+    // show InfoTool bar
+    $aConfig['MVC_INFOTOOL_ENABLE'] = true;
+
     // Log autoloader actions
     $aConfig['MVC_LOG_AUTOLOADER'] = true;
 }

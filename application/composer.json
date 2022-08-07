@@ -4,7 +4,6 @@
     "smarty/smarty": "4.1.1",
     "ezyang/htmlpurifier": "v4.14.0",
     "gueff/cachix": "1.0.0",
-    "gueff/mymvc_module_infotool": "1.1.4",
     "mrclay/jsmin-php": "2.4.1"
   },
   "require-dev": {
