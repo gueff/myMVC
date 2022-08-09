@@ -117,6 +117,7 @@ $aConfig['MODULE_{module}']['CSP']['Content-Security-Policy'] = ""
      */
     .   "script-src   'self' " .
         "'unsafe-inline' " .
+        "'unsafe-eval' " .
         "; "
 
     /**
@@ -166,6 +167,7 @@ $aConfig['MODULE_{module}']['CSP']['Content-Security-Policy'] = ""
      * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/sandbox
      */
     .   "sandbox      " .
+        "allow-downloads " .    
         "allow-forms " .
         "allow-same-origin " .
         "allow-scripts " .
@@ -192,7 +194,7 @@ $aConfig['MODULE_{module}']['CSP']['Content-Security-Policy'] = ""
      * that may embed a page using <frame>, <iframe>, <object>, <embed>, or <applet>.
      * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-ancestors
      */
-    .   "frame-ancestors " . $aConfig['MODULE_{module}']['CSP']['X-Frame-Options'] . "; "
+    .   "frame-ancestors 'none'; "
 
     /**
      * frames

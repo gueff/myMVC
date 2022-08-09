@@ -449,17 +449,17 @@ class Config
     }
 
     /**
-     * @return string
+     * @return bool
      * @throws \ReflectionException
      */
     public static function get_MVC_SECURE_REQUEST()
     {
         if (Registry::isRegistered('MVC_SECURE_REQUEST'))
         {
-            return (string) Registry::get('MVC_SECURE_REQUEST');
+            return (boolean) filter_var(Registry::get('MVC_SECURE_REQUEST'), FILTER_VALIDATE_BOOLEAN);
         }
 
-        return '';
+        return false;
     }
 
     /**
