@@ -1,5 +1,13 @@
-myMVC Documentation  
-Documentation for PHP myMVC Framework by gueff
+myMVC  
+PHP Framework by gueff
 
-[https://mymvc.ueffing.net/](https://mymvc.ueffing.net/)
+- Open Source
+- MVC Structure, +Events, +Policies
+- Smarty Template Engine
+- Modular
+- Expandable
+- DataType Creation
+- PHP >= 7.4
 
+Documentation:  https://mymvc.ueffing.net/  
+github:  https://github.com/gueff/myMVC/  
