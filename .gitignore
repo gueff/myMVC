@@ -7,6 +7,7 @@ application/templates_c/*
 application/vendor
 application/clearTmpFiles.sh
 application/composer.lock
+application/library/MVC/phanlistcreate.sh
 CliDialogue
 modules/*
 public/.env

@@ -819,4 +819,24 @@ class Config
 
         return false;
     }
+
+    /**
+     * returns config settings array of current module | or config of given module
+     * @return array
+     * @throws \ReflectionException
+     */
+    public static function MODULE($sModule = '')
+    {
+        if ('' === $sModule)
+        {
+            $sModule = Request::getModuleName();
+        }
+
+        if (Registry::isRegistered('MODULE'))
+        {
+            return (array) get(Registry::get('MODULE')[$sModule], array());
+        }
+
+        return array();
+    }
 }

@@ -13,6 +13,7 @@ Event.php
 File.php
 Generator/DataType.php
 Helper.php
+InfoTool.php
 Lock.php
 Log.php
 Minify.php
@@ -29,4 +30,5 @@ RouterJsonfile.php
 RouterJson.php
 Router.php
 Session.php
+Strings.php
 View.php

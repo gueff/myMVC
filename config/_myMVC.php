@@ -204,6 +204,10 @@ MVC_TEMPLATE_ENGINE_SMARTY: {
     $aConfig['MVC_SMARTY_PLUGINS_DIR'][] = $aConfig['MVC_APPLICATION_PATH'] . '/smartyPlugins';
 }
 
+MODULES: {
+    $aConfig['MODULE'] = array();
+}
+
 /**
  * @see /application/doc/README "Policy"
  * Policy Rules are bonded to a specific "Controller::Method"

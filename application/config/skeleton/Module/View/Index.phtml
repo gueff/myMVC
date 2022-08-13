@@ -40,13 +40,17 @@ class Index extends \MVC\View
      */
     public function sendSecurityHeader()
     {
-        if (null === get(\MVC\Registry::get('MODULE_{module}')['CSP']) || null === get(\MVC\Registry::get('MODULE_{module}')['CSP']['aMapping']))
-        {
-            return false;
-        }
+        $aCSPMapping = array(
+            // header key                   CSP config key
+            'Content-Security-Policy'   => 'Content-Security-Policy',   // Default
+            'X-Content-Security-Policy' => 'Content-Security-Policy',   // IE
+            'X-Webkit-CSP'              => 'Content-Security-Policy',   // Chrome, Safari
+            'X-Frame-Options'           => 'X-Frame-Options',
+            'X-XSS-Protection'          => 'X-XSS-Protection',
+            'Strict-Transport-Security' => 'Strict-Transport-Security',
+        );
 
-        $aCSP = \MVC\Registry::get('MODULE_{module}')['CSP'];
-        $aCSPMapping = \MVC\Registry::get('MODULE_{module}')['CSP']['aMapping'];
+        $aCSP = get(\MVC\Registry::get('MODULE')['{module}']['CSP'], array());
 
         foreach ($aCSPMapping as $sKey => $sValue)
         {

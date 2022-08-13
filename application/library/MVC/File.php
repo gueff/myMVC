@@ -42,8 +42,8 @@ class File
      */
     public static function secureFilePath($sAbsoluteFilePath = '', $bIgnoreProtocols = false)
     {
-        $sAbsoluteFilePath = Helper::removeDoubleDotSlashesFromString($sAbsoluteFilePath);
-        $sAbsoluteFilePath = Helper::replaceMultipleForwardSlashesByOneFromString($sAbsoluteFilePath, $bIgnoreProtocols);
+        $sAbsoluteFilePath = Strings::removeDoubleDotSlashesFromString($sAbsoluteFilePath);
+        $sAbsoluteFilePath = Strings::replaceMultipleForwardSlashesByOneFromString($sAbsoluteFilePath, $bIgnoreProtocols);
 
         /**@var string */
         return $sAbsoluteFilePath;

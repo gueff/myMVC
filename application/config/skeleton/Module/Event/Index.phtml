@@ -36,27 +36,19 @@ class Index
      */
     protected function __construct()
     {
-        if (true === Registry::isRegistered('MODULE_{module}'))
+        foreach (get(Registry::get('MODULE')['{module}']['EVENT_BIND'], array()) as $sEvent => $mData)
         {
-            $aEvent = Registry::get('MODULE_{module}');
-
-            if (isset($aEvent['EVENT_BIND']))
+            if (true === is_array($mData))
             {
-				foreach ($aEvent['EVENT_BIND'] as $sEvent => $mData)
-				{
-					if (true === is_array($mData))
-					{
-						foreach ($mData as $oClosure)
-						{
-							Event::bind($sEvent, $oClosure, null);
-						}
+                foreach ($mData as $oClosure)
+                {
+                    Event::bind($sEvent, $oClosure, null);
+                }
 
-						continue;
-					}
-
-					Event::bind($sEvent, $mData);
-				}				
+                continue;
             }
+
+            Event::bind($sEvent, $mData);
         }
     }
 
@@ -93,8 +85,8 @@ class Index
      */
     public static function enableSession(\MVC\DataType\DTArrayObject $oDTArrayObject)
     {
-        $aEnableSessionForController = Registry::get('MODULE_{module}')['SESSION']['aEnableSessionForController'];
-        $aDisableSessionForController = Registry::get('MODULE_{module}')['SESSION']['aDisableSessionForController'];
+        $aEnableSessionForController = get(Registry::get('MODULE')['{module}']['SESSION']['aEnableSessionForController'], array());
+        $aDisableSessionForController = get(Registry::get('MODULE')['{module}']['SESSION']['aDisableSessionForController'], array());
 
         $bEnable = (
             // current controller
