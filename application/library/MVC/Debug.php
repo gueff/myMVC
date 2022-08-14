@@ -227,18 +227,10 @@ class Debug
     public static function prepareBacktraceArray(array $aBacktrace = array())
     {
         $aData = array();
-        $aData['sFile'] = (isset($aBacktrace[0]['file']))
-            ? $aBacktrace[0]['file']
-            : '';
-        $aData['sLine'] = (isset($aBacktrace[0]['line']))
-            ? $aBacktrace[0]['line']
-            : '';
-        $aData['sClass'] = (isset($aBacktrace[1]['class']))
-            ? $aBacktrace[1]['class']
-            : '';
-        $aData['sFunction'] = (isset($aBacktrace[1]['function']))
-            ? $aBacktrace[1]['function']
-            : '';
+        $aData['sFile'] = get($aBacktrace[0]['file'], '');
+        $aData['sLine'] = get($aBacktrace[0]['line'], '');
+        $aData['sClass'] = get($aBacktrace[1]['class'], '');
+        $aData['sFunction'] = get($aBacktrace[1]['function'], '');
 
         return $aData;
     }

@@ -29,17 +29,14 @@ class Log
      */
 	public static function prepareDebug (array $aBacktrace = array ())
 	{
-        $sFile = get($aBacktrace[0]['file'], '?');
+        $aData = Debug::prepareBacktraceArray($aBacktrace);
 
-        if (substr(get($aBacktrace[0]['file'], ''), 0, strlen(Registry::get('MVC_BASE_PATH'))) === Registry::get('MVC_BASE_PATH'))
+        if (substr($aData['sFile'], 0, strlen(Config::get_MVC_BASE_PATH())) === Config::get_MVC_BASE_PATH())
         {
-            $sFile = substr(get($aBacktrace[0]['file'], '?'), strlen(Registry::get('MVC_BASE_PATH')));
+            $aData['sFile'] = substr($aData['sFile'], strlen(Config::get_MVC_BASE_PATH()));
         }
 
-		$sDebug = '';
-		$sDebug.= $sFile;
-		$sDebug.= ', ' . get($aBacktrace[0]['line'], '?');
-		(isset ($aBacktrace[0]['class'])) ? $sDebug.= ' > ' : false;
+		$sDebug = $aData['sFile'] . ', ' . $aData['sLine'];
 
 		return $sDebug;
 	}

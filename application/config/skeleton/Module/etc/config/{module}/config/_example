@@ -73,7 +73,7 @@ $aConfig['MODULE']['{module}']['EVENT_BIND'] = array(
             }
         },
     ),
-    'mvc.helper.stop.after' => array(
+    'mvc.debug.stop.after' => array(
         function (\MVC\DataType\DTArrayObject $oDTArrayObject) {
             \MVC\Log::write("\n\n*** STOP ***\n" . print_r($oDTArrayObject->get_akeyvalue()[0]->get_sValue(), true));
         }
