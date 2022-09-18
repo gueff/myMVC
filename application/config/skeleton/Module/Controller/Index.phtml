@@ -8,11 +8,12 @@
  * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
  */
 
-
 /**
  * @name ${module}Controller
  */
 namespace {module}\Controller;
+
+use MVC\Route;
 
 /**
  * Index
@@ -20,34 +21,11 @@ namespace {module}\Controller;
  */
 class Index implements \MVC\MVCInterface\Controller
 {
-	/**
-	 * Session Object
-	 * @var \MVC\Session
-	 */
-	protected $_oMVCSession;
-	
-	/**
-	 * routing array for current page
-	 * @var array
-	 */
-	protected $_aRoutingCurrent = array();
-
-	/**
-	 * View Object
-	 * @var \{module}\View\Index
-	 */
-	public $oView;
-
-	/**
-	 * Model Object
-	 * @var \{module}\Model\Index
-	 */
-	protected $_oModel;
-
-	/**
-	 * this method is autom. called by MVC_Application->runTargetClassBeforeMethod()
-	 * in very early stage
+    /**
+     * this method is autom. called by MVC_Application->runTargetClassBeforeMethod()
+     * in very early stage
      * @return void
+     * @throws \ReflectionException
      */
 	public static function __preconstruct ()
 	{
@@ -62,12 +40,9 @@ class Index implements \MVC\MVCInterface\Controller
      */
 	public function __construct ()
 	{
-        \MVC\Request::handleFallback();
-		$this->_oMVCSession = \MVC\Session::is();
-		$this->_aRoutingCurrent = \MVC\Router::getRoutingCurrent();
-		$this->_oModel = new \{module}\Model\Index();
-		$this->oView = new \{module}\View\Index();
-        $this->oView->autoAssign($this->_aRoutingCurrent);
+        \{module}\View\Index::init()->autoAssign(
+            Route::getCurrent()
+        );
 	}
 
     /**
@@ -92,6 +67,6 @@ class Index implements \MVC\MVCInterface\Controller
      */
 	public function __destruct ()
 	{
-		$this->oView->render ();
+        \{module}\View\Index::init()->render();
 	}
 }

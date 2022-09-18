@@ -4,7 +4,8 @@
     "smarty/smarty": "4.1.1",
     "ezyang/htmlpurifier": "v4.14.0",
     "gueff/cachix": "1.0.0",
-    "mrclay/jsmin-php": "2.4.1"
+    "mrclay/jsmin-php": "2.4.1",
+    "zircote/swagger-php": "4.4.9"
   },
   "require-dev": {
     "phpunit/phpunit": "*",

@@ -14,7 +14,7 @@ use MVC\DataType\DTArrayObject;
 
 /**
  * @example
- * \MVC\Event::BIND('test', function() {\MVC\Helper::DISPLAY('Hello from anonymous function');});
+ * \MVC\Event::BIND('test', function() {\MVC\Debug::display('Hello from anonymous function');});
  * \MVC\Event::RUN ('test');
  * \MVC\Event::RUN ('test', array('some' => 'value'));
  * \MVC\Event::RUN ('test', $oObject);
@@ -36,7 +36,7 @@ class Event
     public static $aPackage = array();
 
     /**
-     * binds a callback closure to a an event
+     * binds a callback closure to an event
      * @param $sEvent
      * @param \Closure $oClosure
      * @param null $oObject
@@ -93,7 +93,7 @@ class Event
         // nothing bonded
         if (!isset (self::$aEvent[$sEvent]))
         {
-            Log::write('RUN  ' . $sPreLog);
+            // 'RUN  ' . $sPreLog
             return false;
         }
 
@@ -105,9 +105,9 @@ class Event
         foreach (self::$aEvent[$sEvent] as $sKey => $sCallback)
         {
             // run bonded closure
-            if (true === filter_var(Helper::isClosure($sCallback), FILTER_VALIDATE_BOOLEAN))
+            if (true === filter_var(Closure::is($sCallback), FILTER_VALIDATE_BOOLEAN))
             {
-                Log::write($sPreLog . ' --> bonded by `' . unserialize($sKey) . ', try to run its Closure: ' . Helper::closureDump($sCallback));
+                Log::write($sPreLog . ' --> bonded by `' . unserialize($sKey) . ', try to run its Closure: ' . Closure::dump($sCallback));
 
                 // error occured
                 if (call_user_func($sCallback, $mPackage) === false)

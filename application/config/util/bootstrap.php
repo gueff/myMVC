@@ -72,6 +72,12 @@ MVC_CONFIG: {
 
 FIRST_LOG_ENTRY_ON_NEW_REQUEST: {
 
+    if ('cli' === php_sapi_name())
+    {
+        require_once realpath(__DIR__ . '/../../') . '/library/MVC/Request.php';
+        \MVC\Request::setServerVarsForCli();
+    }
+
     $sMessage = substr(__FILE__, strlen(realpath(__DIR__ . '/../../../'))) . ', ' . __LINE__ . ' > '
                 . "\t" . str_repeat ('#', 10) . "\tnew Request"
                 . "\t" . php_sapi_name ()

@@ -36,36 +36,14 @@ MVC_APPLICATION_SETTINGS: {
 
     /**
      * reserverd $_GET Params
-     * if you change one of these, take care to change the "query" settings
-     * of each route inside
-     *        /application/config/routing.json
-     * too.
      */
     $aConfig['MVC_GET_PARAM_MODULE'] = 'module';
     $aConfig['MVC_GET_PARAM_C'] = 'c';
     $aConfig['MVC_GET_PARAM_M'] = 'm';
-    $aConfig['MVC_GET_PARAM_A'] = 'a';
-
-    /**
-     * define from where myMVC should read routing
-     * default is "MVC_RouterJsonfile" and does not require a database.
-     * If default "MVC_RouterJsonfile" is chosen, there must be definded
-     * which class is responsible for building up the json string, storing the routings.
-     * Which is, as default: "MVC_RouterJsonBuilder"
-     */
-    $aConfig['MVC_ROUTING_HANDLING'] = '\MVC\RouterJsonfile';
-    $aConfig['MVC_ROUTING_JSON_BUILDER'] = '\MVC\RouterJsonBuilder';
-
-    // *** this you should not change ***
-    $aConfig['MVC_ROUTER_JSON'] = '\MVC\RouterJson';
-    // *** this you should not change ***
-    $aConfig['MVC_INTERFACE_ROUTER_JSON'] = '\MVC\MVCInterface\RouterJson';
 
     /**
      * MVC fallback routing
      * this routing will be used if none is specified for routing
-     * (see e.g. /application/config/routing.json)
-     *
      * Note: Possibility of a direct call (http|cli) of this route is disabled
      */
     $aConfig['MVC_ROUTING_FALLBACK'] =
@@ -108,8 +86,19 @@ MVC_APPLICATION_SETTINGS: {
     // Main myMVC config folder
     $aConfig['MVC_CONFIG_DIR'] = $aConfig['MVC_BASE_PATH'] . '/config';
 
-    // cache folder and
+    /**
+     * Caching
+     */
+    // cache folder
     $aConfig['MVC_CACHE_DIR'] = $aConfig['MVC_APPLICATION_PATH'] . '/cache';
+    $aConfig['MVC_CACHE_CONFIG'] = array(
+        'bCaching' => true,
+        'sCacheDir' => $aConfig['MVC_CACHE_DIR'],
+        'iDeleteAfterMinutes' => 1440,
+        'sBinRemove' => '/bin/rm',
+        'sBinFind' => '/usr/bin/find',
+        'sBinGrep' => '/bin/grep'
+    );
 
     /**
      * misc
@@ -150,38 +139,10 @@ MVC_APPLICATION_SETTINGS: {
     // true:    session will start
     $aConfig['MVC_SESSION_ENABLE'] = false;
 
-    /**
-     * Request
-     */
-    $aConfig['MVC_REQUEST_WHITELIST_PARAMS'] = array(
-        'GET' => array(
-            // module
-            $aConfig['MVC_GET_PARAM_MODULE'] => array(
-                'regex' => "/[^[:alnum:]]+/u",
-                'length' => 50,
-            ),
-            // class
-            $aConfig['MVC_GET_PARAM_C'] => array(
-                'regex' => "/[^[:alnum:]]+/u",
-                'length' => 50,
-            ),
-            // method
-            $aConfig['MVC_GET_PARAM_M'] => array(
-                'regex' => "/[^[:alnum:_]]+/u",
-                'length' => 50,
-            ),
-            // args
-            $aConfig['MVC_GET_PARAM_A'] => array(
-                /** @see https://www.regular-expressions.info/unicode.html */
-                'regex' => "/[^\\p{L}\\p{M}\\p{Z}\\p{S}\\p{N}\\p{Pd}\\p{Pc}\\p{Ps}\\p{Pe}\\p{Pi}\\p{Pf}\|']+/u",
-                'length' => 256,
-            ),
-        )
-    );
+    // Routing Class
+    $aConfig['MVC_ROUTING_CLASS'] = '\\MVC\\Routing';
 
-    /**
-     * routing.json file
-     */
+    // routing.json file
     $aConfig['MVC_ROUTING_JSON'] = '';
 
     // detect if request is done via cli. set boole true|false

@@ -47,6 +47,7 @@ class Session
     {
         $this->setNamespace($sNamespace);
         $this->_aOption = Config::get_MVC_SESSION_OPTIONS();
+        $this->enable(Config::get_MVC_SESSION_ENABLE());
 
         foreach ($this->_aOption as $sKey => $mValue)
         {
@@ -72,19 +73,9 @@ class Session
      * @return bool
      * @throws \ReflectionException
      */
-    public static function getSessionEnable()
+    public function enabled()
     {
         return Config::get_MVC_SESSION_ENABLE();
-    }
-
-    /**
-     * @deprecated use: Config::set_MVC_SESSION_ENABLE();
-     * @param $bEnable
-     * @return void
-     */
-    public static function setSessionEnable($bEnable = true)
-    {
-        Config::set_MVC_SESSION_ENABLE($bEnable);
     }
 
     /**
@@ -97,17 +88,6 @@ class Session
         Config::set_MVC_SESSION_ENABLE($bEnable);
 
         return self::$_oInstance;
-    }
-
-    /**
-     * @deprecated use: Session:is()
-     * @param string $sNamespace
-     * @return Session
-     * @throws \ReflectionException
-     */
-    public static function getInstance ($sNamespace = '')
-    {
-        return self::is($sNamespace);
     }
 
     /**
@@ -130,16 +110,6 @@ class Session
         Config::set_MVC_SESSION(self::$_oInstance);
 
         return self::$_oInstance;
-    }
-
-    /**
-     * @deprecated use: Config::set_MVC_SESSION();
-     * @param \MVC\Session $oSession
-     * @return void
-     */
-    public static function saveToRegistry(Session $oSession)
-    {
-        Config::set_MVC_SESSION($oSession);
     }
 
     /**
@@ -265,15 +235,5 @@ class Session
         }
 
         return self::$_oInstance;
-    }
-
-    /**
-     * @deprecated use: Config::get_MVC_SESSION_PATH();
-     * @return string
-     * @throws \ReflectionException
-     */
-    public static function getSessionPath()
-    {
-        return Config::get_MVC_SESSION_PATH();
     }
 }

@@ -1,10 +1,11 @@
 <?php
 /**
  * Lock.php
- * @package   myMVC
+ *
+ * @package myMVC
  * @copyright ueffing.net
- * @author    Guido K.B.W. Üffing <info@ueffing.net>
- * @license   GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
+ * @author Guido K.B.W. Üffing <info@ueffing.net>
+ * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
  */
 
 namespace MVC;
@@ -26,7 +27,7 @@ class Lock
      */
     public static function create($sKey = '', $bReturn = false)
     {
-        $aBacktrace = Helper::prepareBacktraceArray(debug_backtrace());
+        $aBacktrace = Debug::prepareBacktraceArray(debug_backtrace());
         $sCacheDir = Config::get_MVC_CACHE_DIR();
 
         if (false === file_exists($sCacheDir))

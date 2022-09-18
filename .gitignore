@@ -4,7 +4,6 @@ application/cache/*
 application/log/*
 application/session/*
 application/templates_c/*
-application/vendor
 application/clearTmpFiles.sh
 application/composer.lock
 application/library/MVC/phanlistcreate.sh
@@ -12,7 +11,7 @@ CliDialogue
 modules/*
 public/.env
 _createPhar.php
-_createMVCDataTypes.php
+_generateDataTypes.php
 _push.sh
 **/*.min.css
 **/*.min.js

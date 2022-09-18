@@ -19,11 +19,16 @@ use MVC\DataType\DTKeyValue;
 class Policy
 {
     /**
+     * @var array error
+     */
+    private static $aApplied = array();
+
+    /**
      * gets the policy rules; if one matches to the current request, it will be executed
      */
 	public static function apply()
     {
-        $aPolicy = self::getPolicyRuleOnCurrentRequest ();
+        $aPolicy = self::getPolicyRuleOnCurrentRequest();
 
         if (!empty ($aPolicy))
         {
@@ -45,15 +50,15 @@ class Policy
                         );
                     }
 
-                    Event::run ('mvc.policy.apply.execute',
-                        DTArrayObject::create()
-                            ->add_aKeyValue(
-                                DTKeyValue::create()->set_sKey('bSuccess')->set_sValue($bSuccess)
-                            )
-                            ->add_aKeyValue(
-                                DTKeyValue::create()->set_sKey('sPolicy')->set_sValue($sPolicy)
-                            )
-                    );
+                    $oDTArrayObject = DTArrayObject::create()
+                        ->add_aKeyValue(
+                            DTKeyValue::create()->set_sKey('bSuccess')->set_sValue($bSuccess)
+                        )
+                        ->add_aKeyValue(
+                            DTKeyValue::create()->set_sKey('sPolicy')->set_sValue($sPolicy)
+                        );
+                    self::$aApplied[] = $oDTArrayObject;
+                    Event::run ('mvc.policy.apply.execute', $oDTArrayObject);
                 }
             }
         }
@@ -67,24 +72,38 @@ class Policy
 	public static function getPolicyRuleOnCurrentRequest ()
 	{
 		$aPolicyRule = Config::get_MVC_POLICY();
-		$aRoutingCurrent = Router::getRoutingCurrent();
+		$oDTRoute = Route::getCurrent();
 
 		// check if there is a policy for this request
-		if (array_key_exists ('class', $aRoutingCurrent))
-		{
-			$sClass = (substr ($aRoutingCurrent['class'], 0, 1) !== '\\') ? '\\' . $aRoutingCurrent['class'] : $aRoutingCurrent['class'];
+        $sClass = (substr ($oDTRoute->get_class(), 0, 1) !== '\\') ? '\\' . $oDTRoute->get_class() : $oDTRoute->get_class();
 
-			if (array_key_exists ($sClass, $aPolicyRule))
-			{
-				if (array_key_exists (Request::getMethodName(), $aPolicyRule[$sClass]))
-				{
-					$aPolicy = $aPolicyRule[$sClass][Request::getMethodName()];
+        if (array_key_exists ($sClass, $aPolicyRule))
+        {
+            if (array_key_exists ($oDTRoute->get_method(), $aPolicyRule[$sClass]))
+            {
+                $aPolicy = $aPolicyRule[$sClass][$oDTRoute->get_method()];
 
-					return $aPolicy;
-				}
-			}
-		}
+                return $aPolicy;
+            }
+        }
 
 		return array();
 	}
+
+    /**
+     * @return array
+     * @throws \ReflectionException
+     */
+    public static function getRules()
+    {
+        return Config::get_MVC_POLICY();
+    }
+
+    /**
+     * @return array
+     */
+    public static function getRulesApplied()
+    {
+        return self::$aApplied;
+    }
 }

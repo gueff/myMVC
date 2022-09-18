@@ -9,11 +9,12 @@
 
 namespace MVC\Generator;
 
+use MVC\Cache;
 use MVC\DataType\DTClass;
 use MVC\DataType\DTConfig;
 use MVC\DataType\DTConstant;
 use MVC\DataType\DTProperty;
-use MVC\Helper;
+use MVC\Debug;
 use MVC\Lock;
 
 class DataType
@@ -22,6 +23,11 @@ class DataType
      * @var int
      */
     protected $iPhpVersion = 70;
+
+    /**
+     * @var bool
+     */
+    protected $bCreateEvents = false;
 
     /**
      * @var array
@@ -64,6 +70,7 @@ class DataType
      */
     public function initConfigArray(array $aDataType = array())
     {
+        $this->bCreateEvents = get($aDataType['createEvents'], false);
         $oDTDataTypeGeneratorConfig = $this->buildDTDataTypeGeneratorConfigObject($aDataType);
         $bSuccess = $this->initConfigObject($oDTDataTypeGeneratorConfig);
 
@@ -188,7 +195,7 @@ class DataType
             ? (boolean) $oDTDataTypeGeneratorConfig->get_unlinkDir()
             : false;
 
-        if ($sCacheKey != \Cachix::getCache($sCacheKey))
+        if ($sCacheKey != Cache::getCache($sCacheKey))
         {
             Lock::create($sCacheKey);
 
@@ -203,7 +210,7 @@ class DataType
                 return $bSuccess;
             }
 
-            \Cachix::saveCache($sCacheKey, $sCacheKey);
+            Cache::saveCache($sCacheKey, $sCacheKey);
         }
 
         return true;
@@ -573,7 +580,7 @@ class DataType
         $sContent = "\t/**\r\n\t * " . $oDTDataTypeGeneratorClass->get_name() . " constructor." . "\r\n\t * @param array " . '$aData' . "\r\n\t * @throws \ReflectionException " . "\r\n\t " . "*/\r\n\t";
         $sContent .= "public function __construct(array " . '$aData' . " = array())\r\n\t";
         $sContent .= "{\r\n";
-        $sContent .= "\t\t\MVC\Event::RUN ('" . $oDTDataTypeGeneratorClass->get_name() . ".__construct.before', \MVC\DataType\DTArrayObject::create(" . '$aData' . ")->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));\r\n\r\n";
+        $sContent .= "\t\t\MVC\Event::RUN ('" . $oDTDataTypeGeneratorClass->get_name() . ".__construct.before', \MVC\DataType\DTArrayObject::create(" . '$aData' . ")->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));\r\n\r\n";
 
         if (false === empty($oDTDataTypeGeneratorClass->get_extends()))
         {
@@ -614,7 +621,7 @@ class DataType
                 if ('array' == strtolower($oProperty->get_var()))
                 {
                     $sContent .= (is_array($oProperty->get_value()))
-                        ? preg_replace('!\s+!', '', str_replace("\n", '', Helper::varExport($oProperty->get_value(), true, false))) . ";\r\n"
+                        ? preg_replace('!\s+!', '', str_replace("\n", '', Debug::varExport($oProperty->get_value(), true, false))) . ";\r\n"
                         : "array();\r\n";
                 }
 
@@ -671,7 +678,7 @@ class DataType
      */
     public static function create(array " . '$aData' . " = array())
     {
-        \MVC\Event::RUN ('" . $sClassName . ".create.before', \MVC\DataType\DTArrayObject::create(" . '$aData' . ")->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));
+        \MVC\Event::RUN ('" . $sClassName . ".create.before', \MVC\DataType\DTArrayObject::create(" . '$aData' . ")->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
         
         " . '$oObject' . " = new self(" . '$aData' . ");
 
@@ -897,7 +904,7 @@ class DataType
                 ? $sContent .= $sVar . ' '
                 : false;
 
-            $sContent .= '$mValue)' . "\r\n" . "\t{" . "\r\n\t\t\MVC\Event::RUN ('" . $sClassName . ".set_" . $oProperty->get_key() . ".before', \MVC\DataType\DTArrayObject::create(array('" . $oProperty->get_key() . "' => " . '$mValue' . "))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));\r\n";
+            $sContent .= '$mValue)' . "\r\n" . "\t{" . "\r\n\t\t\MVC\Event::RUN ('" . $sClassName . ".set_" . $oProperty->get_key() . ".before', \MVC\DataType\DTArrayObject::create(array('" . $oProperty->get_key() . "' => " . '$mValue' . "))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));\r\n";
 
             if (true === $oProperty->get_forceCasting())
             {
@@ -922,7 +929,7 @@ class DataType
             // add ArrayType Instancer
             if (false === in_array(strtolower($sVar), $this->aType))
             {
-                $sContent .= "\MVC\Event::RUN ('" . $sClassName . ".set_" . $oProperty->get_key() . ".before', \MVC\DataType\DTArrayObject::create(array('" . $oProperty->get_key() . "' => " . '$aValue' . "))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));" . "\r\n";
+                $sContent .= "\MVC\Event::RUN ('" . $sClassName . ".set_" . $oProperty->get_key() . ".before', \MVC\DataType\DTArrayObject::create(array('" . $oProperty->get_key() . "' => " . '$aValue' . "))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));" . "\r\n";
 
                 $sContent .= "\r\n\t\t" . 'foreach ($aValue as $mKey => $aData)
         {
@@ -966,7 +973,7 @@ class DataType
             : false;
 
         $sContent .= "\r\n";
-        $sContent .= "\t{\r\n" . "\t\t\MVC\Event::RUN ('" . $sClassName . ".get_" . $oProperty->get_key() . ".before', \MVC\DataType\DTArrayObject::create()" . "->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('" . $oProperty->get_key() . "')->set_sValue(" . '$this->' . $oProperty->get_key() . "))" . "->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));" . "\r\n" . "\r\n\t\t" . 'return $this->' . $oProperty->get_key() . ';' . "\r\n\t}\r\n\r\n";
+        $sContent .= "\t{\r\n" . "\t\t\MVC\Event::RUN ('" . $sClassName . ".get_" . $oProperty->get_key() . ".before', \MVC\DataType\DTArrayObject::create()" . "->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('" . $oProperty->get_key() . "')->set_sValue(" . '$this->' . $oProperty->get_key() . "))" . "->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));" . "\r\n" . "\r\n\t\t" . 'return $this->' . $oProperty->get_key() . ';' . "\r\n\t}\r\n\r\n";
 
         return $sContent;
     }

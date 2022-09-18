@@ -31,7 +31,7 @@ class DTConfig
 	 */
 	public function __construct(array $aData = array())
 	{
-		\MVC\Event::RUN ('DTConfig.__construct.before', \MVC\DataType\DTArrayObject::create($aData)->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));
+		\MVC\Event::RUN ('DTConfig.__construct.before', \MVC\DataType\DTArrayObject::create($aData)->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
 
 		$this->dir = '';
 		$this->unlinkDir = false;
@@ -57,7 +57,7 @@ class DTConfig
      */
     public static function create(array $aData = array())
     {
-        \MVC\Event::RUN ('DTConfig.create.before', \MVC\DataType\DTArrayObject::create($aData)->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));
+        \MVC\Event::RUN ('DTConfig.create.before', \MVC\DataType\DTArrayObject::create($aData)->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
         
         $oObject = new self($aData);
 
@@ -84,7 +84,7 @@ class DTConfig
 	 */
 	public function set_dir(string $mValue)
 	{
-		\MVC\Event::RUN ('DTConfig.set_dir.before', \MVC\DataType\DTArrayObject::create(array('dir' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));
+		\MVC\Event::RUN ('DTConfig.set_dir.before', \MVC\DataType\DTArrayObject::create(array('dir' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
 
 		$this->dir = $mValue;
 
@@ -98,7 +98,7 @@ class DTConfig
 	 */
 	public function set_unlinkDir(bool $mValue)
 	{
-		\MVC\Event::RUN ('DTConfig.set_unlinkDir.before', \MVC\DataType\DTArrayObject::create(array('unlinkDir' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));
+		\MVC\Event::RUN ('DTConfig.set_unlinkDir.before', \MVC\DataType\DTArrayObject::create(array('unlinkDir' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
 
 		$this->unlinkDir = $mValue;
 
@@ -112,7 +112,7 @@ class DTConfig
 	 */
 	public function set_class(array $aValue)
 	{
-		\MVC\Event::RUN ('DTConfig.set_class.before', \MVC\DataType\DTArrayObject::create(array('class' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));
+		\MVC\Event::RUN ('DTConfig.set_class.before', \MVC\DataType\DTArrayObject::create(array('class' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
 
 		foreach ($aValue as $mKey => $aData)
         {
@@ -144,7 +144,7 @@ class DTConfig
 	 */
 	public function get_dir() : string
 	{
-		\MVC\Event::RUN ('DTConfig.get_dir.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('dir')->set_sValue($this->dir))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));
+		\MVC\Event::RUN ('DTConfig.get_dir.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('dir')->set_sValue($this->dir))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
 
 		return $this->dir;
 	}
@@ -155,7 +155,7 @@ class DTConfig
 	 */
 	public function get_unlinkDir() : bool
 	{
-		\MVC\Event::RUN ('DTConfig.get_unlinkDir.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('unlinkDir')->set_sValue($this->unlinkDir))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));
+		\MVC\Event::RUN ('DTConfig.get_unlinkDir.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('unlinkDir')->set_sValue($this->unlinkDir))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
 
 		return $this->unlinkDir;
 	}
@@ -166,7 +166,7 @@ class DTConfig
 	 */
 	public function get_class()
 	{
-		\MVC\Event::RUN ('DTConfig.get_class.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('class')->set_sValue($this->class))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Helper::PREPAREBACKTRACEARRAY(debug_backtrace()))));
+		\MVC\Event::RUN ('DTConfig.get_class.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('class')->set_sValue($this->class))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
 
 		return $this->class;
 	}
@@ -256,5 +256,4 @@ class DTConfig
 	{
 		return '{"name":"DTConfig","file":"DTConfig.php","extends":"","namespace":"MVC\\\\DataType","constant":[],"property":[{"key":"dir","var":"string","value":"","visibility":"protected","static":false,"setter":true,"getter":true,"explicitMethodForValue":false,"listProperty":true,"createStaticPropertyGetter":true,"setValueInConstructor":true,"forceCasting":false},{"key":"unlinkDir","var":"bool","value":false,"visibility":"protected","static":false,"setter":true,"getter":true,"explicitMethodForValue":false,"listProperty":true,"createStaticPropertyGetter":true,"setValueInConstructor":true,"forceCasting":false},{"key":"class","var":"\\\\MVC\\\\DataType\\\\DTClass[]","value":"array()","visibility":"protected","static":false,"setter":true,"getter":true,"explicitMethodForValue":false,"listProperty":true,"createStaticPropertyGetter":true,"setValueInConstructor":true,"forceCasting":false}],"createHelperMethods":true}';
 	}
-
 }

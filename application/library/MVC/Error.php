@@ -110,7 +110,7 @@ class Error
         );
 		Log::write ($sMsg, $sLogfile);
 
-		(true === Config::get_MVC_DEBUG()) ? Helper::display(print_r($oErrorException, true)) : false;
+		(true === Config::get_MVC_DEBUG()) ? Debug::display(print_r($oErrorException, true)) : false;
 	}
 
 	/**
@@ -124,7 +124,7 @@ class Error
 		if (!empty($aError))
 		{
 			(true === Config::get_MVC_DEBUG())
-                ? Helper::display($aError)
+                ? Debug::display($aError)
                 : false
             ;
 			

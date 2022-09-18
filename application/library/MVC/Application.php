@@ -31,14 +31,17 @@ class Application
         // handle Errors
         Error::init();
 
+        // Caching
+        Cache::init();
+
 		// add a CLI wrapper to enable requests from command line
 		(true === Request::isCli()) ? Request::cliWrapper() : false;
 
-        // save + prepare Request
-        Request::init();
-
         // handle Routing
-		Router::init();
+        Route::init();
+
+        // Policy Rules
+        Policy::apply();
 
 		// Run target Controller's __preconstruct()
 		Controller::runTargetClassPreconstruct();
@@ -46,15 +49,10 @@ class Application
 		// Session
 		self::initSession();
 
-		// consider Policy Rules
-		// e.g. maybe the requested target controller may not be called due to some reason 
-		// and should be protected from any requesting
-		Policy::apply();
-
         // Run the requested target Controller
         Controller::init();
 
-		Event::run ('mvc.application.construct.after', DTArrayObject::create());
+		Event::run ('mvc.application.construct.after');
 	}
 
 	/**
@@ -64,7 +62,7 @@ class Application
      */
 	private static function initSession ()
 	{
-		Event::run ('mvc.application.setSession.before', DTArrayObject::create());
+		Event::run ('mvc.application.setSession.before');
 
         (!file_exists (Config::get_MVC_SESSION_PATH())) ? mkdir (Config::get_MVC_SESSION_PATH()) : false;
 

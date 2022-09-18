@@ -77,7 +77,7 @@ class View extends \Smarty
 
         if (false === file_exists($this->sTemplateDir))
         {
-            $this->sTemplateDir = Config::get_MVC_MODULES() . '/' . Request::getModuleName() . '/templates';
+            $this->sTemplateDir = Config::get_MVC_MODULES() . '/' . Route::getCurrent()->get_module() . '/templates';
         }
 
         $this->setAbsolutePathToTemplateDir ($this->sTemplateDir);
@@ -90,6 +90,14 @@ class View extends \Smarty
         (!empty(Config::get_MVC_SMARTY_PLUGINS_DIR())) ? $aPlugInDir = array_merge ($aPlugInDir, Config::get_MVC_SMARTY_PLUGINS_DIR()) : false;
         $this->setPluginsDir ($aPlugInDir);
         $this->checkDirs();
+
+        \MVC\Event::bind('mvc.view.render.off', function () {
+            \MVC\View::$bRender = false;
+        });
+
+        \MVC\Event::bind('mvc.view.render.on', function () {
+            \MVC\View::$bRender = true;
+        });
 
         \MVC\Event::bind('mvc.view.echoOut.off', function () {
             \MVC\View::$bEchoOut = false;
@@ -225,15 +233,6 @@ class View extends \Smarty
      */
     public function setAbsolutePathToTemplateDir ($sAbsolutePathToTemplateDir = '')
     {
-        if ($sAbsolutePathToTemplateDir === '')
-        {
-            $aQueryArray = Request::getQueryVarArray();
-            (array_key_exists (Config::get_MVC_GET_PARAM_MODULE(), $aQueryArray['GET']))
-                ? $sAbsolutePathToTemplateDir = realpath (Config::get_MVC_MODULES() . '/' . $aQueryArray['GET'][Config::get_MVC_GET_PARAM_MODULE()] . '/templates/')
-                : false
-            ;
-        }
-
         if (is_dir ($sAbsolutePathToTemplateDir))
         {
             $aIncludePath = explode (PATH_SEPARATOR, get_include_path ());

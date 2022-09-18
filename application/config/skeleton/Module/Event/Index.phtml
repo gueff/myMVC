@@ -17,7 +17,7 @@ use MVC\Config;
 use MVC\DataType\DTArrayObject;
 use MVC\Event;
 use MVC\Registry;
-use MVC\Request;
+use MVC\Route;
 
 /**
  * Index
@@ -54,8 +54,7 @@ class Index
 
     /**
      * Singleton instance
-     * @return \{module}\Event\Index
-     * @throws \ReflectionException
+     * @return \{module}\Event\Index|null
      */
     public static function getInstance()
     {
@@ -90,7 +89,7 @@ class Index
 
         $bEnable = (
             // current controller
-            in_array(Request::getControllerName(), $aEnableSessionForController)
+            in_array(Route::getCurrent()->get_c(), $aEnableSessionForController)
             ||
             // any
             in_array('*', $aEnableSessionForController)
@@ -98,7 +97,7 @@ class Index
 
         $bDisable = (
             // current controller
-            in_array(Request::getControllerName(), $aDisableSessionForController)
+            in_array(Route::getCurrent()->get_c(), $aDisableSessionForController)
             ||
             // any
             in_array('*', $aDisableSessionForController)
@@ -123,4 +122,3 @@ class Index
 		;
 	}
 }
- 

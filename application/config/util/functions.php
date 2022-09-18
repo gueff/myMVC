@@ -28,3 +28,9 @@ function get(&$sVar, $mFallback = null)
 
     return $mFallback;
 }
+
+function stop()
+{
+    $aDebug = \MVC\Debug::prepareBacktraceArray(debug_backtrace());
+    \MVC\Debug::stop('', true, true, $aDebug);
+}

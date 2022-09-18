@@ -23,7 +23,7 @@ class InfoTool
 
     /**
      * Index constructor.
-     * adds Event Listerner to 'mvc.view.render.before'
+     * adds Event Listener to 'mvc.view.render.before'
      * starts collecting Infos and save it to Registry
      * @param \Smarty $oView
      * @throws \ReflectionException
@@ -31,12 +31,12 @@ class InfoTool
     public function __construct (\Smarty $oView)
     {
         // add toolbar at the right time
-        \MVC\Event::BIND ('mvc.view.render.before', function (\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \MVC\InfoTool::injectToolbar ($oDTArrayObject->getDTKeyValueByKey('oView')->get_sValue());
+        Event::BIND ('mvc.view.render.before', function (\MVC\DataType\DTArrayObject $oDTArrayObject) {
+            InfoTool::injectToolbar ($oDTArrayObject->getDTKeyValueByKey('oView')->get_sValue());
         });
 
         // get toolbar values and save them to registry
-        \MVC\Registry::set ('aToolbar', $this->collectInfo ($oView));
+        Registry::set ('aToolbar', $this->collectInfo ($oView));
     }
 
     /**
@@ -48,7 +48,7 @@ class InfoTool
      */
     public static function injectToolbar (\Smarty $oView)
     {
-        $aToolbar = \MVC\Registry::get ('aToolbar');
+        $aToolbar = Registry::get ('aToolbar');
         $sHtml = '';
 
         $sToolBarVarName = 'sToolBar_' . uniqid();
@@ -59,7 +59,7 @@ class InfoTool
         $oView->assign($sToolBarVarName, $oView->loadTemplateAsString(realpath(__DIR__) . '/templates/infoTool.tpl'));
 
         // disable regular view output
-        \MVC\View::$bEchoOut = false;
+        View::$bEchoOut = false;
 
         // inject toolbar var to regular string output via DOM
         if (true === isset($aToolbar['sRendered']) && false === empty($aToolbar['sRendered']))
@@ -107,69 +107,92 @@ class InfoTool
     {
         $aToolbar = array ();
 
+        $aMethod = get_class_methods('MVC\Config');
+        $aTmp = array();
+
+        foreach ($aMethod as $sMethod)
+        {
+            if ('get' === substr($sMethod, 0, 3))
+            {
+                $sTmpVar = str_replace('get_', '', $sMethod);
+                $aTmp['sVar'] = $sTmpVar;
+
+                if (in_array($sTmpVar, array('MVC_ROUTING', 'MVC_MODULE_CURRENT_VIEW')))
+                {
+                    $aTmp['mResult'] = '⚠ (would be too large to dump here)';
+                }
+                else
+                {
+                    $aTmp['mResult'] = Config::$sMethod();
+                }
+
+                $aTmp['sMethod'] = 'Config::' . $sMethod . '()';
+                $aToolbar['aConfig'][] = $aTmp;
+            }
+        }
+
         $aToolbar['sPHP'] = phpversion ();
         $aToolbar['sOS'] = PHP_OS;
-        $aToolbar['sOS'] = PHP_OS;
-        $aToolbar['sUniqueId'] = \MVC\Config::get_MVC_UNIQUE_ID();
-        $aToolbar['sMyMvcVersion'] = (\MVC\Registry::isRegistered('MVC_CORE') && isset(\MVC\Registry::get('MVC_CORE')['version']))
-            ? \MVC\Registry::get('MVC_CORE')['version']
-            : '?';
-        $aToolbar['sMyMVCCore'] = (\MVC\Registry::isRegistered('MVC_CORE')) ? $this->buildMarkupListTree(\MVC\Registry::get('MVC_CORE')) : '?';
-
-        $aToolbar['sEnv'] = \MVC\Registry::get('MVC_ENV');
-        $aToolbar['aEnv'] = $this->buildMarkupListTree($_ENV);
+        $aToolbar['sUniqueId'] = Config::get_MVC_UNIQUE_ID();
+        $aToolbar['sMyMvcVersion'] = Config::get_MVC_VERSION();
+        $aToolbar['sMyMVCCore'] = $this->buildMarkupListTree(Config::get_MVC_CORE());
+        $aToolbar['sEnv'] = Config::get_MVC_ENV();
+        $aToolbar['aEnvGetenv'] = $this->buildMarkupListTree(getenv());
+        $aToolbar['aEnvEnv'] = $this->buildMarkupListTree($_ENV);
         $aToolbar['aGet'] = $this->buildMarkupListTree($_GET);
         $aToolbar['aPost'] = $this->buildMarkupListTree($_POST);
         $aToolbar['aCookie'] = $this->buildMarkupListTree($_COOKIE);
         $aToolbar['aRequest'] = $this->buildMarkupListTree($_REQUEST);
-        $aToolbar['session_id'] = \MVC\Session::is()->getSessionId();
-        $aToolbar['aSessionSettings'] = $this->buildMarkupListTree(array(
-
-            'namespace' => \MVC\Session::is()->getNamespace() . ' (which means: $_SESSION["' . \MVC\Session::is()->getNamespace() . '"])',
-            'session_id' => $aToolbar['session_id'],
-            'MVC_SESSION_ENABLE' => \MVC\Config::get_MVC_SESSION_ENABLE(),
-            'MVC_SESSION_PATH' => \MVC\Config::get_MVC_SESSION_PATH(),
-            'MVC_SESSION_OPTIONS' => \MVC\Config::get_MVC_SESSION_OPTIONS(),
-            'oSession' => \MVC\Session::is(),
-        ));
-        $aToolbar['aSessionKeyValues'] = $this->buildMarkupListTree((isset($_SESSION)) ? $_SESSION : array());
-        $aToolbar['aSessionFiles'] = $this->buildMarkupListTree(
-            preg_grep('/^([^.])/', scandir(\MVC\Config::get_MVC_SESSION_OPTIONS()['save_path']))
+        $aToolbar['session_id'] = Session::is()->getSessionId();
+        $aToolbar['aSessionSettings'] = array(
+            'MVC_SESSION_ENABLE' => Config::get_MVC_SESSION_ENABLE(),
+            'MVC_SESSION_PATH' => Config::get_MVC_SESSION_PATH(),
+            'MVC_SESSION_OPTIONS' => $this->buildMarkupListTree(Config::get_MVC_SESSION_OPTIONS()),
+            'oSession' => Session::is(),
         );
-
-        $aToolbar['aSmartyTemplateVars'] = $this->buildMarkupListTree($oView->getTemplateVars());
+        $aToolbar['aSessionKeyValues'] = $this->buildMarkupListTree(Session::is()->getAll());
+        $aToolbar['aSessionFiles'] = $this->buildMarkupListTree(
+            preg_grep('/^([^.])/', scandir(Config::get_MVC_SESSION_OPTIONS()['save_path']))
+        );
+        $aToolbar['aSmartyTemplateVars'] = $oView->getTemplateVars();
+        $aToolbar['sSmartyTemplateVars'] = $this->buildMarkupListTree($oView->getTemplateVars());
         $aConstants = get_defined_constants (true);
         $aToolbar['aConstant'] = $this->buildMarkupListTree($aConstants['user']);
         $aToolbar['aServer'] = $this->buildMarkupListTree($_SERVER);
-        $aToolbar['oMvcRequestGetWhitelistParams'] = $this->buildMarkupListTree(\MVC\Config::get_MVC_REQUEST_WHITELIST_PARAMS());
-        $aToolbar['oMvcRequestGetQueryArray'] = $this->buildMarkupListTree(array_reverse(\MVC\Request::getQueryVarArray()));
-        $aToolbar['aEvent'] = \MVC\Config::get_MVC_EVENT();
+        $aToolbar['sPathParam'] = $this->buildMarkupListTree(Request::getPathParam());
+        $aToolbar['aPathParam'] = Request::getPathParam();
+        $aToolbar['aEvent'] = Config::get_MVC_EVENT();
         $aToolbar['aEventBIND'] = $this->buildMarkupListTree($aToolbar['aEvent']['BIND']);
         $aToolbar['aEventBINDNAME'] = $this->buildMarkupListTree(Event::$aEvent);
         $aToolbar['aEventRUN'] = $this->buildMarkupListTree($aToolbar['aEvent']['RUN']);
         $aToolbar['aEventRUNBONDED'] = (isset($aToolbar['aEvent']['RUN_BONDED']) && false === empty($aToolbar['aEvent']['RUN_BONDED'])) ? $this->buildMarkupListTree($aToolbar['aEvent']['RUN_BONDED']) : array();
         $aToolbar['aEventUNBIND'] = (isset($aToolbar['aEvent']['UNBIND']) && false === empty($aToolbar['aEvent']['UNBIND'])) ? $this->buildMarkupListTree($aToolbar['aEvent']['UNBIND']) : array();
         $aToolbar['aRouting'] = array(
-            'aRequest' => \MVC\Request::getCurrentRequest(),
-            'sModule' => \MVC\Request::getModuleName(),
-            'sController' => \MVC\Request::getControllerName(),
-            'sMethod' => \MVC\Request::getMethodName(),
-            'sArg' => ((isset($aToolbar['oMvcRequestGetQueryArray']['GET']['a'])) ? $aToolbar['oMvcRequestGetQueryArray']['GET']['a'] : ''),
-            'aRoute' => $this->buildMarkupListTree(\MVC\Registry::get ('MVC_ROUTING_CURRENT')),
-            'sRoutingJsonBuilder' => \MVC\Config::get_MVC_ROUTING_JSON_BUILDER(),
-            'sRoutingHandling' => \MVC\Config::get_MVC_ROUTING_HANDLING()
+            'aRequest' => Request::getCurrentRequest()->getPropertyArray(),
+            'sModule' => Route::getCurrent()->get_module(),
+            'sController' => Route::getCurrent()->get_c(),
+            'sMethod' => Route::getCurrent()->get_method(),
+            'aRoutingCurrent' => Route::getCurrent()->getPropertyArray(),
+            'sRoutingCurrent' => $this->buildMarkupListTree(Route::getCurrent()->getPropertyArray()),
+            'aRoute' => $this->buildMarkupListTree(Route::$aRoute),
         );
-        $aToolbar['sRoutingPath'] = \MVC\Request::getCurrentRequest()['path'];
-        $aToolbar['sRoutingQuery'] = (isset(\MVC\Request::getCurrentRequest()['query'])) ? \MVC\Request::getCurrentRequest()['query'] : '';
 
-        $aPolicy = \MVC\Config::get_MVC_POLICY();
-        $sController = '\\' . \MVC\Request::getModuleName() . '\\Controller\\' . \MVC\Request::getControllerName();
-        $sMethod = \MVC\Request::getMethodName();
-        $aToolbar['aPolicy']['aRule'] = $this->buildMarkupListTree(\MVC\Config::get_MVC_POLICY());
-        $aToolbar['aPolicy']['aApplied'] = $this->buildMarkupListTree((isset($aPolicy[$sController][$sMethod])) ? $aPolicy[$sController][$sMethod] : false);
-        $aToolbar['aPolicy']['sAppliedAt'] = ((isset($aPolicy[$sController][$sMethod])) ? $sController . '::' . $sMethod : false);
+        $aToolbar['sRoutingPath'] = Request::getCurrentRequest()->get_path();
+        $aToolbar['sRoutingQuery'] = Request::getCurrentRequest()->get_query(); # (isset(Request::getCurrentRequest()->get_query())) ? Request::getCurrentRequest()['query'] : '';
+
+        $aToolbar['aPolicy']['aRule'] = $this->buildMarkupListTree(Policy::getRules());
+        $aPolicy = Policy::getRulesApplied();
+        $aTmpPolicy = array();
+
+        /** @var \MVC\DataType\DTArrayObject $oDTArrayObject */
+        foreach ($aPolicy as $oDTArrayObject)
+        {
+            $aTmpPolicy[] = $oDTArrayObject->getDTKeyValueByKey('sPolicy')->get_sValue();
+        }
+
+        $aToolbar['aPolicy']['aApplied'] = $this->buildMarkupListTree($aTmpPolicy);
+
         $aToolbar['sTemplate'] = $oView->sTemplate;
-
         $aToolbar['sTemplateContent'] = (null !== get($aToolbar['sTemplate']) && true === is_file($oView->sTemplate)) ? file_get_contents ($aToolbar['sTemplate'], true) : '';
         $sRendered = '';
 
@@ -189,15 +212,17 @@ class InfoTool
             , 'dMemoryUsage' => (memory_get_usage () / 1024)
             , 'dMemoryPeakUsage' => (memory_get_peak_usage () / 1024)
         );
-        $aToolbar['aRegistry'] = \MVC\Registry::getStorageArray ();
+        $aToolbar['aRegistry'] = Registry::getStorageArray ();
         $aToolbar['sRegistry'] = $this->buildMarkupListTree($aToolbar['aRegistry']);
         $aToolbar['aCache'] = $this->buildMarkupListTree($this->getCaches());
-        $aToolbar['aError'] = \MVC\Error::getERROR();
+        $aToolbar['aError'] = Error::getERROR();
+
+        $aToolbar['aModuleCurrentConfig'] = $this->buildMarkupListTree(Config::MODULE());
 
         $iMicrotime = microtime (true);
         $sMicrotime = sprintf ("%06d", ($iMicrotime - floor ($iMicrotime)) * 1000000);
         $oDateTime = new \DateTime (date ('Y-m-d H:i:s.' . $sMicrotime, $iMicrotime));
-        $oStart = (false === empty(\MVC\Session::is()->get('startDateTime'))) ? \MVC\Session::is()->get('startDateTime') : new \DateTime (date ('Y-m-d H:i:s.' . $sMicrotime, $iMicrotime));
+        $oStart = (false === empty(Session::is()->get('startDateTime'))) ? Session::is()->get('startDateTime') : new \DateTime (date ('Y-m-d H:i:s.' . $sMicrotime, $iMicrotime));
         $dDiff = (date_format ($oDateTime, "s.u") - date_format ($oStart, "s.u"));
         $aToolbar['sConstructionTime'] = round ($dDiff, 3);
 
@@ -257,7 +282,7 @@ class InfoTool
         $aCache = array ();
         $oObjects = new \RecursiveIteratorIterator (
             new \RecursiveDirectoryIterator (
-                \MVC\Config::get_MVC_CACHE_DIR(),
+                Config::get_MVC_CACHE_DIR(),
                 0
             ),
             \RecursiveIteratorIterator::SELF_FIRST,
@@ -266,7 +291,7 @@ class InfoTool
 
         foreach ($oObjects as $sName => $oObject)
         {
-            $sTmp = str_replace (\MVC\Config::get_MVC_CACHE_DIR(), '', $sName);
+            $sTmp = str_replace (Config::get_MVC_CACHE_DIR(), '', $sName);
 
             if ($sTmp != '.' && $sTmp != '..')
             {

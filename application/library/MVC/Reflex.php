@@ -29,33 +29,27 @@ class Reflex
 
 	/**
 	 * executes the target (requested) controller class and its method
-     * @param array $aQueryArray
      * @return bool
      * @throws \ReflectionException
      */
-	public function reflect (array $aQueryArray = array ())
+	public function reflect ()
 	{
-		Event::run ('mvc.reflex.reflect.before',
+        $oDTRoute = Route::getCurrent();
+        $sModule = $oDTRoute->get_module();
+        $sClass = $oDTRoute-> get_c();
+        $sMethod = $oDTRoute->get_m();
+
+        Event::run ('mvc.reflex.reflect.before',
             DTArrayObject::create()
                 ->add_aKeyValue(
-                    DTKeyValue::create()->set_sKey('aQueryArray')->set_sValue($aQueryArray)
+                    DTKeyValue::create()->set_sKey('Route.getCurrent')->set_sValue($oDTRoute)
                 )
         );
 
-		if (empty ($aQueryArray))
-		{
-			return false;
-		}
-
-		(array_key_exists (Config::get_MVC_GET_PARAM_MODULE(), $aQueryArray['GET'])) ? $sModule = $aQueryArray['GET'][Config::get_MVC_GET_PARAM_MODULE()] : $sModule = '';
-		(array_key_exists (Config::get_MVC_GET_PARAM_C(), $aQueryArray['GET'])) ? $sClass = $aQueryArray['GET'][Config::get_MVC_GET_PARAM_C()] : $sClass = '';
-		(array_key_exists (Config::get_MVC_GET_PARAM_M(), $aQueryArray['GET'])) ? $sMethod = $aQueryArray['GET'][Config::get_MVC_GET_PARAM_M()] : $sMethod = '';
-		(array_key_exists (Config::get_MVC_GET_PARAM_A(), $aQueryArray['GET'])) ? $sArgs = $aQueryArray['GET'][Config::get_MVC_GET_PARAM_A()] : $sArgs = '';
-
-		// Fallback Target
+        // Fallback Target
 		if ($sModule == '' && $sClass == '')
 		{
-			parse_str (Router::getRoutingFallback(), $aParse);
+			parse_str (Config::get_MVC_ROUTING_FALLBACK(), $aParse);
 			$sControllerClassName = '\\' . ucfirst ($aParse[Config::get_MVC_GET_PARAM_MODULE()]) . '\\Controller\\' . ucfirst ($aParse[Config::get_MVC_GET_PARAM_C()]);
 		}
 		// Regular Target
@@ -63,8 +57,8 @@ class Reflex
 		{
 			$sControllerClassName = '\\' . ucfirst ($sModule) . '\\Controller\\' . ucfirst ($sClass);
 		}
-		
-		$sControllerFilename = Config::get_MVC_MODULES() . '/' . $sModule . '/Controller/' . $sClass . '.php';
+
+		$sControllerFilename = $oDTRoute->get_classFile();
 
 		if (file_exists ($sControllerFilename))
 		{
@@ -73,7 +67,7 @@ class Reflex
 				// Singleton or New
 				if (method_exists ($sControllerClassName, 'getInstance'))
 				{
-					$oReflectionObject = $sControllerClassName::getInstance ($sArgs);
+					$oReflectionObject = $sControllerClassName::getInstance ();
 
                     // run an event which KEY is
                     //		Class::method
@@ -87,14 +81,11 @@ class Reflex
                             ->add_aKeyValue(
                                 DTKeyValue::create()->set_sKey('sMethod')->set_sValue('getInstance')
                             )
-                            ->add_aKeyValue(
-                                DTKeyValue::create()->set_sKey('sArgs')->set_sValue($sArgs)
-                            )
                     );
 				}
 				else
 				{
-					$oReflectionObject = new $sControllerClassName ($sArgs);
+					$oReflectionObject = new $sControllerClassName ();
 
                     // run an event which KEY is
                     //		Class::method
@@ -108,9 +99,6 @@ class Reflex
                             ->add_aKeyValue(
                                 DTKeyValue::create()->set_sKey('sMethod')->set_sValue('__construct')
                             )
-                            ->add_aKeyValue(
-                                DTKeyValue::create()->set_sKey('sArgs')->set_sValue($sArgs)
-                            )
                     );
 				}
 
@@ -119,7 +107,7 @@ class Reflex
 					//@todo ERROR
 					$sMsg = 'ERROR: <br />Make sure `' . $sControllerClassName . '` <b>implements</b> \MVC\MVCInterface\Controller';
 					Log::write (strip_tags ($sMsg));
-					Helper::stop ($sMsg);
+					Debug::stop ($sMsg);
 				}
 
 				if ($sMethod != '')
@@ -142,9 +130,6 @@ class Reflex
                             ->add_aKeyValue(
                                 DTKeyValue::create()->set_sKey('sMethod')->set_sValue($sMethod)
                             )
-                            ->add_aKeyValue(
-                                DTKeyValue::create()->set_sKey('sArgs')->set_sValue($sArgs)
-                            )
                     );
 
                     // run an event which KEY is
@@ -159,19 +144,16 @@ class Reflex
                             ->add_aKeyValue(
                                 DTKeyValue::create()->set_sKey('sMethod')->set_sValue($sMethod)
                             )
-                            ->add_aKeyValue(
-                                DTKeyValue::create()->set_sKey('sArgs')->set_sValue($sArgs)
-                            )
                     );
 
 					// static Method or not-static
 					if (true === filter_var ($oReflectionMethod->isStatic (), FILTER_VALIDATE_BOOLEAN))
 					{
-						$oReflectionObject::$sMethod ($sArgs);
+						$oReflectionObject::$sMethod ();
 					}
 					else
 					{
-						$oReflectionObject->$sMethod ($sArgs);
+						$oReflectionObject->$sMethod ();
 					}
 					
 					Event::run ('mvc.reflex.reflect.targetObject.after',
@@ -181,9 +163,6 @@ class Reflex
                             )
                             ->add_aKeyValue(
                                 DTKeyValue::create()->set_sKey('sMethod')->set_sValue($sMethod)
-                            )
-                            ->add_aKeyValue(
-                                DTKeyValue::create()->set_sKey('sArgs')->set_sValue($sArgs)
                             )
                     );
 

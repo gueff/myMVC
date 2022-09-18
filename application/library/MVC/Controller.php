@@ -27,12 +27,9 @@ class Controller
 	{
 		Event::run ('mvc.controller.init.before', DTArrayObject::create());
 
-		// get Request Array
-		$aQueryArray = Request::getQueryVarArray();
-
-		// start requested Module/Class/Method/Arguments
+		// start requested Module/Class/Method
 		$oReflex = new Reflex();
-		$bSuccess = $oReflex->reflect ($aQueryArray);
+		$bSuccess = $oReflex->reflect ();
 
         Event::run ('mvc.controller.construct.after',
             DTArrayObject::create()
@@ -51,15 +48,15 @@ class Controller
      */
     public static function runTargetClassPreconstruct ()
     {
-        $sTargetModule = Config::get_MVC_MODULES() . '/' . Request::getModuleName();
-        $sTargetClass = Request::getTargetClass();
-        $sTargetClassFile = Request::getTargetClassFile();
+        $sTargetModule = Config::get_MVC_MODULES() . '/' . Route::getCurrent()->get_module();
+        $sTargetClass = Route::getCurrent()->get_class();
+        $sTargetClassFile = Route::getCurrent()->get_classFile();
         $sMethodNamePreconstruct = Config::get_MVC_METHODNAME_PRECONSTRUCT();
 
         if (false === file_exists($sTargetModule))
         {
             $sMessage = "\n"
-                        . "Module missing\n" . Request::getModuleName() . "\n\n"
+                        . "Module missing\n" . Route::getCurrent()->get_module() . "\n\n"
                         . "Expected Filepath Target Controller\n" . $sTargetClassFile . "\n\n"
                         . "Abort.\n\n"
                         . str_repeat('-', 80) . "\n\n"
@@ -73,7 +70,7 @@ class Controller
 
         if (!file_exists ($sTargetClassFile))
         {
-            parse_str (Router::getRoutingFallback(), $aParse);
+            parse_str (Config::get_MVC_ROUTING_FALLBACK(), $aParse);
             $sTargetClass = '\\' . ucfirst ($aParse[Config::get_MVC_GET_PARAM_MODULE()]) . '\\' . ucfirst ($aParse[Config::get_MVC_GET_PARAM_C()]);
         }
 
@@ -120,5 +117,4 @@ class Controller
                 )
         );
 	}
-	
 }

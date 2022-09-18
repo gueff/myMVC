@@ -14,7 +14,8 @@
 namespace {module}\View;
 
 use MVC\Config;
-use MVC\Registry;
+use MVC\DataType\DTRoute;
+use {module}\DataType\DTRoutingAdditional;
 
 /**
  * Index
@@ -23,16 +24,36 @@ use MVC\Registry;
 class Index extends \MVC\View
 {
     /**
+     * @var \MVC\View
+     */
+    protected static $_oInstance = NULL;
+
+    /**
      * Index constructor.
      * @throws \ReflectionException
      */
-	public function __construct ()
+    protected function __construct ()
 	{
 		parent::__construct ();
         $this->sendSecurityHeader();
 		$this->sContentVar = 'sContent';
 	}
 
+    /**
+     * @return \MVC\View|\{module}\View\Index|null
+     */
+    public static function init ()
+    {
+        if (null === self::$_oInstance)
+        {
+            self::$_oInstance = new self ();
+        }
+
+        Config::set_MVC_MODULE_CURRENT_VIEW(self::$_oInstance);
+
+        return self::$_oInstance;
+    }
+    
     /**
      * set HTTP Security Header
      * @return bool
@@ -66,45 +87,20 @@ class Index extends \MVC\View
     }
 
     /**
-     * @param array $aRouting
+     * @param \MVC\DataType\DTRoute|null $oDTRoute
      * @return void
      * @throws \ReflectionException
-     * @throws \SmartyException
      */
-    public function autoAssign(array $aRouting = array())
+    public function autoAssign(DTRoute $oDTRoute = null)
     {
-        $this->sTemplateRelative = get($aRouting['template']['layout'], Config::get_MVC_SMARTY_TEMPLATE_DEFAULT());
+        $oDTRoutingAdditional = DTRoutingAdditional::create(json_decode($oDTRoute->get_additional(), true));
+
+        $this->sTemplateRelative = (isset($oAdditional->layout)) ? $oAdditional->layout : Config::get_MVC_SMARTY_TEMPLATE_DEFAULT();
         $this->sTemplate = $this->sTemplateDir . '/' . $this->sTemplateRelative;
         $this->assign('sTemplateRelative', $this->sTemplateRelative);
         $this->assign('sTemplate', $this->sTemplate);
-        $this->assign('sTitle', get($aRouting['title'], ''));
-        $this->assign('aRegistry', Registry::getStorageArray());
-        $this->assign('aRouting', $aRouting);
-
-        foreach (get($aRouting['template']['var']['set'], array()) as $sKey => $sValue)
-        {
-            $this->assign($sKey, trim($sValue));
-        }
-
-        foreach (get($aRouting['template']['var']['load'], array()) as $sKey => $sValue)
-        {
-            $this->assign($sKey, trim($this->loadTemplateAsString ($sValue)));
-        }
-
-        $sStyle = '';
-        $sScript = '';
-
-        foreach (get($aRouting['template']['sStyle'], array()) as $sKey => $sValue)
-        {
-            $sStyle.= '<link href="' . $sValue . '" rel="stylesheet" type="text/css">' . "\n";
-        }
-
-        foreach (get($aRouting['template']['sScript'], array()) as $sKey => $sValue)
-        {
-            $sScript.='<script src="' . $sValue . '" type="text/javascript"></script>' . "\n";
-        }
-
-        $this->assign('sStyle', $sStyle);
-        $this->assign('sScript', $sScript);
+        $this->assign('oDTRoute', $oDTRoute);
+        $this->assign('oDTRoutingAdditional', $oDTRoutingAdditional);
+        $this->assign('layout', trim($this->loadTemplateAsString($oDTRoutingAdditional->get_sLayout())));
     }
 }

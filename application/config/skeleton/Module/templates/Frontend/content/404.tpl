@@ -11,4 +11,3 @@
     {include file="Frontend/content/info.tpl"}
     <hr>
 </div> <!-- /container -->
-

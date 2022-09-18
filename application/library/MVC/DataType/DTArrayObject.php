@@ -10,10 +10,8 @@
 /**
  * @name $MVCDataType
  */
-
 namespace MVC\DataType;
 
-use MVC\Helper;
 
 class DTArrayObject
 {
@@ -231,7 +229,6 @@ class DTArrayObject
      */
     public function getDataTypeConfigJSON()
     {
-        return '{"name":"ArrayObject","file":"ArrayObject.php","extends":"","namespace":"MVC\\\\DataType","constant":[],"property":[{"key":"aKeyValue","var":"\\\\MVC\\\\DataType\\\\DTKeyValue[]","value":"array()","visibility":"protected","static":false,"setter":true,"getter":true,"explicitMethodForValue":false,"listProperty":true,"createStaticPropertyGetter":true,"setValueInConstructor":true}],"createHelperMethods":true}';
+        return '{"name":"DTArrayObject","file":"DTArrayObject.php","extends":"","namespace":"MVC\\\\DataType","constant":[],"property":[{"key":"aKeyValue","var":"\\\\MVC\\\\DataType\\\\DTKeyValue[]","value":"array()","visibility":"protected","static":false,"setter":true,"getter":true,"explicitMethodForValue":false,"listProperty":true,"createStaticPropertyGetter":true,"setValueInConstructor":true}],"createHelperMethods":true}';
     }
-
 }

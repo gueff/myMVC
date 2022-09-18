@@ -1,4 +1,12 @@
 <?php
+/**
+ * Strings.php
+ *
+ * @package myMVC
+ * @copyright ueffing.net
+ * @author Guido K.B.W. Üffing <info@ueffing.net>
+ * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
+ */
 
 namespace MVC;
 
@@ -54,5 +62,22 @@ class Strings
         $sString = (string) preg_replace('/[^-a-z0-9_]+/', '', $sString);
 
         return $sString;
+    }
+
+    /**
+     * @param $sString
+     * @return bool
+     */
+    public static function isJson($sString = '')
+    {
+        if (false === is_string($sString))
+        {
+            return false;
+        }
+
+        json_decode($sString);
+        $bIsJson = (json_last_error() === JSON_ERROR_NONE);
+
+        return $bIsJson;
     }
 }

@@ -3,11 +3,13 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<title>{$sTitle}</title>
+		<title>{$oDTRoutingAdditional->get_sTitle()}</title>
 
 		<link rel="icon" href="/favicon.ico">
 
-		{$sStyle}
+		{foreach key=sKey item=sItem from=$oDTRoutingAdditional->get_aStyle()}
+		<link href="{$sItem}" rel="stylesheet" type="text/css">
+		{/foreach}
 
 		<style>
 			{literal}
@@ -22,18 +24,20 @@
 	<body>
 		<a name="top"></a>
 
-		{$sMainmenu}
+		{{module}\View\Index::init()->loadTemplateAsString($oDTRoutingAdditional->get_sMainmenu())}
 
 		<main role="main">
 
-			{$sContent}
+			{{module}\View\Index::init()->loadTemplateAsString($oDTRoutingAdditional->get_sContent())}
 
 		</main>
 
-		{$sFooter}
-		{$sNoscript}
-		{$sCookieConsent}
+		{{module}\View\Index::init()->loadTemplateAsString($oDTRoutingAdditional->get_sFooter())}
+		{{module}\View\Index::init()->loadTemplateAsString($oDTRoutingAdditional->get_sNoscript())}
+		{{module}\View\Index::init()->loadTemplateAsString($oDTRoutingAdditional->get_sCookieConsent())}
 
-		{$sScript}
+		{foreach key=sKey item=sItem from=$oDTRoutingAdditional->get_aScript()}
+		<script src="{$sItem}" type="text/javascript"></script>
+		{/foreach}
 	</body>
 </html>

@@ -53,23 +53,14 @@ $aConfig['MODULE']['{module}']['EVENT_BIND'] = array(
         // minify css + js files (if necessary)
         function(\MVC\DataType\DTArrayObject $oDTArrayObject) use ($aConfig) {
             \MVC\Minify::init();
-        },
-        // create/update ".myMVC.json" routing file (if necessary)
-        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \MVC\Router::createFinalJson();
         }
     ),
     'mvc.reflex.reflect.targetObject.after' => array(
         function (\MVC\DataType\DTArrayObject $oDTArrayObject) {
             if (true === Config::get_MVC_INFOTOOL_ENABLE())
             {
-                // load InfoTool
-                $oView = $oDTArrayObject
-                    ->getDTKeyValueByKey('oReflectionObject')
-                    ->get_sValue()
-                    ->oView;
                 // switch on InfoTool
-                new \MVC\InfoTool($oView);
+                new \MVC\InfoTool(\{module}\View\Index::init());
             }
         },
     ),

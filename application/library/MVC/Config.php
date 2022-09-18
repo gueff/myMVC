@@ -107,81 +107,11 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_GET_PARAM_A()
+    public static function get_MVC_MODULE_CURRENT_ETC_DIR()
     {
-        if (Registry::isRegistered('MVC_GET_PARAM_A'))
+        if (Registry::isRegistered('MVC_MODULE_CURRENT_ETC_DIR'))
         {
-            return (string) Registry::get('MVC_GET_PARAM_A');
-        }
-
-        return '';
-    }
-
-    /**
-     * @return string
-     * @throws \ReflectionException
-     */
-    public static function get_MVC_ROUTING_HANDLING()
-    {
-        if (Registry::isRegistered('MVC_ROUTING_HANDLING'))
-        {
-            return (string) Registry::get('MVC_ROUTING_HANDLING');
-        }
-
-        return '';
-    }
-
-    /**
-     * @return string
-     * @throws \ReflectionException
-     */
-    public static function get_MVC_ROUTING_JSON()
-    {
-        if (Registry::isRegistered('MVC_ROUTING_JSON'))
-        {
-            return (string) Registry::get('MVC_ROUTING_JSON');
-        }
-
-        return '';
-    }
-
-    /**
-     * @return string
-     * @throws \ReflectionException
-     */
-    public static function get_MVC_ROUTING_JSON_BUILDER()
-    {
-        if (Registry::isRegistered('MVC_ROUTING_JSON_BUILDER'))
-        {
-            return (string) Registry::get('MVC_ROUTING_JSON_BUILDER');
-        }
-
-        return '';
-    }
-
-    /**
-     * @return string
-     * @throws \ReflectionException
-     */
-    public static function get_MVC_ROUTER_JSON()
-    {
-        if (Registry::isRegistered('MVC_ROUTER_JSON'))
-        {
-            return (string) Registry::get('MVC_ROUTER_JSON');
-        }
-
-        return '';
-    }
-
-    /**
-     * @return string
-     * @throws \ReflectionException
-     */
-    public static function get_MVC_INTERFACE_ROUTER_JSON()
-    {
-        if (Registry::isRegistered('MVC_INTERFACE_ROUTER_JSON'))
-        {
-            return (string) Registry::get('MVC_INTERFACE_ROUTER_JSON');
+            return (string) Registry::get('MVC_MODULE_CURRENT_ETC_DIR');
         }
 
         return '';
@@ -528,33 +458,10 @@ class Config
     }
 
     /**
-     * @return array
-     * @throws \ReflectionException
-     */
-    public static function get_MVC_REQUEST_WHITELIST_PARAMS()
-    {
-        if (Registry::isRegistered('MVC_REQUEST_WHITELIST_PARAMS'))
-        {
-            return (array) Registry::get('MVC_REQUEST_WHITELIST_PARAMS');
-        }
-
-        return array();
-    }
-
-    /**
-     * @param array $aWhitelistParam
-     * @return void
-     */
-    public static function set_MVC_REQUEST_WHITELIST_PARAMS(array $aWhitelistParam = array())
-    {
-        Registry::set('MVC_REQUEST_WHITELIST_PARAMS', $aWhitelistParam);
-    }
-
-    /**
      * @return bool
      * @throws \ReflectionException
      */
-    public static function get_MVC_CLI ()
+    public static function get_MVC_CLI()
     {
         if (Registry::isRegistered('MVC_CLI'))
         {
@@ -653,7 +560,7 @@ class Config
      * @return array
      * @throws \ReflectionException
      */
-    public static function get_MVC_POLICY ()
+    public static function get_MVC_POLICY()
     {
         if (Registry::isRegistered('MVC_POLICY'))
         {
@@ -695,7 +602,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_UNIQUE_ID ()
+    public static function get_MVC_UNIQUE_ID()
     {
         if (Registry::isRegistered('MVC_UNIQUE_ID'))
         {
@@ -732,81 +639,6 @@ class Config
     }
 
     /**
-     * @return array
-     * @throws \ReflectionException
-     */
-    public static function get_MVC_REQUEST_QUERYVAR ()
-    {
-        if (Registry::isRegistered('MVC_REQUEST_QUERYVAR'))
-        {
-            return (array) Registry::get('MVC_REQUEST_QUERYVAR');
-        }
-
-        return array();
-    }
-
-    /**
-     * @param array $aQueryVar
-     * @return void
-     */
-    public static function set_MVC_REQUEST_QUERYVAR(array $aQueryVar = array())
-    {
-        Registry::set('MVC_REQUEST_QUERYVAR', $aQueryVar);
-    }
-
-    /**
-     * @return array
-     * @throws \ReflectionException
-     */
-    public static function get_MVC_ROUTING()
-    {
-        if (Registry::isRegistered('MVC_ROUTING'))
-        {
-            return (array) Registry::get('MVC_ROUTING');
-        }
-
-        return array();
-    }
-
-    /**
-     * @param array $aRouting
-     * @return void
-     */
-    public static function set_MVC_ROUTING(array $aRouting = array())
-    {
-        Registry::set (
-            'MVC_ROUTING',
-            $aRouting
-        );
-    }
-
-    /**
-     * @return array
-     * @throws \ReflectionException
-     */
-    public static function get_MVC_ROUTING_CURRENT()
-    {
-        if (Registry::isRegistered('MVC_ROUTING_CURRENT'))
-        {
-            return (array) Registry::get('MVC_ROUTING_CURRENT');
-        }
-
-        return array();
-    }
-
-    /**
-     * @param array $aRouting
-     * @return void
-     */
-    public static function set_MVC_ROUTING_CURRENT(array $aRouting = array())
-    {
-        Registry::set (
-            'MVC_ROUTING_CURRENT',
-            $aRouting
-        );
-    }
-
-    /**
      * @return string
      * @throws \ReflectionException
      */
@@ -829,7 +661,7 @@ class Config
     {
         if ('' === $sModule)
         {
-            $sModule = Request::getModuleName();
+            $sModule = Route::getCurrent()->get_module();
         }
 
         if (Registry::isRegistered('MODULE'))
@@ -838,5 +670,127 @@ class Config
         }
 
         return array();
+    }
+
+    /**
+     * returns config settings array of current module | or config of given module
+     * @return array
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_CORE($sModule = '')
+    {
+        if (Registry::isRegistered('MVC_CORE'))
+        {
+            return (array) Registry::get('MVC_CORE');
+        }
+
+        return array();
+    }
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_ENV()
+    {
+        if (Registry::isRegistered('MVC_ENV'))
+        {
+            return (string) Registry::get('MVC_ENV');
+        }
+
+        return '?';
+    }
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_VERSION()
+    {
+        return (Registry::isRegistered('MVC_CORE') && isset(Registry::get('MVC_CORE')['version']))
+            ? Registry::get('MVC_CORE')['version']
+            : '?';
+    }
+
+    /**
+     * @return array
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_CACHE_CONFIG()
+    {
+        if (Registry::isRegistered('MVC_CACHE_CONFIG'))
+        {
+            return (array) Registry::get('MVC_CACHE_CONFIG');
+        }
+
+        return array();
+    }
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_MODULE_CURRENT_COMPOSER_DIR()
+    {
+        if (Registry::isRegistered('MVC_MODULE_CURRENT_COMPOSER_DIR'))
+        {
+            return (string) Registry::get('MVC_MODULE_CURRENT_COMPOSER_DIR');
+        }
+
+        return '';
+    }
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_MODULE_CURRENT_CONFIG_DIR()
+    {
+        if (Registry::isRegistered('MVC_MODULE_CURRENT_CONFIG_DIR'))
+        {
+            return (string) Registry::get('MVC_MODULE_CURRENT_CONFIG_DIR');
+        }
+
+        return '';
+    }
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_MODULE_CURRENT_STAGING_CONFIG_DIR()
+    {
+        if (Registry::isRegistered('MVC_MODULE_CURRENT_STAGING_CONFIG_DIR'))
+        {
+            return (string) Registry::get('MVC_MODULE_CURRENT_STAGING_CONFIG_DIR');
+        }
+
+        return '';
+    }
+
+    /**
+     * @param \MVC\View $oView
+     * @return void
+     */
+    public static function set_MVC_MODULE_CURRENT_VIEW(\MVC\View $oView)
+    {
+        Registry::set('MVC_MODULE_CURRENT_VIEW', $oView);
+    }
+
+    /**
+     * @return \MVC\View|null
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_MODULE_CURRENT_VIEW()
+    {
+        $oView = null;
+
+        if (Registry::isRegistered('MVC_MODULE_CURRENT_VIEW'))
+        {
+            /** @var \MVC\View $oView */
+            $oView = Registry::get('MVC_MODULE_CURRENT_VIEW');
+        }
+
+        return $oView;
     }
 }

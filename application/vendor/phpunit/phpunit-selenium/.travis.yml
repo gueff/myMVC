@@ -1,0 +1,12 @@
+language: php
+dist: xenial
+php:
+  - 7.3
+  - 7.4
+
+matrix:
+    allow_failures:
+        - php: hhvm
+
+before_script: ./.ci/before_script.sh
+script: "vendor/bin/phpunit Tests"

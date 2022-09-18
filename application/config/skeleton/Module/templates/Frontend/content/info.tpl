@@ -11,6 +11,6 @@
     </div>
     <div class="col-md-6">
         <h2>Content Template</h2>
-        <small>{$aRouting.template.var.load.sContent}</small>
+        <small>{$oDTRoutingAdditional->get_sContent()}</small>
     </div>
 </div>

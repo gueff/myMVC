@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Minify.php
  *
@@ -33,19 +32,6 @@ class Minify
     public static function init(array $aContentFilterMinify = array())
     {
         (true === empty($aContentFilterMinify)) ? $aContentFilterMinify = array(Config::get_MVC_PUBLIC_PATH()) : false;
-
-        // take config from registry or take fallback config
-        $aCachixConfig = (true === Registry::isRegistered('CACHIX_CONFIG'))
-            ? Registry::get('CACHIX_CONFIG')
-            : array(
-                'bCaching' => true,
-                'sCacheDir' => Config::get_MVC_CACHE_DIR(),
-                'iDeleteAfterMinutes' => 1440,
-                'sBinRemove' => '/bin/rm',
-                'sBinFind' => '/usr/bin/find',
-                'sBinGrep' => '/bin/grep'
-            );
-        \Cachix::init($aCachixConfig);
         $bSuccess = true;
         $aFile = [];
 
@@ -67,7 +53,7 @@ class Minify
         $sCacheContent = md5(json_encode($aFile));
 
         // nothing to do because of no changes
-        if ($sCacheContent === \Cachix::getCache($sCacheKey))
+        if ($sCacheContent === Cache::getCache($sCacheKey))
         {
             return self::$bMinifySuccess;
         }
@@ -91,7 +77,7 @@ class Minify
         }
 
         // update cache
-        \Cachix::saveCache($sCacheKey, $sCacheContent);
+        Cache::saveCache($sCacheKey, $sCacheContent);
 
         return self::$bMinifySuccess;
     }

@@ -1,4 +1,12 @@
 <?php
+/**
+ * Debug.php
+ *
+ * @package myMVC
+ * @copyright ueffing.net
+ * @author Guido K.B.W. Üffing <info@ueffing.net>
+ * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
+ */
 
 namespace MVC;
 
@@ -124,18 +132,20 @@ class Debug
     /**
      * Stops any further execution: exits the script.
      * Shows a Message from where the STOP command was called (default).
-     * @param mixed $mData          default=''
-     * @param bool  $bShowWhereStop default=true
-     * @param bool  $bDump          default=true
+     * @param       $mData
+     * @param       $bShowWhereStop
+     * @param       $bDump
+     * @param array $aBacktrace
+     * @return void
      * @throws \ReflectionException
      */
-    public static function stop($mData = '', $bShowWhereStop = true, $bDump = true)
+    public static function stop($mData = '', $bShowWhereStop = true, $bDump = true, array $aBacktrace = array())
     {
         static $iCount;
         $iCount++;
 
         // source
-        $aBacktrace = self::prepareBacktraceArray(debug_backtrace());
+        (true === empty($aBacktrace)) ? $aBacktrace = self::prepareBacktraceArray(debug_backtrace()) : false;
 
         if (true === $bDump)
         {
