@@ -84,16 +84,17 @@ FIRST_LOG_ENTRY_ON_NEW_REQUEST: {
                 . "\t" . (array_key_exists ('REQUEST_METHOD', $_SERVER) ? (string) $_SERVER['REQUEST_METHOD'] : '')
                 . ' ' . (array_key_exists ('REQUEST_URI', $_SERVER) ? (string) $_SERVER['REQUEST_URI'] : '');
     $sMessage = ''
-                . date ("Y-m-d H:i:s")
+                . date("Y-m-d H:i:s")
                 . "\t" . ((false !== getenv('MVC_ENV')) ? getenv('MVC_ENV') : '---?---')
                 . "\t" . ((array_key_exists('REMOTE_ADDR', $_SERVER)) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1')
                 . "\t" . ((array_key_exists('MVC_UNIQUE_ID', $GLOBALS['aConfig'])) ? $GLOBALS['aConfig']['MVC_UNIQUE_ID'] : '---')
-                . "\t" . (('' !== session_id ()) ? session_id () : str_pad ('...........no session', 32, '.'))
+                . "\t" . (('' !== session_id()) ? session_id() : str_pad('...........no session', 32, '.'))
                 . "\t" . 0
                 . "\t" . $sMessage
                 . "\n";
 
-    file_put_contents ($GLOBALS['aConfig']['MVC_LOG_FILE_DEFAULT'], $sMessage,FILE_APPEND);
+    (false === file_exists($GLOBALS['aConfig']['MVC_LOG_FILE_DEFAULT'])) ? touch($GLOBALS['aConfig']['MVC_LOG_FILE_DEFAULT']) : false;
+    file_put_contents($GLOBALS['aConfig']['MVC_LOG_FILE_DEFAULT'], $sMessage,FILE_APPEND);
     $sMessage = null;
     unset($sMessage);
 }
