@@ -6,24 +6,7 @@
     "license": "GPL-3.0-or-later",
     "homepage": "https://mymvc.ueffing.net/",
     "require": {
-        "php": ">=7.4",
-        "ext-ctype": "*",
-        "ext-curl": "*",
-        "ext-date": "*",
-        "ext-dom": "*",
-        "ext-fileinfo": "*",
-        "ext-filter": "*",
-        "ext-iconv": "*",
-        "ext-json": "*",
-        "ext-mbstring": "*",
-        "ext-phar": "*",
-        "ext-posix": "*",
-        "ext-reflection": "*",
-        "ext-session": "*",
-        "ext-simplexml": "*",
-        "ext-standard": "*",
-        "ext-spl": "*",
-        "ext-zip": "*"
+        "php": ">=7.4"
     },
     "authors": [
         {
