@@ -7,7 +7,6 @@
     "homepage": "https://mymvc.ueffing.net/",
     "require": {
         "php": ">=7.4",
-        "ext-core": "*",
         "ext-ctype": "*",
         "ext-curl": "*",
         "ext-date": "*",
