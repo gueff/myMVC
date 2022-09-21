@@ -53,7 +53,7 @@ MVC_ENV: {
     $aConfig['MVC_ENV'] = getenv('MVC_ENV');
 }
 
-MVC_CONFIG: {
+CONFIG: {
 
     // place of main myMVC config
     $aConfig['MVC_CONFIG_DIR'] = realpath(__DIR__ . '/../../../') . '/config';
@@ -65,6 +65,48 @@ MVC_CONFIG: {
         $sFile = null;
         unset ($sFile);
     }
+
+    #-----------------------------
+
+    // get modules
+    $aModule = glob($aConfig['MVC_MODULES'] . '/*', GLOB_ONLYDIR);
+
+    // walk modules
+    foreach ($aModule as $sModule)
+    {
+        if (file_exists($sModule . '/etc/config/'))
+        {
+            // load common config files
+            foreach (glob ($sModule . '/etc/config/*.php') as $sFile)
+            {
+                require_once $sFile;
+            }
+
+            // load staging config
+            $sConfigFileName =
+                $sModule
+                . '/etc/config/'
+                . basename($sModule)
+                . '/config/'
+                . getenv('MVC_ENV')
+                . '.php';
+
+            if (file_exists($sConfigFileName))
+            {
+                include $sConfigFileName;
+            }
+
+            // External composer Libraries
+            $sVendorAutoload = $sModule . '/etc/config/' . basename($sModule) . '/vendor/autoload.php';
+
+            if (file_exists($sVendorAutoload))
+            {
+                require_once $sVendorAutoload;
+            }
+        }
+    }
+
+    #-----------------------------
 
     // load requirements from /application/config/util/_myMVC.php
     require_once __DIR__ . '/_myMVC.php';

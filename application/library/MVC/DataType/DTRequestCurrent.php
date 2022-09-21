@@ -7,7 +7,7 @@ namespace MVC\DataType;
 
 class DTRequestCurrent
 {
-	const DTHASH = 'a3facc8726426cf7e8b034ae6807a5cc';
+	const DTHASH = 'fe6185dcf19cad204306514f47a0899e';
 
 	/**
 	 * @var string
@@ -37,12 +37,22 @@ class DTRequestCurrent
 	/**
 	 * @var string
 	 */
+	protected $requestmethod;
+
+	/**
+	 * @var string
+	 */
 	protected $protocol;
 
 	/**
 	 * @var string
 	 */
 	protected $full;
+
+	/**
+	 * @var string
+	 */
+	protected $input;
 
 	/**
 	 * DTRequestCurrent constructor.
@@ -58,8 +68,10 @@ class DTRequestCurrent
 		$this->path = array();
 		$this->query = '';
 		$this->requesturi = '';
+		$this->requestmethod = '';
 		$this->protocol = '';
 		$this->full = '';
+		$this->input = '';
 
 		foreach ($aData as $sKey => $mValue)
 		{
@@ -165,6 +177,20 @@ class DTRequestCurrent
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
+	public function set_requestmethod($mValue)
+	{
+		\MVC\Event::RUN ('DTRequestCurrent.set_requestmethod.before', \MVC\DataType\DTArrayObject::create(array('requestmethod' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+
+		$this->requestmethod = $mValue;
+
+		return $this;
+	}
+
+	/**
+	 * @param string $mValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
 	public function set_protocol($mValue)
 	{
 		\MVC\Event::RUN ('DTRequestCurrent.set_protocol.before', \MVC\DataType\DTArrayObject::create(array('protocol' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
@@ -184,6 +210,20 @@ class DTRequestCurrent
 		\MVC\Event::RUN ('DTRequestCurrent.set_full.before', \MVC\DataType\DTArrayObject::create(array('full' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
 
 		$this->full = $mValue;
+
+		return $this;
+	}
+
+	/**
+	 * @param string $mValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
+	public function set_input($mValue)
+	{
+		\MVC\Event::RUN ('DTRequestCurrent.set_input.before', \MVC\DataType\DTArrayObject::create(array('input' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+
+		$this->input = $mValue;
 
 		return $this;
 	}
@@ -247,6 +287,17 @@ class DTRequestCurrent
 	 * @return string
 	 * @throws \ReflectionException
 	 */
+	public function get_requestmethod()
+	{
+		\MVC\Event::RUN ('DTRequestCurrent.get_requestmethod.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('requestmethod')->set_sValue($this->requestmethod))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+
+		return $this->requestmethod;
+	}
+
+	/**
+	 * @return string
+	 * @throws \ReflectionException
+	 */
 	public function get_protocol()
 	{
 		\MVC\Event::RUN ('DTRequestCurrent.get_protocol.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('protocol')->set_sValue($this->protocol))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
@@ -263,6 +314,17 @@ class DTRequestCurrent
 		\MVC\Event::RUN ('DTRequestCurrent.get_full.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('full')->set_sValue($this->full))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
 
 		return $this->full;
+	}
+
+	/**
+	 * @return string
+	 * @throws \ReflectionException
+	 */
+	public function get_input()
+	{
+		\MVC\Event::RUN ('DTRequestCurrent.get_input.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('input')->set_sValue($this->input))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+
+		return $this->input;
 	}
 
 	/**
@@ -308,6 +370,14 @@ class DTRequestCurrent
 	/**
 	 * @return string
 	 */
+	public static function getPropertyName_requestmethod()
+	{
+        return 'requestmethod';
+	}
+
+	/**
+	 * @return string
+	 */
 	public static function getPropertyName_protocol()
 	{
         return 'protocol';
@@ -319,6 +389,14 @@ class DTRequestCurrent
 	public static function getPropertyName_full()
 	{
         return 'full';
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getPropertyName_input()
+	{
+        return 'input';
 	}
 
 	/**

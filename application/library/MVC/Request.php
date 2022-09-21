@@ -20,7 +20,8 @@ use MVC\DataType\DTRequestCurrent;
 class Request
 {
     /**
-     * @param       $sMethod _GET|_POST|_COOKIE
+     * @deprecated
+     * @param       $sMethod GET|POST|COOKIE
      * @param array $aConfig
      * @return void
      */
@@ -68,6 +69,8 @@ class Request
         $oDTRequestCurrent->set_requesturi(self::getServerRequestUri());
         $oDTRequestCurrent->set_protocol(self::getUriProtocol());
         $oDTRequestCurrent->set_full(self::getUriProtocol() . $_SERVER['HTTP_HOST'] . self::getServerRequestUri());
+        $oDTRequestCurrent->set_requestmethod(Request::getServerRequestMethod());
+        $oDTRequestCurrent->set_input(file_get_contents("php://input"));
 
         return $oDTRequestCurrent;
     }

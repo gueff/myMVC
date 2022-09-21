@@ -5,15 +5,6 @@ use MVC\Config;
 error_reporting(E_ALL);
 date_default_timezone_set('Europe/Berlin');
 
-// enable debug output
-$aConfig['MVC_DEBUG'] = true;
-
-// show InfoTool bar
-$aConfig['MVC_INFOTOOL_ENABLE'] = true;
-
-// MVC fallback routing
-$aConfig['MVC_ROUTING_FALLBACK'] = 'module={module}&c=index&m=notFound'; # query
-
 //-------------------------------------------------------------------------------------
 // Module {module}
 
@@ -39,7 +30,6 @@ $aConfig['MODULE']['{module}']['SESSION'] = array(
 
 /**
  * Event Bindings
- * @see https://mymvc.ueffing.net/
  */
 $aConfig['MODULE']['{module}']['EVENT_BIND'] = array(
 
@@ -77,10 +67,10 @@ $aConfig['MODULE']['{module}']['EVENT_BIND'] = array(
     ),
 );
 
-//-------------------------------------------------------------------------------------
-// Module {module} CSP
-// For further Rules Explanation @see https://content-security-policy.com/
-
+/**
+ * Module {module} CSP
+ * For further Rules Explanation @see https://content-security-policy.com/
+ */
 $aConfig['MODULE']['{module}']['CSP'] = array();
 
 // Websites (URLs) which are allowed to embed our Site into e.g. a <frame>

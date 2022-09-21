@@ -57,19 +57,25 @@ class Application
 
 	/**
 	 * inits a session and copies it to the registry
-     * @return void
+     * @return bool init
      * @throws \ReflectionException
      */
-	private static function initSession ()
+	public static function initSession()
 	{
+        // don't run again if this already has been run
+        if (null !== Config::get_MVC_SESSION())
+        {
+            return false;
+        }
+
 		Event::run ('mvc.application.setSession.before');
 
         (!file_exists (Config::get_MVC_SESSION_PATH())) ? mkdir (Config::get_MVC_SESSION_PATH()) : false;
 
         $oSession = Session::is();
-        $iMicrotime = microtime (true);
-        $sMicrotime = sprintf ("%06d", ($iMicrotime - floor ($iMicrotime)) * 1000000);
-        $oSession->set ('startDateTime', new \DateTime (date ('Y-m-d H:i:s.' . $sMicrotime, $iMicrotime)));
+        $fMicrotime = microtime (true);
+        $sMicrotime = sprintf ("%06d", ($fMicrotime - floor ($fMicrotime)) * 1000000);
+        $oSession->set ('startDateTime', new \DateTime (date ('Y-m-d H:i:s.' . $sMicrotime)));
         $oSession->set ('uniqueid', Config::get_MVC_UNIQUE_ID());
         
         // copy Session Object to registry
@@ -81,6 +87,8 @@ class Application
                     DTKeyValue::create()->set_sKey('oSession')->set_sValue($oSession)
                 )
         );
+
+        return true;
 	}
 
     /**

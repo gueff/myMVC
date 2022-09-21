@@ -2,7 +2,7 @@
 
 /*
  * this DataType class "\{module}\DataType\DTRoutingAdditional" is generated
- * @see modules/{module}/generateDataTypes.php
+ * @see modules/{module}/etc/config/DataType/_generate.php
  */
 $oDTRoutingAdditional = \{module}\DataType\DTRoutingAdditional::create()
     ->set_sTitle('{module}')

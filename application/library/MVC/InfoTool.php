@@ -64,7 +64,7 @@ class InfoTool
         // inject toolbar var to regular string output via DOM
         if (true === isset($aToolbar['sRendered']) && false === empty($aToolbar['sRendered']))
         {
-            $oDom = new \DOMDocument(null, null);
+            $oDom = new \DOMDocument('', '');
 
             // prevent error messages occuring by using DOM
             // @see http://stackoverflow.com/a/6090728/2487859
@@ -219,10 +219,10 @@ class InfoTool
 
         $aToolbar['aModuleCurrentConfig'] = $this->buildMarkupListTree(Config::MODULE());
 
-        $iMicrotime = microtime (true);
-        $sMicrotime = sprintf ("%06d", ($iMicrotime - floor ($iMicrotime)) * 1000000);
-        $oDateTime = new \DateTime (date ('Y-m-d H:i:s.' . $sMicrotime, $iMicrotime));
-        $oStart = (false === empty(Session::is()->get('startDateTime'))) ? Session::is()->get('startDateTime') : new \DateTime (date ('Y-m-d H:i:s.' . $sMicrotime, $iMicrotime));
+        $fMicrotime = microtime (true);
+        $sMicrotime = sprintf ("%06d", ($fMicrotime - floor ($fMicrotime)) * 1000000);
+        $oDateTime = new \DateTime (date ('Y-m-d H:i:s.' . $sMicrotime));
+        $oStart = (false === empty(Session::is()->get('startDateTime'))) ? Session::is()->get('startDateTime') : new \DateTime (date ('Y-m-d H:i:s.' . $iMicrotime2, $iMicrotime));
         $dDiff = (date_format ($oDateTime, "s.u") - date_format ($oStart, "s.u"));
         $aToolbar['sConstructionTime'] = round ($dDiff, 3);
 

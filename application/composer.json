@@ -1,7 +1,7 @@
 {
   "require": {
     "php": ">=7.4",
-    "smarty/smarty": "4.1.1",
+    "smarty/smarty": "4.2.1",
     "ezyang/htmlpurifier": "v4.14.0",
     "gueff/cachix": "1.0.0",
     "mrclay/jsmin-php": "2.4.1",

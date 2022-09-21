@@ -53,7 +53,10 @@ blue: hsl(210,50%,50%)
 </style>
 <div id="myMvcToolbar" class="myMvcToolbar_expand">
 	<div id="myMvcToolbar_head" class="myMvcToolbar_expand">
-		<span>PHP {$aToolbar.sPHP}, Operating System {$aToolbar.sOS}, Construction Time: {$aToolbar.sConstructionTime} s</span>
+		<span>
+			PHP {$aToolbar.sPHP}, Operating System {$aToolbar.sOS}, Construction Time: {$aToolbar.sConstructionTime} s,
+			<a href="https://mymvc.ueffing.net/" target="_blank">Documentation</a>
+		</span>
 		<br>
 		<span>myMVC: {$aToolbar.sMyMvcVersion}, MVC_ENV: {$aToolbar.sEnv}, MVC_UNIQUE_ID: {$aToolbar.sUniqueId}, session_id(): {$aToolbar.session_id}</span>
 	</div>

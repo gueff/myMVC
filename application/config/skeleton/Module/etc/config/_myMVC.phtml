@@ -4,15 +4,18 @@
 // MVC
 
 // enable debug output
-$aConfig['MVC_DEBUG'] = false;
+$aConfig['MVC_DEBUG'] = true;
 
-/**
- * Misc
- */
+// show InfoTool bar
+$aConfig['MVC_INFOTOOL_ENABLE'] = true;
+
+// MVC fallback routing
+$aConfig['MVC_ROUTING_FALLBACK'] = 'module={module}&c=index&m=notFound';
+
 // override MVC's fallback routing
 $aConfig['MVC_ROUTING_FALLBACK'] = $aConfig['MVC_GET_PARAM_MODULE'] . '={module}&'
     . $aConfig['MVC_GET_PARAM_C'] . '=index&'
-    . $aConfig['MVC_GET_PARAM_M'] . '=index';
+    . $aConfig['MVC_GET_PARAM_M'] . '=notFound';
 
 // module's config dir
 $aConfig['MVC_MODULE_CURRENT_ETC_DIR'] = $aConfig['MVC_MODULES'] . '/{module}/etc';

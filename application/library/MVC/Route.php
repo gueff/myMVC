@@ -48,9 +48,9 @@ class Route
      * @return void
      * @throws \ReflectionException
      */
-    public static function get($sPath = '', $sQuery = '', $mOptional = '')
+    public static function GET($sPath = '', $sQuery = '', $mOptional = '')
     {
-        self::add('get', $sPath, $sQuery, $mOptional);
+        self::add('GET', $sPath, $sQuery, $mOptional);
     }
 
     /**
@@ -60,9 +60,9 @@ class Route
      * @return void
      * @throws \ReflectionException
      */
-    public static function post($sPath = '', $sQuery = '', $mOptional = '')
+    public static function POST($sPath = '', $sQuery = '', $mOptional = '')
     {
-        self::add('post', $sPath, $sQuery, $mOptional);
+        self::add('POST', $sPath, $sQuery, $mOptional);
     }
 
     /**
@@ -72,9 +72,9 @@ class Route
      * @return void
      * @throws \ReflectionException
      */
-    public static function put($sPath = '', $sQuery = '', $mOptional = '')
+    public static function PUT($sPath = '', $sQuery = '', $mOptional = '')
     {
-        self::add('put', $sPath, $sQuery, $mOptional);
+        self::add('PUT', $sPath, $sQuery, $mOptional);
     }
 
     /**
@@ -84,33 +84,43 @@ class Route
      * @return void
      * @throws \ReflectionException
      */
-    public static function delete($sPath = '', $sQuery = '', $mOptional = '')
+    public static function DELETE($sPath = '', $sQuery = '', $mOptional = '')
     {
-        self::add('delete', $sPath, $sQuery, $mOptional);
+        self::add('DELETE', $sPath, $sQuery, $mOptional);
     }
 
     /**
      * @param $sMethod
      * @param $sPath
-     * @param $sQuery
+     * @param $sQuery e.g: 'module=Foo&c=Api&m=bar' OR '\Foo\Controller\Api::bar'
      * @param $mOptional
      * @return void
      * @throws \ReflectionException
      */
-    protected static function add($sMethod = 'get', $sPath = '', $sQuery = '', $mOptional = '')
+    protected static function add($sMethod = 'GET', $sPath = '', $sQuery = '', $mOptional = '')
     {
         parse_str(get($sQuery), $aQuery);
-        $sClass = ucfirst(get($aQuery[Config::get_MVC_GET_PARAM_MODULE()])) . '\\Controller\\' . ucfirst(get($aQuery[Config::get_MVC_GET_PARAM_C()]));
+
+        // allows schema '\Foo\Controller\Api::bar' next to 'module=Foo&c=Api&m=bar'
+        if (null === get($aQuery['m']))
+        {
+            $aQuery = array();
+            list($aQuery[Config::get_MVC_GET_PARAM_MODULE()], $sTmp, $aQuery[Config::get_MVC_GET_PARAM_C()]) = array_values(array_filter(explode('\\', strtok($sQuery, ':'))));
+            $aQuery[Config::get_MVC_GET_PARAM_M()] = substr($sQuery, (strrpos($sQuery, ':') + 1));
+            $sQuery = 'module=' . $aQuery[Config::get_MVC_GET_PARAM_MODULE()] .'&c=' . $aQuery[Config::get_MVC_GET_PARAM_C()] . '&m=' . $aQuery[Config::get_MVC_GET_PARAM_M()];
+        }
+
+        $sClass = ucfirst(get($aQuery[Config::get_MVC_GET_PARAM_MODULE()], '')) . '\\Controller\\' . ucfirst(get($aQuery[Config::get_MVC_GET_PARAM_C()], ''));
 
         self::$aRoute[$sPath] = DTRoute::create()
             ->set_path($sPath)
-            ->set_method(strtolower($sMethod))
+            ->set_method(strtoupper($sMethod))
             ->set_query($sQuery)
             ->set_class($sClass)
             ->set_classFile(Config::get_MVC_MODULES() . '/' . str_replace ('\\', '/', $sClass) . '.php')
-            ->set_module($aQuery[Config::get_MVC_GET_PARAM_MODULE()])
-            ->set_c($aQuery[Config::get_MVC_GET_PARAM_C()])
-            ->set_m($aQuery[Config::get_MVC_GET_PARAM_M()])
+            ->set_module(get($aQuery[Config::get_MVC_GET_PARAM_MODULE()]))
+            ->set_c(get($aQuery[Config::get_MVC_GET_PARAM_C()]))
+            ->set_m(get($aQuery[Config::get_MVC_GET_PARAM_M()]))
             ->set_additional(
                 (true === Strings::isJson($mOptional)) ? $mOptional : json_encode($mOptional)
             )
@@ -149,7 +159,7 @@ class Route
 
         foreach ($aRoute as $iIndex => $aValue)
         {
-            (get($aValue[$sKey]) === $sValue) ? $aIndex[] = $iIndex : false;
+            (strtolower(get($aValue[$sKey], '')) === strtolower($sValue)) ? $aIndex[] = $iIndex : false;
         }
 
         return $aIndex;
@@ -204,6 +214,9 @@ class Route
 
             if (substr($sPath, 0, strlen($sIndexCutOff)) === $sIndexCutOff)
             {
+                $aPathParam['_tail'] = substr($sPath, strlen($sIndexCutOff));
+                Request::setPathParam($aPathParam);
+
                 return $sIndex;
             }
         }
@@ -218,13 +231,13 @@ class Route
     public static function getPathOnPlaceholderIndex($sPath = '')
     {
         // Request
-        $aPartPath = preg_split('@/@', $sPath, null, PREG_SPLIT_NO_EMPTY);
+        $aPartPath = preg_split('@/@', $sPath, 0, PREG_SPLIT_NO_EMPTY);
         $iLengthPath = count($aPartPath);
         $aIndex = self::getIndices();
 
         foreach ($aIndex as $iKey => $sValue)
         {
-            $aPartMatch = array_diff(preg_split('@/@', $sValue, null, PREG_SPLIT_NO_EMPTY), array('*')); # delete "*"
+            $aPartMatch = array_diff(preg_split('@/@', $sValue, 0, PREG_SPLIT_NO_EMPTY), array('*')); # delete "*"
             $sLastCharRight = substr($sValue, -1);
             $bIsWildcard = ('*' === $sLastCharRight) ? true : false;
             $iLengthFoo = count($aPartMatch);
