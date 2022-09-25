@@ -7,7 +7,7 @@ namespace MVC\DataType;
 
 class DTFileinfo
 {
-	const DTHASH = '6047d7946fd8e855470bc69790e0c220';
+	const DTHASH = '6d505a5d37345bdb35946d7ac89e4754';
 
 	/**
 	 * @var string
@@ -18,6 +18,21 @@ class DTFileinfo
 	 * @var string
 	 */
 	protected $basename;
+
+	/**
+	 * @var string
+	 */
+	protected $path;
+
+	/**
+	 * @var bool
+	 */
+	protected $is_file;
+
+	/**
+	 * @var bool
+	 */
+	protected $is_dir;
 
 	/**
 	 * @var string
@@ -75,6 +90,9 @@ class DTFileinfo
 
 		$this->dirname = '';
 		$this->basename = '';
+		$this->path = '';
+		$this->is_file = false;
+		$this->is_dir = false;
 		$this->extension = '';
 		$this->filename = '';
 		$this->name = '';
@@ -138,6 +156,48 @@ class DTFileinfo
 		\MVC\Event::RUN ('DTFileinfo.set_basename.before', \MVC\DataType\DTArrayObject::create(array('basename' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
 
 		$this->basename = (string) $mValue;
+
+		return $this;
+	}
+
+	/**
+	 * @param string $mValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
+	public function set_path($mValue)
+	{
+		\MVC\Event::RUN ('DTFileinfo.set_path.before', \MVC\DataType\DTArrayObject::create(array('path' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+
+		$this->path = (string) $mValue;
+
+		return $this;
+	}
+
+	/**
+	 * @param bool $mValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
+	public function set_is_file($mValue)
+	{
+		\MVC\Event::RUN ('DTFileinfo.set_is_file.before', \MVC\DataType\DTArrayObject::create(array('is_file' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+
+		$this->is_file = (bool) $mValue;
+
+		return $this;
+	}
+
+	/**
+	 * @param bool $mValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
+	public function set_is_dir($mValue)
+	{
+		\MVC\Event::RUN ('DTFileinfo.set_is_dir.before', \MVC\DataType\DTArrayObject::create(array('is_dir' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+
+		$this->is_dir = (bool) $mValue;
 
 		return $this;
 	}
@@ -294,6 +354,39 @@ class DTFileinfo
 	 * @return string
 	 * @throws \ReflectionException
 	 */
+	public function get_path()
+	{
+		\MVC\Event::RUN ('DTFileinfo.get_path.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('path')->set_sValue($this->path))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+
+		return $this->path;
+	}
+
+	/**
+	 * @return bool
+	 * @throws \ReflectionException
+	 */
+	public function get_is_file()
+	{
+		\MVC\Event::RUN ('DTFileinfo.get_is_file.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('is_file')->set_sValue($this->is_file))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+
+		return $this->is_file;
+	}
+
+	/**
+	 * @return bool
+	 * @throws \ReflectionException
+	 */
+	public function get_is_dir()
+	{
+		\MVC\Event::RUN ('DTFileinfo.get_is_dir.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('is_dir')->set_sValue($this->is_dir))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+
+		return $this->is_dir;
+	}
+
+	/**
+	 * @return string
+	 * @throws \ReflectionException
+	 */
 	public function get_extension()
 	{
 		\MVC\Event::RUN ('DTFileinfo.get_extension.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('extension')->set_sValue($this->extension))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
@@ -403,6 +496,30 @@ class DTFileinfo
 	public static function getPropertyName_basename()
 	{
         return 'basename';
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getPropertyName_path()
+	{
+        return 'path';
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getPropertyName_is_file()
+	{
+        return 'is_file';
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getPropertyName_is_dir()
+	{
+        return 'is_dir';
 	}
 
 	/**

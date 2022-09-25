@@ -32,15 +32,13 @@ class Route
      */
     public static function init()
     {
-        $sRoutingDir = Config::get_MVC_MODULE_CURRENT_ETC_DIR() . '/routing';
-        $aRouteFile = glob( $sRoutingDir . '/*php');
-
         //  require recursively all php files in module's routing dir
-        foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(Config::get_MVC_MODULE_CURRENT_DIR() . '/etc/routing')) as $sRouteFile)
+        /** @var \SplFileInfo $oSplFileInfo */
+        foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(Config::get_MVC_MODULE_CURRENT_DIR() . '/etc/routing')) as $oSplFileInfo)
         {
-            if ('php' === strtolower(File::info($sRouteFile)->get_extension()))
+            if ('php' === strtolower($oSplFileInfo->getExtension()))
             {
-                require_once $sRouteFile;
+                require_once $oSplFileInfo->getPathname();
             }
         }
     }

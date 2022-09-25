@@ -29,6 +29,9 @@ class File
 
         $aStat = stat($sFile);
         $aInfo = posix_getpwuid($aStat['uid']);
+        $aInfo['path'] = $sFile;
+        $aInfo['is_file'] = is_file($sFile);
+        $aInfo['is_dir'] = is_dir($sFile);
         $aPathInfo = pathinfo($sFile);
         $aInfo = array_merge($aInfo, $aPathInfo);
         $oDTFileinfo = DTFileinfo::create($aInfo);
