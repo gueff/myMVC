@@ -1,14 +1,15 @@
 {
   "require": {
     "php": ">=7.4",
-    "smarty/smarty": "4.2.1",
-    "ezyang/htmlpurifier": "v4.14.0",
+    "smarty/smarty": "v4.2.1",
+    "ezyang/htmlpurifier": "v4.16.0",
     "gueff/cachix": "1.0.0",
     "mrclay/jsmin-php": "2.4.1",
-    "zircote/swagger-php": "4.4.9"
+    "zircote/swagger-php": "4.4.9",
+    "cebe/php-openapi": "1.7.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "*",
+    "phpunit/phpunit": "9.5.24",
     "ext-zip": "*",
     "php-webdriver/webdriver": "1.12.1",
     "phpunit/phpunit-selenium": "^9.0"

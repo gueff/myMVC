@@ -908,15 +908,28 @@ class DataType
 
             if (true === $oProperty->get_forceCasting())
             {
-                $sContent .= "\r\n\t\t" . '(false === ($mValue instanceof ' . $sVar . ')) ? $mValue = ' . $sVar . '::create($mValue) : false;' . "\r\n";
+                // common types
+                if (in_array($oProperty->get_var(), array('string', 'int', 'integer', 'array', 'bool', 'boolean', 'float', 'double')))
+                {
+                    $sContent .= "\r\n\t\t" . '$this->' . $oProperty->get_key() . ' = (' . $oProperty->get_var() . ') $mValue;' . "\r\n\r\n" . "\t\treturn " . '$this;' . "\r\n\t}\r\n\r\n";
+                }
+                // custom types
+                else
+                {
+                    /** @todo custom type casting; Reflection... */
+                    #$sContent .= "\r\n\t\t" . '(false === ($mValue instanceof ' . $sVar . ')) ? $mValue = ' . $sVar . '::create($mValue) : false;' . "\r\n";
+                    $sContent .= "\r\n\t\t" . '$this->' . $oProperty->get_key() . ' = $mValue;' . "\r\n\r\n" . "\t\treturn " . '$this;' . "\r\n\t}\r\n\r\n";
+                }
             }
-
-            $sContent .= "\r\n\t\t" . '$this->' . $oProperty->get_key() . ' = $mValue;' . "\r\n\r\n" . "\t\treturn " . '$this;' . "\r\n\t}\r\n\r\n";
+            else
+            {
+                $sContent .= "\r\n\t\t" . '$this->' . $oProperty->get_key() . ' = $mValue;' . "\r\n\r\n" . "\t\treturn " . '$this;' . "\r\n\t}\r\n\r\n";
+            }
         }
         // type is array
         else
         {
-            $sContent .= "\t/**\r\n" . "\t * @param array " . ' $mValue ' . "\r\n" . "\t * @return " . '$this' . "\r\n" . "\t * @throws \ReflectionException\r\n" . "\t */" . "\r\n";
+            $sContent .= "\t/**\r\n" . "\t * @param " . $oProperty->get_var() . " " . ' $mValue ' . "\r\n" . "\t * @return " . '$this' . "\r\n" . "\t * @throws \ReflectionException\r\n" . "\t */" . "\r\n";
             $sContent .= "\tpublic function set_" . $oProperty->get_key() . '(';
 
             // place type for php7 and newer

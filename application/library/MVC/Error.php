@@ -18,6 +18,28 @@ use MVC\DataType\DTKeyValue;
  */
 class Error
 {
+    /**
+     * @var string[]
+     */
+    public static $aExceptionTranslation = [
+        E_ERROR => "E_ERROR",
+        E_WARNING => "E_WARNING",
+        E_PARSE => "E_PARSE",
+        E_NOTICE => "E_NOTICE",
+        E_CORE_ERROR => "E_CORE_ERROR",
+        E_CORE_WARNING => "E_CORE_WARNING",
+        E_COMPILE_ERROR => "E_COMPILE_ERROR",
+        E_COMPILE_WARNING => "E_COMPILE_WARNING",
+        E_USER_ERROR => "E_USER_ERROR",
+        E_USER_WARNING => "E_USER_WARNING",
+        E_USER_NOTICE => "E_USER_NOTICE",
+        E_STRICT => "E_STRICT",
+        E_RECOVERABLE_ERROR => "E_RECOVERABLE_ERROR",
+        E_DEPRECATED => "E_DEPRECATED",
+        E_USER_DEPRECATED => "E_USER_DEPRECATED",
+        E_ALL => "E_ALL"
+    ];
+
 	/**
 	 * @var array error
 	 */
@@ -81,36 +103,33 @@ class Error
 		$sLogfile = Config::get_MVC_LOG_FILE_ERROR();
 		$sMsg = '';
 
+        /** @var \ErrorException $oErrorException */
 		if (method_exists ($oErrorException, 'getSeverity'))
 		{
-			$iSeverity = $oErrorException->getSeverity ();
-			$sMsg.= 'Severity: ' . $iSeverity . "\t";
-
-			if (in_array ($iSeverity, array (E_WARNING, E_USER_WARNING)))
+			if (in_array ($oErrorException->getCode(), array (E_WARNING, E_USER_WARNING)))
 			{
 				$sLogfile = Config::get_MVC_LOG_FILE_WARNING();
 			}
 
-			if (in_array ($iSeverity, array (E_NOTICE, E_USER_NOTICE, E_DEPRECATED)))
+			if (in_array ($oErrorException->getCode(), array (E_NOTICE, E_USER_NOTICE, E_DEPRECATED)))
 			{
 				$sLogfile = Config::get_MVC_LOG_FILE_NOTICE();
 			}
 		}
 
-		$sMsg.= '(Code: ' . $oErrorException->getCode ()
+        $sMsg.= self::$aExceptionTranslation[$oErrorException->getCode()] . "\t";
+		$sMsg.= '(Code: ' . $oErrorException->getCode()
             . ' / Class: ' . get_class ($oErrorException)
-            . '), File: ' . $oErrorException->getFile ()
-            . ', Line: ' . $oErrorException->getLine ()
-            . ', Message: ' . $oErrorException->getMessage ()
-            . ', Trace: ' . $oErrorException->getTraceAsString ();
+            . '), File: ' . $oErrorException->getFile()
+            . ', Line: ' . $oErrorException->getLine()
+            . ', Message: ' . $oErrorException->getMessage()
+            . ', Trace: ' . $oErrorException->getTraceAsString();
 		self::addERROR (
 		    DTArrayObject::create()
                 ->add_aKeyValue(DTKeyValue::create()->set_sKey('sMessage')->set_sValue($sMsg))
                 ->add_aKeyValue(DTKeyValue::create()->set_sKey('$oException')->set_sValue($oErrorException))
         );
 		Log::write ($sMsg, $sLogfile);
-
-		(true === Config::get_MVC_DEBUG()) ? Debug::display(print_r($oErrorException, true)) : false;
 	}
 
 	/**
@@ -123,11 +142,6 @@ class Error
 
 		if (!empty($aError))
 		{
-			(true === Config::get_MVC_DEBUG())
-                ? Debug::display($aError)
-                : false
-            ;
-			
 			self::error (
 				$aError["message"], 
 				E_ERROR, 

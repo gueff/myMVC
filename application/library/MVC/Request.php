@@ -11,6 +11,7 @@
 namespace MVC;
 
 use MVC\DataType\DTArrayObject;
+use MVC\DataType\DTFileinfo;
 use MVC\DataType\DTKeyValue;
 use MVC\DataType\DTRequestCurrent;
 
@@ -315,13 +316,12 @@ class Request
         // check user/file permission
         $sIndex = realpath (__DIR__ . '/../../../public') . '/index.php';
 
-        if (posix_getuid () != File::getFileInfo($sIndex, 'uid'))
+        if (posix_getuid () != File::info($sIndex)->get_uid())
         {
             $aUser = posix_getpwuid (posix_getuid ());
-            $aFileInfo = File::getFileInfo($sIndex);
 
             die (
-                "\n\tERROR\tCLI - access granted for User `" . $aFileInfo['name'] . "` only "
+                "\n\tERROR\tCLI - access granted for User `" . File::info($sIndex)->get_name() . "` only "
                 . "(User `" . $aUser['name'] . "`, uid:" . $aUser['uid'] . ", not granted).\t"
                 . __FILE__ . ', ' . __LINE__ . "\n\n"
             );

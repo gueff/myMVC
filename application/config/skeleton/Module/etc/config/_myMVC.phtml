@@ -3,9 +3,6 @@
 //-------------------------------------------------------------------------------------
 // MVC
 
-// enable debug output
-$aConfig['MVC_DEBUG'] = true;
-
 // show InfoTool bar
 $aConfig['MVC_INFOTOOL_ENABLE'] = true;
 
@@ -18,9 +15,10 @@ $aConfig['MVC_ROUTING_FALLBACK'] = $aConfig['MVC_GET_PARAM_MODULE'] . '={module}
     . $aConfig['MVC_GET_PARAM_M'] . '=notFound';
 
 // module's config dir
-$aConfig['MVC_MODULE_CURRENT_ETC_DIR'] = $aConfig['MVC_MODULES'] . '/{module}/etc';
-$aConfig['MVC_MODULE_CURRENT_CONFIG_DIR'] = $aConfig['MVC_MODULES'] . '/{module}/etc/config';
-$aConfig['MVC_MODULE_CURRENT_STAGING_CONFIG_DIR'] = $aConfig['MVC_MODULE_CURRENT_CONFIG_DIR'] . '/{module}/config';
+$aConfig['MVC_MODULE_CURRENT_DIR'] = $aConfig['MVC_MODULES'] . '/{module}';
+$aConfig['MVC_MODULE_CURRENT_ETC_DIR'] = $aConfig['MVC_MODULE_CURRENT_DIR'] . '/etc';
+$aConfig['MVC_MODULE_CURRENT_CONFIG_DIR'] = $aConfig['MVC_MODULE_CURRENT_DIR'] . '/etc/config';
+$aConfig['MVC_MODULE_CURRENT_STAGING_CONFIG_DIR'] = $aConfig['MVC_MODULE_CURRENT_DIR'] . '/config';
 
 // composer dir
 $aConfig['MVC_MODULE_CURRENT_COMPOSER_DIR'] = realpath(__DIR__ . '/../') . '/config/{module}';

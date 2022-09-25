@@ -52,7 +52,6 @@ class Session
         foreach ($this->_aOption as $sKey => $mValue)
         {
             ini_set ('session.' . $sKey, $mValue);
-            Log::write ('ini_set("session.' . $sKey . '", ' . $mValue . ');');
         }
 
         // Start a default Session, if no session was started before

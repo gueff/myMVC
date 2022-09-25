@@ -35,9 +35,13 @@ class Route
         $sRoutingDir = Config::get_MVC_MODULE_CURRENT_ETC_DIR() . '/routing';
         $aRouteFile = glob( $sRoutingDir . '/*php');
 
-        foreach ($aRouteFile as $sRouteFile)
+        //  require recursively all php files in module's routing dir
+        foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(Config::get_MVC_MODULE_CURRENT_DIR() . '/etc/routing')) as $sRouteFile)
         {
-            require_once $sRouteFile;
+            if ('php' === strtolower(File::info($sRouteFile)->get_extension()))
+            {
+                require_once $sRouteFile;
+            }
         }
     }
 
@@ -243,8 +247,10 @@ class Route
             $iLengthFoo = count($aPartMatch);
 
             // string part before first placeholder has to match
-            $sStrToK = strtok($sValue, ':');
-            $bPartBeforePlaceholderMatch = (substr($sPath, 0, strlen($sStrToK)) === $sStrToK) ? true : false;
+            $sStrToKColon = strtok($sValue, ':');
+            $sStrToKBrace = strtok($sValue, '{');
+            $bPartBeforePlaceholderMatchColon = (substr($sPath, 0, strlen($sStrToKColon)) === $sStrToKColon) ? true : false;
+            $bPartBeforePlaceholderMatchBrace = (substr($sPath, 0, strlen($sStrToKBrace)) === $sStrToKBrace) ? true : false;
             $sPart = '/';
 
             for ($i = 0; $i < $iLengthFoo; $i++)
@@ -256,7 +262,7 @@ class Route
 
             // detect placeholder route match
             if (
-                true === $bPartBeforePlaceholderMatch &&
+                (true === $bPartBeforePlaceholderMatchColon || true === $bPartBeforePlaceholderMatchBrace) &&
                 (
                     // has exact same amount of / parts
                     $iLengthPath === $iLengthFoo
@@ -266,12 +272,27 @@ class Route
                 )
             )
             {
-                $aPlaceholder = preg_grep('/:/i', $aPartMatch);
+                (true === $bPartBeforePlaceholderMatchColon)
+                    ? $aPlaceholder = preg_grep('/:/i', $aPartMatch)
+                    : false
+                ;
+                (true === $bPartBeforePlaceholderMatchBrace)
+                    ? $aPlaceholder = preg_grep('/\{*\}/i', $aPartMatch)
+                    : false
+                ;
+
                 $aPathParam = array();
 
                 foreach ($aPlaceholder as $iIndex => $sPlaceholder)
                 {
-                    $sPlaceholder = substr($sPlaceholder, 1);
+                    (true === $bPartBeforePlaceholderMatchColon)
+                        ? $sPlaceholder = substr($sPlaceholder, 1)
+                        : false
+                    ;
+                    (true === $bPartBeforePlaceholderMatchBrace)
+                        ? $sPlaceholder = substr($sPlaceholder, 1, -1)
+                        : false
+                    ;
                     $aPathParam[$sPlaceholder] = $aPartPath[$iIndex];
                 }
 

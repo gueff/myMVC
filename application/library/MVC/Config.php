@@ -37,20 +37,6 @@ class Config
      * @return bool
      * @throws \ReflectionException
      */
-    public static function get_MVC_DEBUG ()
-    {
-        if (Registry::isRegistered('MVC_DEBUG'))
-        {
-            return (boolean) filter_var(Registry::get('MVC_DEBUG'), FILTER_VALIDATE_BOOLEAN);
-        }
-
-        return false;
-    }
-
-    /**
-     * @return bool
-     * @throws \ReflectionException
-     */
     public static function get_MVC_LOG_AUTOLOADER()
     {
         if (Registry::isRegistered('MVC_LOG_AUTOLOADER'))
@@ -98,6 +84,20 @@ class Config
         if (Registry::isRegistered('MVC_GET_PARAM_M'))
         {
             return (string) Registry::get('MVC_GET_PARAM_M');
+        }
+
+        return '';
+    }
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_MODULE_CURRENT_DIR()
+    {
+        if (Registry::isRegistered('MVC_MODULE_CURRENT_DIR'))
+        {
+            return (string) Registry::get('MVC_MODULE_CURRENT_DIR');
         }
 
         return '';

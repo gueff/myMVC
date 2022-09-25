@@ -22,9 +22,6 @@ MVC_RUNTIME_SETTINGS: {
     date_default_timezone_set(((file_exists('/etc/timezone')) ? trim(file_get_contents('/etc/timezone')) : 'UTC'));
     setlocale(LC_ALL, 'C');
 
-    // enable debug output
-    $aConfig['MVC_DEBUG'] = true;
-
     // show InfoTool bar
     $aConfig['MVC_INFOTOOL_ENABLE'] = true;
 

@@ -10,35 +10,30 @@
 
 namespace MVC;
 
+use MVC\DataType\DTFileinfo;
+
 class File
 {
     /**
-     * get infos about a file via stat
-     * @access public
-     * @static
-     * @param string $sFile file
-     * @param string $sKey  (optional) if $sKey is given, only this info wil be returned
-     * @return array|mixed
+     * get infos about a file via stat, posix_getpwuid, pathinfo
+     * @param $sFile
+     * @return \MVC\DataType\DTFileinfo
+     * @throws \ReflectionException
      */
-    public static function getFileInfo($sFile = null, $sKey = null)
+    public static function info($sFile = null)
     {
         if (false === isset($sFile))
         {
-            return array();
+            return DTFileinfo::create();
         }
 
         $aStat = stat($sFile);
         $aInfo = posix_getpwuid($aStat['uid']);
+        $aPathInfo = pathinfo($sFile);
+        $aInfo = array_merge($aInfo, $aPathInfo);
+        $oDTFileinfo = DTFileinfo::create($aInfo);
 
-        if (false === empty ($sKey))
-        {
-            if (array_key_exists($sKey, $aInfo))
-            {
-                return $aInfo[$sKey];
-            }
-        }
-
-        return $aInfo;
+        return $oDTFileinfo;
     }
 
     /**

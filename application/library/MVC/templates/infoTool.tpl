@@ -524,7 +524,7 @@ Request::getPathParam( $sKey )</pre>
 
 			<!-- menu -->
 			<navi>
-				<label for="subtab81">Error</label>
+				<label for="subtab81">Malfunction</label>
 			</navi>
 
 			<!-- content -->
@@ -535,14 +535,12 @@ Request::getPathParam( $sKey )</pre>
 				<div class="subtab81">
 					<ul>
 					{foreach key=key item=oDTArrayObject from=$aToolbar.aError}
-						{assign var="_sErrorTime" value="."|explode:$oDTArrayObject->getDTKeyValueByKey('_sErrorTime')->get_sValue()}
 						<li>
-							<b>{$key}: {$oDTArrayObject->getDTKeyValueByKey('sMessage')->get_sValue()}</b>
-							<span class="myMvcToolbar-float-right">
-								🕑{$oDTArrayObject->getDTKeyValueByKey('_sErrorTime')->get_sValue()|date_format:"%Y-%m-%d, %T"}.{$_sErrorTime[1]}
-							</span>
-							<hr>
-							<pre class="myMvcToolbar-bg-kbd">{$oDTArrayObject->getDTKeyValueByKey('oException')->get_sValue()}</pre>
+							{assign var="oErrorException" value=$oDTArrayObject->getDTKeyValueByKey('$oException')->get_sValue()}
+							<b>{MVC\Error::$aExceptionTranslation[$oErrorException->getCode()]}</b> ({$oErrorException->getCode()})<br>
+							{$oErrorException->getFile()}<br>
+							Line: {$oErrorException->getLine()}<br>
+							<u>Message:</u> <i>{$oErrorException->getMessage()}</i>
 						</li>
 					{/foreach}
 					</ul>
@@ -575,8 +573,8 @@ Request::getPathParam( $sKey )</pre>
 			<i class="fa fa-bar-chart-o"></i> Memory
 		</label>
 		{if !empty($aToolbar.aError)}
-		<label for="tab8" class="myMvcToolbar-bg-danger">
-			<i class="fa fa-warning myMvcToolbarBlink"></i> Error
+		<label for="tab8" class="myMvcToolbar-bg-danger" style="position: relative;">
+			<i class="fa fa-warning myMvcToolbarBlink"></i> Malfunction <sup>({count($aToolbar.aError)})</sup>
 		</label>
 		{/if}
 		<label id="myMvcToolbar_toggle" class="myMvcToolbar-bg-info" title="toggle"><b>&larr;&rarr;</b></label>
