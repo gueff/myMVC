@@ -5,8 +5,12 @@
  */
 namespace MVC\DataType;
 
+use MVC\MVCTrait\TraitDataType;
+
 class DTFileinfo
 {
+	use TraitDataType;
+
 	const DTHASH = '6d505a5d37345bdb35946d7ac89e4754';
 
 	/**
@@ -133,197 +137,197 @@ class DTFileinfo
     }
 
 	/**
-	 * @param string $mValue 
+	 * @param string $aValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_dirname($mValue)
+	public function set_dirname($aValue)
 	{
-		\MVC\Event::RUN ('DTFileinfo.set_dirname.before', \MVC\DataType\DTArrayObject::create(array('dirname' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTFileinfo.set_dirname.before', \MVC\DataType\DTArrayObject::create(array('dirname' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
 
-		$this->dirname = (string) $mValue;
+		$this->dirname = (string) $aValue;
 
 		return $this;
 	}
 
 	/**
-	 * @param string $mValue 
+	 * @param string $aValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_basename($mValue)
+	public function set_basename($aValue)
 	{
-		\MVC\Event::RUN ('DTFileinfo.set_basename.before', \MVC\DataType\DTArrayObject::create(array('basename' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTFileinfo.set_basename.before', \MVC\DataType\DTArrayObject::create(array('basename' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
 
-		$this->basename = (string) $mValue;
+		$this->basename = (string) $aValue;
 
 		return $this;
 	}
 
 	/**
-	 * @param string $mValue 
+	 * @param string $aValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_path($mValue)
+	public function set_path($aValue)
 	{
-		\MVC\Event::RUN ('DTFileinfo.set_path.before', \MVC\DataType\DTArrayObject::create(array('path' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTFileinfo.set_path.before', \MVC\DataType\DTArrayObject::create(array('path' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
 
-		$this->path = (string) $mValue;
+		$this->path = (string) $aValue;
 
 		return $this;
 	}
 
 	/**
-	 * @param bool $mValue 
+	 * @param bool $aValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_is_file($mValue)
+	public function set_is_file($aValue)
 	{
-		\MVC\Event::RUN ('DTFileinfo.set_is_file.before', \MVC\DataType\DTArrayObject::create(array('is_file' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTFileinfo.set_is_file.before', \MVC\DataType\DTArrayObject::create(array('is_file' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
 
-		$this->is_file = (bool) $mValue;
+		$this->is_file = (bool) $aValue;
 
 		return $this;
 	}
 
 	/**
-	 * @param bool $mValue 
+	 * @param bool $aValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_is_dir($mValue)
+	public function set_is_dir($aValue)
 	{
-		\MVC\Event::RUN ('DTFileinfo.set_is_dir.before', \MVC\DataType\DTArrayObject::create(array('is_dir' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTFileinfo.set_is_dir.before', \MVC\DataType\DTArrayObject::create(array('is_dir' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
 
-		$this->is_dir = (bool) $mValue;
+		$this->is_dir = (bool) $aValue;
 
 		return $this;
 	}
 
 	/**
-	 * @param string $mValue 
+	 * @param string $aValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_extension($mValue)
+	public function set_extension($aValue)
 	{
-		\MVC\Event::RUN ('DTFileinfo.set_extension.before', \MVC\DataType\DTArrayObject::create(array('extension' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTFileinfo.set_extension.before', \MVC\DataType\DTArrayObject::create(array('extension' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
 
-		$this->extension = (string) $mValue;
+		$this->extension = (string) $aValue;
 
 		return $this;
 	}
 
 	/**
-	 * @param string $mValue 
+	 * @param string $aValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_filename($mValue)
+	public function set_filename($aValue)
 	{
-		\MVC\Event::RUN ('DTFileinfo.set_filename.before', \MVC\DataType\DTArrayObject::create(array('filename' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTFileinfo.set_filename.before', \MVC\DataType\DTArrayObject::create(array('filename' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
 
-		$this->filename = (string) $mValue;
+		$this->filename = (string) $aValue;
 
 		return $this;
 	}
 
 	/**
-	 * @param string $mValue 
+	 * @param string $aValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_name($mValue)
+	public function set_name($aValue)
 	{
-		\MVC\Event::RUN ('DTFileinfo.set_name.before', \MVC\DataType\DTArrayObject::create(array('name' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTFileinfo.set_name.before', \MVC\DataType\DTArrayObject::create(array('name' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
 
-		$this->name = (string) $mValue;
+		$this->name = (string) $aValue;
 
 		return $this;
 	}
 
 	/**
-	 * @param string $mValue 
+	 * @param string $aValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_passwd($mValue)
+	public function set_passwd($aValue)
 	{
-		\MVC\Event::RUN ('DTFileinfo.set_passwd.before', \MVC\DataType\DTArrayObject::create(array('passwd' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTFileinfo.set_passwd.before', \MVC\DataType\DTArrayObject::create(array('passwd' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
 
-		$this->passwd = (string) $mValue;
+		$this->passwd = (string) $aValue;
 
 		return $this;
 	}
 
 	/**
-	 * @param int $mValue 
+	 * @param int $aValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_uid($mValue)
+	public function set_uid($aValue)
 	{
-		\MVC\Event::RUN ('DTFileinfo.set_uid.before', \MVC\DataType\DTArrayObject::create(array('uid' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTFileinfo.set_uid.before', \MVC\DataType\DTArrayObject::create(array('uid' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
 
-		$this->uid = (int) $mValue;
+		$this->uid = (int) $aValue;
 
 		return $this;
 	}
 
 	/**
-	 * @param int $mValue 
+	 * @param int $aValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_gid($mValue)
+	public function set_gid($aValue)
 	{
-		\MVC\Event::RUN ('DTFileinfo.set_gid.before', \MVC\DataType\DTArrayObject::create(array('gid' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTFileinfo.set_gid.before', \MVC\DataType\DTArrayObject::create(array('gid' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
 
-		$this->gid = (int) $mValue;
+		$this->gid = (int) $aValue;
 
 		return $this;
 	}
 
 	/**
-	 * @param string $mValue 
+	 * @param string $aValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_gecos($mValue)
+	public function set_gecos($aValue)
 	{
-		\MVC\Event::RUN ('DTFileinfo.set_gecos.before', \MVC\DataType\DTArrayObject::create(array('gecos' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTFileinfo.set_gecos.before', \MVC\DataType\DTArrayObject::create(array('gecos' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
 
-		$this->gecos = (string) $mValue;
+		$this->gecos = (string) $aValue;
 
 		return $this;
 	}
 
 	/**
-	 * @param string $mValue 
+	 * @param string $aValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_dir($mValue)
+	public function set_dir($aValue)
 	{
-		\MVC\Event::RUN ('DTFileinfo.set_dir.before', \MVC\DataType\DTArrayObject::create(array('dir' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTFileinfo.set_dir.before', \MVC\DataType\DTArrayObject::create(array('dir' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
 
-		$this->dir = (string) $mValue;
+		$this->dir = (string) $aValue;
 
 		return $this;
 	}
 
 	/**
-	 * @param string $mValue 
+	 * @param string $aValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_shell($mValue)
+	public function set_shell($aValue)
 	{
-		\MVC\Event::RUN ('DTFileinfo.set_shell.before', \MVC\DataType\DTArrayObject::create(array('shell' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTFileinfo.set_shell.before', \MVC\DataType\DTArrayObject::create(array('shell' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
 
-		$this->shell = (string) $mValue;
+		$this->shell = (string) $aValue;
 
 		return $this;
 	}

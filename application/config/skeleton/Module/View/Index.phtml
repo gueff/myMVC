@@ -15,6 +15,7 @@ namespace {module}\View;
 
 use MVC\Config;
 use MVC\DataType\DTRoute;
+use MVC\Route;
 use {module}\DataType\DTRoutingAdditional;
 
 /**
@@ -93,6 +94,7 @@ class Index extends \MVC\View
      */
     public function autoAssign(DTRoute $oDTRoute = null)
     {
+        (null === $oDTRoute) ? $oDTRoute = Route::getCurrent() : false;
         $oDTRoutingAdditional = DTRoutingAdditional::create(json_decode($oDTRoute->get_additional(), true));
 
         $this->sTemplateRelative = (isset($oAdditional->layout)) ? $oAdditional->layout : Config::get_MVC_SMARTY_TEMPLATE_DEFAULT();

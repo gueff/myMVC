@@ -6,6 +6,7 @@ application/session/*
 application/templates_c/*
 application/clearTmpFiles.sh
 application/composer.lock
+application/library/MVC/*.tar.gz
 application/library/MVC/phanlistcreate.sh
 application/vendor
 vendor
@@ -15,5 +16,6 @@ public/.env
 _createPhar.php
 _generateDataTypes.php
 _push.sh
+Changelog.md
 **/*.min.css
 **/*.min.js

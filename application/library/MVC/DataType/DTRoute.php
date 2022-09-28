@@ -5,9 +5,13 @@
  */
 namespace MVC\DataType;
 
+use MVC\MVCTrait\TraitDataType;
+
 class DTRoute
 {
-	const DTHASH = '65ad2984db56798429c395eac420f6ba';
+	use TraitDataType;
+
+	const DTHASH = 'e365031b36b512766fce9c0336675616';
 
 	/**
 	 * @var string
@@ -50,7 +54,7 @@ class DTRoute
 	protected $m;
 
 	/**
-	 * @var string
+	 * @var mixed
 	 */
 	protected $additional;
 
@@ -71,7 +75,7 @@ class DTRoute
 		$this->module = '';
 		$this->c = '';
 		$this->m = '';
-		$this->additional = '';
+		$this->additional = null;
 
 		foreach ($aData as $sKey => $mValue)
 		{
@@ -103,127 +107,127 @@ class DTRoute
     }
 
 	/**
-	 * @param string $mValue 
+	 * @param string $aValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_path($mValue)
+	public function set_path($aValue)
 	{
-		\MVC\Event::RUN ('DTRoute.set_path.before', \MVC\DataType\DTArrayObject::create(array('path' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRoute.set_path.before', \MVC\DataType\DTArrayObject::create(array('path' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
 
-		$this->path = (string) $mValue;
+		$this->path = (string) $aValue;
 
 		return $this;
 	}
 
 	/**
-	 * @param string $mValue 
+	 * @param string $aValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_method($mValue)
+	public function set_method($aValue)
 	{
-		\MVC\Event::RUN ('DTRoute.set_method.before', \MVC\DataType\DTArrayObject::create(array('method' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRoute.set_method.before', \MVC\DataType\DTArrayObject::create(array('method' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
 
-		$this->method = (string) $mValue;
+		$this->method = (string) $aValue;
 
 		return $this;
 	}
 
 	/**
-	 * @param string $mValue 
+	 * @param string $aValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_query($mValue)
+	public function set_query($aValue)
 	{
-		\MVC\Event::RUN ('DTRoute.set_query.before', \MVC\DataType\DTArrayObject::create(array('query' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRoute.set_query.before', \MVC\DataType\DTArrayObject::create(array('query' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
 
-		$this->query = (string) $mValue;
+		$this->query = (string) $aValue;
 
 		return $this;
 	}
 
 	/**
-	 * @param string $mValue 
+	 * @param string $aValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_class($mValue)
+	public function set_class($aValue)
 	{
-		\MVC\Event::RUN ('DTRoute.set_class.before', \MVC\DataType\DTArrayObject::create(array('class' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRoute.set_class.before', \MVC\DataType\DTArrayObject::create(array('class' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
 
-		$this->class = (string) $mValue;
+		$this->class = (string) $aValue;
 
 		return $this;
 	}
 
 	/**
-	 * @param string $mValue 
+	 * @param string $aValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_classFile($mValue)
+	public function set_classFile($aValue)
 	{
-		\MVC\Event::RUN ('DTRoute.set_classFile.before', \MVC\DataType\DTArrayObject::create(array('classFile' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRoute.set_classFile.before', \MVC\DataType\DTArrayObject::create(array('classFile' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
 
-		$this->classFile = (string) $mValue;
+		$this->classFile = (string) $aValue;
 
 		return $this;
 	}
 
 	/**
-	 * @param string $mValue 
+	 * @param string $aValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_module($mValue)
+	public function set_module($aValue)
 	{
-		\MVC\Event::RUN ('DTRoute.set_module.before', \MVC\DataType\DTArrayObject::create(array('module' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRoute.set_module.before', \MVC\DataType\DTArrayObject::create(array('module' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
 
-		$this->module = (string) $mValue;
+		$this->module = (string) $aValue;
 
 		return $this;
 	}
 
 	/**
-	 * @param string $mValue 
+	 * @param string $aValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_c($mValue)
+	public function set_c($aValue)
 	{
-		\MVC\Event::RUN ('DTRoute.set_c.before', \MVC\DataType\DTArrayObject::create(array('c' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRoute.set_c.before', \MVC\DataType\DTArrayObject::create(array('c' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
 
-		$this->c = (string) $mValue;
+		$this->c = (string) $aValue;
 
 		return $this;
 	}
 
 	/**
-	 * @param string $mValue 
+	 * @param string $aValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_m($mValue)
+	public function set_m($aValue)
 	{
-		\MVC\Event::RUN ('DTRoute.set_m.before', \MVC\DataType\DTArrayObject::create(array('m' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRoute.set_m.before', \MVC\DataType\DTArrayObject::create(array('m' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
 
-		$this->m = (string) $mValue;
+		$this->m = (string) $aValue;
 
 		return $this;
 	}
 
 	/**
-	 * @param string $mValue 
+	 * @param mixed $aValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_additional($mValue)
+	public function set_additional($aValue)
 	{
-		\MVC\Event::RUN ('DTRoute.set_additional.before', \MVC\DataType\DTArrayObject::create(array('additional' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRoute.set_additional.before', \MVC\DataType\DTArrayObject::create(array('additional' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
 
-		$this->additional = (string) $mValue;
+		$this->additional = $aValue;
 
 		return $this;
 	}
@@ -317,7 +321,7 @@ class DTRoute
 	}
 
 	/**
-	 * @return string
+	 * @return mixed
 	 * @throws \ReflectionException
 	 */
 	public function get_additional()

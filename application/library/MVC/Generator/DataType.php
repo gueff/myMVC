@@ -171,6 +171,9 @@ class DataType
                     (isset($aProperty['forceCasting']))
                         ? $oDTDataTypeGeneratorProperty->set_forceCasting($aProperty['forceCasting'])
                         : false;
+                    (isset($aProperty['required']))
+                        ? $oDTDataTypeGeneratorProperty->set_required($aProperty['required'])
+                        : false;
 
                     $oDTDataTypeGeneratorClass->add_DTProperty($oDTDataTypeGeneratorProperty);
                 }
@@ -435,16 +438,19 @@ class DataType
                 : false;
 
             $sContent = '';
-            $sContent .= $this->createDocHeader();
-            $sContent .= $this->createNamespace($oDTDataTypeGeneratorClass->get_namespace());
-            $sContent .= "class " . $oDTDataTypeGeneratorClass->get_name();
+            $sContent.= $this->createDocHeader();
+            $sContent.= $this->createNamespace($oDTDataTypeGeneratorClass->get_namespace());
+            $sContent.= "use MVC\MVCTrait\TraitDataType;\n\n";
+            $sContent.= "class " . $oDTDataTypeGeneratorClass->get_name();
 
             // extends
             (0 != strlen($oDTDataTypeGeneratorClass->get_extends()))
-                ? $sContent .= ' extends ' . $oDTDataTypeGeneratorClass->get_extends()
+                ? $sContent.= ' extends ' . $oDTDataTypeGeneratorClass->get_extends()
                 : false;
 
             $sContent .= "\r\n{\r\n";
+
+            $sContent.= "\tuse TraitDataType;\r\n\r\n";
 
             // hash constant
             $sContent .= $this->createConst(DTConstant::create()
@@ -558,7 +564,10 @@ class DataType
         }
 
         $sContent = '';
-        $sContent .= "\t/**\r\n\t * @var " . $oProperty->get_var() . "\r\n\t */\r\n";
+        $sContent .= "\t/**\r\n"
+                     . "\t * @required " . ($oProperty->get_required() ? 'true' : 'false') . "\r\n"
+                     . "\t * @var " . $oProperty->get_var() . "\r\n"
+                     . "\t */\r\n";
         $sContent .= "\t" . $oProperty->get_visibility() . " ";
         (true === $oProperty->get_static())
             ? $sContent .= "static "
@@ -648,9 +657,19 @@ class DataType
             }
             else
             {
-                $sContent .= (true === is_null($oProperty->get_value()))
-                    ? "null;\r\n"
-                    : $oProperty->get_value() . ';' . "\r\n";
+                // Object[] array
+                if ('[]' == substr($oProperty->get_var(), -2))
+                {
+                    $sContent .= (is_array($oProperty->get_value()))
+                        ? preg_replace('!\s+!', '', str_replace("\n", '', Debug::varExport($oProperty->get_value(), true, false))) . ";\r\n"
+                        : "array();\r\n";
+                }
+                else
+                {
+                    $sContent .= (true === is_null($oProperty->get_value()))
+                        ? "null;\r\n"
+                        : $oProperty->get_value() . ';' . "\r\n";
+                }
             }
         }
 
@@ -896,7 +915,7 @@ class DataType
 
         if ('[]' !== $sRight2)
         {
-            $sContent .= "\t/**\r\n" . "\t * @param " . $sVar . ' $mValue ' . "\r\n" . "\t * @return " . '$this' . "\r\n" . "\t * @throws \ReflectionException\r\n" . "\t */" . "\r\n";
+            $sContent .= "\t/**\r\n" . "\t * @param " . $sVar . ' $aValue ' . "\r\n" . "\t * @return " . '$this' . "\r\n" . "\t * @throws \ReflectionException\r\n" . "\t */" . "\r\n";
             $sContent .= "\tpublic function set_" . $oProperty->get_key() . '(';
 
             // place type for php7 and newer
@@ -904,32 +923,37 @@ class DataType
                 ? $sContent .= $sVar . ' '
                 : false;
 
-            $sContent .= '$mValue)' . "\r\n" . "\t{" . "\r\n\t\t\MVC\Event::RUN ('" . $sClassName . ".set_" . $oProperty->get_key() . ".before', \MVC\DataType\DTArrayObject::create(array('" . $oProperty->get_key() . "' => " . '$mValue' . "))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));\r\n";
+            $sContent .= '$aValue)' . "\r\n" . "\t{" . "\r\n\t\t\MVC\Event::RUN ('" . $sClassName . ".set_" . $oProperty->get_key() . ".before', \MVC\DataType\DTArrayObject::create(array('" . $oProperty->get_key() . "' => " . '$aValue' . "))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));\r\n";
 
             if (true === $oProperty->get_forceCasting())
             {
                 // common types
                 if (in_array($oProperty->get_var(), array('string', 'int', 'integer', 'array', 'bool', 'boolean', 'float', 'double')))
                 {
-                    $sContent .= "\r\n\t\t" . '$this->' . $oProperty->get_key() . ' = (' . $oProperty->get_var() . ') $mValue;' . "\r\n\r\n" . "\t\treturn " . '$this;' . "\r\n\t}\r\n\r\n";
+                    $sContent .= "\r\n\t\t" . '$this->' . $oProperty->get_key() . ' = (' . $oProperty->get_var() . ') $aValue;' . "\r\n\r\n" . "\t\treturn " . '$this;' . "\r\n\t}\r\n\r\n";
+                }
+                // mixed
+                elseif (in_array($oProperty->get_var(), array('mixed')))
+                {
+                    $sContent .= "\r\n\t\t" . '$this->' . $oProperty->get_key() . ' = $aValue;' . "\r\n\r\n" . "\t\treturn " . '$this;' . "\r\n\t}\r\n\r\n";
                 }
                 // custom types
                 else
                 {
                     /** @todo custom type casting; Reflection... */
                     #$sContent .= "\r\n\t\t" . '(false === ($mValue instanceof ' . $sVar . ')) ? $mValue = ' . $sVar . '::create($mValue) : false;' . "\r\n";
-                    $sContent .= "\r\n\t\t" . '$this->' . $oProperty->get_key() . ' = $mValue;' . "\r\n\r\n" . "\t\treturn " . '$this;' . "\r\n\t}\r\n\r\n";
+                    $sContent .= "\r\n\t\t" . '$this->' . $oProperty->get_key() . ' = $aValue;' . "\r\n\r\n" . "\t\treturn " . '$this;' . "\r\n\t}\r\n\r\n";
                 }
             }
             else
             {
-                $sContent .= "\r\n\t\t" . '$this->' . $oProperty->get_key() . ' = $mValue;' . "\r\n\r\n" . "\t\treturn " . '$this;' . "\r\n\t}\r\n\r\n";
+                $sContent .= "\r\n\t\t" . '$this->' . $oProperty->get_key() . ' = $aValue;' . "\r\n\r\n" . "\t\treturn " . '$this;' . "\r\n\t}\r\n\r\n";
             }
         }
         // type is array
         else
         {
-            $sContent .= "\t/**\r\n" . "\t * @param " . $oProperty->get_var() . " " . ' $mValue ' . "\r\n" . "\t * @return " . '$this' . "\r\n" . "\t * @throws \ReflectionException\r\n" . "\t */" . "\r\n";
+            $sContent .= "\t/**\r\n" . "\t * @param " . $oProperty->get_var() . " " . ' $aValue ' . "\r\n" . "\t * @return " . '$this' . "\r\n" . "\t * @throws \ReflectionException\r\n" . "\t */" . "\r\n";
             $sContent .= "\tpublic function set_" . $oProperty->get_key() . '(';
 
             // place type for php7 and newer
@@ -944,8 +968,12 @@ class DataType
             {
                 $sContent .= "\MVC\Event::RUN ('" . $sClassName . ".set_" . $oProperty->get_key() . ".before', \MVC\DataType\DTArrayObject::create(array('" . $oProperty->get_key() . "' => " . '$aValue' . "))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));" . "\r\n";
 
-                $sContent .= "\r\n\t\t" . 'foreach ($aValue as $mKey => $aData)
+                $sContent .= "\r\n\t\t" . '$aValue = (array) $aValue;
+                
+        foreach ($aValue as $mKey => $aData)
         {
+            $aData = (array) $aData; 
+            
             if (false === ($aData instanceof ' . ucwords($sVar) . '))
             {
                 $aValue[$mKey] = new ' . ucwords($sVar) . '($aData);

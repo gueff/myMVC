@@ -29,8 +29,20 @@ function get(&$sVar, $mFallback = null)
     return $mFallback;
 }
 
+/**
+ * @return void
+ * @throws \ReflectionException
+ */
 function stop()
 {
     $aDebug = \MVC\Debug::prepareBacktraceArray(debug_backtrace());
-    \MVC\Debug::stop('', true, true, $aDebug);
+    $sMessage = "<pre>
+stop at:
+- File: " . $aDebug['sFile'] . "
+- Line: " . $aDebug['sLine']. "
+- Method: " . $aDebug['sClass'] . "::" . $aDebug['sFunction'] . "
+</pre>
+";
+    (true === \MVC\Request::isCli()) ? $sMessage = strip_tags($sMessage): false;
+    die($sMessage);
 }

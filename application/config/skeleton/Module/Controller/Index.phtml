@@ -40,9 +40,7 @@ class Index implements \MVC\MVCInterface\Controller
      */
 	public function __construct ()
 	{
-        \{module}\View\Index::init()->autoAssign(
-            Route::getCurrent()
-        );
+        \{module}\View\Index::init()->autoAssign();
 	}
 
     /**

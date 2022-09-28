@@ -34,7 +34,7 @@ class Route
     {
         //  require recursively all php files in module's routing dir
         /** @var \SplFileInfo $oSplFileInfo */
-        foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(Config::get_MVC_MODULE_CURRENT_DIR() . '/etc/routing')) as $oSplFileInfo)
+        foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(Config::get_MVC_MODULE_CURRENT_ETC_DIR() . '/routing')) as $oSplFileInfo)
         {
             if ('php' === strtolower($oSplFileInfo->getExtension()))
             {
@@ -44,62 +44,62 @@ class Route
     }
 
     /**
-     * @param $sPath
-     * @param $sQuery
-     * @param $mOptional
+     * @param string $sPath
+     * @param string $sQuery
+     * @param        $mOptional
      * @return void
      * @throws \ReflectionException
      */
-    public static function GET($sPath = '', $sQuery = '', $mOptional = '')
+    public static function GET(string $sPath = '', string $sQuery = '', $mOptional = '')
     {
         self::add('GET', $sPath, $sQuery, $mOptional);
     }
 
     /**
-     * @param $sPath
-     * @param $sQuery
-     * @param $mOptional
+     * @param string $sPath
+     * @param string $sQuery
+     * @param        $mOptional
      * @return void
      * @throws \ReflectionException
      */
-    public static function POST($sPath = '', $sQuery = '', $mOptional = '')
+    public static function POST(string $sPath = '', string $sQuery = '', $mOptional = '')
     {
         self::add('POST', $sPath, $sQuery, $mOptional);
     }
 
     /**
-     * @param $sPath
-     * @param $sQuery
-     * @param $mOptional
+     * @param string $sPath
+     * @param string $sQuery
+     * @param        $mOptional
      * @return void
      * @throws \ReflectionException
      */
-    public static function PUT($sPath = '', $sQuery = '', $mOptional = '')
+    public static function PUT(string $sPath = '', string $sQuery = '', $mOptional = '')
     {
         self::add('PUT', $sPath, $sQuery, $mOptional);
     }
 
     /**
-     * @param $sPath
-     * @param $sQuery
-     * @param $mOptional
+     * @param string $sPath
+     * @param string $sQuery
+     * @param        $mOptional
      * @return void
      * @throws \ReflectionException
      */
-    public static function DELETE($sPath = '', $sQuery = '', $mOptional = '')
+    public static function DELETE(string $sPath = '', string $sQuery = '', $mOptional = '')
     {
         self::add('DELETE', $sPath, $sQuery, $mOptional);
     }
 
     /**
-     * @param $sMethod
-     * @param $sPath
-     * @param $sQuery e.g: 'module=Foo&c=Api&m=bar' OR '\Foo\Controller\Api::bar'
-     * @param $mOptional
+     * @param string $sMethod
+     * @param string $sPath
+     * @param string $sQuery
+     * @param mixed  $mOptional
      * @return void
      * @throws \ReflectionException
      */
-    protected static function add($sMethod = 'GET', $sPath = '', $sQuery = '', $mOptional = '')
+    protected static function add(string $sMethod = 'GET', string $sPath = '', string $sQuery = '', $mOptional = '')
     {
         parse_str(get($sQuery), $aQuery);
 
@@ -123,18 +123,16 @@ class Route
             ->set_module(get($aQuery[Config::get_MVC_GET_PARAM_MODULE()]))
             ->set_c(get($aQuery[Config::get_MVC_GET_PARAM_C()]))
             ->set_m(get($aQuery[Config::get_MVC_GET_PARAM_M()]))
-            ->set_additional(
-                (true === Strings::isJson($mOptional)) ? $mOptional : json_encode($mOptional)
-            )
+            ->set_additional($mOptional)
         ;
         self::$aMethod[strtolower($sMethod)][] = $sPath;
     }
 
     /**
-     * @param $bWildcardsOnly
+     * @param bool $bWildcardsOnly
      * @return array|false
      */
-    public static function getIndices($bWildcardsOnly = false)
+    public static function getIndices(bool $bWildcardsOnly = false)
     {
         $aIndex = (array) array_keys(self::$aRoute);
 
@@ -150,11 +148,11 @@ class Route
     }
 
     /**
-     * @param $sKey
-     * @param $sValue
+     * @param string $sKey
+     * @param string $sValue
      * @return array
      */
-    public static function getRouteIndexArrayOnKey($sKey = 'query', $sValue = '')
+    public static function getRouteIndexArrayOnKey(string $sKey = 'query', string $sValue = '')
     {
         $aRoute = Convert::objectToArray(self::$aRoute);
         $aIndex = array();
@@ -202,10 +200,10 @@ class Route
     }
 
     /**
-     * @param $sPath
-     * @return int|mixed|string
+     * @param string $sPath
+     * @return string
      */
-    public static function getIndexOnWildcard($sPath = '')
+    public static function getIndexOnWildcard(string $sPath = '')
     {
         $aIndex = self::getIndices(true);
 
@@ -219,7 +217,7 @@ class Route
                 $aPathParam['_tail'] = substr($sPath, strlen($sIndexCutOff));
                 Request::setPathParam($aPathParam);
 
-                return $sIndex;
+                return (string) $sIndex;
             }
         }
 
@@ -227,10 +225,10 @@ class Route
     }
 
     /**
-     * @param $sPath
-     * @return int|mixed|string|void
+     * @param string $sPath
+     * @return string
      */
-    public static function getPathOnPlaceholderIndex($sPath = '')
+    public static function getPathOnPlaceholderIndex(string $sPath = '')
     {
         // Request
         $aPartPath = preg_split('@/@', $sPath, 0, PREG_SPLIT_NO_EMPTY);
@@ -297,9 +295,11 @@ class Route
                 $aPathParam['_tail'] = $sTail;
                 Request::setPathParam($aPathParam);
 
-                return $aIndex[$iKey];
+                return (string) get($aIndex[$iKey], '');
             }
         }
+
+        return '';
     }
 
     /**
