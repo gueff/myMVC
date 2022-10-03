@@ -127,6 +127,7 @@ FIRST_LOG_ENTRY_ON_NEW_REQUEST: {
                 . ' ' . (array_key_exists ('REQUEST_URI', $_SERVER) ? (string) $_SERVER['REQUEST_URI'] : '');
     $sMessage = ''
                 . date("Y-m-d H:i:s")
+                . "\t" . $_SERVER['HTTP_HOST']
                 . "\t" . ((false !== getenv('MVC_ENV')) ? getenv('MVC_ENV') : '---?---')
                 . "\t" . ((array_key_exists('REMOTE_ADDR', $_SERVER)) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1')
                 . "\t" . ((array_key_exists('MVC_UNIQUE_ID', $GLOBALS['aConfig'])) ? $GLOBALS['aConfig']['MVC_UNIQUE_ID'] : '---')

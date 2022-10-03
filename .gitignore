@@ -13,6 +13,7 @@ vendor
 CliDialogue
 modules/*
 public/.env
+public/openapi/
 _createPhar.php
 _generateDataTypes.php
 _push.sh

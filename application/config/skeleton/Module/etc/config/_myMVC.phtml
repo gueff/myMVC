@@ -1,32 +1,37 @@
 <?php
 
 //-------------------------------------------------------------------------------------
+// Module
+
+$aConfig['MVC_MODULE_CURRENT_NAME'] = '{module}';
+
+$aConfig['MVC_MODULE_CURRENT_DIR'] = $aConfig['MVC_MODULES'] . '/' . $aConfig['MVC_MODULE_CURRENT_NAME'];
+$aConfig['MVC_MODULE_CURRENT_CONFIG_DIR'] = $aConfig['MVC_MODULE_CURRENT_DIR'] . '/etc/config';
+$aConfig['MVC_MODULE_CURRENT_CONTROLLER_DIR'] = $aConfig['MVC_MODULE_CURRENT_DIR'] . '/Controller';
+$aConfig['MVC_MODULE_CURRENT_DATATYPE_DIR'] = $aConfig['MVC_MODULE_CURRENT_DIR'] . '/DataType';
+$aConfig['MVC_MODULE_CURRENT_ETC_DIR'] = $aConfig['MVC_MODULE_CURRENT_DIR'] . '/etc';
+$aConfig['MVC_MODULE_CURRENT_STAGING_CONFIG_DIR'] = $aConfig['MVC_MODULE_CURRENT_CONFIG_DIR'] . '/' . $aConfig['MVC_MODULE_CURRENT_NAME'] . '/config';
+$aConfig['MVC_MODULE_CURRENT_EVENT_DIR'] = $aConfig['MVC_MODULES'] . '/Event';
+$aConfig['MVC_MODULE_CURRENT_MODEL_DIR'] = $aConfig['MVC_MODULES'] . '/Model';
+$aConfig['MVC_MODULE_CURRENT_POLICY_DIR'] = $aConfig['MVC_MODULES'] . '/Policy';
+$aConfig['MVC_MODULE_CURRENT_VIEW_DIR'] = $aConfig['MVC_MODULES'] . '/View';
+$aConfig['MVC_MODULE_CURRENT_COMPOSER_DIR'] = $aConfig['MVC_MODULE_CURRENT_CONFIG_DIR'] . '/' . $aConfig['MVC_MODULE_CURRENT_NAME'];
+
+//-------------------------------------------------------------------------------------
 // MVC
 
 // show InfoTool bar
 $aConfig['MVC_INFOTOOL_ENABLE'] = true;
 
-// MVC fallback routing
-$aConfig['MVC_ROUTING_FALLBACK'] = 'module={module}&c=index&m=notFound';
-
-// override MVC's fallback routing
-$aConfig['MVC_ROUTING_FALLBACK'] = $aConfig['MVC_GET_PARAM_MODULE'] . '={module}&'
-    . $aConfig['MVC_GET_PARAM_C'] . '=index&'
-    . $aConfig['MVC_GET_PARAM_M'] . '=notFound';
-
-// module's config dir
-$aConfig['MVC_MODULE_CURRENT_DIR'] = $aConfig['MVC_MODULES'] . '/{module}';
-$aConfig['MVC_MODULE_CURRENT_ETC_DIR'] = $aConfig['MVC_MODULE_CURRENT_DIR'] . '/etc';
-$aConfig['MVC_MODULE_CURRENT_CONFIG_DIR'] = $aConfig['MVC_MODULE_CURRENT_DIR'] . '/etc/config';
-$aConfig['MVC_MODULE_CURRENT_STAGING_CONFIG_DIR'] = $aConfig['MVC_MODULE_CURRENT_DIR'] . '/config';
-
-// composer dir
-$aConfig['MVC_MODULE_CURRENT_COMPOSER_DIR'] = realpath(__DIR__ . '/../') . '/config/{module}';
+// override default fallback routing
+$aConfig['MVC_ROUTING_FALLBACK'] = $aConfig['MVC_GET_PARAM_MODULE'] . '=' . $aConfig['MVC_MODULE_CURRENT_NAME'] . '&'
+                                   . $aConfig['MVC_GET_PARAM_C'] . '=index&'
+                                   . $aConfig['MVC_GET_PARAM_M'] . '=notFound';
 
 // Smarty
-$aConfig['MVC_VIEW_TEMPLATES'] = $aConfig['MVC_MODULES'] . '/' . basename(realpath(__DIR__ . '/../../')) . '/templates';
+$aConfig['MVC_VIEW_TEMPLATES'] = $aConfig['MVC_MODULE_CURRENT_DIR'] . '/templates';
 $aConfig['MVC_SMARTY_TEMPLATE_DIR'] = $aConfig['MVC_VIEW_TEMPLATES'];
-$aConfig['MVC_SMARTY_TEMPLATE_DEFAULT'] = 'Frontend/layout/index.tpl';
+$aConfig['MVC_SMARTY_TEMPLATE_DEFAULT'] = 'Frontend/layout/index.tpl'; # relative path from templates folder
 
 // Add Location of Smarty PlugIns
-$aConfig['MVC_SMARTY_PLUGINS_DIR'][] = $aConfig['MVC_MODULES'] . '/' . basename(realpath(__DIR__ . '/../../')) . '/etc/smarty';
+$aConfig['MVC_SMARTY_PLUGINS_DIR'][] = $aConfig['MVC_MODULE_CURRENT_ETC_DIR'] . '/smartyPlugins';
