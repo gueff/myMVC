@@ -29,6 +29,16 @@ MVC_RUNTIME_SETTINGS: {
     $aConfig['MVC_LOG_AUTOLOADER'] = true;
 }
 
+MVC_BIN: {
+
+    // remove
+    $aConfig['MVC_BIN_REMOVE'] = '/bin/rm';
+    // find
+    $aConfig['MVC_BIN_FIND'] = '/usr/bin/find';
+    // grep
+    $aConfig['MVC_BIN_GREP'] = '/bin/grep';
+}
+
 MVC_APPLICATION_SETTINGS: {
 
     /**
@@ -92,9 +102,9 @@ MVC_APPLICATION_SETTINGS: {
         'bCaching' => true,
         'sCacheDir' => $aConfig['MVC_CACHE_DIR'],
         'iDeleteAfterMinutes' => 1440,
-        'sBinRemove' => '/bin/rm',
-        'sBinFind' => '/usr/bin/find',
-        'sBinGrep' => '/bin/grep'
+        'sBinRemove' => $aConfig['MVC_BIN_REMOVE'],
+        'sBinFind' => $aConfig['MVC_BIN_FIND'],
+        'sBinGrep' => $aConfig['MVC_BIN_GREP']
     );
 
     /**

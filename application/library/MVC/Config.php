@@ -891,4 +891,48 @@ class Config
 
         return $oView;
     }
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_BIN_REMOVE()
+    {
+        if (Registry::isRegistered('MVC_BIN_REMOVE'))
+        {
+            return (string) Registry::get('MVC_BIN_REMOVE');
+        }
+
+        return '';
+    }
+
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_BIN_FIND()
+    {
+        if (Registry::isRegistered('MVC_BIN_FIND'))
+        {
+            return (string) Registry::get('MVC_BIN_FIND');
+        }
+
+        return '';
+    }
+
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_BIN_GREP()
+    {
+        if (Registry::isRegistered('MVC_BIN_GREP'))
+        {
+            return (string) Registry::get('MVC_BIN_GREP');
+        }
+
+        return '';
+    }
 }
