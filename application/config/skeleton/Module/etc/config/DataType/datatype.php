@@ -5,7 +5,7 @@
  * @see https://mymvc.ueffing.net/generator-datatype
  */
 $aDataType = array(
-    'dir' => \MVC\Config::get_MVC_MODULES() . '/{module}/DataType/',
+    'dir' => \MVC\Config::get_MVC_MODULES_DIR() . '/{module}/DataType/',
     'unlinkDir' => true
 );
 

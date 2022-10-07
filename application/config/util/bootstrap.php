@@ -69,7 +69,7 @@ CONFIG: {
     #-----------------------------
 
     // get modules
-    $aModule = glob($aConfig['MVC_MODULES'] . '/*', GLOB_ONLYDIR);
+    $aModule = glob($aConfig['MVC_MODULES_DIR'] . '/*', GLOB_ONLYDIR);
 
     // walk modules
     foreach ($aModule as $sModule)
@@ -163,7 +163,7 @@ MVC_AUTOLOADING: {
 
 		// MVC Application
 		. PATH_SEPARATOR . $aConfig['MVC_LIBRARY']
-		. PATH_SEPARATOR . $aConfig['MVC_MODULES']
+		. PATH_SEPARATOR . $aConfig['MVC_MODULES_DIR']
 		. PATH_SEPARATOR . implode (PATH_SEPARATOR, $aConfig['MVC_SMARTY_PLUGINS_DIR'])
 	);
 

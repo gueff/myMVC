@@ -115,6 +115,7 @@ blue: hsl(210,50%,50%)
 					<ul>
 						<li><a href="#myMvcToolbar_Session_Status">Session Status</a></li>
 						<li><a href="#myMvcToolbar_Session_Values">Session Values</a></li>
+						<li><a href="#myMvcToolbar_Session_Rules">Session Activation Rules</a></li>
 						<li><a href="#myMvcToolbar_Session_Options">Session Options</a></li>
 						<li><a href="#myMvcToolbar_Session_Files">Session Files</a></li>
 					</ul>
@@ -140,8 +141,34 @@ blue: hsl(210,50%,50%)
 						{$aToolbar.aSessionKeyValues}
 					</p>
 					<pre>Session::is()->getAll()
-equals to:
+OR
 $_SESSION['{MVC\Session::is()->getNamespace()}']</pre>
+
+					<!------------------------------------------->
+
+					<h6>Session Rules
+						<a id="myMvcToolbar_Session_Rules"></a>
+						<small>* = any</small>
+						<span class="myMvcToolbar-float-right">
+							<small>
+								<a href="#myMvcToolbar_top">&uarr; top</a>
+							</small>
+						</span>
+					</h6>
+					{assign var="aModuleConfig" value=MVC\Config::MODULE()}
+					<p>
+						<span class="text-success">Enable</span> Session explicitely for Controller:<br>
+						{$aToolbar.aSessionRules.aEnableSessionForController}
+					</p>
+					<p>
+						<span class="text-danger">Disable</span> Session explicitely for Controller:<br>
+						{$aToolbar.aSessionRules.aDisableSessionForController}
+					</p>
+					<pre>Config::MODULE()['SESSION']
+OR
+Config::MODULE('{MVC\Config::get_MVC_MODULE_CURRENT_NAME()}')['SESSION']</pre>
+
+					<!------------------------------------------->
 
 					<h6>Session Options <a id="myMvcToolbar_Session_Options"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top">&uarr; top</a></small></span></h6>
 					<p>
@@ -260,7 +287,7 @@ $_SESSION['{MVC\Session::is()->getNamespace()}']</pre>
 <pre>Request::getPathParam();
 Request::getPathParam( $sKey )</pre>
 
-						<h6>Query <small>requested</small><a id="myMvcToolbar_Query"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top2">&uarr; top</a></small></span></h6>
+					<h6>Query <small>requested</small><a id="myMvcToolbar_Query"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top2">&uarr; top</a></small></span></h6>
 					<p>
 					{if '' === $aToolbar.sRoutingQuery}
 						...no GET query
@@ -269,6 +296,11 @@ Request::getPathParam( $sKey )</pre>
 					{/if}
 					</p>
 					<pre>Request::getCurrentRequest()->get_query()</pre>
+
+					<h6>Current Request Object</h6>
+					<pre>{MVC\Request::getCurrentRequest()|@print_r:true}</pre>
+					<i>MVC\DataType\DTRequestCurrent</i>
+					<pre>Request::getCurrentRequest()</pre>
 				</div>
 				<div class="subtab23">
 					<h6>Overview</h6>

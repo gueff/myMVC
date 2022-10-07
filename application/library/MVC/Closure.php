@@ -133,7 +133,13 @@ class Closure
             (substr_count($aExplode[$iLastLineNumber], '}') > 1)
         )
         {
-            \MVC\Error::addERROR("Too complex context definition in: `$sFileName`. Check lines: $iStartLine & $iEndLine.");
+            \MVC\Error::error(
+                "Too complex context definition in: `$sFileName`. Check lines: $iStartLine & $iEndLine.",
+                1,
+                0,
+                $sFileName,
+                $iStartLine
+            );
         }
 
         $aExplode[0] = ('function' . explode('function', current($aExplode))[1]);

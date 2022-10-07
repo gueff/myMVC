@@ -64,14 +64,42 @@ class Request
      */
     public static function getCurrentRequest()
     {
+        // run only once
+        if (true === Registry::isRegistered('oDTRequestCurrent'))
+        {
+            $oDTRequestCurrent = Registry::get('oDTRequestCurrent');
+
+            return $oDTRequestCurrent;
+        }
+
         $aUriInfo = parse_url(self::getUriProtocol() . $_SERVER['HTTP_HOST'] . self::getServerRequestUri());
         (false === is_array($aUriInfo)) ? $aUriInfo = array() : false;
+
         $oDTRequestCurrent = DTRequestCurrent::create($aUriInfo);
         $oDTRequestCurrent->set_requesturi(self::getServerRequestUri());
         $oDTRequestCurrent->set_protocol(self::getUriProtocol());
         $oDTRequestCurrent->set_full(self::getUriProtocol() . $_SERVER['HTTP_HOST'] . self::getServerRequestUri());
         $oDTRequestCurrent->set_requestmethod(Request::getServerRequestMethod());
         $oDTRequestCurrent->set_input(file_get_contents("php://input"));
+        $oDTRequestCurrent->set_isSecure(Config::get_MVC_SECURE_REQUEST());
+        parse_str($oDTRequestCurrent->get_query(), $aQueryArray);
+        $oDTRequestCurrent->set_queryArray($aQueryArray);
+
+        // if event ...
+        Event::bind('mvc.controller.init.before', function(){
+            // ... run this event
+            Event::run(
+                'mvc.request.getCurrentRequest.after',
+                DTArrayObject::create()->add_aKeyValue(
+                    DTKeyValue::create()
+                        ->set_sKey('oDTRequestCurrent')
+                        ->set_sValue(Registry::get('oDTRequestCurrent'))
+                )
+            );
+        });
+
+        // save to registry
+        Registry::set('oDTRequestCurrent', $oDTRequestCurrent);
 
         return $oDTRequestCurrent;
     }

@@ -107,22 +107,22 @@ class Route
         if (null === get($aQuery['m']))
         {
             $aQuery = array();
-            list($aQuery[Config::get_MVC_GET_PARAM_MODULE()], $sTmp, $aQuery[Config::get_MVC_GET_PARAM_C()]) = array_values(array_filter(explode('\\', strtok($sQuery, ':'))));
-            $aQuery[Config::get_MVC_GET_PARAM_M()] = substr($sQuery, (strrpos($sQuery, ':') + 1));
-            $sQuery = 'module=' . $aQuery[Config::get_MVC_GET_PARAM_MODULE()] .'&c=' . $aQuery[Config::get_MVC_GET_PARAM_C()] . '&m=' . $aQuery[Config::get_MVC_GET_PARAM_M()];
+            list($aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_MODULE()], $sTmp, $aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_C()]) = array_values(array_filter(explode('\\', strtok($sQuery, ':'))));
+            $aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_M()] = substr($sQuery, (strrpos($sQuery, ':') + 1));
+            $sQuery = 'module=' . $aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_MODULE()] .'&c=' . $aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_C()] . '&m=' . $aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_M()];
         }
 
-        $sClass = ucfirst(get($aQuery[Config::get_MVC_GET_PARAM_MODULE()], '')) . '\\Controller\\' . ucfirst(get($aQuery[Config::get_MVC_GET_PARAM_C()], ''));
+        $sClass = ucfirst(get($aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_MODULE()], '')) . '\\Controller\\' . ucfirst(get($aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_C()], ''));
 
         self::$aRoute[$sPath] = DTRoute::create()
             ->set_path($sPath)
             ->set_method(strtoupper($sMethod))
             ->set_query($sQuery)
             ->set_class($sClass)
-            ->set_classFile(Config::get_MVC_MODULES() . '/' . str_replace ('\\', '/', $sClass) . '.php')
-            ->set_module(get($aQuery[Config::get_MVC_GET_PARAM_MODULE()]))
-            ->set_c(get($aQuery[Config::get_MVC_GET_PARAM_C()]))
-            ->set_m(get($aQuery[Config::get_MVC_GET_PARAM_M()]))
+            ->set_classFile(Config::get_MVC_MODULES_DIR() . '/' . str_replace ('\\', '/', $sClass) . '.php')
+            ->set_module(get($aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_MODULE()]))
+            ->set_c(get($aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_C()]))
+            ->set_m(get($aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_M()]))
             ->set_additional($mOptional)
         ;
         self::$aMethod[strtolower($sMethod)][] = $sPath;

@@ -11,49 +11,58 @@ class DTRoute
 {
 	use TraitDataType;
 
-	const DTHASH = 'e365031b36b512766fce9c0336675616';
+	const DTHASH = '5f6fc0b2477f18e401b2b11348df79d0';
 
 	/**
+	 * @required true
 	 * @var string
 	 */
 	protected $path;
 
 	/**
+	 * @required false
 	 * @var string
 	 */
 	protected $method;
 
 	/**
+	 * @required false
 	 * @var string
 	 */
 	protected $query;
 
 	/**
+	 * @required false
 	 * @var string
 	 */
 	protected $class;
 
 	/**
+	 * @required false
 	 * @var string
 	 */
 	protected $classFile;
 
 	/**
+	 * @required false
 	 * @var string
 	 */
 	protected $module;
 
 	/**
+	 * @required false
 	 * @var string
 	 */
 	protected $c;
 
 	/**
+	 * @required false
 	 * @var string
 	 */
 	protected $m;
 
 	/**
+	 * @required false
 	 * @var mixed
 	 */
 	protected $additional;

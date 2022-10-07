@@ -11,74 +11,88 @@ class DTFileinfo
 {
 	use TraitDataType;
 
-	const DTHASH = '6d505a5d37345bdb35946d7ac89e4754';
+	const DTHASH = '4ae6b0c4623d19d1179671c04fe05cd5';
 
 	/**
+	 * @required false
 	 * @var string
 	 */
 	protected $dirname;
 
 	/**
+	 * @required false
 	 * @var string
 	 */
 	protected $basename;
 
 	/**
+	 * @required false
 	 * @var string
 	 */
 	protected $path;
 
 	/**
+	 * @required false
 	 * @var bool
 	 */
 	protected $is_file;
 
 	/**
+	 * @required false
 	 * @var bool
 	 */
 	protected $is_dir;
 
 	/**
+	 * @required false
 	 * @var string
 	 */
 	protected $extension;
 
 	/**
+	 * @required false
 	 * @var string
 	 */
 	protected $filename;
 
 	/**
+	 * @required false
 	 * @var string
 	 */
 	protected $name;
 
 	/**
+	 * @required false
 	 * @var string
 	 */
 	protected $passwd;
 
 	/**
+	 * @required false
 	 * @var int
 	 */
 	protected $uid;
 
 	/**
+	 * @required false
 	 * @var int
 	 */
 	protected $gid;
 
 	/**
+	 * @required false
 	 * @var string
 	 */
 	protected $gecos;
 
 	/**
+	 * @required false
 	 * @var string
 	 */
 	protected $dir;
 
 	/**
+	 * @required false
 	 * @var string
 	 */
 	protected $shell;

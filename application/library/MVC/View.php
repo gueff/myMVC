@@ -77,7 +77,7 @@ class View extends \Smarty
 
         if (false === file_exists($this->sTemplateDir))
         {
-            $this->sTemplateDir = Config::get_MVC_MODULES() . '/' . Route::getCurrent()->get_module() . '/templates';
+            $this->sTemplateDir = Config::get_MVC_MODULES_DIR() . '/' . Route::getCurrent()->get_module() . '/templates';
         }
 
         $this->setAbsolutePathToTemplateDir ($this->sTemplateDir);

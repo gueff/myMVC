@@ -154,6 +154,14 @@ class InfoTool
         $aToolbar['aSessionFiles'] = $this->buildMarkupListTree(
             preg_grep('/^([^.])/', scandir(Config::get_MVC_SESSION_OPTIONS()['save_path']))
         );
+        $aToolbar['aSessionRules']['aEnableSessionForController'] = (false === empty(\MVC\Config::MODULE()['SESSION']['aEnableSessionForController']))
+            ? $this->buildMarkupListTree(\MVC\Config::MODULE()['SESSION']['aEnableSessionForController'])
+            : 'none'
+        ;
+        $aToolbar['aSessionRules']['aDisableSessionForController'] = (false === empty(\MVC\Config::MODULE()['SESSION']['aDisableSessionForController']))
+            ? $this->buildMarkupListTree(\MVC\Config::MODULE()['SESSION']['aDisableSessionForController'])
+            : 'none'
+        ;
         $aToolbar['aSmartyTemplateVars'] = $oView->getTemplateVars();
         $aToolbar['sSmartyTemplateVars'] = $this->buildMarkupListTree($oView->getTemplateVars());
         $aConstants = get_defined_constants (true);

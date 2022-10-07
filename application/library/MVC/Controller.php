@@ -48,7 +48,7 @@ class Controller
      */
     public static function runTargetClassPreconstruct ()
     {
-        $sTargetModule = Config::get_MVC_MODULES() . '/' . Route::getCurrent()->get_module();
+        $sTargetModule = Config::get_MVC_MODULES_DIR() . '/' . Route::getCurrent()->get_module();
         $sTargetClass = Route::getCurrent()->get_class();
         $sTargetClassFile = Route::getCurrent()->get_classFile();
         $sMethodNamePreconstruct = Config::get_MVC_METHODNAME_PRECONSTRUCT();
@@ -71,7 +71,7 @@ class Controller
         if (!file_exists ($sTargetClassFile))
         {
             parse_str (Config::get_MVC_ROUTING_FALLBACK(), $aParse);
-            $sTargetClass = '\\' . ucfirst ($aParse[Config::get_MVC_GET_PARAM_MODULE()]) . '\\' . ucfirst ($aParse[Config::get_MVC_GET_PARAM_C()]);
+            $sTargetClass = '\\' . ucfirst ($aParse[Config::get_MVC_ROUTE_QUERY_PARAM_MODULE()]) . '\\' . ucfirst ($aParse[Config::get_MVC_ROUTE_QUERY_PARAM_C()]);
         }
 
         if (class_exists ($sTargetClass))

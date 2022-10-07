@@ -11,52 +11,73 @@ class DTRequestCurrent
 {
 	use TraitDataType;
 
-	const DTHASH = 'fe6185dcf19cad204306514f47a0899e';
+	const DTHASH = 'afd63a2a5c0c34adb3f985736f791b5c';
 
 	/**
+	 * @required false
 	 * @var string
 	 */
 	protected $scheme;
 
 	/**
+	 * @required false
 	 * @var string
 	 */
 	protected $host;
 
 	/**
+	 * @required false
 	 * @var array
 	 */
 	protected $path;
 
 	/**
+	 * @required false
 	 * @var string
 	 */
 	protected $query;
 
 	/**
+	 * @required false
+	 * @var array
+	 */
+	protected $queryArray;
+
+	/**
+	 * @required false
 	 * @var string
 	 */
 	protected $requesturi;
 
 	/**
+	 * @required false
 	 * @var string
 	 */
 	protected $requestmethod;
 
 	/**
+	 * @required false
 	 * @var string
 	 */
 	protected $protocol;
 
 	/**
+	 * @required false
 	 * @var string
 	 */
 	protected $full;
 
 	/**
+	 * @required false
 	 * @var string
 	 */
 	protected $input;
+
+	/**
+	 * @required false
+	 * @var bool
+	 */
+	protected $isSecure;
 
 	/**
 	 * DTRequestCurrent constructor.
@@ -71,11 +92,13 @@ class DTRequestCurrent
 		$this->host = '';
 		$this->path = array();
 		$this->query = '';
+		$this->queryArray = array();
 		$this->requesturi = '';
 		$this->requestmethod = '';
 		$this->protocol = '';
 		$this->full = '';
 		$this->input = '';
+		$this->isSecure = false;
 
 		foreach ($aData as $sKey => $mValue)
 		{
@@ -163,6 +186,20 @@ class DTRequestCurrent
 	}
 
 	/**
+	 * @param array $aValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
+	public function set_queryArray($aValue)
+	{
+		\MVC\Event::RUN ('DTRequestCurrent.set_queryArray.before', \MVC\DataType\DTArrayObject::create(array('queryArray' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+
+		$this->queryArray = $aValue;
+
+		return $this;
+	}
+
+	/**
 	 * @param string $aValue 
 	 * @return $this
 	 * @throws \ReflectionException
@@ -233,6 +270,20 @@ class DTRequestCurrent
 	}
 
 	/**
+	 * @param bool $aValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
+	public function set_isSecure($aValue)
+	{
+		\MVC\Event::RUN ('DTRequestCurrent.set_isSecure.before', \MVC\DataType\DTArrayObject::create(array('isSecure' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+
+		$this->isSecure = $aValue;
+
+		return $this;
+	}
+
+	/**
 	 * @return string
 	 * @throws \ReflectionException
 	 */
@@ -274,6 +325,17 @@ class DTRequestCurrent
 		\MVC\Event::RUN ('DTRequestCurrent.get_query.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('query')->set_sValue($this->query))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
 
 		return $this->query;
+	}
+
+	/**
+	 * @return array
+	 * @throws \ReflectionException
+	 */
+	public function get_queryArray()
+	{
+		\MVC\Event::RUN ('DTRequestCurrent.get_queryArray.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('queryArray')->set_sValue($this->queryArray))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+
+		return $this->queryArray;
 	}
 
 	/**
@@ -332,6 +394,17 @@ class DTRequestCurrent
 	}
 
 	/**
+	 * @return bool
+	 * @throws \ReflectionException
+	 */
+	public function get_isSecure()
+	{
+		\MVC\Event::RUN ('DTRequestCurrent.get_isSecure.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('isSecure')->set_sValue($this->isSecure))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+
+		return $this->isSecure;
+	}
+
+	/**
 	 * @return string
 	 */
 	public static function getPropertyName_scheme()
@@ -361,6 +434,14 @@ class DTRequestCurrent
 	public static function getPropertyName_query()
 	{
         return 'query';
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getPropertyName_queryArray()
+	{
+        return 'queryArray';
 	}
 
 	/**
@@ -401,6 +482,14 @@ class DTRequestCurrent
 	public static function getPropertyName_input()
 	{
         return 'input';
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getPropertyName_isSecure()
+	{
+        return 'isSecure';
 	}
 
 	/**

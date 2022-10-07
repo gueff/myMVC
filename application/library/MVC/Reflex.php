@@ -50,7 +50,7 @@ class Reflex
 		if ($sModule == '' && $sClass == '')
 		{
 			parse_str (Config::get_MVC_ROUTING_FALLBACK(), $aParse);
-			$sControllerClassName = '\\' . ucfirst ($aParse[Config::get_MVC_GET_PARAM_MODULE()]) . '\\Controller\\' . ucfirst ($aParse[Config::get_MVC_GET_PARAM_C()]);
+			$sControllerClassName = '\\' . ucfirst ($aParse[Config::get_MVC_ROUTE_QUERY_PARAM_MODULE()]) . '\\Controller\\' . ucfirst ($aParse[Config::get_MVC_ROUTE_QUERY_PARAM_C()]);
 		}
 		// Regular Target
 		else

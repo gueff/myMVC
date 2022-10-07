@@ -51,11 +51,11 @@ class Config
      * @return string
      * @throws \ReflectionException#
      */
-    public static function get_MVC_GET_PARAM_MODULE()
+    public static function get_MVC_ROUTE_QUERY_PARAM_MODULE()
     {
-        if (Registry::isRegistered('MVC_GET_PARAM_MODULE'))
+        if (Registry::isRegistered('MVC_ROUTE_QUERY_PARAM_MODULE'))
         {
-            return (string) Registry::get('MVC_GET_PARAM_MODULE');
+            return (string) Registry::get('MVC_ROUTE_QUERY_PARAM_MODULE');
         }
 
         return '';
@@ -65,11 +65,11 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_GET_PARAM_C()
+    public static function get_MVC_ROUTE_QUERY_PARAM_C()
     {
-        if (Registry::isRegistered('MVC_GET_PARAM_C'))
+        if (Registry::isRegistered('MVC_ROUTE_QUERY_PARAM_C'))
         {
-            return (string) Registry::get('MVC_GET_PARAM_C');
+            return (string) Registry::get('MVC_ROUTE_QUERY_PARAM_C');
         }
 
         return '';
@@ -79,11 +79,11 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_GET_PARAM_M()
+    public static function get_MVC_ROUTE_QUERY_PARAM_M()
     {
-        if (Registry::isRegistered('MVC_GET_PARAM_M'))
+        if (Registry::isRegistered('MVC_ROUTE_QUERY_PARAM_M'))
         {
-            return (string) Registry::get('MVC_GET_PARAM_M');
+            return (string) Registry::get('MVC_ROUTE_QUERY_PARAM_M');
         }
 
         return '';
@@ -345,11 +345,11 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_MODULES()
+    public static function get_MVC_MODULES_DIR()
     {
-        if (Registry::isRegistered('MVC_MODULES'))
+        if (Registry::isRegistered('MVC_MODULES_DIR'))
         {
-            return (string) Registry::get('MVC_MODULES');
+            return (string) Registry::get('MVC_MODULES_DIR');
         }
 
         return '';
@@ -689,7 +689,7 @@ class Config
     {
         if ('' === $sModule)
         {
-            $sModule = Route::getCurrent()->get_module();
+            $sModule = self::get_MVC_MODULE_CURRENT_NAME();
         }
 
         if (Registry::isRegistered('MODULE'))
@@ -906,7 +906,6 @@ class Config
         return '';
     }
 
-
     /**
      * @return string
      * @throws \ReflectionException
@@ -921,7 +920,6 @@ class Config
         return '';
     }
 
-
     /**
      * @return string
      * @throws \ReflectionException
@@ -931,6 +929,76 @@ class Config
         if (Registry::isRegistered('MVC_BIN_GREP'))
         {
             return (string) Registry::get('MVC_BIN_GREP');
+        }
+
+        return '';
+    }
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_BIN_MOVE()
+    {
+        if (Registry::isRegistered('MVC_BIN_MOVE'))
+        {
+            return (string) Registry::get('MVC_BIN_MOVE');
+        }
+
+        return '';
+    }
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_BIN_RENAME()
+    {
+        if (Registry::isRegistered('MVC_BIN_RENAME'))
+        {
+            return (string) Registry::get('MVC_BIN_RENAME');
+        }
+
+        return '';
+    }
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_BIN_XARGS()
+    {
+        if (Registry::isRegistered('MVC_BIN_XARGS'))
+        {
+            return (string) Registry::get('MVC_BIN_XARGS');
+        }
+
+        return '';
+    }
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_BIN_SED()
+    {
+        if (Registry::isRegistered('MVC_BIN_SED'))
+        {
+            return (string) Registry::get('MVC_BIN_SED');
+        }
+
+        return '';
+    }
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_BIN_PHP_BINARY()
+    {
+        if (Registry::isRegistered('MVC_BIN_PHP_BINARY'))
+        {
+            return (string) Registry::get('MVC_BIN_PHP_BINARY');
         }
 
         return '';

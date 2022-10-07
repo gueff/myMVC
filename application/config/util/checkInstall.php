@@ -57,7 +57,7 @@ class MyMVCInstaller
      */
 	protected function checkOnModulesInstalled()
     {
-        $aModule = glob($this->_aConfig['MVC_MODULES'] . '/*', GLOB_ONLYDIR);
+        $aModule = glob($this->_aConfig['MVC_MODULES_DIR'] . '/*', GLOB_ONLYDIR);
 
         if (empty($aModule))
         {

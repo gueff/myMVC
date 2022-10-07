@@ -15,8 +15,7 @@ MVC_RUNTIME_SETTINGS: {
     /*
      * @see http://www.php.net/manual/en/timezones.php
      * @see http://stackoverflow.com/a/5559239/2487859
-     * to get array of availabe timezones see result of timezone_identifiers_list()
-     * 
+     * to get array of available timezones see result of timezone_identifiers_list()
      * try to get timezone (ubuntu), or set to UTC
      */
     date_default_timezone_set(((file_exists('/etc/timezone')) ? trim(file_get_contents('/etc/timezone')) : 'UTC'));
@@ -31,22 +30,25 @@ MVC_RUNTIME_SETTINGS: {
 
 MVC_BIN: {
 
-    // remove
-    $aConfig['MVC_BIN_REMOVE'] = '/bin/rm';
-    // find
+    $aConfig['MVC_BIN_SED'] = '/bin/sed';
     $aConfig['MVC_BIN_FIND'] = '/usr/bin/find';
-    // grep
     $aConfig['MVC_BIN_GREP'] = '/bin/grep';
+    $aConfig['MVC_BIN_MOVE'] = '/bin/mv';
+    $aConfig['MVC_BIN_XARGS'] = '/usr/bin/xargs';
+    $aConfig['MVC_BIN_RENAME'] = '/usr/bin/rename';
+    $aConfig['MVC_BIN_REMOVE'] = '/bin/rm';
+    $aConfig['MVC_BIN_PHP_BINARY'] = PHP_BINARY;
 }
 
 MVC_APPLICATION_SETTINGS: {
 
     /**
-     * reserverd $_GET Params
+     * keys for "query" notation in \MVC\Route routings
+     * e.g.: 'module=Foo&c=index&m=index'
      */
-    $aConfig['MVC_GET_PARAM_MODULE'] = 'module';
-    $aConfig['MVC_GET_PARAM_C'] = 'c';
-    $aConfig['MVC_GET_PARAM_M'] = 'm';
+    $aConfig['MVC_ROUTE_QUERY_PARAM_MODULE'] = 'module';
+    $aConfig['MVC_ROUTE_QUERY_PARAM_C'] = 'c';
+    $aConfig['MVC_ROUTE_QUERY_PARAM_M'] = 'm';
 
     /**
      * MVC fallback routing
@@ -54,18 +56,18 @@ MVC_APPLICATION_SETTINGS: {
      * Note: Possibility of a direct call (http|cli) of this route is disabled
      */
     $aConfig['MVC_ROUTING_FALLBACK'] =
-          $aConfig['MVC_GET_PARAM_MODULE'] . '=standard&'
-        . $aConfig['MVC_GET_PARAM_C'] . '=index&'
-        . $aConfig['MVC_GET_PARAM_M'] . '=fallback';
+          $aConfig['MVC_ROUTE_QUERY_PARAM_MODULE'] . '=standard&'
+        . $aConfig['MVC_ROUTE_QUERY_PARAM_C'] . '=index&'
+        . $aConfig['MVC_ROUTE_QUERY_PARAM_M'] . '=fallback';
 
     /**
      * Name of method to be executed in the Target Controller Class
      * before session and other main functionalities.
      * It will be called in /application/library/MVC/Application.php:
-     *        self::runTargetClassPreconstruct (Request::getInstance ()->getQueryArray ());
+     *        Controller::runTargetClassPreconstruct();
      *
      * This method is also declared via interface MVC_Interface_Controller.
-     * Due to this, you should not edit this name. Otherwise you have to
+     * Due to this, you should not edit this name, otherwise you have to
      * rename the method in that interface class, too.
      *
      * default:
@@ -88,7 +90,7 @@ MVC_APPLICATION_SETTINGS: {
     $aConfig['MVC_APPLICATION_CONFIG_DIR'] = $aConfig['MVC_APPLICATION_PATH'] . '/config';
     $aConfig['MVC_VIEW_TEMPLATES'] = $aConfig['MVC_BASE_PATH'] . '/modules/Default/templates';
     $aConfig['MVC_LIBRARY'] = $aConfig['MVC_APPLICATION_PATH'] . '/library';
-    $aConfig['MVC_MODULES'] = $aConfig['MVC_BASE_PATH'] . '/modules';
+    $aConfig['MVC_MODULES_DIR'] = $aConfig['MVC_BASE_PATH'] . '/modules';
 
     // Main myMVC config folder
     $aConfig['MVC_CONFIG_DIR'] = $aConfig['MVC_BASE_PATH'] . '/config';
