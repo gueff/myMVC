@@ -60,7 +60,7 @@ class Log
 
 			if (!file_exists ($sLogfile))
 			{
-				Error::addERROR('cannot create logfile: ' . $sLogfile);
+				Error::error('cannot create logfile: ' . $sLogfile);
 			}
 		}
 

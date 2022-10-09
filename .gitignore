@@ -14,8 +14,12 @@ CliDialogue
 modules/*
 public/.env
 public/openapi/
+_clearTmpFiles.sh
 _createPhar.php
 _generateDataTypes.php
+_dataTypeCreation.php
+_gitPush.sh
+_phanlistcreate.sh
 _push.sh
 Changelog.md
 **/*.min.css
