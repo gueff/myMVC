@@ -97,7 +97,7 @@ class Index extends \MVC\View
         (null === $oDTRoute) ? $oDTRoute = Route::getCurrent() : false;
         $oDTRoutingAdditional = DTRoutingAdditional::create(json_decode($oDTRoute->get_additional(), true));
 
-        $this->sTemplateRelative = (isset($oAdditional->layout)) ? $oAdditional->layout : Config::get_MVC_SMARTY_TEMPLATE_DEFAULT();
+        $this->sTemplateRelative = (false === empty($oDTRoutingAdditional->get_sLayout())) ? $oDTRoutingAdditional->get_sLayout() : Config::get_MVC_SMARTY_TEMPLATE_DEFAULT();
         $this->sTemplate = $this->sTemplateDir . '/' . $this->sTemplateRelative;
         $this->assign('sTemplateRelative', $this->sTemplateRelative);
         $this->assign('sTemplate', $this->sTemplate);

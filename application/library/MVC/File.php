@@ -32,6 +32,8 @@ class File
         $aInfo['path'] = $sFile;
         $aInfo['is_file'] = is_file($sFile);
         $aInfo['is_dir'] = is_dir($sFile);
+        $aInfo['filemtime'] = filemtime($sFile);
+        $aInfo['filectime'] = filemtime($sFile);
         $aPathInfo = pathinfo($sFile);
         $aInfo = array_merge($aInfo, $aPathInfo);
         $oDTFileinfo = DTFileinfo::create($aInfo);

@@ -11,7 +11,7 @@ class DTFileinfo
 {
 	use TraitDataType;
 
-	const DTHASH = '4ae6b0c4623d19d1179671c04fe05cd5';
+	const DTHASH = '1301c656d77cf30864476f75fb648a51';
 
 	/**
 	 * @required false
@@ -98,6 +98,18 @@ class DTFileinfo
 	protected $shell;
 
 	/**
+	 * @required false
+	 * @var int
+	 */
+	protected $filemtime;
+
+	/**
+	 * @required false
+	 * @var int
+	 */
+	protected $filectime;
+
+	/**
 	 * DTFileinfo constructor.
 	 * @param array $aData
 	 * @throws \ReflectionException 
@@ -120,6 +132,8 @@ class DTFileinfo
 		$this->gecos = '';
 		$this->dir = '';
 		$this->shell = '';
+		$this->filemtime = 0;
+		$this->filectime = 0;
 
 		foreach ($aData as $sKey => $mValue)
 		{
@@ -347,6 +361,34 @@ class DTFileinfo
 	}
 
 	/**
+	 * @param int $aValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
+	public function set_filemtime($aValue)
+	{
+		\MVC\Event::RUN ('DTFileinfo.set_filemtime.before', \MVC\DataType\DTArrayObject::create(array('filemtime' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+
+		$this->filemtime = (int) $aValue;
+
+		return $this;
+	}
+
+	/**
+	 * @param int $aValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
+	public function set_filectime($aValue)
+	{
+		\MVC\Event::RUN ('DTFileinfo.set_filectime.before', \MVC\DataType\DTArrayObject::create(array('filectime' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+
+		$this->filectime = (int) $aValue;
+
+		return $this;
+	}
+
+	/**
 	 * @return string
 	 * @throws \ReflectionException
 	 */
@@ -501,6 +543,28 @@ class DTFileinfo
 	}
 
 	/**
+	 * @return int
+	 * @throws \ReflectionException
+	 */
+	public function get_filemtime()
+	{
+		\MVC\Event::RUN ('DTFileinfo.get_filemtime.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('filemtime')->set_sValue($this->filemtime))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+
+		return $this->filemtime;
+	}
+
+	/**
+	 * @return int
+	 * @throws \ReflectionException
+	 */
+	public function get_filectime()
+	{
+		\MVC\Event::RUN ('DTFileinfo.get_filectime.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('filectime')->set_sValue($this->filectime))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+
+		return $this->filectime;
+	}
+
+	/**
 	 * @return string
 	 */
 	public static function getPropertyName_dirname()
@@ -610,6 +674,22 @@ class DTFileinfo
 	public static function getPropertyName_shell()
 	{
         return 'shell';
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getPropertyName_filemtime()
+	{
+        return 'filemtime';
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getPropertyName_filectime()
+	{
+        return 'filectime';
 	}
 
 	/**
