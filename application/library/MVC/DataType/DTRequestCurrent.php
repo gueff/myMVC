@@ -11,7 +11,7 @@ class DTRequestCurrent
 {
 	use TraitDataType;
 
-	const DTHASH = 'afd63a2a5c0c34adb3f985736f791b5c';
+	const DTHASH = 'ec58e550098e9ff3f607f1cc55c11054';
 
 	/**
 	 * @required false
@@ -80,6 +80,18 @@ class DTRequestCurrent
 	protected $isSecure;
 
 	/**
+	 * @required false
+	 * @var array
+	 */
+	protected $headerArray;
+
+	/**
+	 * @required false
+	 * @var array
+	 */
+	protected $pathParam;
+
+	/**
 	 * DTRequestCurrent constructor.
 	 * @param array $aData
 	 * @throws \ReflectionException 
@@ -99,6 +111,8 @@ class DTRequestCurrent
 		$this->full = '';
 		$this->input = '';
 		$this->isSecure = false;
+		$this->headerArray = array();
+		$this->pathParam = array();
 
 		foreach ($aData as $sKey => $mValue)
 		{
@@ -284,6 +298,34 @@ class DTRequestCurrent
 	}
 
 	/**
+	 * @param array $aValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
+	public function set_headerArray($aValue)
+	{
+		\MVC\Event::RUN ('DTRequestCurrent.set_headerArray.before', \MVC\DataType\DTArrayObject::create(array('headerArray' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+
+		$this->headerArray = $aValue;
+
+		return $this;
+	}
+
+	/**
+	 * @param array $aValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
+	public function set_pathParam($aValue)
+	{
+		\MVC\Event::RUN ('DTRequestCurrent.set_pathParam.before', \MVC\DataType\DTArrayObject::create(array('pathParam' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+
+		$this->pathParam = $aValue;
+
+		return $this;
+	}
+
+	/**
 	 * @return string
 	 * @throws \ReflectionException
 	 */
@@ -405,6 +447,28 @@ class DTRequestCurrent
 	}
 
 	/**
+	 * @return array
+	 * @throws \ReflectionException
+	 */
+	public function get_headerArray()
+	{
+		\MVC\Event::RUN ('DTRequestCurrent.get_headerArray.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('headerArray')->set_sValue($this->headerArray))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+
+		return $this->headerArray;
+	}
+
+	/**
+	 * @return array
+	 * @throws \ReflectionException
+	 */
+	public function get_pathParam()
+	{
+		\MVC\Event::RUN ('DTRequestCurrent.get_pathParam.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('pathParam')->set_sValue($this->pathParam))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+
+		return $this->pathParam;
+	}
+
+	/**
 	 * @return string
 	 */
 	public static function getPropertyName_scheme()
@@ -490,6 +554,22 @@ class DTRequestCurrent
 	public static function getPropertyName_isSecure()
 	{
         return 'isSecure';
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getPropertyName_headerArray()
+	{
+        return 'headerArray';
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getPropertyName_pathParam()
+	{
+        return 'pathParam';
 	}
 
 	/**

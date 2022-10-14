@@ -84,6 +84,8 @@ class Request
         $oDTRequestCurrent->set_isSecure(Config::get_MVC_SECURE_REQUEST());
         parse_str($oDTRequestCurrent->get_query(), $aQueryArray);
         $oDTRequestCurrent->set_queryArray($aQueryArray);
+        $oDTRequestCurrent->set_headerArray(self::getHeaderArray());
+        $oDTRequestCurrent->set_pathParam(self::getPathParam());
 
         // if event ...
         Event::bind('mvc.controller.init.before', function(){
@@ -377,5 +379,31 @@ class Request
             $_SERVER['QUERY_STRING'] = $aParseUrl['query'];
             parse_str ($aParseUrl['query'], $_GET);
         }
+    }
+
+    /**
+     * @return array
+     */
+    public static function getHeaderArray()
+    {
+        $aHeader = getallheaders();
+
+        if (false === $aHeader)
+        {
+            return array();
+        }
+
+        return $aHeader;
+    }
+
+    /**
+     * @param $sKey
+     * @return string
+     */
+    public static function getHeader($sKey = '')
+    {
+        $aHeader = self::getHeaderArray();
+
+        return (string) get($aHeader[$sKey], '');
     }
 }
