@@ -378,7 +378,7 @@ class MyMVCInstaller
 	}
 
     /**
-     * @return int
+     * @return void
      */
     protected function installModuleLibraries()
     {
@@ -436,7 +436,8 @@ class MyMVCInstaller
 	}
 
     /**
-     * @param string $sText
+     * @param $sText
+     * @return void
      */
 	protected function _text($sText = '')
 	{
