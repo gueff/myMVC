@@ -384,7 +384,7 @@ class MyMVCInstaller
     {
         $this->installVendor($this->_aConfig['MVC_APPLICATION_PATH']);
 
-        $sCmd = $this->_aConfig['MVC_BIN_FIND'] . ' ' . $this->_aConfig['MVC_MODULES_DIR'] . '/* -name "composer.json" -print | ' . $this->_aConfig['MVC_BIN_GREP'] . ' -v vendor';
+        $sCmd = $this->_aConfig['MVC_BIN_FIND'] . ' ' . $this->_aConfig['MVC_MODULES_DIR'] . '/ -name "composer.json" -print | ' . $this->_aConfig['MVC_BIN_GREP'] . ' -v vendor';
         $sFind = trim(shell_exec($sCmd));
         $aFind = explode("\n", $sFind);
 
