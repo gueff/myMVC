@@ -17,6 +17,7 @@ _clearTmpFiles.sh
 _createPhar.php
 _dataTypeCreation.php
 _gitPush.sh
+_gitPush.sh.example
 _phanlistcreate.sh
 myMVC
 Changelog.md

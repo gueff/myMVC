@@ -12,9 +12,12 @@ require_once realpath(__DIR__ . '/../../../../../') . '/application/config/util/
 // `/modules/{module}/DataType/`
 // @see https://mymvc.ueffing.net/3.1.x/generating-datatype-classes
 
+$sCurrentModuleName = basename(realpath(__DIR__ . '/../../../'));
+$sDataTypeDir = realpath(__DIR__ . '/../../../') . '/DataType/';
+
 // base setup
 $aDataType = array(
-    'dir' => \MVC\Config::get_MVC_MODULES_DIR() . '/{module}/DataType/',
+    'dir' => $sDataTypeDir,
     'unlinkDir' => false
 );
 
@@ -22,7 +25,7 @@ $aDataType = array(
 $aDataType['class'][] = array(
     'name' => 'DTRoutingAdditional',
     'file' => 'DTRoutingAdditional.php',
-    'namespace' => '{module}\\DataType',
+    'namespace' => $sCurrentModuleName . '\\DataType',
     'createHelperMethods' => true,
     'constant' => array(),
     'property' => array(

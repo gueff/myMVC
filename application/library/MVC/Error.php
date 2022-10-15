@@ -87,11 +87,52 @@ class Error
      * @throws \ReflectionException
      */
 	public static function error ($sMessage = '', $iCode = E_ERROR, $iSeverity = 0, $sFilename = '', $iLineNr = 0)
-	{	
-		$oErrorException = new \ErrorException ($sMessage, (int) $iCode, (int) $iSeverity, $sFilename, (int) $iLineNr );		
+	{
+        $aDebug = Debug::prepareBacktraceArray(debug_backtrace());
+        (true === empty($sFilename)) ? $sFilename = $aDebug['sFile'] : false;
+        (true === empty($iLineNr)) ? $iLineNr = $aDebug['sLine'] : false;
+		$oErrorException = new \ErrorException ($sMessage, (int) $iCode, (int) $iSeverity, $sFilename, (int) $iLineNr );
 		
 		self::exception ($oErrorException);
 	}
+
+    /**
+     * @param $sMessage
+     * @param $iCode
+     * @param $iSeverity
+     * @param $sFilename
+     * @param $iLineNr
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function warning ($sMessage = '', $iCode = E_WARNING, $iSeverity = 0, $sFilename = '', $iLineNr = 0)
+    {
+        $aDebug = Debug::prepareBacktraceArray(debug_backtrace());
+        (true === empty($sFilename)) ? $sFilename = $aDebug['sFile'] : false;
+        (true === empty($iLineNr)) ? $iLineNr = $aDebug['sLine'] : false;
+        $oErrorException = new \ErrorException ($sMessage, (int) $iCode, (int) $iSeverity, $sFilename, (int) $iLineNr );
+
+        self::exception ($oErrorException);
+    }
+
+    /**
+     * @param $sMessage
+     * @param $iCode
+     * @param $iSeverity
+     * @param $sFilename
+     * @param $iLineNr
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function notice ($sMessage = '', $iCode = E_NOTICE, $iSeverity = 0, $sFilename = '', $iLineNr = 0)
+    {
+        $aDebug = Debug::prepareBacktraceArray(debug_backtrace());
+        (true === empty($sFilename)) ? $sFilename = $aDebug['sFile'] : false;
+        (true === empty($iLineNr)) ? $iLineNr = $aDebug['sLine'] : false;
+        $oErrorException = new \ErrorException ($sMessage, (int) $iCode, (int) $iSeverity, $sFilename, (int) $iLineNr );
+
+        self::exception ($oErrorException);
+    }
 
 	/**
 	 * Uncaught exception handler
