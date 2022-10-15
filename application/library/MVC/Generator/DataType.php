@@ -10,6 +10,7 @@
 namespace MVC\Generator;
 
 use MVC\Cache;
+use MVC\Closure;
 use MVC\DataType\DTClass;
 use MVC\DataType\DTConfig;
 use MVC\DataType\DTConstant;
@@ -192,7 +193,13 @@ class DataType
      */
     public function initConfigObject(DTConfig $oDTDataTypeGeneratorConfig)
     {
-        $sCacheKey = preg_replace('/[^a-zA-Z0-9\.]+/', '_', trim(__CLASS__) . '.' . md5(serialize(base64_encode($oDTDataTypeGeneratorConfig))));
+        $sMd5 = (true === Closure::is($oDTDataTypeGeneratorConfig))
+            // we just need a simple string representation; this is enough
+            ? md5(base64_encode((string) new \ReflectionFunction($oDTDataTypeGeneratorConfig)))
+            // default way
+            : md5(base64_encode(serialize($oDTDataTypeGeneratorConfig)))
+        ;
+        $sCacheKey = preg_replace('/[^a-zA-Z0-9\.]+/', '_', trim(__CLASS__) . '.' . $sMd5);
 
         $bUnlinkDir = ('' !== $oDTDataTypeGeneratorConfig->get_unlinkDir())
             ? (boolean) $oDTDataTypeGeneratorConfig->get_unlinkDir()
