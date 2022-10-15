@@ -43,9 +43,9 @@ class MyMVCInstaller
 		$this->checkForPHPExtensions();
         $this->installModuleLibraries();
 
+        // only call if not on myMVC.phar
         if (false === getenv('myMVC.phar'))
         {
-            // do not call if on myMVC.phar
             $this->checkOnModulesInstalled();
         }
 
