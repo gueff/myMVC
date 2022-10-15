@@ -42,7 +42,12 @@ class MyMVCInstaller
 		$this->setupDirsAndFiles();
 		$this->checkForPHPExtensions();
         $this->installModuleLibraries();
-        $this->checkOnModulesInstalled();
+
+        if (false === getenv('myMVC.phar'))
+        {
+            // do not call if on myMVC.phar
+            $this->checkOnModulesInstalled();
+        }
 
         if (true === self::$_bOutputStarted)
         {
@@ -321,6 +326,12 @@ class MyMVCInstaller
 	protected function installVendor($sComposerDir = '')
 	{
         $iPid = 0;
+
+        if ('' === $sComposerDir)
+        {
+            return $iPid;
+        }
+
         $sComposerJsonFile = $sComposerDir . '/composer.json';
         $sInstallLock = $sComposerDir . '/INSTALLER_RUNNING.sh';
         $sComposerLockFile = $sComposerDir . '/composer.lock';
