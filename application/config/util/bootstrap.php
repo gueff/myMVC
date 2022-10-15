@@ -136,7 +136,16 @@ FIRST_LOG_ENTRY_ON_NEW_REQUEST: {
                 . "\t" . $sMessage
                 . "\n";
 
-    (false === file_exists($GLOBALS['aConfig']['MVC_LOG_FILE_DEFAULT'])) ? touch($GLOBALS['aConfig']['MVC_LOG_FILE_DEFAULT']) : false;
+    if (false === file_exists($GLOBALS['aConfig']['MVC_LOG_FILE_FOLDER']))
+    {
+        mkdir($GLOBALS['aConfig']['MVC_LOG_FILE_FOLDER']);
+    }
+
+    if (false === file_exists($GLOBALS['aConfig']['MVC_LOG_FILE_DEFAULT']))
+    {
+        touch($GLOBALS['aConfig']['MVC_LOG_FILE_DEFAULT']);
+    }
+
     file_put_contents($GLOBALS['aConfig']['MVC_LOG_FILE_DEFAULT'], $sMessage,FILE_APPEND);
     $sMessage = null;
     unset($sMessage);
