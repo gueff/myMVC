@@ -41,8 +41,10 @@ class MyMVCInstaller
         $this->_aConfig = $aConfig;
 		$this->setupDirsAndFiles();
 		$this->checkForPHPExtensions();
+        $this->installModuleLibraries();
+        $this->checkOnModulesInstalled();
 
-        if (true === $this->installMainLibraries() || true === $this->installModuleLibraries() || true === $this->checkOnModulesInstalled())
+        if (true === self::$_bOutputStarted)
         {
             $this->_text("\n<hr /><dd><b><i class='fa fa-check text-success'></i></b> Installation completed.\n</dd>");
             ('cli' !== php_sapi_name()) ? $this->_text("<dd>Page will auto-reload in 5 seconds...</dd>") : '';
@@ -80,10 +82,10 @@ class MyMVCInstaller
 	{
 		error_reporting (E_ALL);
 		set_time_limit (0);
-		ini_set('implicit_flush', 1);		
+		ini_set('implicit_flush', 1);
 		('cli' !== php_sapi_name()) ? ob_end_flush () : false;
-		ob_implicit_flush ();		
-		
+		ob_implicit_flush ();
+
 		return true;
 	}
 
@@ -103,7 +105,7 @@ class MyMVCInstaller
 				$aExtMissing[] = $sExt;
 			}
 		}
-		
+
 		if (false === empty($aExtMissing))
 		{
 			$sMsg = "\nPHP extensions are missing on your system: \n";
@@ -118,7 +120,7 @@ class MyMVCInstaller
             $sMsg.= "Required Extensions: \n";
             $sMsg.= implode(', ', $this->_aConfig['MVC_CORE']['phpExtensionsRequired']);
 		}
-		
+
 		return $sMsg;
 	}
 
@@ -164,7 +166,7 @@ class MyMVCInstaller
 		$sFilename = $this->_aConfig['MVC_PUBLIC_PATH'] . '/index.php';
 		$aUser = posix_getpwuid(fileowner($sFilename));
 		$aGroup = posix_getgrgid(filegroup($sFilename));
-		
+
 		return array(
 			'aUser' => $aUser,
 			'aGroup' => $aGroup,
@@ -236,7 +238,7 @@ class MyMVCInstaller
      */
     protected function removeInstallLock($sInstallLock = '')
     {
-        if ('' !== $sInstallLock && file_exists($sInstallLock))
+        if ('' !== $sInstallLock && true === file_exists($sInstallLock))
         {
             return unlink($sInstallLock);
         }
@@ -313,110 +315,82 @@ class MyMVCInstaller
     }
 
     /**
-     * @return bool
+     * @param $sComposerDir
+     * @return int
      */
-	protected function installMainLibraries()
+	protected function installVendor($sComposerDir = '')
 	{
-        $sInstallLock = $this->_aConfig['MVC_APPLICATION_PATH'] . '/INSTALLER_RUNNING.sh';
+        $iPid = 0;
+        $sComposerJsonFile = $sComposerDir . '/composer.json';
+        $sInstallLock = $sComposerDir . '/INSTALLER_RUNNING.sh';
+        $sComposerLockFile = $sComposerDir . '/composer.lock';
+        $sVendorFolder = $sComposerDir . '/vendor';
 
 		if (
-            file_exists ($this->_aConfig['MVC_APPLICATION_PATH'] . '/.composer') &&
-            file_exists ($this->_aConfig['MVC_APPLICATION_PATH'] . '/composer.json') &&
-            file_exists ($this->_aConfig['MVC_APPLICATION_PATH'] . '/composer.lock') &&
-            file_exists ($this->_aConfig['MVC_APPLICATION_PATH'] . '/vendor')
+            file_exists ($sComposerJsonFile) &&
+            file_exists ($sComposerLockFile) &&
+            file_exists ($sVendorFolder)
         )
 		{
 			$this->removeInstallLock($sInstallLock);
-			return false;
+
+			return $iPid;
 		}
 
-        $aComposerJson = json_decode(file_get_contents($this->_aConfig['MVC_APPLICATION_PATH'] . '/composer.json'), true);
+        $aComposerJson = json_decode(file_get_contents($sComposerJsonFile), true);
 
-        if (empty($aComposerJson))
+        if (true === empty($aComposerJson))
         {
-            return false;
+            return $iPid;
         }
 
         $this->prepareForOutput($sInstallLock);
 
         // save runfile
-        $sCmd = 'cd ' . $this->_aConfig['MVC_APPLICATION_PATH'] . '; '
-            . PHP_BINDIR . '/php ' . $this->_aConfig['MVC_APPLICATION_PATH'] . '/composer.phar self-update; '
-            . PHP_BINDIR . '/php ' . $this->_aConfig['MVC_APPLICATION_PATH'] . '/composer.phar install --prefer-dist; '
-            . 'rm ' . $sInstallLock . ';';
-
-        file_put_contents($sInstallLock, "#!/bin/bash\n" . $sCmd);
-        $iPid = $this->_runInBackground ('/bin/bash ' . $sInstallLock);
-        $this->_text('<dd>&bull; Installing required <kbd>Main Application libraries</kbd> via composer in Background with PID <code>' . $iPid . '</code>. Please wait.</dd>');
-
-        while ($this->_isProcessRunning ($iPid))
-        {
-            $this->_flush ();
-        }
-
-        $this->removeInstallLock($sInstallLock);
-
-        return true;
-	}
-
-    /**
-     * @return bool
-     */
-    protected function installModuleLibraries()
-    {
-        if (false === isset($this->_aConfig['MVC_COMPOSER_DIR']) || false == file_exists($this->_aConfig['MVC_COMPOSER_DIR'] . '/composer.json'))
-        {
-            return false;
-        }
-
-        $sInstallLock = $this->_aConfig['MVC_COMPOSER_DIR'] . '/INSTALLER_RUNNING.sh';
-
-        if (
-            file_exists($this->_aConfig['MVC_COMPOSER_DIR'] . '/composer.json') &&
-            file_exists ($this->_aConfig['MVC_COMPOSER_DIR'] . '/composer.lock') &&
-            file_exists($this->_aConfig['MVC_COMPOSER_DIR'] . '/vendor')
-        )
-        {
-            $this->removeInstallLock($sInstallLock);
-            return false;
-        }
-
-        $aComposerJson = json_decode(file_get_contents($this->_aConfig['MVC_COMPOSER_DIR'] . '/composer.json'), true);
-
-        if (empty($aComposerJson))
-        {
-            return false;
-        }
-
-        $this->prepareForOutput($sInstallLock);
-
-        // save runfile
-        $sCmd = 'cd ' . $this->_aConfig['MVC_COMPOSER_DIR'] . '; '
-            . PHP_BINDIR . '/php ' . $this->_aConfig['MVC_APPLICATION_PATH'] . '/composer.phar self-update; '
-            . PHP_BINDIR . '/php ' . $this->_aConfig['MVC_APPLICATION_PATH'] . '/composer.phar --working-dir="' . $this->_aConfig['MVC_COMPOSER_DIR'] . '" install --prefer-dist; '
-            . 'rm ' . $sInstallLock . ';';
+        $sCmd = 'cd ' . $sComposerDir . '; '
+                . PHP_BINDIR . '/php ' . $this->_aConfig['MVC_APPLICATION_PATH'] . '/composer.phar self-update; '
+                . PHP_BINDIR . '/php ' . $this->_aConfig['MVC_APPLICATION_PATH'] . '/composer.phar --working-dir="' . $sComposerDir . '" install --prefer-dist; '
+                . $this->_aConfig['MVC_BIN_REMOVE'] . ' ' . $sInstallLock . ';';
 
         file_put_contents($sInstallLock, "#!/bin/bash\n" . $sCmd);
         $iPid = $this->_runInBackground ('/bin/bash ' . $sInstallLock);
         $this->_text('<dd>&bull; Installing required <kbd>Module libraries</kbd> via composer in Background with PID <code>' . $iPid . '</code>. Please wait.</dd>');
 
-        while ($this->_isProcessRunning ($iPid))
+        while (true === $this->_isProcessRunning ($iPid))
         {
             $this->_flush ();
         }
 
         $this->removeInstallLock($sInstallLock);
 
-        return true;
+        return $iPid;
+	}
+
+    /**
+     * @return int
+     */
+    protected function installModuleLibraries()
+    {
+        $this->installVendor($this->_aConfig['MVC_APPLICATION_PATH']);
+
+        $sCmd = $this->_aConfig['MVC_BIN_FIND'] . ' ' . $this->_aConfig['MVC_MODULES_DIR'] . '/* -name "composer.json" -print | ' . $this->_aConfig['MVC_BIN_GREP'] . ' -v vendor';
+        $sFind = trim(shell_exec($sCmd));
+        $aFind = explode("\n", $sFind);
+
+        foreach ($aFind as $sComposerJsonFile)
+        {
+            $sComposerDir = dirname($sComposerJsonFile);
+            $this->installVendor($sComposerDir);
+        }
     }
 
     /**
      * @param $sCommand
-     * @return string
+     * @return int
      */
 	protected function _runInBackground ($sCommand)
 	{
-		$iPid = trim (shell_exec ($sCommand . ' > /dev/null 2>/dev/null & echo $!'));
+		$iPid = (int) trim(shell_exec($sCommand . ' > /dev/null 2>/dev/null & echo $!'));
 
 		return $iPid;
 	}
@@ -432,7 +406,7 @@ class MyMVCInstaller
             return false;
         }
 
-		exec ('/bin/ps ' . $iPid, $iProcessState);
+		exec($this->_aConfig['MVC_BIN_PS'] . ' ' . $iPid, $iProcessState);
         $bIsRunning = (count ($iProcessState) >= 2);
 
 		return $bIsRunning;

@@ -1003,4 +1003,18 @@ class Config
 
         return '';
     }
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_BIN_PS()
+    {
+        if (Registry::isRegistered('MVC_BIN_PS'))
+        {
+            return (string) Registry::get('MVC_BIN_PS');
+        }
+
+        return '';
+    }
 }

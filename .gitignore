@@ -8,6 +8,7 @@ application/clearTmpFiles.sh
 application/composer.lock
 application/library/MVC/*.tar.gz
 application/vendor
+*.tar.gz
 vendor
 CliDialogue
 modules/*
