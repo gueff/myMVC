@@ -73,21 +73,31 @@ class Policy
 	{
 		$aPolicyRule = Config::get_MVC_POLICY();
 		$oDTRoute = Route::getCurrent();
+        $aPolicy = array();
 
         // check if there is a policy for this request
         $sClass = (substr ($oDTRoute->get_class(), 0, 1) !== '\\') ? '\\' . $oDTRoute->get_class() : $oDTRoute->get_class();
 
         if (array_key_exists ($sClass, $aPolicyRule))
         {
+            if (array_key_exists ('*', $aPolicyRule[$sClass]))
+            {
+                $aPolicy = array_merge(
+                    $aPolicy,
+                    $aPolicyRule[$sClass]['*']
+                );
+            }
+
             if (array_key_exists ($oDTRoute->get_m(), $aPolicyRule[$sClass]))
             {
-                $aPolicy = $aPolicyRule[$sClass][$oDTRoute->get_m()];
-
-                return $aPolicy;
+                $aPolicy = array_merge(
+                    $aPolicyRule[$sClass][$oDTRoute->get_m()],
+                    $aPolicy
+                );
             }
         }
 
-		return array();
+		return $aPolicy;
 	}
 
     /**

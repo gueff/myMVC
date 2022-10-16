@@ -13,6 +13,7 @@ DataType/DTRoute.php
 DataType/DTRequestCurrent.php
 DataType/DTKeyValue.php
 DataType/DTFileinfo.php
+Date.php
 Debug.php
 Error.php
 Event.php
