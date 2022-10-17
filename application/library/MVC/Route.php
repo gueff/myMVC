@@ -32,13 +32,21 @@ class Route
      */
     public static function init()
     {
-        //  require recursively all php files in module's routing dir
-        /** @var \SplFileInfo $oSplFileInfo */
-        foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(Config::get_MVC_MODULE_CURRENT_ETC_DIR() . '/routing')) as $oSplFileInfo)
-        {
-            if ('php' === strtolower($oSplFileInfo->getExtension()))
+        \MVC\Event::RUN('mvc.route.init');
+
+        /** @todo hier versuchen middleware einzubauen - mit Listener; Source bspw. dann DB und nicht php files */
+        $aMiddleware = [];
+
+        DEFAULT_SOURCE_PHP_FILES: {
+
+            //  require recursively all php files in module's routing dir
+            /** @var \SplFileInfo $oSplFileInfo */
+            foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(Config::get_MVC_MODULE_CURRENT_ETC_DIR() . '/routing')) as $oSplFileInfo)
             {
-                require_once $oSplFileInfo->getPathname();
+                if ('php' === strtolower($oSplFileInfo->getExtension()))
+                {
+                    require_once $oSplFileInfo->getPathname();
+                }
             }
         }
     }

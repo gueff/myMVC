@@ -24,9 +24,87 @@ class Policy
     private static $aApplied = array();
 
     /**
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function init()
+    {
+        //  require recursively all php files in module's policy dir
+        /** @var \SplFileInfo $oSplFileInfo */
+        foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(Config::get_MVC_MODULE_CURRENT_ETC_DIR() . '/policy')) as $oSplFileInfo)
+        {
+            if ('php' === strtolower($oSplFileInfo->getExtension()))
+            {
+                require_once $oSplFileInfo->getPathname();
+            }
+        }
+
+        self::apply();
+    }
+
+    /**
+     * sets a policy rule
+     * @param $sClass
+     * @param $sMethod
+     * @param $sTarget
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function set($sClass = '', $sMethod = '', $sTarget = null)
+    {
+        $aPolicy = Config::get_MVC_POLICY();
+
+        if (true === isset($aPolicy[$sClass]))
+        {
+            if (true === isset($aPolicy[$sClass][$sMethod]))
+            {
+                if (false === in_array($sTarget, $aPolicy[$sClass][$sMethod]))
+                {
+                    array_push(
+                        $aPolicy[$sClass][$sMethod],
+                        $sTarget
+                    );
+                }
+            }
+            else
+            {
+                $aPolicy[$sClass][$sMethod] = array($sTarget);
+            }
+        }
+        else
+        {
+            $aPolicy[$sClass] = array($sMethod => array($sTarget));
+        }
+
+        Config::set_MVC_POLICY($aPolicy);
+    }
+
+    /**
+     * unsets a policy rule
+     * @param $sClass
+     * @param $sMethod
+     * @param $sTarget
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function unset($sClass = '', $sMethod = '', $sTarget = null)
+    {
+        $aPolicy = Config::get_MVC_POLICY();
+
+        if (isset($aPolicy[$sClass][$sMethod]) && in_array($sTarget, $aPolicy[$sClass][$sMethod], true))
+        {
+            $iKey = array_search($sTarget, $aPolicy[$sClass][$sMethod]);
+            $aPolicy[$sClass][$sMethod][$iKey] = null;
+            unset($aPolicy[$sClass][$sMethod][$iKey]);
+        }
+
+        Config::set_MVC_POLICY($aPolicy);
+    }
+
+    /**
      * gets the policy rules; if one matches to the current request, it will be executed
      */
-	public static function apply()
+	protected static function apply()
     {
         $aPolicy = self::getPolicyRuleOnCurrentRequest();
 

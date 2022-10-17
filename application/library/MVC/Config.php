@@ -599,6 +599,16 @@ class Config
     }
 
     /**
+     * sets policy rules to registry
+     * @param array $aPolicy
+     * @return void
+     */
+    public static function set_MVC_POLICY(array $aPolicy = array())
+    {
+        Registry::set('MVC_POLICY', $aPolicy);
+    }
+
+    /**
      * @return array
      * @throws \ReflectionException
      */

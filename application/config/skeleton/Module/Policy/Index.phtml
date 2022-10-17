@@ -13,16 +13,22 @@
  */
 namespace {module}\Policy;
 
+
 /**
  * Index
  */
 class Index
 {
-	/**
-	 * method to run on policy rule
-	 */
-	public static function policy1 ()
-	{
-	    ;
-	}
+    /**
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function requestMethodHasToMatchRouteMethod ()
+    {
+        if (\MVC\Request::getCurrentRequest()->get_requestmethod() !== \MVC\Route::getCurrent()->get_method())
+        {
+            $oController = new \{module}\Controller\Index();
+            $oController->notFound();
+        }
+    }
 }

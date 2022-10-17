@@ -41,7 +41,7 @@ class Application
         Route::init();
 
         // Policy Rules
-        Policy::apply();
+        Policy::init();
 
 		// Run target Controller's __preconstruct()
 		Controller::runTargetClassPreconstruct();
