@@ -11,7 +11,7 @@ class DTRoute
 {
 	use TraitDataType;
 
-	const DTHASH = '5f6fc0b2477f18e401b2b11348df79d0';
+	const DTHASH = '68791994b30f4c19747ff6db589d6b0d';
 
 	/**
 	 * @required true
@@ -24,6 +24,12 @@ class DTRoute
 	 * @var string
 	 */
 	protected $method;
+
+	/**
+	 * @required false
+	 * @var array
+	 */
+	protected $methodsAssigned;
 
 	/**
 	 * @required false
@@ -78,6 +84,7 @@ class DTRoute
 
 		$this->path = '';
 		$this->method = '';
+		$this->methodsAssigned = array();
 		$this->query = '';
 		$this->class = '';
 		$this->classFile = '';
@@ -139,6 +146,20 @@ class DTRoute
 		\MVC\Event::RUN ('DTRoute.set_method.before', \MVC\DataType\DTArrayObject::create(array('method' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
 
 		$this->method = (string) $aValue;
+
+		return $this;
+	}
+
+	/**
+	 * @param array $aValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
+	public function set_methodsAssigned($aValue)
+	{
+		\MVC\Event::RUN ('DTRoute.set_methodsAssigned.before', \MVC\DataType\DTArrayObject::create(array('methodsAssigned' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+
+		$this->methodsAssigned = (array) $aValue;
 
 		return $this;
 	}
@@ -264,6 +285,17 @@ class DTRoute
 	}
 
 	/**
+	 * @return array
+	 * @throws \ReflectionException
+	 */
+	public function get_methodsAssigned()
+	{
+		\MVC\Event::RUN ('DTRoute.get_methodsAssigned.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('methodsAssigned')->set_sValue($this->methodsAssigned))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+
+		return $this->methodsAssigned;
+	}
+
+	/**
 	 * @return string
 	 * @throws \ReflectionException
 	 */
@@ -354,6 +386,14 @@ class DTRoute
 	public static function getPropertyName_method()
 	{
         return 'method';
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getPropertyName_methodsAssigned()
+	{
+        return 'methodsAssigned';
 	}
 
 	/**

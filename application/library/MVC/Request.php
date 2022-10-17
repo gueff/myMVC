@@ -86,6 +86,7 @@ class Request
         $oDTRequestCurrent->set_queryArray($aQueryArray);
         $oDTRequestCurrent->set_headerArray(self::getHeaderArray());
         $oDTRequestCurrent->set_pathParam(self::getPathParam());
+        $oDTRequestCurrent->set_ip(self::getIpAddress());
 
         // if event ...
         Event::bind('mvc.controller.init.before', function(){
@@ -406,4 +407,18 @@ class Request
 
         return (string) get($aHeader[$sKey], '');
     }
+
+    /**
+     * @return string
+     */
+    public static function getIpAddress()
+    {
+        $sIpAddress = isset($_SERVER['HTTP_CLIENT_IP'])
+            ? $_SERVER['HTTP_CLIENT_IP']
+            : (isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR']: $_SERVER['REMOTE_ADDR'])
+        ;
+
+        return (string) $sIpAddress;
+    }
+
 }

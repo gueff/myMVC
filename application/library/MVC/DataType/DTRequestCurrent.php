@@ -11,7 +11,7 @@ class DTRequestCurrent
 {
 	use TraitDataType;
 
-	const DTHASH = 'ec58e550098e9ff3f607f1cc55c11054';
+	const DTHASH = '7f3f9a46bb543c77b09da2575bc91d2f';
 
 	/**
 	 * @required false
@@ -92,6 +92,12 @@ class DTRequestCurrent
 	protected $pathParam;
 
 	/**
+	 * @required false
+	 * @var string
+	 */
+	protected $ip;
+
+	/**
 	 * DTRequestCurrent constructor.
 	 * @param array $aData
 	 * @throws \ReflectionException 
@@ -113,6 +119,7 @@ class DTRequestCurrent
 		$this->isSecure = false;
 		$this->headerArray = array();
 		$this->pathParam = array();
+		$this->ip = '';
 
 		foreach ($aData as $sKey => $mValue)
 		{
@@ -326,6 +333,20 @@ class DTRequestCurrent
 	}
 
 	/**
+	 * @param string $aValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
+	public function set_ip($aValue)
+	{
+		\MVC\Event::RUN ('DTRequestCurrent.set_ip.before', \MVC\DataType\DTArrayObject::create(array('ip' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+
+		$this->ip = $aValue;
+
+		return $this;
+	}
+
+	/**
 	 * @return string
 	 * @throws \ReflectionException
 	 */
@@ -470,6 +491,17 @@ class DTRequestCurrent
 
 	/**
 	 * @return string
+	 * @throws \ReflectionException
+	 */
+	public function get_ip()
+	{
+		\MVC\Event::RUN ('DTRequestCurrent.get_ip.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('ip')->set_sValue($this->ip))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+
+		return $this->ip;
+	}
+
+	/**
+	 * @return string
 	 */
 	public static function getPropertyName_scheme()
 	{
@@ -570,6 +602,14 @@ class DTRequestCurrent
 	public static function getPropertyName_pathParam()
 	{
         return 'pathParam';
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getPropertyName_ip()
+	{
+        return 'ip';
 	}
 
 	/**

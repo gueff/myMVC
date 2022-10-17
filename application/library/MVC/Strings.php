@@ -80,4 +80,49 @@ class Strings
 
         return $bIsJson;
     }
+
+    /**
+     * @param $sString
+     * @return bool string is utf8
+     */
+    public static function isUtf8($sString = '')
+    {
+        $iStrlen = strlen($sString);
+
+        for($iCnt = 0; $iCnt < $iStrlen; $iCnt++)
+        {
+            $iOrd = ord($sString[$iCnt]);
+
+            if($iOrd < 0x80)
+            {
+                continue; // 0bbbbbbb
+            }
+            elseif(($iOrd & 0xE0) === 0xC0 && $iOrd > 0xC1)
+            {
+                $iN = 1; // 110bbbbb (exkl C0-C1)
+            }
+            elseif(($iOrd & 0xF0) === 0xE0)
+            {
+                $iN = 2; // 1110bbbb
+            }
+            elseif(($iOrd & 0xF8) === 0xF0 && $iOrd < 0xF5)
+            {
+                $iN = 3; // 11110bbb (exkl F5-FF)
+            }
+            else
+            {
+                return false; // invalid UTF-8 char
+            }
+
+            for($iCnt2 = 0; $iCnt2 < $iN; $iCnt2++) // $iN followbytes? // 10bbbbbb
+            {
+                if(++$iCnt === $iStrlen || (ord($sString[$iCnt]) & 0xC0) !== 0x80)
+                {
+                    return false; // invalid UTF-8 char
+                }
+            }
+        }
+
+        return true; // no valid UTF-8 char found
+    }
 }

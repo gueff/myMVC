@@ -58,6 +58,34 @@ class Route
      * @return void
      * @throws \ReflectionException
      */
+    public static function ANY(string $sPath = '', string $sQuery = '', $mOptional = '')
+    {
+        self::add('*', $sPath, $sQuery, $mOptional);
+    }
+
+    /**
+     * @param array  $aMethod
+     * @param string $sPath
+     * @param string $sQuery
+     * @param        $mOptional
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function MIX(array $aMethod = array(), string $sPath = '', string $sQuery = '', $mOptional = '')
+    {
+        foreach ($aMethod as $sMethod)
+        {
+            self::add(strtoupper($sMethod), $sPath, $sQuery, $mOptional);
+        }
+    }
+
+    /**
+     * @param string $sPath
+     * @param string $sQuery
+     * @param        $mOptional
+     * @return void
+     * @throws \ReflectionException
+     */
     public static function GET(string $sPath = '', string $sQuery = '', $mOptional = '')
     {
         self::add('GET', $sPath, $sQuery, $mOptional);
@@ -100,14 +128,14 @@ class Route
     }
 
     /**
-     * @param string $sMethod
+     * @param string $sMethod *=any
      * @param string $sPath
      * @param string $sQuery
      * @param mixed  $mOptional
      * @return void
      * @throws \ReflectionException
      */
-    protected static function add(string $sMethod = 'GET', string $sPath = '', string $sQuery = '', $mOptional = '')
+    protected static function add(string $sMethod = '*', string $sPath = '', string $sQuery = '', $mOptional = '')
     {
         parse_str(get($sQuery), $aQuery);
 
@@ -121,10 +149,35 @@ class Route
         }
 
         $sClass = ucfirst(get($aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_MODULE()], '')) . '\\Controller\\' . ucfirst(get($aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_C()], ''));
+        $aMethodsAssigned = array(strtoupper($sMethod));
+
+        if (isset(self::$aRoute[$sPath]))
+        {
+            $aMethodsAssigned = self::$aRoute[$sPath]->get_methodsAssigned();
+
+            if (false === in_array($sMethod, $aMethodsAssigned, true))
+            {
+                array_push(
+                    $aMethodsAssigned,
+                    $sMethod
+                );
+            }
+
+            // define default method
+            if (in_array(Request::getCurrentRequest()->get_requestmethod(), $aMethodsAssigned, true))
+            {
+                $sMethod = Request::getCurrentRequest()->get_requestmethod();
+            }
+            else
+            {
+                $sMethod = current($aMethodsAssigned);
+            }
+        }
 
         self::$aRoute[$sPath] = DTRoute::create()
             ->set_path($sPath)
             ->set_method(strtoupper($sMethod))
+            ->set_methodsAssigned($aMethodsAssigned)
             ->set_query($sQuery)
             ->set_class($sClass)
             ->set_classFile(Config::get_MVC_MODULES_DIR() . '/' . str_replace ('\\', '/', $sClass) . '.php')
@@ -133,7 +186,19 @@ class Route
             ->set_m(get($aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_M()]))
             ->set_additional($mOptional)
         ;
-        self::$aMethod[strtolower($sMethod)][] = $sPath;
+
+        foreach ($aMethodsAssigned as $sMethodsAssigned)
+        {
+            if (false === isset(self::$aMethod[strtolower($sMethodsAssigned)]))
+            {
+                self::$aMethod[strtolower($sMethodsAssigned)] = array();
+            }
+
+            if (false === in_array($sPath, self::$aMethod[strtolower($sMethodsAssigned)], true))
+            {
+                self::$aMethod[strtolower($sMethodsAssigned)][] = $sPath;
+            }
+        }
     }
 
     /**
