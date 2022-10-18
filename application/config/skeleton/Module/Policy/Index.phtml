@@ -8,6 +8,10 @@
  * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
  */
 
+use MVC\DataType\DTArrayObject;
+use MVC\DataType\DTKeyValue;
+use MVC\Event;
+
 /**
  * @name ${module}Policy
  */
@@ -25,10 +29,40 @@ class Index
      */
     public static function requestMethodHasToMatchRouteMethod ()
     {
-        if (\MVC\Request::getCurrentRequest()->get_requestmethod() !== \MVC\Route::getCurrent()->get_method())
+        $oDTArrayObject = DTArrayObject::create()
+            ->add_aKeyValue(DTKeyValue::create()->set_sKey('sRequestmethod')->set_sValue(\MVC\Request::getCurrentRequest()->get_requestmethod()))
+            ->add_aKeyValue(DTKeyValue::create()->set_sKey('aMethodsAssigned')->set_sValue(\MVC\Route::getCurrent()->get_methodsAssigned()))
+            ->add_aKeyValue(DTKeyValue::create()->set_sKey('bGrant')->set_sValue(false))
+            ->add_aKeyValue(DTKeyValue::create()->set_sKey('sMessage')->set_sValue('access denied'))
+            ->add_aKeyValue(DTKeyValue::create()->set_sKey('sMethod')->set_sValue(__METHOD__))
+            ->add_aKeyValue(DTKeyValue::create()->set_sKey('sRedirect')->set_sValue('/404/'))
+            ->add_aKeyValue(DTKeyValue::create()->set_sKey('sClosure')->set_sValue(
+                function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
+                    \MVC\Request::redirect($oDTArrayObject->getDTKeyValueByKey('sRedirect')->get_sValue());
+                }
+            ))
+        ;
+
+        // grant access
+        if (
+            // Route is of type ANY
+            '*' === \MVC\Route::getCurrent()->get_method()
+            OR
+            // Request and Route methods do match
+            true === in_array(\MVC\Request::getCurrentRequest()->get_requestmethod(), \MVC\Route::getCurrent()->get_methodsAssigned(), true)
+        )
         {
-            $oController = new \{module}\Controller\Index();
-            $oController->notFound();
+            $oDTArrayObject->setDTKeyValueByKey(DTKeyValue::create()->set_sKey('bGrant')->set_sValue(true));
+            $oDTArrayObject->setDTKeyValueByKey(DTKeyValue::create()->set_sKey('sMessage')->set_sValue('access granted'));
+        }
+
+        // give any middleware option to modify $oDTArrayObject
+        Event::run('policy.index.requestMethodHasToMatchRouteMethod.after', $oDTArrayObject);
+
+        // deny access; call closure
+        if (false === $oDTArrayObject->getDTKeyValueByKey('bGrant')->get_sValue())
+        {
+            call_user_func($oDTArrayObject->getDTKeyValueByKey('sClosure')->get_sValue(), $oDTArrayObject);
         }
     }
 }

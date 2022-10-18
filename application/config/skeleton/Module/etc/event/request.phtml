@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * sanitize request
+ * listen to getCurrent request initial setup
+ */
+\MVC\Event::BIND ('mvc.request.getCurrentRequest.after', function ($oDTArrayObject) {
+
+    // sanitize request by config
+    foreach (\MVC\Config::MODULE()['SANITIZING'] as $sMethod => $aConfig)
+    {
+        \MVC\Request::sanitize($sMethod, $aConfig);
+    }
+
+    // get request object
+    $oDTRequestCurrent = $oDTArrayObject->getDTKeyValueByKey('oDTRequestCurrent')->get_sValue();
+
+    // write back to request object
+    $oDTRequestCurrent->set_queryArray($_GET);
+    $oDTRequestCurrent->set_query(http_build_query($oDTRequestCurrent->get_queryArray()));
+});

@@ -29,42 +29,17 @@ $aConfig['MODULE']['{module}']['SESSION'] = array(
 );
 
 /**
- * Event Bindings
+ * SANITIZING
  */
-$aConfig['MODULE']['{module}']['EVENT_BIND'] = array(
-
-    'mvc.application.setSession.before' => array(
-        // enable session (if necessary)
-        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \{module}\Event\Index::enableSession($oDTArrayObject);
-        }
-    ),
-    'mvc.reflex.reflect.targetObject.before' => array(
-        // minify css + js files (if necessary)
-        function(\MVC\DataType\DTArrayObject $oDTArrayObject) use ($aConfig) {
-            \MVC\Minify::init();
-        }
-    ),
-    'mvc.reflex.reflect.targetObject.after' => array(
-        function (\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            if (true === Config::get_MVC_INFOTOOL_ENABLE())
-            {
-                // switch on InfoTool
-                new \MVC\InfoTool(\{module}\View\Index::init());
-            }
-        },
-    ),
-    'mvc.debug.stop.after' => array(
-        function (\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \MVC\Log::write("\n\n*** STOP ***\n" . print_r($oDTArrayObject->get_akeyvalue()[0]->get_sValue(), true));
-        }
-    ),
-    'mvc.error' => array(
-        // write errors into error log file
-        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \MVC\Log::write($oDTArrayObject, 'error.log');
-        }
-    ),
+$aConfig['MODULE']['{module}']['SANITIZING'] = array(
+    '_GET' => array(
+        // key
+        'a' => array(
+            /** @see https://www.regular-expressions.info/unicode.html */
+            'regex' => "/[^\\p{L}\\p{M}\\p{Z}\\p{S}\\p{N}\\p{P}\|']+/u",
+            'length' => 256,
+        ),
+    )
 );
 
 /**

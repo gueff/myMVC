@@ -34,9 +34,6 @@ class Route
     {
         \MVC\Event::RUN('mvc.route.init');
 
-        /** @todo hier versuchen middleware einzubauen - mit Listener; Source bspw. dann DB und nicht php files */
-        $aMiddleware = [];
-
         DEFAULT_SOURCE_PHP_FILES: {
 
             //  require recursively all php files in module's routing dir

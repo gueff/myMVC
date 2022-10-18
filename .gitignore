@@ -25,3 +25,4 @@ myMVC
 Changelog.md
 **/*.min.css
 **/*.min.js
+application/library/MVC/Arr.php

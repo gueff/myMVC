@@ -28,6 +28,9 @@ class Application
 		// write configs into registry
         Config::init($GLOBALS['aConfig']);
 
+        // Event Procedures of current module
+        Event::init();
+
         // handle Errors
         Error::init();
 

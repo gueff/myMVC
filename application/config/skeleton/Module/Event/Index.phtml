@@ -24,68 +24,17 @@ use MVC\Route;
  */
 class Index
 {
-	/**
-	 * \{module}\Event\Index
-	 * @var \{module}\Event\Index
-	 */
-	private static $_oInstance = NULL;
-
-    /**
-     * Index constructor.
-     * @throws \ReflectionException
-     */
-    protected function __construct()
-    {
-        foreach (get(Registry::get('MODULE')['{module}']['EVENT_BIND'], array()) as $sEvent => $mData)
-        {
-            if (true === is_array($mData))
-            {
-                foreach ($mData as $oClosure)
-                {
-                    Event::bind($sEvent, $oClosure, null);
-                }
-
-                continue;
-            }
-
-            Event::bind($sEvent, $mData);
-        }
-    }
-
-    /**
-     * Singleton instance
-     * @return \{module}\Event\Index|null
-     */
-    public static function getInstance()
-    {
-        if (null === self::$_oInstance)
-        {
-            self::$_oInstance = new self ();
-        }
-
-        return self::$_oInstance;
-    }
-
-    /**
-     * prevent any cloning
-     * @return void
-     */
-    private function __clone()
-    {
-        ;
-    }
-
     /**
      * activates Session
      * gets active by triggered event "mvc.application.setSession.before"
-     * @see /modules/{module}/etc/config/{module}/config/{env}.php
+     * @see /modules/{module}/etc/event/
      * @param DTArrayObject $oDTArrayObject
      * @throws \ReflectionException
      */
     public static function enableSession(\MVC\DataType\DTArrayObject $oDTArrayObject)
     {
-        $aEnableSessionForController = get(Registry::get('MODULE')['{module}']['SESSION']['aEnableSessionForController'], array());
-        $aDisableSessionForController = get(Registry::get('MODULE')['{module}']['SESSION']['aDisableSessionForController'], array());
+        $aEnableSessionForController = get(Config::MODULE()['SESSION']['aEnableSessionForController'], array());
+        $aDisableSessionForController = get(Config::MODULE()['SESSION']['aDisableSessionForController'], array());
 
         $bEnable = (
             // current controller
@@ -112,13 +61,4 @@ class Index
             Config::set_MVC_SESSION_ENABLE();
         }
     }
-	
-	/**
-	 * Destructor
-	 * @return void
-	 */
-	public function __destruct()
-	{
-		;
-	}
 }

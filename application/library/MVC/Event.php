@@ -36,13 +36,32 @@ class Event
     public static $aPackage = array();
 
     /**
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function init()
+    {
+        \MVC\Event::RUN('mvc.event.init');
+
+        //  require recursively all php files in module's routing dir
+        /** @var \SplFileInfo $oSplFileInfo */
+        foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(Config::get_MVC_MODULE_CURRENT_ETC_DIR() . '/event')) as $oSplFileInfo)
+        {
+            if ('php' === strtolower($oSplFileInfo->getExtension()))
+            {
+                require_once $oSplFileInfo->getPathname();
+            }
+        }
+    }
+
+    /**
      * binds a callback closure to an event
      * @param $sEvent
      * @param \Closure $oClosure
      * @param null $oObject
      * @throws \ReflectionException
      */
-    public static function bind($sEvent, \Closure $oClosure, $oObject = NULL)
+    public static function bind($sEvent, \Closure $oClosure, $oObject = null)
     {
         $sDebug = Log::prepareDebug(debug_backtrace());
 

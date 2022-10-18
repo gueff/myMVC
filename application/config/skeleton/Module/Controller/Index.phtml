@@ -22,16 +22,12 @@ use MVC\Route;
 class Index implements \MVC\MVCInterface\Controller
 {
     /**
-     * this method is autom. called by MVC_Application->runTargetClassBeforeMethod()
-     * in very early stage
      * @return void
-     * @throws \ReflectionException
      */
-	public static function __preconstruct ()
-	{
-		// start event listener
-		\{module}\Event\Index::getInstance();
-	}
+    public static function __preconstruct ()
+    {
+        ;
+    }
 	
     /**
      * Index constructor.
