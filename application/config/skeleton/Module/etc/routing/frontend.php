@@ -2,7 +2,7 @@
 
 /*
  * this DataType class "\{module}\DataType\DTRoutingAdditional" is generated
- * @see modules/{module}/etc/config/DataType/_generate.php
+ * @see modules/{module}/etc/config/DataType/
  */
 $oDTRoutingAdditional = \{module}\DataType\DTRoutingAdditional::create()
     ->set_sTitle('{module}')
@@ -29,5 +29,5 @@ $oDTRoutingAdditional = \{module}\DataType\DTRoutingAdditional::create()
 /*
  * Routes
  */
-\MVC\Route::get('/', 'module={module}&c=index&m=index', $oDTRoutingAdditional->getPropertyJson());
-\MVC\Route::get('/404/', 'module={module}&c=index&m=notFound', $oDTRoutingAdditional->set_sTitle('404')->set_sContent('Frontend/content/404.tpl')->getPropertyJson());
+\MVC\Route::MIX(['GET', 'POST'],'/', 'module={module}&c=index&m=index', $oDTRoutingAdditional->getPropertyJson());
+\MVC\Route::GET('/404/', 'module={module}&c=index&m=notFound', $oDTRoutingAdditional->set_sTitle('404')->set_sContent('Frontend/content/404.tpl')->getPropertyJson());
