@@ -55,6 +55,35 @@ class Event
     }
 
     /**
+     * bind multiple closures to multiple event at once via config array
+     * @see /modules/{module}/etc/event/
+     * @param array $aEvent
+     * @return void
+     * @throws \ReflectionException
+     * @example  $aEvent = ['mvc.reflex.reflect.targetObject.before' => array(
+     *              function(\MVC\DataType\DTArrayObject $oDTArrayObject) { // minify css/js files
+     *                  \MVC\Minify::init();
+     *              })];
+     */
+    public static function processBindConfigStack(array $aEvent = array())
+    {
+        foreach ($aEvent as $sEventName => $mData)
+        {
+            if (true === is_array($mData))
+            {
+                foreach ($mData as $oClosure)
+                {
+                    Event::bind($sEventName, $oClosure, null);
+                }
+
+                continue;
+            }
+
+            Event::bind($sEventName, $mData);
+        }
+    }
+
+    /**
      * binds a callback closure to an event
      * @param $sEvent
      * @param \Closure $oClosure

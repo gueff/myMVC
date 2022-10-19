@@ -6,7 +6,7 @@
     "license": "GPL-3.0-or-later",
     "homepage": "https://mymvc.ueffing.net/",
     "require": {
-        "php": ">=8.1"
+        "php": ">=7.4"
     },
     "authors": [
         {
