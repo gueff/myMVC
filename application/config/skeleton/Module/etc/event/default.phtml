@@ -1,32 +1,35 @@
 <?php
 
-/**
- * minify css/js files
- */
-\MVC\Event::bind('mvc.reflex.reflect.targetObject.before', function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
-    \MVC\Minify::init();
-});
+#-------------------------------------------------------------
+# declare bindings
 
-/**
- * switch on InfoTool
- */
-\MVC\Event::bind('mvc.reflex.reflect.targetObject.after', function (\MVC\DataType\DTArrayObject $oDTArrayObject) {
-    if (true === \MVC\Config::get_MVC_INFOTOOL_ENABLE())
-    {
-        new \MVC\InfoTool(\{module}\View\Index::init());
-    }
-});
+$aEvent = [
+    'mvc.reflex.reflect.targetObject.before' => array(
+        function(\MVC\DataType\DTArrayObject $oDTArrayObject) { // minify css/js files
+            \MVC\Minify::init();
+        }
+    ),
+    'mvc.reflex.reflect.targetObject.after' => array(
+        function (\MVC\DataType\DTArrayObject $oDTArrayObject) { // switch on InfoTool
+            if (true === \MVC\Config::get_MVC_INFOTOOL_ENABLE())
+            {
+                new \MVC\InfoTool(\{module}\View\Index::init());
+            }
+        }
+    ),
+    'mvc.debug.stop.after' => array(
+        function (\MVC\DataType\DTArrayObject $oDTArrayObject) { // Logging stops
+            \MVC\Log::write("\n\n*** STOP ***\n" . print_r($oDTArrayObject->get_akeyvalue()[0]->get_sValue(), true));
+        }
+    ),
+    'mvc.application.setSession.before' => array(
+        function(\MVC\DataType\DTArrayObject $oDTArrayObject) { // enable Session
+            \{module}\Event\Index::enableSession($oDTArrayObject);
+        }
+    ),
+];
 
-/**
- * Logging stops
- */
-\MVC\Event::bind('mvc.debug.stop.after', function (\MVC\DataType\DTArrayObject $oDTArrayObject) {
-    \MVC\Log::write("\n\n*** STOP ***\n" . print_r($oDTArrayObject->get_akeyvalue()[0]->get_sValue(), true));
-});
+#-------------------------------------------------------------
+# process: bind the declared ones
 
-/**
- * enable Session
- */
-\MVC\Event::bind('mvc.application.setSession.before', function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
-    \{module}\Event\Index::enableSession($oDTArrayObject);
-});
+\MVC\Event::processBindConfigStack($aEvent);

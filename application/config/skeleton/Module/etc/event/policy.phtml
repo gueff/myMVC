@@ -1,26 +1,34 @@
 <?php
 
-/**
- * Log policy rule result when on develop Environment
- */
-\MVC\Event::BIND ('policy.index.requestMethodHasToMatchRouteMethod.after', function ($oDTArrayObject) {
+#-------------------------------------------------------------
+# declare bindings
 
-    // build message
-    $sMessage = $oDTArrayObject->getDTKeyValueByKey('sMethod')->get_sValue()
-                . ', ' . ((true === $oDTArrayObject->getDTKeyValueByKey('bGrant')->get_sValue()) ? 'ALLOW' : 'DENY') . ', '
-                . 'Has to be: '. implode('|',\MVC\Route::getCurrent()->get_methodsAssigned())
-                . ' - Is: ' . \MVC\Request::getCurrentRequest()->get_requestmethod()
-    ;
-    $oDTArrayObject->setDTKeyValueByKey(\MVC\DataType\DTKeyValue::create()->set_sKey('sMessage')->set_sValue($sMessage));
+$aEvent = [
+    'policy.index.requestMethodHasToMatchRouteMethod.after' => array(
+        function (\MVC\DataType\DTArrayObject $oDTArrayObject) { // Log policy rule result when on develop Environment
 
-    if ('develop' === \MVC\Config::get_MVC_ENV())
-    {
-        \MVC\Log::write(
-            \MVC\Request::getCurrentRequest()->get_path()
-            . ' (' . \MVC\Request::getCurrentRequest()->get_requestmethod() . ') => '
-            . \MVC\Route::getCurrent()->get_method() . ' '
-            . \MVC\Route::getCurrent()->get_path(), 'policy.log'
-        );
-        \MVC\Log::write($oDTArrayObject->getDTKeyValueByKey('sMessage')->get_sValue(), 'policy.log');
-    }
-});
+            // build message
+            $sMessage = $oDTArrayObject->getDTKeyValueByKey('sMethod')->get_sValue()
+                        . ', ' . ((true === $oDTArrayObject->getDTKeyValueByKey('bGrant')->get_sValue()) ? 'ALLOW' : 'DENY') . ', '
+                        . 'Has to be: '. implode('|',\MVC\Route::getCurrent()->get_methodsAssigned())
+                        . ' - Is: ' . \MVC\Request::getCurrentRequest()->get_requestmethod()
+            ;
+            $oDTArrayObject->setDTKeyValueByKey(\MVC\DataType\DTKeyValue::create()->set_sKey('sMessage')->set_sValue($sMessage));
+
+            if ('develop' === \MVC\Config::get_MVC_ENV())
+            {
+                \MVC\Log::write(
+                    \MVC\Request::getCurrentRequest()->get_path()
+                    . ' (' . \MVC\Request::getCurrentRequest()->get_requestmethod() . ') => '
+                    . \MVC\Route::getCurrent()->get_method() . ' '
+                    . \MVC\Route::getCurrent()->get_path(), 'policy.log'
+                );
+                \MVC\Log::write($oDTArrayObject->getDTKeyValueByKey('sMessage')->get_sValue(), 'policy.log');
+            }
+        })
+];
+
+#-------------------------------------------------------------
+# process: bind the declared ones
+
+\MVC\Event::processBindConfigStack($aEvent);

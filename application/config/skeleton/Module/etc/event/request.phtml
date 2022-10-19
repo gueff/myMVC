@@ -1,21 +1,34 @@
 <?php
 
-/**
- * sanitize request
- * listen to getCurrent request initial setup
- */
-\MVC\Event::BIND ('mvc.request.getCurrentRequest.after', function ($oDTArrayObject) {
+#-------------------------------------------------------------
+# declare bindings
 
-    // sanitize request by config
-    foreach (\MVC\Config::MODULE()['SANITIZING'] as $sMethod => $aConfig)
-    {
-        \MVC\Request::sanitize($sMethod, $aConfig);
-    }
+$aEvent = [
+    'mvc.request.getCurrentRequest.after' => array(
+        function (\MVC\DataType\DTArrayObject $oDTArrayObject) { // sanitize request; listen to getCurrent request initial setup
 
-    // get request object
-    $oDTRequestCurrent = $oDTArrayObject->getDTKeyValueByKey('oDTRequestCurrent')->get_sValue();
+            // sanitize request by config
+            foreach (\MVC\Config::MODULE()['SANITIZING'] as $sMethod => $aConfig)
+            {
+                \MVC\Request::sanitize($sMethod, $aConfig);
+            }
 
-    // write back to request object
-    $oDTRequestCurrent->set_queryArray($_GET);
-    $oDTRequestCurrent->set_query(http_build_query($oDTRequestCurrent->get_queryArray()));
-});
+            // get request object
+            $oDTRequestCurrent = $oDTArrayObject->getDTKeyValueByKey('oDTRequestCurrent')->get_sValue();
+
+            // write back to request object
+            $oDTRequestCurrent->set_queryArray($_GET);
+            $oDTRequestCurrent->set_query(http_build_query($oDTRequestCurrent->get_queryArray()));
+
+            if ('develop' === \MVC\Config::get_MVC_ENV())
+            {
+                \MVC\Log::write(__LINE__, 'debug.log');
+            }
+        }
+    )
+];
+
+#-------------------------------------------------------------
+# process: bind the declared ones
+
+\MVC\Event::processBindConfigStack($aEvent);
