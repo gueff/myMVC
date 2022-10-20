@@ -1,4 +1,5 @@
 .idea
+.composer.lock
 application/.composer
 application/cache/*
 application/log/*
