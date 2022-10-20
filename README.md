@@ -1,4 +1,4 @@
-# <img src="https://mymvc.ueffing.net/myMVC/images/myMVC-Logo_transparent.png" width="60" align="left"> myMVC
+# <img src="https://mymvc.ueffing.net/myMVC.png" width="60" align="left"> myMVC
 
 the PHP Framework
 
