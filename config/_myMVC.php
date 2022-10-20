@@ -88,7 +88,8 @@ MVC_APPLICATION_SETTINGS: {
     $aConfig['MVC_APPLICATION_CONFIG_DIR'] = $aConfig['MVC_APPLICATION_PATH'] . '/config';
     $aConfig['MVC_VIEW_TEMPLATES'] = $aConfig['MVC_BASE_PATH'] . '/modules/Default/templates';
     $aConfig['MVC_LIBRARY'] = $aConfig['MVC_APPLICATION_PATH'] . '/library';
-    $aConfig['MVC_MODULES'] = $aConfig['MVC_BASE_PATH'] . '/modules';
+    $aConfig['MVC_MODULES'] = $aConfig['MVC_BASE_PATH'] . '/modules';/** @deprecated - use instead: `MVC_MODULES_DIR` */
+    $aConfig['MVC_MODULES_DIR'] = $aConfig['MVC_BASE_PATH'] . '/modules';
 
     // Main myMVC config folder
     $aConfig['MVC_CONFIG_DIR'] = $aConfig['MVC_BASE_PATH'] . '/config';

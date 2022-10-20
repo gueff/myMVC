@@ -342,6 +342,7 @@ class Config
     }
 
     /**
+     * @deprecated - use instead: get_MVC_MODULES_DIR()
      * @return string
      * @throws \ReflectionException
      */
@@ -350,6 +351,20 @@ class Config
         if (Registry::isRegistered('MVC_MODULES'))
         {
             return (string) Registry::get('MVC_MODULES');
+        }
+
+        return '';
+    }
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_MODULES_DIR()
+    {
+        if (Registry::isRegistered('MVC_MODULES_DIR'))
+        {
+            return (string) Registry::get('MVC_MODULES_DIR');
         }
 
         return '';
