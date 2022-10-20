@@ -253,6 +253,7 @@ class InfoTool
         foreach ($aData as $sKey => $mValue)
         {
             $sMarkup.= '<li class="myMvcToolbar-tree"><span class="myMvcToolbar-bg-primary">' . trim($sKey) . '</span> <span class="myMvcToolbar-bg-info">=></span> ';
+            (true === empty($mValue)) ? $mValue = '' : false;
 
             if (is_array($mValue))
             {
