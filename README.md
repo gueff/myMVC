@@ -1,7 +1,8 @@
-myMVC  
-PHP Framework by gueff
+# <img src="https://mymvc.ueffing.net/myMVC/images/myMVC-Logo_transparent.png" width="60" align="left"> myMVC
 
-- Open Source
+the PHP Framework
+
+- Open Source; GPL-3.0 license
 - MVC Structure, +Events, +Policies
 - Smarty Template Engine
 - Modular
