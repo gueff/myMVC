@@ -293,7 +293,7 @@ class Request
         }
 
         $aUrl = parse_url($sUrl);
-        $mPath = preg_split('~/~', $aUrl['path'], NULL, PREG_SPLIT_NO_EMPTY);
+        $mPath = preg_split('~/~', $aUrl['path'], 0, PREG_SPLIT_NO_EMPTY);
         $aPath = (false === is_array($mPath)) ? array() : $mPath;
 
         if (true === $bReverse)
