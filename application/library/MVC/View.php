@@ -195,17 +195,6 @@ class View extends \Smarty
             );
         Event::run ('mvc.view.render.before', $oDTArrayObject);
 
-        // flatten $oDTArrayObject
-        $aFlatten = [];
-        foreach ($oDTArrayObject->get_aKeyValue() as $sKey => $mValue)
-        {
-            $aFlatten[$mValue->get_sKey()] = $mValue->get_sValue();
-        }
-
-        Debug::info(
-            $aFlatten
-        );
-
         $this->renderString (
             $oDTArrayObject->getDTKeyValueByKey('sTemplate')->get_sValue()
         );
