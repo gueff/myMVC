@@ -41,8 +41,6 @@ class Event
      */
     public static function init()
     {
-        \MVC\Event::RUN('mvc.event.init');
-
         //  require recursively all php files in module's routing dir
         /** @var \SplFileInfo $oSplFileInfo */
         foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(Config::get_MVC_MODULE_CURRENT_ETC_DIR() . '/event')) as $oSplFileInfo)

@@ -31,7 +31,7 @@ class Controller
 		$oReflex = new Reflex();
 		$bSuccess = $oReflex->reflect ();
 
-        Event::run ('mvc.controller.construct.after',
+        Event::run ('mvc.controller.init.after',
             DTArrayObject::create()
                 ->add_aKeyValue(
                     DTKeyValue::create()->set_sKey('bSuccess')->set_sValue($bSuccess)
@@ -94,7 +94,7 @@ class Controller
             );
         }
 
-        Event::run ('mvc.runTargetClassPreconstruct.after',
+        Event::run ('mvc.controller.runTargetClassPreconstruct.after',
             DTArrayObject::create()
                 ->add_aKeyValue(
                     DTKeyValue::create()->set_sKey('sClass')->set_sValue($sTargetClass)

@@ -183,26 +183,34 @@ class View extends \Smarty
      */
     public function render ()
     {
-        Event::run ('mvc.view.render.before',
-            DTArrayObject::create()
-                ->add_aKeyValue(
-                    DTKeyValue::create()->set_sKey('oView')->set_sValue($this)
-                )
-        );
-
         // Load Template and render
         $sTemplate = (true === is_file($this->sTemplate)) ? file_get_contents ($this->sTemplate, true) : '';
-        $this->renderString ($sTemplate);
 
-        Event::run ('mvc.view.render.after',
-            DTArrayObject::create()
-                ->add_aKeyValue(
-                    DTKeyValue::create()->set_sKey('oView')->set_sValue($this)
-                )
-                ->add_aKeyValue(
-                    DTKeyValue::create()->set_sKey('sTemplate')->set_sValue($sTemplate)
-                )
+        $oDTArrayObject = DTArrayObject::create()
+            ->add_aKeyValue(
+                DTKeyValue::create()->set_sKey('oView')->set_sValue($this)
+            )
+            ->add_aKeyValue(
+                DTKeyValue::create()->set_sKey('sTemplate')->set_sValue($sTemplate)
+            );
+        Event::run ('mvc.view.render.before', $oDTArrayObject);
+
+        // flatten $oDTArrayObject
+        $aFlatten = [];
+        foreach ($oDTArrayObject->get_aKeyValue() as $sKey => $mValue)
+        {
+            $aFlatten[$mValue->get_sKey()] = $mValue->get_sValue();
+        }
+
+        Debug::info(
+            $aFlatten
         );
+
+        $this->renderString (
+            $oDTArrayObject->getDTKeyValueByKey('sTemplate')->get_sValue()
+        );
+
+        Event::run ('mvc.view.render.after', $oDTArrayObject);
     }
 
     /**

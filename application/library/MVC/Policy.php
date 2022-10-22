@@ -97,6 +97,16 @@ class Policy
             $aPolicy[$sClass][$sMethod][$iKey] = null;
             unset($aPolicy[$sClass][$sMethod][$iKey]);
         }
+        elseif (isset($aPolicy[$sClass][$sMethod]))
+        {
+            $aPolicy[$sClass][$sMethod] = null;
+            unset($aPolicy[$sClass][$sMethod]);
+        }
+        elseif (isset($aPolicy[$sClass]))
+        {
+            $aPolicy[$sClass] = null;
+            unset($aPolicy[$sClass]);
+        }
 
         Config::set_MVC_POLICY($aPolicy);
     }
