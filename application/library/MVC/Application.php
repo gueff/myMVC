@@ -5,7 +5,7 @@
  * @package myMVC
  * @copyright ueffing.net
  * @author Guido K.B.W. Üffing <info@ueffing.net>
- * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
+ * @license GNU GENERAL PUBLIC LICENSE Version 3.
  */
 
 namespace MVC;
@@ -80,16 +80,16 @@ class Application
         $sMicrotime = sprintf ("%06d", ($fMicrotime - floor ($fMicrotime)) * 1000000);
         $oSession->set ('startDateTime', new \DateTime (date ('Y-m-d H:i:s.' . $sMicrotime)));
         $oSession->set ('uniqueid', Config::get_MVC_UNIQUE_ID());
-        
-        // copy Session Object to registry
-        Config::set_MVC_SESSION($oSession);
 
-		Event::run ('mvc.application.setSession.after',
+        Event::run ('mvc.application.setSession.after',
             DTArrayObject::create()
                 ->add_aKeyValue(
                     DTKeyValue::create()->set_sKey('oSession')->set_sValue($oSession)
                 )
         );
+
+        // copy Session Object to registry
+        Config::set_MVC_SESSION($oSession);
 
         return true;
 	}

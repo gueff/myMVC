@@ -5,7 +5,7 @@
  * @package myMVC
  * @copyright ueffing.net
  * @author Guido K.B.W. Üffing <info@ueffing.net>
- * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
+ * @license GNU GENERAL PUBLIC LICENSE Version 3.
  */
 
 /**
@@ -407,6 +407,15 @@ class Config
     }
 
     /**
+     * @param $iPort
+     * @return void
+     */
+    public static function set_MVC_SSL_PORT($iPort = 443)
+    {
+        Registry::set('MVC_SSL_PORT', $iPort);
+    }
+
+    /**
      * @return bool
      * @throws \ReflectionException
      */
@@ -616,7 +625,7 @@ class Config
     {
         if (false === Registry::isRegistered('MVC_EVENT'))
         {
-            Registry::set('MVC_EVENT', array());
+            self::set_MVC_EVENT();
         }
 
         if (Registry::isRegistered('MVC_EVENT'))
@@ -1026,5 +1035,74 @@ class Config
         }
 
         return '';
+    }
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_REGISTER_SHUTDOWN_FUNCTION()
+    {
+        if (Registry::isRegistered('MVC_REGISTER_SHUTDOWN_FUNCTION'))
+        {
+            return (string) Registry::get('MVC_REGISTER_SHUTDOWN_FUNCTION');
+        }
+
+        return '';
+    }
+
+    /**
+     * @param $sString
+     * @return void
+     */
+    public static function set_MVC_REGISTER_SHUTDOWN_FUNCTION($sString = '')
+    {
+        Registry::set('MVC_REGISTER_SHUTDOWN_FUNCTION', $sString);
+    }
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_SET_ERROR_HANDLER()
+    {
+        if (Registry::isRegistered('MVC_SET_ERROR_HANDLER'))
+        {
+            return (string) Registry::get('MVC_SET_ERROR_HANDLER');
+        }
+
+        return '';
+    }
+
+    /**
+     * @param $sString
+     * @return void
+     */
+    public static function set_MVC_SET_ERROR_HANDLER($sString = '')
+    {
+        Registry::set('MVC_SET_ERROR_HANDLER', $sString);
+    }
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_SET_EXCEPTION_HANDLER()
+    {
+        if (Registry::isRegistered('MVC_SET_EXCEPTION_HANDLER'))
+        {
+            return (string) Registry::get('MVC_SET_EXCEPTION_HANDLER');
+        }
+
+        return '';
+    }
+
+    /**
+     * @param $sString
+     * @return void
+     */
+    public static function set_MVC_SET_EXCEPTION_HANDLER($sString = '')
+    {
+        Registry::set('MVC_SET_EXCEPTION_HANDLER', $sString);
     }
 }

@@ -1,10 +1,9 @@
 <?php
-
 /**
  * @package myMVC
  * @copyright ueffing.net
  * @author Guido K.B.W. Üffing <info@ueffing.net>
- * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
+ * @license GNU GENERAL PUBLIC LICENSE Version 3.
  */
 
 MVC_RUNTIME_SETTINGS: {
@@ -26,6 +25,11 @@ MVC_RUNTIME_SETTINGS: {
 
     // Log autoloader actions
     $aConfig['MVC_LOG_AUTOLOADER'] = true;
+
+    // error handling
+    $aConfig['MVC_REGISTER_SHUTDOWN_FUNCTION'] = '\MVC\Error::fatal';
+    $aConfig['MVC_SET_ERROR_HANDLER'] = '\MVC\Error::errorHandler';
+    $aConfig['MVC_SET_EXCEPTION_HANDLER'] = '\MVC\Error::exception';
 }
 
 MVC_BIN: {

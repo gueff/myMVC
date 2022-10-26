@@ -5,7 +5,7 @@
  * @package myMVC
  * @copyright ueffing.net
  * @author Guido K.B.W. Üffing <info@ueffing.net>
- * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
+ * @license GNU GENERAL PUBLIC LICENSE Version 3.
  */
 
 namespace MVC;
@@ -52,9 +52,11 @@ class Error
      */
 	public static function init()
 	{
-		register_shutdown_function ("\MVC\Error::fatal");
-		set_error_handler ("\MVC\Error::errorHandler");
-		set_exception_handler ("\MVC\Error::exception");
+        Event::run('mvc.error.init.before');
+
+		register_shutdown_function (Config::get_MVC_REGISTER_SHUTDOWN_FUNCTION());
+		set_error_handler (Config::get_MVC_SET_ERROR_HANDLER());
+		set_exception_handler (Config::get_MVC_SET_EXCEPTION_HANDLER());
 
 		Event::bind ('mvc.error', function(DTArrayObject $oDTArrayObject) {
 			\MVC\Error::addERROR ($oDTArrayObject);

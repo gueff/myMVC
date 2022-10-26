@@ -5,7 +5,7 @@
  * @package myMVC
  * @copyright ueffing.net
  * @author Guido K.B.W. Üffing <info@ueffing.net>
- * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
+ * @license GNU GENERAL PUBLIC LICENSE Version 3.
  */
 
 namespace MVC;
@@ -26,9 +26,7 @@ class Closure
 
     /**
      * Dumps a Closure
-     * @access public
-     * @static
-     * @param mixed $mClosure name of function or Closure
+     * @param Closure|string $mClosure name of function or Closure
      * @return string
      * @throws \ReflectionException
      */
@@ -110,42 +108,13 @@ class Closure
     }
 
     /**
-     * converts a closure into a string
-     * @see https://stackoverflow.com/a/69934185
-     * @param $oClosure
+     * alias for Closure::dump()
+     * @param Closure|string $mClosure name of function or Closure
      * @return string
      * @throws \ReflectionException
      */
-    public static function toString($oClosure)
+    public static function toString($mClosure)
     {
-        $oReflectionFunction = new \ReflectionFunction($oClosure);
-        $sFileName = $oReflectionFunction->getFileName();
-        $iStartLine = $oReflectionFunction->getStartLine();
-        $iEndLine = $oReflectionFunction->getEndLine();
-        $aExplode = explode(PHP_EOL, file_get_contents($sFileName));
-        $aExplode = array_slice($aExplode, ($iStartLine - 1), ($iEndLine - ($iStartLine - 1)));
-        $iLastLineNumber = (count($aExplode) - 1);
-        reset($aExplode);
-
-        if (
-            (substr_count(current($aExplode), 'function') > 1) ||
-            (substr_count(current($aExplode), '{') > 1) ||
-            (substr_count($aExplode[$iLastLineNumber], '}') > 1)
-        )
-        {
-            \MVC\Error::error(
-                "Too complex context definition in: `$sFileName`. Check lines: $iStartLine & $iEndLine.",
-                1,
-                0,
-                $sFileName,
-                $iStartLine
-            );
-        }
-
-        $aExplode[0] = ('function' . explode('function', current($aExplode))[1]);
-        $aExplode[$iLastLineNumber] = (explode('}', $aExplode[$iLastLineNumber])[0] . '}');
-        $sClosure = implode(PHP_EOL, $aExplode);
-
-        return $sClosure;
+        return self::dump($mClosure);
     }
 }

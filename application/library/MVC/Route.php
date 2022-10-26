@@ -5,7 +5,7 @@
  * @package myMVC
  * @copyright ueffing.net
  * @author Guido K.B.W. Üffing <info@ueffing.net>
- * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
+ * @license GNU GENERAL PUBLIC LICENSE Version 3.
  */
 
 namespace MVC;
@@ -32,13 +32,17 @@ class Route
      */
     public static function init()
     {
-        \MVC\Event::RUN('mvc.route.init');
+        $oDTArrayObject = DTArrayObject::create()
+            ->add_aKeyValue(DTKeyValue::create()->set_sKey('routeDir')->set_sValue(Config::get_MVC_MODULE_CURRENT_ETC_DIR() . '/routing'))
+        ;
+
+        \MVC\Event::RUN('mvc.route.init.before', $oDTArrayObject);
 
         DEFAULT_SOURCE_PHP_FILES: {
 
             //  require recursively all php files in module's routing dir
             /** @var \SplFileInfo $oSplFileInfo */
-            foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(Config::get_MVC_MODULE_CURRENT_ETC_DIR() . '/routing')) as $oSplFileInfo)
+            foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($oDTArrayObject->getDTKeyValueByKey('routeDir')->get_sValue())) as $oSplFileInfo)
             {
                 if ('php' === strtolower($oSplFileInfo->getExtension()))
                 {
