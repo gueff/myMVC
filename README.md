@@ -2,6 +2,9 @@
 
 the PHP Framework
 
+
+![example workflow](https://github.com/gueff/myMVC/actions/workflows/super-linter.yml/badge.svg)
+
 - Open Source; GPL-3.0 license
 - MVC Structure, +Events, +Policies
 - Smarty Template Engine
