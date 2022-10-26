@@ -2,8 +2,8 @@
 
 the PHP Framework
 
+<img src="https://github.com/gueff/myMVC/actions/workflows/super-linter.yml/badge.svg">
 
-![example workflow](https://github.com/gueff/myMVC/actions/workflows/super-linter.yml/badge.svg)
 
 - Open Source; GPL-3.0 license
 - MVC Structure, +Events, +Policies
