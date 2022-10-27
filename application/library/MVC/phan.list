@@ -12,6 +12,7 @@ DataType/DTConstant.php
 DataType/DTRoute.php
 DataType/DTRequestCurrent.php
 DataType/DTKeyValue.php
+DataType/DTFileinfo.php
 Debug.php
 Error.php
 Event.php
@@ -21,10 +22,8 @@ InfoTool.php
 Lock.php
 Log.php
 Minify.php
-MVCInterface/RouterJson.php
-MVCInterface/RouterJsonBuilder.php
 MVCInterface/Controller.php
-phanlistcreate.sh
+MVCTrait/TraitDataType.php
 Policy.php
 Reflex.php
 Registry.php

@@ -20,6 +20,7 @@ _createPhar.php
 _generateDataTypes.php
 _dataTypeCreation.php
 _gitPush.sh
+_gitPush.sh.example
 _phanlistcreate.sh
 _push.sh
 Changelog.md
