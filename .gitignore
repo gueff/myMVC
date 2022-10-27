@@ -13,6 +13,8 @@ modules/*
 public/.env
 _createPhar.php
 _createMVCDataTypes.php
+_gitPush.sh
+_gitPush.sh.example
 _push.sh
 **/*.min.css
 **/*.min.js
