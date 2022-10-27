@@ -2,6 +2,8 @@
 
 the PHP Framework
 
+<img src="https://github.com/gueff/myMVC/actions/workflows/super-linter.yml/badge.svg">
+
 - Open Source; GPL-3.0 license
 - MVC Structure, +Events, +Policies
 - Smarty Template Engine
@@ -10,5 +12,5 @@ the PHP Framework
 - DataType Creation
 - PHP >= 7.4
 
-Documentation:  https://mymvc.ueffing.net/  
-github:  https://github.com/gueff/myMVC/  
+Documentation:  [https://mymvc.ueffing.net/](https://mymvc.ueffing.net/)  
+github:  [https://github.com/gueff/myMVC/](https://github.com/gueff/myMVC/)  
