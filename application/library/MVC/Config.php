@@ -700,6 +700,15 @@ class Config
     }
 
     /**
+     * @param $bEnable
+     * @return void
+     */
+    public static function set_MVC_INFOTOOL_ENABLE($bEnable = true)
+    {
+        Registry::set('MVC_INFOTOOL_ENABLE', $bEnable);
+    }
+
+    /**
      * returns config settings array of current module | or config of given module
      * @return array
      * @throws \ReflectionException

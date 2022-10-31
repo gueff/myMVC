@@ -11,7 +11,7 @@ class DTRequestCurrent
 {
 	use TraitDataType;
 
-	const DTHASH = '7f3f9a46bb543c77b09da2575bc91d2f';
+	const DTHASH = '1bdca1c879b1afa2aa8027961eaa09f9';
 
 	/**
 	 * @required false
@@ -24,6 +24,12 @@ class DTRequestCurrent
 	 * @var string
 	 */
 	protected $host;
+
+	/**
+	 * @required false
+	 * @var int
+	 */
+	protected $port;
 
 	/**
 	 * @required false
@@ -108,6 +114,7 @@ class DTRequestCurrent
 
 		$this->scheme = '';
 		$this->host = '';
+		$this->port = 0;
 		$this->path = array();
 		$this->query = '';
 		$this->queryArray = array();
@@ -174,6 +181,20 @@ class DTRequestCurrent
 		\MVC\Event::RUN ('DTRequestCurrent.set_host.before', \MVC\DataType\DTArrayObject::create(array('host' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
 
 		$this->host = $aValue;
+
+		return $this;
+	}
+
+	/**
+	 * @param int $aValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
+	public function set_port($aValue)
+	{
+		\MVC\Event::RUN ('DTRequestCurrent.set_port.before', \MVC\DataType\DTArrayObject::create(array('port' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+
+		$this->port = $aValue;
 
 		return $this;
 	}
@@ -369,6 +390,17 @@ class DTRequestCurrent
 	}
 
 	/**
+	 * @return int
+	 * @throws \ReflectionException
+	 */
+	public function get_port()
+	{
+		\MVC\Event::RUN ('DTRequestCurrent.get_port.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('port')->set_sValue($this->port))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+
+		return $this->port;
+	}
+
+	/**
 	 * @return array
 	 * @throws \ReflectionException
 	 */
@@ -514,6 +546,14 @@ class DTRequestCurrent
 	public static function getPropertyName_host()
 	{
         return 'host';
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getPropertyName_port()
+	{
+        return 'port';
 	}
 
 	/**

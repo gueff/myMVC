@@ -76,9 +76,15 @@ class Request
         (false === is_array($aUriInfo)) ? $aUriInfo = array() : false;
 
         $oDTRequestCurrent = DTRequestCurrent::create($aUriInfo);
-        $oDTRequestCurrent->set_requesturi(self::getServerRequestUri());
         $oDTRequestCurrent->set_protocol(self::getUriProtocol());
-        $oDTRequestCurrent->set_full(self::getUriProtocol() . $_SERVER['HTTP_HOST'] . self::getServerRequestUri());
+        $oDTRequestCurrent->set_port(get($_SERVER['SERVER_PORT'], 0));
+        $oDTRequestCurrent->set_requesturi(self::getServerRequestUri());
+        $oDTRequestCurrent->set_full(
+            self::getUriProtocol()
+            . $_SERVER['HTTP_HOST']
+            . ((false === in_array($oDTRequestCurrent->get_port(), array(80, 443), false)) ? ':' . $oDTRequestCurrent->get_port() : '')
+            . self::getServerRequestUri()
+        );
         $oDTRequestCurrent->set_requestmethod(Request::getServerRequestMethod());
         $oDTRequestCurrent->set_input(file_get_contents("php://input"));
         $oDTRequestCurrent->set_isSecure(Config::get_MVC_SECURE_REQUEST());
