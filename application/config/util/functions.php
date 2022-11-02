@@ -52,3 +52,24 @@ stop at:
     (true === \MVC\Request::isCli()) ? $sMessage = strip_tags($sMessage): false;
     die($sMessage);
 }
+
+if (!function_exists('getallheaders'))
+{
+    /**
+     * @return array
+     */
+    function getallheaders()
+    {
+        $aHeader = [];
+
+        foreach ($_SERVER as $name => $value)
+        {
+            if (substr($name, 0, 5) == 'HTTP_')
+            {
+                $aHeader[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+            }
+        }
+
+        return $aHeader;
+    }
+}
