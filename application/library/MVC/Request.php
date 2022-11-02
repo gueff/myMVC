@@ -370,6 +370,7 @@ class Request
         $aParseUrl = parse_url ($GLOBALS['argv'][1]);
 
         $_SERVER = array ();
+        $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI'] = $GLOBALS['argv'][1];
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
         $_SERVER['HTTP_HOST'] = 'localhost';
