@@ -5,7 +5,7 @@
  * @package myMVC
  * @copyright ueffing.net
  * @author Guido K.B.W. Üffing <info@ueffing.net>
- * @license GNU GENERAL PUBLIC LICENSE Version 3.
+ * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
  */
 
 namespace MVC;
@@ -41,6 +41,8 @@ class Event
      */
     public static function init()
     {
+        \MVC\Event::RUN('mvc.event.init');
+
         //  require recursively all php files in module's routing dir
         /** @var \SplFileInfo $oSplFileInfo */
         foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(Config::get_MVC_MODULE_CURRENT_ETC_DIR() . '/event')) as $oSplFileInfo)
@@ -71,26 +73,28 @@ class Event
             {
                 foreach ($mData as $oClosure)
                 {
-                    Event::bind($sEventName, $oClosure, null);
+                    Event::bind($sEventName, $oClosure, null, debug_backtrace());
                 }
 
                 continue;
             }
 
-            Event::bind($sEventName, $mData);
+            Event::bind($sEventName, $mData, null, debug_backtrace());
         }
     }
 
     /**
      * binds a callback closure to an event
-     * @param $sEvent
+     * @param string   $sEvent
      * @param \Closure $oClosure
-     * @param null $oObject
+     * @param          $oObject
+     * @param array    $aDebug
+     * @return void
      * @throws \ReflectionException
      */
-    public static function bind($sEvent, \Closure $oClosure, $oObject = null)
+    public static function bind(string $sEvent, \Closure $oClosure, $oObject = null, array $aDebug = array())
     {
-        $sDebug = Log::prepareDebug(debug_backtrace());
+        $sDebug = Log::prepareDebug(((true === empty($aDebug)) ? debug_backtrace() : $aDebug));
 
         if (!isset (self::$aEvent[$sEvent]))
         {
@@ -105,15 +109,17 @@ class Event
     }
 
     /**
-     * @param          $sEvent
+     * @param string   $sEvent
      * @param \Closure $oClosure
      * @param          $oObject
-     * @param          $sDebug
+     * @param string   $sDebug
      * @return void
+     * @throws \ReflectionException
      */
-    protected static function addListenerToEvent($sEvent, \Closure $oClosure, $oObject = null, $sDebug = '')
+    protected static function addListenerToEvent(string $sEvent, \Closure $oClosure, $oObject = null, string $sDebug = '')
     {
-        self::$aEvent[$sEvent][serialize($sDebug)] = ($oObject === NULL)
+        $sMd5 = md5(serialize($sDebug)) . '.' . md5(Closure::dump($oClosure));
+        self::$aEvent[$sEvent][$sMd5] = ($oObject === NULL)
             ? $oClosure
             : array($oObject, $oClosure)
         ;
