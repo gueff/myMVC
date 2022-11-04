@@ -118,8 +118,10 @@ class Event
      */
     protected static function addListenerToEvent(string $sEvent, \Closure $oClosure, $oObject = null, string $sDebug = '')
     {
-        $sMd5 = md5(serialize($sDebug)) . '.' . md5(Closure::dump($oClosure));
-        self::$aEvent[$sEvent][$sMd5] = ($oObject === NULL)
+        // make $sSource a unique one
+        $sDebug.= ' (' . uniqid() . ')';
+        $sSource = serialize($sDebug);
+        self::$aEvent[$sEvent][$sSource] = ($oObject === NULL)
             ? $oClosure
             : array($oObject, $oClosure)
         ;
