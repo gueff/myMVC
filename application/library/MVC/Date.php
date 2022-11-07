@@ -5,7 +5,7 @@
  * @package myMVC
  * @copyright ueffing.net
  * @author Guido K.B.W. Üffing <info@ueffing.net>
- * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
+ * @license GNU GENERAL PUBLIC LICENSE Version 3.
  */
 
 namespace MVC;
@@ -32,7 +32,7 @@ class Date
      * @return int week number (KW)
      * @throws \Exception
      */
-    public static function getWeekNumberOnIsoDate($sDateIso = '')
+    public static function getWeekNumberOnIsoDate(string $sDateIso = '')
     {
         ('' === $sDateIso) ? $sDateIso = date('Y-m-d') : false;
         $oDateTime = new \DateTime($sDateIso);
@@ -46,7 +46,7 @@ class Date
      * @param int $iYear
      * @return int amount week numbers
      */
-    public static function getAmountOfWeekNumbersOfYear($iYear = 0)
+    public static function getAmountOfWeekNumbersOfYear(int $iYear = 0)
     {
         $iYear = (0 === $iYear) ? date('Y') : (int) $iYear;
 
@@ -62,7 +62,7 @@ class Date
      * @param string $sDateIso
      * @return bool
      */
-    function dateIsBetween2Dates($sDateIsoRangeStart = '', $sDateIsoRangeEnd = '', $sDateIso = '')
+    public static function dateIsBetween2Dates(string $sDateIsoRangeStart = '', string $sDateIsoRangeEnd = '', string $sDateIso = '')
     {
         // Fallback: today
         ('' === $sDateIso) ? $sDateIso = date('Y-m-d', strtotime(date('Y-m-d'))) : false;
