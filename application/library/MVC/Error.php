@@ -158,7 +158,7 @@ class Error
 			}
 		}
 
-        $sMsg.= self::$aExceptionTranslation[$oErrorException->getCode()] . "\t";
+        $sMsg.= get(self::$aExceptionTranslation[$oErrorException->getCode()], 'E_???') . "\t";
 		$sMsg.= '(Code: ' . $oErrorException->getCode()
             . ' / Class: ' . get_class ($oErrorException)
             . '), File: ' . $oErrorException->getFile()
