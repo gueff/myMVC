@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Closure.php
  *
@@ -112,11 +113,12 @@ class Closure
     /**
      * converts a closure into a string
      * @see https://stackoverflow.com/a/69934185
-     * @param $oClosure
+     * @param \Closure $oClosure
+     * @param bool $bShrink remove comments, empty lines, multiple whitespace
      * @return string
      * @throws \ReflectionException
      */
-    public static function toString($oClosure)
+    public static function toString(\Closure $oClosure, $bShrink = true)
     {
         $oReflectionFunction = new \ReflectionFunction($oClosure);
         $sFileName = $oReflectionFunction->getFileName();
@@ -146,6 +148,16 @@ class Closure
         $aExplode[$iLastLineNumber] = (explode('}', $aExplode[$iLastLineNumber])[0] . '}');
         $sClosure = implode(PHP_EOL, $aExplode);
 
-        return $sClosure;
+        // remove comments, empty lines, multiple whitespace
+        if (true === $bShrink)
+        {
+            $sClosure = preg_replace('!/\*.*?\*/!s', '', $sClosure);
+            $sClosure = preg_replace('/\n\s*\n/', "\n", $sClosure);
+            $sClosure = preg_replace('/(?:(?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|(?:(?<!\:|\\\|\'|\")\/\/.*))/', '', $sClosure);
+            $sClosure = str_replace("\n", ' ', $sClosure);
+            $sClosure = preg_replace('!\s+!', ' ', $sClosure);
+        }
+
+        return (string) $sClosure;
     }
 }
