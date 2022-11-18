@@ -161,7 +161,7 @@ class Event
             // run bonded closure
             if (true === filter_var(Closure::is($sCallback), FILTER_VALIDATE_BOOLEAN))
             {
-                Log::write($sPreLog . ' --> bonded by `' . unserialize($sKey) . ', try to run its Closure: ' . Closure::dump($sCallback));
+                Log::write($sPreLog . ' --> bonded by `' . unserialize($sKey) . ', try to run its Closure: ' . Closure::toString($sCallback));
 
                 // error occured
                 if (call_user_func($sCallback, $mPackage) === false)

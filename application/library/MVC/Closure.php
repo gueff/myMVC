@@ -1,11 +1,12 @@
 <?php
+
 /**
  * Closure.php
  *
  * @package myMVC
  * @copyright ueffing.net
  * @author Guido K.B.W. Üffing <info@ueffing.net>
- * @license GNU GENERAL PUBLIC LICENSE Version 3.
+ * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
  */
 
 namespace MVC;
@@ -26,7 +27,9 @@ class Closure
 
     /**
      * Dumps a Closure
-     * @param Closure|string $mClosure name of function or Closure
+     * @access public
+     * @static
+     * @param mixed $mClosure name of function or Closure
      * @return string
      * @throws \ReflectionException
      */
@@ -108,13 +111,53 @@ class Closure
     }
 
     /**
-     * alias for Closure::dump()
-     * @param Closure|string $mClosure name of function or Closure
+     * converts a closure into a string
+     * @see https://stackoverflow.com/a/69934185
+     * @param \Closure $oClosure
+     * @param bool $bShrink remove comments, empty lines, multiple whitespace
      * @return string
      * @throws \ReflectionException
      */
-    public static function toString($mClosure)
+    public static function toString(\Closure $oClosure, bool $bShrink = true)
     {
-        return self::dump($mClosure);
+        $oReflectionFunction = new \ReflectionFunction($oClosure);
+        $sFileName = $oReflectionFunction->getFileName();
+        $iStartLine = $oReflectionFunction->getStartLine();
+        $iEndLine = $oReflectionFunction->getEndLine();
+        $aExplode = explode(PHP_EOL, file_get_contents($sFileName));
+        $aExplode = array_slice($aExplode, ($iStartLine - 1), ($iEndLine - ($iStartLine - 1)));
+        $iLastLineNumber = (count($aExplode) - 1);
+        reset($aExplode);
+
+        if (
+            (substr_count(current($aExplode), 'function') > 1) ||
+            (substr_count(current($aExplode), '{') > 1) ||
+            (substr_count($aExplode[$iLastLineNumber], '}') > 1)
+        )
+        {
+            \MVC\Error::error(
+                "Too complex context definition in: `$sFileName`. Check lines: $iStartLine & $iEndLine.",
+                1,
+                0,
+                $sFileName,
+                $iStartLine
+            );
+        }
+
+        $aExplode[0] = ('function' . explode('function', current($aExplode))[1]);
+        $aExplode[$iLastLineNumber] = (explode('}', $aExplode[$iLastLineNumber])[0] . '}');
+        $sClosure = implode(PHP_EOL, $aExplode);
+
+        // remove comments, empty lines, multiple whitespace
+        if (true === $bShrink)
+        {
+            $sClosure = preg_replace('!/\*.*?\*/!s', '', $sClosure);
+            $sClosure = preg_replace('/\n\s*\n/', "\n", $sClosure);
+            $sClosure = preg_replace('/(?:(?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|(?:(?<!\:|\\\|\'|\")\/\/.*))/', '', $sClosure);
+            $sClosure = str_replace("\n", ' ', $sClosure);
+            $sClosure = preg_replace('!\s+!', ' ', $sClosure);
+        }
+
+        return (string) $sClosure;
     }
 }
