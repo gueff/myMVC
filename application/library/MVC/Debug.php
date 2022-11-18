@@ -113,14 +113,7 @@ class Debug
                 : '';
             $sConsultation .= '</div>';
 
-            if (is_array($mData))
-            {
-                $sDisplay .= $sConsultation . '<textarea style="font-size:10px;width:100% !important;height:200px !important;margin:0 !important;background-color:blue !important;color:white !important;border: none !important;padding: 5px !important;font-family: monospace !important;">' . $mData . '</textarea>';
-            }
-            else
-            {
-                $sDisplay .= $sConsultation . '<div style="font-size:10px;width:100%;padding:2px 0px 10px 0px;margin:0;background-color:blue;color:white;border:none;"><pre style="font-size:12px !important;overflow:auto !important;max-height:300px !important;background-color:transparent !important;color:#fff !important;border: none !important;padding: 5px !important;font-family: monospace !important;">' . $mData . '</pre></div>';
-            }
+            $sDisplay .= $sConsultation . '<textarea style="font-size:10px;width:100% !important;min-height: 60px !important;margin:0 !important;background-color:blue !important;color:white !important;border: none !important;padding: 5px !important;font-family: monospace !important;">' . $mData . '</textarea>';
 
             // Display
             echo '<div class="draggable" style="overflow: auto !important;max-height: 90%;z-index:10000 !important;position:fixed !important;bottom:10px !important;right:10px !important;background-color:blue !important;color:white !important;border:1px solid #333 !important;width:500px !important;-moz-border-radius:3px !important; border-radius: 3px !important;font-size:12px !important;font-family: monospace !important;"><b>';
