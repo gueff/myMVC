@@ -12,9 +12,30 @@ namespace MVC;
 
 use MVC\DataType\DTArrayObject;
 use MVC\DataType\DTKeyValue;
+use Webbixx\Controller\Api;
 
 class Debug
 {
+    /**
+     * @param $sData
+     * @return false|string
+     */
+    protected static function dump($mData = '')
+    {
+        ob_start();
+        echo (Closure::is($mData)) ? '// type: Closure' : '// type: ' . gettype($mData);
+        echo ('resource' === gettype($mData)) ? ', ' . get_resource_type($mData) : '';
+        echo ('array' === gettype($mData)) ? ', items: ' . count($mData) : '';
+        echo "\n";
+        self::varExport($mData);
+        $sData = trim(ob_get_contents());
+        $sData = str_replace("=>\n", '=>', $sData);
+        $sData = str_replace("=> \n", '=>', $sData);
+        ob_end_clean();
+
+        return $sData;
+    }
+
     /**
      * Mini OnScreen Debugger
      * @param string|array $mData
@@ -24,11 +45,7 @@ class Debug
     {
         // source
         $aBacktrace = self::prepareBacktraceArray(debug_backtrace());
-
-        ob_start();
-        var_dump($mData);
-        $mData = ob_get_contents();
-        ob_end_clean();
+        $mData = self::dump($mData);
 
         // output CLI
         if (isset ($GLOBALS['argc']))
@@ -76,11 +93,7 @@ class Debug
 
         // Source
         $aBacktrace = self::prepareBacktraceArray(debug_backtrace());
-
-        ob_start();
-        var_dump($mData);
-        $mData = ob_get_contents();
-        ob_end_clean();
+        $mData = self::dump($mData);
 
         // Output for CLI
         if (isset ($GLOBALS['argc']))
@@ -217,6 +230,7 @@ class Debug
                 ->set_sKey('bOccurrence')
                 ->set_sValue($bShowWhereStop)));
 
+        (true === \MVC\Request::isCli()) ? \MVC\Config::get_MVC_MODULE_CURRENT_VIEW()::$bRender = false : false;
         exit ();
     }
 
@@ -239,36 +253,34 @@ class Debug
     }
 
     /**
-     * @param mixed $mData
-     * @param bool  $bReturn           default=false
-     * @param bool  $bShortArraySyntax default=true
-     * @return mixed
+     * @param      $mData
+     * @param bool $bReturn             default=false
+     * @param bool $bShortArraySyntax   default=true
+     * @return string|void
      */
-    public static function varExport($mData, $bReturn = false, $bShortArraySyntax = true)
+    public static function varExport($mData, bool $bReturn = false, bool $bShortArraySyntax = true)
     {
         $sExport = var_export($mData, true);
         $sExport = preg_replace("/^([ ]*)(.*)/m", '$1$1$2', $sExport);
         $aData = preg_split("/\r\n|\n|\r/", $sExport);
 
-        $sTokenLeft = (true === $bShortArraySyntax)
-            ? '['
-            : 'array(';
-        $sTokenRight = (true === $bShortArraySyntax)
-            ? ']'
-            : ')';
-
-        $aData = preg_replace(["/\s*array\s\($/", "/\)(,)?$/", "/\s=>\s$/"], [
-            null,
-            $sTokenRight . '$1',
-            ' => ' . $sTokenLeft,
-        ], $aData);
-        $sExport = join(PHP_EOL, array_filter([$sTokenLeft] + $aData));
+        if ('array' === gettype($mData))
+        {
+            $sTokenLeft = (true === $bShortArraySyntax) ? '[' : 'array(';
+            $sTokenRight = (true === $bShortArraySyntax) ? ']' : ')';
+            $aData = preg_replace(["/\s*array\s\($/", "/\)(,)?$/", "/\s=>\s$/"], [
+                null,
+                $sTokenRight . '$1',
+                ' => ' . $sTokenLeft,
+            ], $aData);
+            $sExport = join(PHP_EOL, array_filter([$sTokenLeft] + $aData));
+        }
 
         if (true === $bReturn)
         {
-            return $sExport;
+            return (string) $sExport;
         }
 
-        echo $sExport;
+        echo (string) $sExport;
     }
 }

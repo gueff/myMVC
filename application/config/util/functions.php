@@ -51,6 +51,8 @@ stop at:
 </pre>
 ";
     (true === \MVC\Request::isCli()) ? $sMessage = strip_tags($sMessage): false;
+    (true === \MVC\Request::isCli()) ? \MVC\Config::get_MVC_MODULE_CURRENT_VIEW()::$bRender = false : false;
+
     die($sMessage);
 }
 
