@@ -12,6 +12,12 @@ MVC_RUNTIME_SETTINGS: {
     // show error messages
     error_reporting(E_ALL);
 
+    // enable exit on "kill" command and CLI break (CTRL-C)
+    declare(ticks = 1);
+    pcntl_async_signals(true);
+    pcntl_signal(SIGTERM, function(){exit();});
+    pcntl_signal(SIGINT, function(){exit();});
+
     /*
      * @see http://www.php.net/manual/en/timezones.php
      * @see http://stackoverflow.com/a/5559239/2487859
