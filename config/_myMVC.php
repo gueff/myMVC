@@ -13,9 +13,13 @@ MVC_RUNTIME_SETTINGS: {
 
     // enable exit on "kill" command and CLI break (CTRL-C)
     // This command needs the pcntl extension to run.
-    (function_exists('pcntl_async_signals')) ? pcntl_async_signals(true) : false;
-    (function_exists('pcntl_signal')) ? pcntl_signal(SIGTERM, function(){exit();}) : false;
-    (function_exists('pcntl_signal')) ? pcntl_signal(SIGINT, function(){exit();}) : false;
+    // do not provide if php's builtin webserver is running (using e.g. php myMVC.phar)
+    if (true === isset($_SERVER['HTTP_HOST']) && '127.0.0.1:1969' !== $_SERVER['HTTP_HOST'])
+    {
+        (function_exists('pcntl_async_signals')) ? pcntl_async_signals(true) : false;
+        (function_exists('pcntl_signal')) ? pcntl_signal(SIGTERM, function(){exit();}) : false;
+        (function_exists('pcntl_signal')) ? pcntl_signal(SIGINT, function(){exit();}) : false;
+    }
 
     /*
      * @see http://www.php.net/manual/en/timezones.php
