@@ -4,7 +4,7 @@
  * @package myMVC
  * @copyright ueffing.net
  * @author Guido K.B.W. Üffing <info@ueffing.net>
- * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
+ * @license GNU GENERAL PUBLIC LICENSE Version 3.
  */
 
 namespace MVC;
@@ -182,7 +182,7 @@ class InfoTool
             'sMethod' => Route::getCurrent()->get_method(),
             'aRoutingCurrent' => Route::getCurrent()->getPropertyArray(),
             'sRoutingCurrent' => $this->buildMarkupListTree(Route::getCurrent()->getPropertyArray()),
-            'aRoute' => $this->buildMarkupListTree(Route::$aRoute),
+            'aRoute' => $this->buildMarkupListTree(array_keys(Route::$aRoute)),
         );
 
         $aToolbar['sRoutingPath'] = Request::getCurrentRequest()->get_path();

@@ -8,48 +8,48 @@ blue: hsl(210,50%,50%)
 {$iStyleIteration=81}
 <link href="/myMVC/styles/myMVCInfoTool.min.css" rel="stylesheet" type="text/css">
 <style>
-{section name=columns start=0 step=1 loop=$iStyleIteration}
+	{section name=columns start=0 step=1 loop=$iStyleIteration}
 	#tab{$smarty.section.columns.iteration}:checked ~ figure .tab{$smarty.section.columns.iteration},
-{/section}
-{literal}
-#tab99:checked ~ figure .tab99 {display: block;}
-{/literal}
-{section name=columns start=0 step=1 loop=$iStyleIteration}
+	{/section}
+	{literal}
+	#tab99:checked ~ figure .tab99 {display: block;}
+	{/literal}
+	{section name=columns start=0 step=1 loop=$iStyleIteration}
 	#tab{$smarty.section.columns.iteration}:checked ~ navi label[for="tab{$smarty.section.columns.iteration}"],
-{/section}
-{literal}
-#tab99:checked ~ navi label[for="tab99"] {background: whitesmoke;color: #111;position: relative;border-bottom: none;}
-{/literal}
-{section name=columns start=0 step=1 loop=$iStyleIteration}
+	{/section}
+	{literal}
+	#tab99:checked ~ navi label[for="tab99"] {background: whitesmoke;color: #111;position: relative;border-bottom: none;}
+	{/literal}
+	{section name=columns start=0 step=1 loop=$iStyleIteration}
 	#tab{$smarty.section.columns.iteration}:checked ~ navi label[for="tab{$smarty.section.columns.iteration}"]:after,
-{/section}
-{literal}
-#tab99:checked ~ navi label[for="tab99"]:after {content: "";display: block;position: absolute;height: 2px;width: 100%;background: whitesmoke;left: 0;bottom: -1px;}
-/**
- sub menu
- */
-{/literal}
-{section name=columns start=0 step=1 loop=$iStyleIteration}
+	{/section}
+	{literal}
+	#tab99:checked ~ navi label[for="tab99"]:after {content: "";display: block;position: absolute;height: 2px;width: 100%;background: whitesmoke;left: 0;bottom: -1px;}
+	/**
+     sub menu
+     */
+	{/literal}
+	{section name=columns start=0 step=1 loop=$iStyleIteration}
 	#subtab{$smarty.section.columns.iteration}:checked ~ figure .subtab{$smarty.section.columns.iteration},
-{/section}
-{literal}
-#subtab99:checked ~ figure .subtab99 {display: block;}
-{/literal}
-{section name=columns start=0 step=1 loop=$iStyleIteration}
+	{/section}
+	{literal}
+	#subtab99:checked ~ figure .subtab99 {display: block;}
+	{/literal}
+	{section name=columns start=0 step=1 loop=$iStyleIteration}
 	#subtab{$smarty.section.columns.iteration}:checked ~ navi label[for="subtab{$smarty.section.columns.iteration}"],
-{/section}
-{literal}
-#subtab99:checked ~ navi label[for="subtab99"] {background: whitesmoke;color: #111;position: relative;border-bottom: none;}
-{/literal}
-{section name=columns start=0 step=1 loop=$iStyleIteration}
+	{/section}
+	{literal}
+	#subtab99:checked ~ navi label[for="subtab99"] {background: whitesmoke;color: #111;position: relative;border-bottom: none;}
+	{/literal}
+	{section name=columns start=0 step=1 loop=$iStyleIteration}
 	#subtab{$smarty.section.columns.iteration}:checked ~ navi label[for="subtab{$smarty.section.columns.iteration}"]:after,
-{/section}
-{literal}
-#subtab99:checked ~ navi label[for="subtab99"]:after {content: "";display: block;position: absolute;height: 2px;width: 100%;background: whitesmoke;left: 0;bottom: -1px;}
-{/literal}
-{literal}
-#myMvcToolbar pre {background-color: lightgray; font-family: monospace, monospace; padding: 2px 5px; border: 1px dashed #333}
-{/literal}
+	{/section}
+	{literal}
+	#subtab99:checked ~ navi label[for="subtab99"]:after {content: "";display: block;position: absolute;height: 2px;width: 100%;background: whitesmoke;left: 0;bottom: -1px;}
+	{/literal}
+	{literal}
+	#myMvcToolbar pre {background-color: lightgray; font-family: monospace, monospace; padding: 2px 5px; border: 1px dashed #333}
+	{/literal}
 </style>
 <div id="myMvcToolbar" class="myMvcToolbar_expand">
 	<div id="myMvcToolbar_head" class="myMvcToolbar_expand">
@@ -257,10 +257,10 @@ Config::MODULE('{MVC\Config::get_MVC_MODULE_CURRENT_NAME()}')['SESSION']</pre>
 					<p>
 						{foreach key=key item=aData from=$aToolbar.aConfig}
 						<b>{$aData.sVar}</b><br>
-						<p>{$aData.mResult|@print_r:true}</p>
-						<pre>{$aData.sMethod}</pre>
+					<p>{$aData.mResult|@print_r:true}</p>
+					<pre>{$aData.sMethod}</pre>
 					<hr>
-						{/foreach}
+					{/foreach}
 					</p>
 				</div>
 
@@ -284,16 +284,16 @@ Config::MODULE('{MVC\Config::get_MVC_MODULE_CURRENT_NAME()}')['SESSION']</pre>
 							{$aToolbar.sPathParam}
 						{/if}
 					</p>
-<pre>Request::getPathParam();
+					<pre>Request::getPathParam();
 Request::getPathParam( $sKey )</pre>
 
 					<h6>Query <small>requested</small><a id="myMvcToolbar_Query"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top2">&uarr; top</a></small></span></h6>
 					<p>
-					{if '' === $aToolbar.sRoutingQuery}
-						...no GET query
+						{if '' === $aToolbar.sRoutingQuery}
+							...no GET query
 						{else}
-						{$aToolbar.sRoutingQuery|unescape:"url"|escape:"htmlall":"UTF-8"}
-					{/if}
+							{$aToolbar.sRoutingQuery|unescape:"url"|escape:"htmlall":"UTF-8"}
+						{/if}
 					</p>
 					<pre>Request::getCurrentRequest()->get_query()</pre>
 
@@ -330,10 +330,10 @@ Request::getPathParam( $sKey )</pre>
 					<pre>Event::run('event.name', DTArrayObject::create());</pre>
 
 					{if !empty($aToolbar.aEventRUNBONDED)}
-					<p>
-						<b>BONDED</b><br>
-						{$aToolbar.aEventRUNBONDED}
-					</p>
+						<p>
+							<b>BONDED</b><br>
+							{$aToolbar.aEventRUNBONDED}
+						</p>
 					{/if}
 
 					<h6>UNBIND <a id="myMvcToolbar_UNBIND"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top2">&uarr; top</a></small></span></h6>
@@ -359,6 +359,13 @@ Request::getPathParam( $sKey )</pre>
 					<pre>Route::getCurrent()->getPropertyArray()</pre>
 					<i>\MVC\DataType\DTRoute</i>
 					<pre>Route::getCurrent()</pre>
+
+					<h6>All Routes <small>paths only</small></h6>
+					<p>{$aToolbar.aRouting.aRoute}</p>
+					<i>array</i> - paths only
+					<pre>array_keys(Route::$aRoute)</pre>
+					<i>array</i> - full information
+					<pre>Route::$aRoute</pre>
 				</div>
 				<div class="subtab25">
 					<h6>Overview</h6>
@@ -566,15 +573,15 @@ Request::getPathParam( $sKey )</pre>
 
 				<div class="subtab81">
 					<ul>
-					{foreach key=key item=oDTArrayObject from=$aToolbar.aError}
-						<li>
-							{assign var="oErrorException" value=$oDTArrayObject->getDTKeyValueByKey('$oException')->get_sValue()}
-							<b>{MVC\Error::$aExceptionTranslation[$oErrorException->getCode()]}</b> ({$oErrorException->getCode()})<br>
-							{$oErrorException->getFile()}<br>
-							Line: {$oErrorException->getLine()}<br>
-							<u>Message:</u> <i>{$oErrorException->getMessage()}</i>
-						</li>
-					{/foreach}
+						{foreach key=key item=oDTArrayObject from=$aToolbar.aError}
+							<li>
+								{assign var="oErrorException" value=$oDTArrayObject->getDTKeyValueByKey('$oException')->get_sValue()}
+								<b>{MVC\Error::$aExceptionTranslation[$oErrorException->getCode()]}</b> ({$oErrorException->getCode()})<br>
+								{$oErrorException->getFile()}<br>
+								Line: {$oErrorException->getLine()}<br>
+								<u>Message:</u> <i>{$oErrorException->getMessage()}</i>
+							</li>
+						{/foreach}
 					</ul>
 				</div>
 			</figure>
@@ -605,9 +612,9 @@ Request::getPathParam( $sKey )</pre>
 			<i class="fa fa-bar-chart-o"></i> Memory
 		</label>
 		{if !empty($aToolbar.aError)}
-		<label for="tab8" class="myMvcToolbar-bg-danger" style="position: relative;">
-			<i class="fa fa-warning myMvcToolbarBlink"></i> Malfunction <sup>({count($aToolbar.aError)})</sup>
-		</label>
+			<label for="tab8" class="myMvcToolbar-bg-danger" style="position: relative;">
+				<i class="fa fa-warning myMvcToolbarBlink"></i> Malfunction <sup>({count($aToolbar.aError)})</sup>
+			</label>
 		{/if}
 		<label id="myMvcToolbar_toggle" class="myMvcToolbar-bg-info" title="toggle"><b>&larr;&rarr;</b></label>
 	</navi>
