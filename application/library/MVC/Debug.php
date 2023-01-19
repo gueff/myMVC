@@ -5,16 +5,37 @@
  * @package myMVC
  * @copyright ueffing.net
  * @author Guido K.B.W. Üffing <info@ueffing.net>
- * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
+ * @license GNU GENERAL PUBLIC LICENSE Version 3.
  */
 
 namespace MVC;
 
 use MVC\DataType\DTArrayObject;
 use MVC\DataType\DTKeyValue;
+use Webbixx\Controller\Api;
 
 class Debug
 {
+    /**
+     * @param $sData
+     * @return false|string
+     */
+    protected static function dump($mData = '')
+    {
+        ob_start();
+        echo (Closure::is($mData)) ? '// type: Closure' : '// type: ' . gettype($mData);
+        echo ('resource' === gettype($mData)) ? ', ' . get_resource_type($mData) : '';
+        echo ('array' === gettype($mData)) ? ', items: ' . count($mData) : '';
+        echo "\n";
+        self::varExport($mData);
+        $sData = trim(ob_get_contents());
+        $sData = str_replace("=>\n", '=>', $sData);
+        $sData = str_replace("=> \n", '=>', $sData);
+        ob_end_clean();
+
+        return $sData;
+    }
+
     /**
      * Mini OnScreen Debugger
      * @param string|array $mData
@@ -24,11 +45,7 @@ class Debug
     {
         // source
         $aBacktrace = self::prepareBacktraceArray(debug_backtrace());
-
-        ob_start();
-        var_dump($mData);
-        $mData = ob_get_contents();
-        ob_end_clean();
+        $mData = self::dump($mData);
 
         // output CLI
         if (isset ($GLOBALS['argc']))
@@ -46,14 +63,14 @@ class Debug
         // output Web
         else
         {
-            echo '<div class="draggable" style="position: fixed !important; bottom:30px !important;left:5px !important;z-index:1 !important;float:left !important;text-align:left !important;background-color:white !important;border:1px solid gray !important;padding:5px !important;filter: Alpha (opacity=80) !important;opacity: 0.8 !important; moz-opacity: 0.8 !important;-moz-border-radius: 3px !important; border-radius: 3px !important;width: 600px !important;height: 550px !important;">
+            echo '<div class="draggable" style="position: fixed !important; bottom:30px !important;left:5px !important;z-index:65535 !important;float:left !important;text-align:left !important;background-color:white !important;border:1px solid gray !important;padding:5px !important;filter: Alpha (opacity=80) !important;opacity: 0.8 !important; moz-opacity: 0.8 !important;-moz-border-radius: 3px !important; border-radius: 3px !important;width: 600px !important;height: 550px !important;">
 				<h1 style="color:red !important;margin:0 !important;padding:2px 0 0 0 !important;font-size:16px !important;">DEBUG</h1>
                 <div style="overflow-wrap: break-word !important;word-wrap: break-word !important;hyphens: auto !important;">
                     <b>File:</b> ' . $aBacktrace['sFile'] . '<br>
                     <b>Line:</b> ' . $aBacktrace['sLine'] . '<br>
                     <b>Class/Method:</b> ' . $aBacktrace['sClass'] . '::' . $aBacktrace['sFunction'] . '<br>
                 </div>
-				<textarea style="float:left !important;border:1px solid red !important;width:100% !important;min-height:400px !important;z-index:100 !important;font-size:12px !important;-moz-border-radius: 3px !important; border-radius: 3px !important;padding:10px !important;font-family: monospace !important;">' . $mData . '</textarea>
+				<textarea style="float:left !important;border:1px solid red !important;width:100% !important;min-height:400px !important;font-size:12px !important;-moz-border-radius: 3px !important; border-radius: 3px !important;padding:10px !important;font-family: monospace !important;">' . $mData . '</textarea>
 			</div>';
         }
     }
@@ -76,11 +93,7 @@ class Debug
 
         // Source
         $aBacktrace = self::prepareBacktraceArray(debug_backtrace());
-
-        ob_start();
-        var_dump($mData);
-        $mData = ob_get_contents();
-        ob_end_clean();
+        $mData = self::dump($mData);
 
         // Output for CLI
         if (isset ($GLOBALS['argc']))
@@ -116,7 +129,7 @@ class Debug
             $sDisplay .= $sConsultation . '<textarea style="font-size:10px;width:100% !important;min-height: 60px !important;margin:0 !important;background-color:blue !important;color:white !important;border: none !important;padding: 5px !important;font-family: monospace !important;">' . $mData . '</textarea>';
 
             // Display
-            echo '<div class="draggable" style="overflow: auto !important;max-height: 90%;z-index:10000 !important;position:fixed !important;bottom:10px !important;right:10px !important;background-color:blue !important;color:white !important;border:1px solid #333 !important;width:500px !important;-moz-border-radius:3px !important; border-radius: 3px !important;font-size:12px !important;font-family: monospace !important;"><b>';
+            echo '<div class="draggable" style="overflow: auto !important;max-height: 90%;z-index:65535 !important;position:fixed !important;bottom:10px !important;right:10px !important;background-color:blue !important;color:white !important;border:1px solid #333 !important;width:500px !important;-moz-border-radius:3px !important; border-radius: 3px !important;font-size:12px !important;font-family: monospace !important;"><b>';
             echo $sDisplay;
             echo '</b></div>';
         }
@@ -191,7 +204,7 @@ class Debug
             $sConsultation .= '</div>';
 
             // display
-            echo '<div class="draggable" style="padding:10px !important;z-index:10000 !important;position:fixed !important;top:10px !important;left:10px !important;background-color:red !important;color:white !important;border:1px solid #333 !important;width:400px !important;height:auto !important;overflow:auto !important;-moz-border-radius: 3px !important; border-radius: 3px !important;"><b>';
+            echo '<div class="draggable" style="padding:10px !important;z-index:65535 !important;position:fixed !important;top:10px !important;left:10px !important;background-color:red !important;color:white !important;border:1px solid #333 !important;width:400px !important;height:auto !important;overflow:auto !important;-moz-border-radius: 3px !important; border-radius: 3px !important;"><b>';
             echo ($bShowWhereStop === true)
                 ? '<h1 style="font-size:20px !important;">STOP</h1><p>Stopped at:</p>' . $sConsultation
                 : '';
@@ -217,6 +230,7 @@ class Debug
                 ->set_sKey('bOccurrence')
                 ->set_sValue($bShowWhereStop)));
 
+        (true === \MVC\Request::isCli()) ? \MVC\Config::get_MVC_MODULE_CURRENT_VIEW()::$bRender = false : false;
         exit ();
     }
 
@@ -239,36 +253,34 @@ class Debug
     }
 
     /**
-     * @param mixed $mData
-     * @param bool  $bReturn           default=false
-     * @param bool  $bShortArraySyntax default=true
-     * @return mixed
+     * @param      $mData
+     * @param bool $bReturn             default=false
+     * @param bool $bShortArraySyntax   default=true
+     * @return string|void
      */
-    public static function varExport($mData, $bReturn = false, $bShortArraySyntax = true)
+    public static function varExport($mData, bool $bReturn = false, bool $bShortArraySyntax = true)
     {
         $sExport = var_export($mData, true);
         $sExport = preg_replace("/^([ ]*)(.*)/m", '$1$1$2', $sExport);
         $aData = preg_split("/\r\n|\n|\r/", $sExport);
 
-        $sTokenLeft = (true === $bShortArraySyntax)
-            ? '['
-            : 'array(';
-        $sTokenRight = (true === $bShortArraySyntax)
-            ? ']'
-            : ')';
-
-        $aData = preg_replace(["/\s*array\s\($/", "/\)(,)?$/", "/\s=>\s$/"], [
-            null,
-            $sTokenRight . '$1',
-            ' => ' . $sTokenLeft,
-        ], $aData);
-        $sExport = join(PHP_EOL, array_filter([$sTokenLeft] + $aData));
+        if ('array' === gettype($mData))
+        {
+            $sTokenLeft = (true === $bShortArraySyntax) ? '[' : 'array(';
+            $sTokenRight = (true === $bShortArraySyntax) ? ']' : ')';
+            $aData = preg_replace(["/\s*array\s\($/", "/\)(,)?$/", "/\s=>\s$/"], [
+                null,
+                $sTokenRight . '$1',
+                ' => ' . $sTokenLeft,
+            ], $aData);
+            $sExport = join(PHP_EOL, array_filter([$sTokenLeft] + $aData));
+        }
 
         if (true === $bReturn)
         {
-            return $sExport;
+            return (string) $sExport;
         }
 
-        echo $sExport;
+        echo (string) $sExport;
     }
 }
