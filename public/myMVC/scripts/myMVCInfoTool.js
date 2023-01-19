@@ -48,7 +48,7 @@ document.getElementById("myMvcToolbar_toggle").addEventListener("click", functio
 
     toggleInOut();
     var oCoords = getOffset(this);
-    (parseInt(oCoords.left) < 800) ? oCoords.left = 0 : false;
+    (parseInt(oCoords.left) < 650) ? oCoords.left = 0 : false;
     localStorage.setItem("myMvcToolbar_toggle", parseInt(oCoords.left));
 });
 

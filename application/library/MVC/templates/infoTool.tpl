@@ -359,6 +359,13 @@ Request::getPathParam( $sKey )</pre>
 					<pre>Route::getCurrent()->getPropertyArray()</pre>
 					<i>\MVC\DataType\DTRoute</i>
 					<pre>Route::getCurrent()</pre>
+
+					<h6>All Routes <small>paths only</small></h6>
+					<p>{$aToolbar.aRouting.aRoute}</p>
+					<i>array</i> - paths only
+					<pre>array_keys(Route::$aRoute)</pre>
+					<i>array</i> - full information
+					<pre>Route::$aRoute</pre>
 				</div>
 				<div class="subtab25">
 					<h6>Overview</h6>
