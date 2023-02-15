@@ -15,6 +15,7 @@ CliDialogue
 modules/*
 public/.env
 public/openapi/
+_*
 _clearTmpFiles.sh
 _createPhar.php
 _dataTypeCreation.php
