@@ -230,7 +230,12 @@ class InfoTool
         $fMicrotime = microtime (true);
         $sMicrotime = sprintf ("%06d", ($fMicrotime - floor ($fMicrotime)) * 1000000);
         $oDateTime = new \DateTime (date ('Y-m-d H:i:s.' . $sMicrotime));
-        $oStart = (false === empty(Session::is()->get('startDateTime'))) ? Session::is()->get('startDateTime') : new \DateTime (date ('Y-m-d H:i:s.' . $iMicrotime2, $iMicrotime));
+
+        $oStart = (false === empty(Session::is()->get('startDateTime')))
+            ? Session::is()->get('startDateTime')
+            : new \DateTime (date ('Y-m-d H:i:s.' . $sMicrotime))
+        ;
+
         $dDiff = (date_format ($oDateTime, "s.u") - date_format ($oStart, "s.u"));
         $aToolbar['sConstructionTime'] = round ($dDiff, 3);
 

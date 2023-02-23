@@ -16,9 +16,11 @@ modules/*
 public/.env
 public/openapi
 public/api
+_*
 _clearTmpFiles.sh
 _createPhar.php
 _dataTypeCreation.php
+_gitPull.sh
 _gitPush.sh
 _gitPush.sh.example
 _phanlistcreate.sh
