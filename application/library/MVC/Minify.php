@@ -43,8 +43,7 @@ class Minify
                 // handle css + js files only
                 if (in_array(pathinfo($oSplFileInfo->getPathname(), PATHINFO_EXTENSION), array('css', 'js')))
                 {
-                    $aFile[] = $oSplFileInfo;
-                    $oSplFileInfo->md5 = md5_file($oSplFileInfo->getPathname());
+                    $aFile[md5_file($oSplFileInfo->getPathname())] = $oSplFileInfo;
                 }
             }
         }
