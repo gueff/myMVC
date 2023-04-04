@@ -38,7 +38,7 @@ class Minify
         foreach ($aContentFilterMinify as $sScriptDirAbs)
         {
             /** @var \SplFileInfo $oSplFileInfo */
-            foreach(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($sScriptDirAbs)) as $oSplFileInfo)
+            foreach(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($sScriptDirAbs, \FilesystemIterator::FOLLOW_SYMLINKS)) as $oSplFileInfo)
             {
                 // handle css + js files only
                 if (in_array(pathinfo($oSplFileInfo->getPathname(), PATHINFO_EXTENSION), array('css', 'js')))
