@@ -5,7 +5,7 @@
  * @package myMVC
  * @copyright ueffing.net
  * @author Guido K.B.W. Üffing <info@ueffing.net>
- * @license GNU GENERAL PUBLIC LICENSE Version 3.
+ * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
  */
 
 namespace MVC;
@@ -47,11 +47,11 @@ class Policy
      * sets a policy rule
      * @param $sClass
      * @param $sMethod
-     * @param $sTarget
+     * @param $mTarget string|array
      * @return void
      * @throws \ReflectionException
      */
-    public static function set($sClass = '', $sMethod = '', $sTarget = null)
+    public static function set($sClass = '', $sMethod = '', $mTarget = null)
     {
         $aPolicy = Config::get_MVC_POLICY();
 
@@ -59,22 +59,35 @@ class Policy
         {
             if (true === isset($aPolicy[$sClass][$sMethod]))
             {
-                if (false === in_array($sTarget, $aPolicy[$sClass][$sMethod]))
+                if (is_array($mTarget))
                 {
-                    array_push(
-                        $aPolicy[$sClass][$sMethod],
-                        $sTarget
-                    );
+                    foreach ($mTarget as $sTarget)
+                    {
+                        if (false === in_array($sTarget, $aPolicy[$sClass][$sMethod]))
+                        {
+                            $aPolicy[$sClass][$sMethod][] = $sTarget;
+                        }
+                    }
+                }
+                else
+                {
+                    if (false === in_array($mTarget, $aPolicy[$sClass][$sMethod]))
+                    {
+                        $aPolicy[$sClass][$sMethod][] = $mTarget;
+                    }
                 }
             }
             else
             {
-                $aPolicy[$sClass][$sMethod] = array($sTarget);
+                $aPolicy[$sClass][$sMethod] = $mTarget;
             }
         }
         else
         {
-            $aPolicy[$sClass] = array($sMethod => array($sTarget));
+            (is_array($mTarget))
+                ? $aPolicy[$sClass] = array($sMethod => $mTarget)
+                : $aPolicy[$sClass] = array($sMethod => array($mTarget))
+            ;
         }
 
         Config::set_MVC_POLICY($aPolicy);
@@ -84,29 +97,86 @@ class Policy
      * unsets a policy rule
      * @param $sClass
      * @param $sMethod
-     * @param $sTarget
+     * @param $mTarget
      * @return void
      * @throws \ReflectionException
      */
-    public static function unset($sClass = '', $sMethod = '', $sTarget = null)
+    public static function unset($sClass = '', $sMethod = '', $mTarget = null)
     {
         $aPolicy = Config::get_MVC_POLICY();
 
-        if (isset($aPolicy[$sClass][$sMethod]) && in_array($sTarget, $aPolicy[$sClass][$sMethod], true))
+        // Unset all rules set to controller
+        if ('' !== $sClass && '' === $sMethod && null === $mTarget)
         {
-            $iKey = array_search($sTarget, $aPolicy[$sClass][$sMethod]);
-            $aPolicy[$sClass][$sMethod][$iKey] = null;
-            unset($aPolicy[$sClass][$sMethod][$iKey]);
+            if (isset($aPolicy[$sClass]))
+            {
+                $aPolicy[$sClass] = null;
+                unset($aPolicy[$sClass]);
+            }
         }
-        elseif (isset($aPolicy[$sClass][$sMethod]))
+        // Unset all target methods set to controller
+        elseif ('' !== $sClass && '' !== $sMethod && null === $mTarget)
         {
-            $aPolicy[$sClass][$sMethod] = null;
-            unset($aPolicy[$sClass][$sMethod]);
+            if (isset($aPolicy[$sClass][$sMethod]))
+            {
+                $aPolicy[$sClass][$sMethod] = null;
+                unset($aPolicy[$sClass][$sMethod]);
+            }
+
+            if (true === empty($aPolicy[$sClass]))
+            {
+                $aPolicy[$sClass] = null;
+                unset($aPolicy[$sClass]);
+            }
         }
-        elseif (isset($aPolicy[$sClass]))
+        // Unset certain target method(s)
+        elseif ('' !== $sClass && '' !== $sMethod && null !== $mTarget)
         {
-            $aPolicy[$sClass] = null;
-            unset($aPolicy[$sClass]);
+            if (is_array($mTarget))
+            {
+                foreach ($mTarget as $sTarget)
+                {
+                    if (isset($aPolicy[$sClass][$sMethod]) && in_array($sTarget, $aPolicy[$sClass][$sMethod], true))
+                    {
+                        $iKey = array_search($sTarget, $aPolicy[$sClass][$sMethod]);
+                        $aPolicy[$sClass][$sMethod][$iKey] = null;
+                        unset($aPolicy[$sClass][$sMethod][$iKey]);
+                    }
+                }
+
+                if (true === empty($aPolicy[$sClass][$sMethod]))
+                {
+                    $aPolicy[$sClass][$sMethod] = null;
+                    unset($aPolicy[$sClass][$sMethod]);
+                }
+
+                if (true === empty($aPolicy[$sClass]))
+                {
+                    $aPolicy[$sClass] = null;
+                    unset($aPolicy[$sClass]);
+                }
+            }
+            else
+            {
+                if (isset($aPolicy[$sClass][$sMethod]) && in_array($mTarget, $aPolicy[$sClass][$sMethod], true))
+                {
+                    $iKey = array_search($mTarget, $aPolicy[$sClass][$sMethod]);
+                    $aPolicy[$sClass][$sMethod][$iKey] = null;
+                    unset($aPolicy[$sClass][$sMethod][$iKey]);
+                }
+
+                if (true === empty($aPolicy[$sClass][$sMethod]))
+                {
+                    $aPolicy[$sClass][$sMethod] = null;
+                    unset($aPolicy[$sClass][$sMethod]);
+                }
+
+                if (true === empty($aPolicy[$sClass]))
+                {
+                    $aPolicy[$sClass] = null;
+                    unset($aPolicy[$sClass]);
+                }
+            }
         }
 
         Config::set_MVC_POLICY($aPolicy);
@@ -114,8 +184,10 @@ class Policy
 
     /**
      * gets the policy rules; if one matches to the current request, it will be executed
+     * @return void
+     * @throws \ReflectionException
      */
-	protected static function apply()
+    protected static function apply()
     {
         $aPolicy = self::getPolicyRuleOnCurrentRequest();
 
@@ -153,15 +225,15 @@ class Policy
         }
     }
 
-	/**
-	 * gets the matching policy rules on the current request
+    /**
+     * gets the matching policy rules on the current request
      * @return array|mixed
      * @throws \ReflectionException
      */
-	public static function getPolicyRuleOnCurrentRequest ()
-	{
-		$aPolicyRule = Config::get_MVC_POLICY();
-		$oDTRoute = Route::getCurrent();
+    public static function getPolicyRuleOnCurrentRequest ()
+    {
+        $aPolicyRule = Config::get_MVC_POLICY();
+        $oDTRoute = Route::getCurrent();
         $aPolicy = array();
 
         // check if there is a policy for this request
@@ -186,8 +258,8 @@ class Policy
             }
         }
 
-		return $aPolicy;
-	}
+        return $aPolicy;
+    }
 
     /**
      * @return array
@@ -208,31 +280,31 @@ class Policy
 
     /**
      * @param \MVC\DataType\DTRoute $oDTRoute
-     * @param                       $sTarget
+     * @param                       $mTarget
      * @return void
      * @throws \ReflectionException
      */
-    public static function bindOnRoute(DTRoute $oDTRoute, $sTarget = null)
+    public static function bindOnRoute(DTRoute $oDTRoute, $mTarget = null)
     {
         self::set(
             '\\' . $oDTRoute->get_class(),
             $oDTRoute->get_m(),
-            $sTarget
+            $mTarget
         );
     }
 
     /**
      * @param \MVC\DataType\DTRoute $oDTRoute
-     * @param                       $sTarget
+     * @param                       $mTarget
      * @return void
      * @throws \ReflectionException
      */
-    public static function unbindRoute(DTRoute $oDTRoute, $sTarget = null)
+    public static function unbindRoute(DTRoute $oDTRoute, $mTarget = null)
     {
         self::unset(
             '\\' . $oDTRoute->get_class(),
             $oDTRoute->get_m(),
-            $sTarget
+            $mTarget
         );
     }
 }
