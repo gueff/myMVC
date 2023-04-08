@@ -12,6 +12,7 @@ namespace MVC;
 
 use MVC\DataType\DTArrayObject;
 use MVC\DataType\DTKeyValue;
+use MVC\DataType\DTRoute;
 
 /**
  * Policy
@@ -193,5 +194,20 @@ class Policy
     public static function getRulesApplied()
     {
         return self::$aApplied;
+    }
+
+    /**
+     * @param \MVC\DataType\DTRoute $oDTRoute
+     * @param                       $sTarget
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function bindOnRoute(DTRoute $oDTRoute, $sTarget = null)
+    {
+        self::set(
+            '\\' . $oDTRoute->get_class(),
+            $oDTRoute->get_m(),
+            $sTarget
+        );
     }
 }
