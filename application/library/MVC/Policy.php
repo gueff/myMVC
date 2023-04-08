@@ -220,4 +220,19 @@ class Policy
             $sTarget
         );
     }
+
+    /**
+     * @param \MVC\DataType\DTRoute $oDTRoute
+     * @param                       $sTarget
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function unbindRoute(DTRoute $oDTRoute, $sTarget = null)
+    {
+        self::unset(
+            '\\' . $oDTRoute->get_class(),
+            $oDTRoute->get_m(),
+            $sTarget
+        );
+    }
 }
