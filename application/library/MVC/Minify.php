@@ -5,7 +5,7 @@
  * @package myMVC
  * @copyright ueffing.net
  * @author Guido K.B.W. Üffing <info@ueffing.net>
- * @license GNU GENERAL PUBLIC LICENSE Version 3.
+ * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
  */
 
 namespace MVC;
@@ -43,7 +43,7 @@ class Minify
                 // handle css + js files only
                 if (in_array(pathinfo($oSplFileInfo->getPathname(), PATHINFO_EXTENSION), array('css', 'js')))
                 {
-                    $aFile[md5_file($oSplFileInfo->getPathname())] = $oSplFileInfo;
+                    $aFile[md5($oSplFileInfo->getPathname()) . '.' . md5_file($oSplFileInfo->getPathname())] = $oSplFileInfo;
                 }
             }
         }
