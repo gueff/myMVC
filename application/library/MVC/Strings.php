@@ -57,9 +57,10 @@ class Strings
     {
         $sString = preg_replace('/[^\\pL\d_]+/u', $sReplacement, $sString);
         $sString = trim($sString, $sReplacement);
-        $sString = iconv('utf-8', "us-ascii//TRANSLIT", $sString);
+        $sString = transliterator_transliterate('de-ASCII; Any-Latin; Latin-ASCII;', $sString);
+        $sString = iconv("utf-8","ascii//translit//ignore", $sString);
         (true === $bStrToLower) ? $sString = strtolower($sString) : false;
-        $sString = (string) preg_replace('/[^-a-z0-9_]+/', '', $sString);
+        $sString = (string) preg_replace('/[^-a-zA-Z0-9_]+/', '', $sString);
 
         return $sString;
     }
