@@ -32,7 +32,8 @@ class Route
      */
     public static function init()
     {
-        \MVC\Event::RUN('mvc.route.init');
+        \MVC\Event::RUN('mvc.route.init'); /** @deprecated  */
+        \MVC\Event::RUN('mvc.route.init.before');
 
         DEFAULT_SOURCE_PHP_FILES: {
 
@@ -46,6 +47,8 @@ class Route
                 }
             }
         }
+
+        \MVC\Event::RUN('mvc.route.init.after');
     }
 
     /**
