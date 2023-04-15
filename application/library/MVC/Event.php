@@ -175,13 +175,24 @@ class Event
     }
 
     /**
-     * unbinds (delete) one or all events
-     * if this parameter not is set, *all* events are going to be deleted
+     * @deprecated use instead: Event::delete($sEvent)
      * @param $sEvent
      * @return bool
      * @throws \ReflectionException
      */
     public static function unbind($sEvent = '')
+    {
+        return self::delete($sEvent);
+    }
+
+    /**
+     * unbinds (delete) one or all events
+     * if this parameter not is set, *all* events are going to be deleted
+     * @param $sEvent
+     * @return true
+     * @throws \ReflectionException
+     */
+    public static function delete($sEvent = '')
     {
         $sDebug = Log::prepareDebug(debug_backtrace());
 
