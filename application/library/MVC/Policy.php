@@ -30,6 +30,8 @@ class Policy
      */
     public static function init()
     {
+        \MVC\Event::RUN('mvc.policy.init.before');
+
         //  require recursively all php files in module's policy dir
         /** @var \SplFileInfo $oSplFileInfo */
         foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(Config::get_MVC_MODULE_CURRENT_ETC_DIR() . '/policy')) as $oSplFileInfo)
@@ -41,6 +43,8 @@ class Policy
         }
 
         self::apply();
+
+        \MVC\Event::RUN('mvc.policy.init.after');
     }
 
     /**
@@ -54,6 +58,8 @@ class Policy
     public static function set($sClass = '', $sMethod = '', $mTarget = null)
     {
         $aPolicy = Config::get_MVC_POLICY();
+
+        \MVC\Event::RUN('mvc.policy.set.before', $aPolicy);
 
         if (true === isset($aPolicy[$sClass]))
         {
@@ -90,6 +96,8 @@ class Policy
             ;
         }
 
+        \MVC\Event::RUN('mvc.policy.set.after', $aPolicy);
+
         Config::set_MVC_POLICY($aPolicy);
     }
 
@@ -104,6 +112,8 @@ class Policy
     public static function unset($sClass = '', $sMethod = '', $mTarget = null)
     {
         $aPolicy = Config::get_MVC_POLICY();
+
+        \MVC\Event::RUN('mvc.policy.unset.before', $aPolicy);
 
         // Unset all rules set to controller
         if ('' !== $sClass && '' === $sMethod && null === $mTarget)
@@ -179,6 +189,8 @@ class Policy
             }
         }
 
+        \MVC\Event::RUN('mvc.policy.unset.after', $aPolicy);
+
         Config::set_MVC_POLICY($aPolicy);
     }
 
@@ -190,6 +202,8 @@ class Policy
     protected static function apply()
     {
         $aPolicy = self::getPolicyRuleOnCurrentRequest();
+
+        \MVC\Event::RUN('mvc.policy.apply.before', $aPolicy);
 
         if (!empty ($aPolicy))
         {
