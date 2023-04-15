@@ -5,7 +5,7 @@
  * @package myMVC
  * @copyright ueffing.net
  * @author Guido K.B.W. Üffing <info@ueffing.net>
- * @license GNU GENERAL PUBLIC LICENSE Version 3.
+ * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
  */
 
 namespace MVC;
@@ -23,13 +23,20 @@ class Controller
      * @return bool
      * @throws \ReflectionException
      */
-	public static function init()
-	{
-		Event::run ('mvc.controller.init.before', DTArrayObject::create());
+    public static function init()
+    {
+        Event::run ('mvc.controller.init.before', DTArrayObject::create());
 
-		// start requested Module/Class/Method
-		$oReflex = new Reflex();
-		$bSuccess = $oReflex->reflect ();
+        // start requested Module/Class/Method
+        $oReflex = new Reflex();
+        $bSuccess = $oReflex->reflect ();
+
+        Event::run ('mvc.controller.construct.after',
+            DTArrayObject::create()
+                ->add_aKeyValue(
+                    DTKeyValue::create()->set_sKey('bSuccess')->set_sValue($bSuccess)
+                )
+        );/** @deprecated  */
 
         Event::run ('mvc.controller.init.after',
             DTArrayObject::create()
@@ -37,9 +44,8 @@ class Controller
                     DTKeyValue::create()->set_sKey('bSuccess')->set_sValue($bSuccess)
                 )
         );
-        
         return $bSuccess;
-	}
+    }
 
     /**
      * calls the "__preconstruct()" method
@@ -94,6 +100,16 @@ class Controller
             );
         }
 
+        Event::run ('mvc.runTargetClassPreconstruct.after',
+            DTArrayObject::create()
+                ->add_aKeyValue(
+                    DTKeyValue::create()->set_sKey('sClass')->set_sValue($sTargetClass)
+                )
+                ->add_aKeyValue(
+                    DTKeyValue::create()->set_sKey('sMethod')->set_sValue($sMethodNamePreconstruct)
+                )
+        ); /** @deprecated  */
+
         Event::run ('mvc.controller.runTargetClassPreconstruct.after',
             DTArrayObject::create()
                 ->add_aKeyValue(
@@ -108,13 +124,13 @@ class Controller
     /**
      * @throws \ReflectionException
      */
-	public function __destruct ()
-	{
+    public function __destruct ()
+    {
         Event::run ('mvc.controller.destruct.before',
             DTArrayObject::create()
                 ->add_aKeyValue(
                     DTKeyValue::create()->set_sKey('oController')->set_sValue($this)
                 )
         );
-	}
+    }
 }
