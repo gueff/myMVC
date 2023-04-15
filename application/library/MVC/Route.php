@@ -50,6 +50,8 @@ class Route
                 }
             }
         }
+
+        \MVC\Event::RUN('mvc.route.init.after', $oDTArrayObject);
     }
 
     /**

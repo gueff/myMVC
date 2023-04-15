@@ -225,6 +225,26 @@ class DTArrayObject
     }
 
     /**
+     * returns a simple "key" and "value" array of key value pairs stored in this object
+     * notice: it does only use "sKey" and "sValue" of the DTKeyValue Object
+     * @return array
+     */
+    public function flatten()
+    {
+        $aDTKeyValue = $this->get_aKeyValue();
+        $aFlatten = array();
+
+        foreach ($aDTKeyValue as $oDTKeyValue)
+        {
+            (false === empty($oDTKeyValue->get_sKey()))
+                ? $aFlatten[$oDTKeyValue->get_sKey()] = $oDTKeyValue->get_sValue()
+                : false;
+        }
+
+        return $aFlatten;
+    }
+
+    /**
      * @return string JSON
      */
     public function getDataTypeConfigJSON()
