@@ -13,6 +13,8 @@
 namespace MVC\DataType;
 
 
+use MVC\Debug;
+
 class DTArrayObject
 {
     const DTHASH = '75575fbb25ada598d5a34e03168fbfa7';
@@ -222,6 +224,26 @@ class DTArrayObject
         }
 
         return $this;
+    }
+
+    /**
+     * returns a simple "key" and "value" array of key value pairs stored in this object
+     * notice: it does only use "sKey" and "sValue" of the DTKeyValue Object
+     * @return array
+     */
+    public function flatten()
+    {
+        $aDTKeyValue = $this->get_aKeyValue();
+        $aFlatten = array();
+
+        foreach ($aDTKeyValue as $oDTKeyValue)
+        {
+            (false === empty($oDTKeyValue->get_sKey()))
+                ? $aFlatten[$oDTKeyValue->get_sKey()] = $oDTKeyValue->get_sValue()
+                : false;
+        }
+
+        return $aFlatten;
     }
 
     /**
