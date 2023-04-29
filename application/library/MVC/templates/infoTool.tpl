@@ -409,6 +409,8 @@ Request::getPathParam( $sKey )</pre>
 
 				<div class="subtab31">
 					<h6>Current View</h6>
+					{assign var=oViewCurrent value=MVC\Config::get_MVC_MODULE_CURRENT_VIEW()}
+
 					<p>{get_class(MVC\Config::get_MVC_MODULE_CURRENT_VIEW())}</p>
 					<i>ClassName</i>
 					<pre>get_class(Config::get_MVC_MODULE_CURRENT_VIEW())</pre>
@@ -424,13 +426,13 @@ Request::getPathParam( $sKey )</pre>
 					<h6>Template Files</h6>
 					<b>Current Template relative</b>
 					<p>
-						{$aToolbar.aSmartyTemplateVars.sTemplateRelative}
+						{$oViewCurrent->sTemplateRelative}
 					</p>
 					<pre>\{get_class(MVC\Config::get_MVC_MODULE_CURRENT_VIEW())}::init()->sTemplateRelative</pre>
 
 					<b>Current Template absolute</b>
 					<p>
-						{$aToolbar.aSmartyTemplateVars.sTemplate}
+						{$oViewCurrent::init()->sTemplate}
 					</p>
 					<pre>\{get_class(MVC\Config::get_MVC_MODULE_CURRENT_VIEW())}::init()->sTemplate</pre>
 
