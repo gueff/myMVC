@@ -147,18 +147,18 @@ class Error
 		$sMsg = '';
 
         /** @var \ErrorException $oErrorException */
-		if (method_exists ($oErrorException, 'getSeverity'))
-		{
-			if (in_array ($oErrorException->getCode(), array (E_WARNING, E_USER_WARNING)))
-			{
-				$sLogfile = Config::get_MVC_LOG_FILE_WARNING();
-			}
+        if (method_exists ($oErrorException, 'getSeverity'))
+        {
+            if (in_array ($oErrorException->getCode(), array (E_WARNING, E_CORE_WARNING, E_COMPILE_WARNING, E_USER_WARNING)))
+            {
+                $sLogfile = Config::get_MVC_LOG_FILE_WARNING();
+            }
 
-			if (in_array ($oErrorException->getCode(), array (E_NOTICE, E_USER_NOTICE, E_DEPRECATED)))
-			{
-				$sLogfile = Config::get_MVC_LOG_FILE_NOTICE();
-			}
-		}
+            if (in_array ($oErrorException->getCode(), array (E_NOTICE, E_USER_NOTICE, E_DEPRECATED, E_USER_DEPRECATED)))
+            {
+                $sLogfile = Config::get_MVC_LOG_FILE_NOTICE();
+            }
+        }
 
         $sMsg.= get(self::$aExceptionTranslation[$oErrorException->getCode()], 'E_???') . "\t";
 		$sMsg.= '(Code: ' . $oErrorException->getCode()
