@@ -136,7 +136,7 @@ class InfoTool
         $aToolbar['sUniqueId'] = Config::get_MVC_UNIQUE_ID();
         $aToolbar['sMyMvcVersion'] = Config::get_MVC_VERSION();
         $aToolbar['sMyMVCCore'] = $this->buildMarkupListTree(Config::get_MVC_CORE());
-        $aToolbar['sEnv'] = Config::get_MVC_ENV();
+        $aToolbar['sEnv'] = getenv('MVC_ENV');
         $aToolbar['aEnvGetenv'] = $this->buildMarkupListTree(getenv());
         $aToolbar['aEnvEnv'] = $this->buildMarkupListTree($_ENV);
         $aToolbar['aGet'] = $this->buildMarkupListTree($_GET);
