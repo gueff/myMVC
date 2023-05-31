@@ -37,16 +37,16 @@ class Route
 
         DEFAULT_SOURCE_PHP_FILES: {
 
-            //  require recursively all php files in module's routing dir
-            /** @var \SplFileInfo $oSplFileInfo */
-            foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(Config::get_MVC_MODULE_CURRENT_ETC_DIR() . '/routing')) as $oSplFileInfo)
+        //  require recursively all php files in module's routing dir
+        /** @var \SplFileInfo $oSplFileInfo */
+        foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(Config::get_MVC_MODULE_CURRENT_ETC_DIR() . '/routing')) as $oSplFileInfo)
+        {
+            if ('php' === strtolower($oSplFileInfo->getExtension()))
             {
-                if ('php' === strtolower($oSplFileInfo->getExtension()))
-                {
-                    require_once $oSplFileInfo->getPathname();
-                }
+                require_once $oSplFileInfo->getPathname();
             }
         }
+    }
 
         \MVC\Event::RUN('mvc.route.init.after');
     }
@@ -299,7 +299,7 @@ class Route
 
     /**
      * @param string $sPath
-     * @return string
+     * @return string matching route path | empty
      */
     public static function getPathOnPlaceholderIndex(string $sPath = '')
     {
@@ -308,67 +308,55 @@ class Route
         $iLengthPath = count($aPartPath);
         $aIndex = self::getIndices();
 
-        foreach ($aIndex as $iKey => $sValue)
+        // iterate routes
+        foreach ($aIndex as $sValue)
         {
-            $aPartMatch = array_diff(preg_split('@/@', $sValue, 0, PREG_SPLIT_NO_EMPTY), array('*')); # delete "*"
-            $sLastCharRight = substr($sValue, -1);
-            $bIsWildcard = ('*' === $sLastCharRight) ? true : false;
-            $iLengthFoo = count($aPartMatch);
+            $aRoute = preg_split('@/@', $sValue, 0, PREG_SPLIT_NO_EMPTY);
+            $iLengthRoute = count($aRoute);
 
-            // string part before first placeholder has to match
-            $sStrToKColon = strtok($sValue, ':');
-            $sStrToKBrace = strtok($sValue, '{');
-            $bPartBeforePlaceholderMatchColon = (substr($sPath, 0, strlen($sStrToKColon)) === $sStrToKColon) ? true : false;
-            $bPartBeforePlaceholderMatchBrace = (substr($sPath, 0, strlen($sStrToKBrace)) === $sStrToKBrace) ? true : false;
-            $sPart = '/';
-
-            for ($i = 0; $i < $iLengthFoo; $i++)
+            // skip routes without * at the end if they are shorter than the requested path
+            if (($iLengthRoute < $iLengthPath) && ('*' !== current(array_reverse($aRoute))))
             {
-                $sPart.= get($aPartPath[$i]) . '/';
+                continue;
             }
 
-            $sTail = substr($sPath, strlen($sPart));
+            $aPathParam = array();
 
-            // detect placeholder route match
-            if (
-                (true === $bPartBeforePlaceholderMatchColon || true === $bPartBeforePlaceholderMatchBrace) &&
-                (
-                    // has exact same amount of / parts
-                    $iLengthPath === $iLengthFoo
-                    OR
-                    // has minimum amount of / parts and is wildcard (has tail)
-                    (true === $bIsWildcard && $iLengthPath >= $iLengthFoo)
-                )
-            )
+            // compare each part of the route
+            foreach ($aRoute as $iKey => $sPart)
             {
-                (true === $bPartBeforePlaceholderMatchColon)
-                    ? $aPlaceholder = preg_grep('/:/i', $aPartMatch)
-                    : false
-                ;
-                (true === $bPartBeforePlaceholderMatchBrace)
-                    ? $aPlaceholder = preg_grep('/\{*\}/i', $aPartMatch)
-                    : false
-                ;
-
-                $aPathParam = array();
-
-                foreach ($aPlaceholder as $iIndex => $sPlaceholder)
+                // part is wildcard; save tail, remove wildcard from array
+                if ('*' === $sPart)
                 {
-                    (true === $bPartBeforePlaceholderMatchColon)
-                        ? $sPlaceholder = substr($sPlaceholder, 1)
-                        : false
-                    ;
-                    (true === $bPartBeforePlaceholderMatchBrace)
-                        ? $sPlaceholder = substr($sPlaceholder, 1, -1)
-                        : false
-                    ;
-                    $aPathParam[$sPlaceholder] = $aPartPath[$iIndex];
+                    $aTail = array_slice($aPartPath, $iKey);
+                    $aPathParam['_tail'] = (true === empty($aTail)) ? '' : implode('/', $aTail) . (('/' === (substr($sPath, -1))) ? '/' : '');
+                    unset($aRoute[$iKey]);
                 }
 
-                $aPathParam['_tail'] = $sTail;
-                Request::setPathParam($aPathParam);
+                // part is a variable; save key value
+                $sKey = '';
+                (':' === (substr($sPart, 0, 1))) ? $sKey = str_replace(':', '', $sPart) : false;
+                ('{}' === (substr($sPart, 0, 1) . substr($sPart, -1))) ? $sKey = str_replace('}', '', str_replace('{', '', $sPart)) : false;
 
-                return (string) get($aIndex[$iKey], '');
+                if (false === empty($sKey))
+                {
+                    $aRoute[$iKey] = $aPartPath[$iKey];     # replace variable by concrete value from path
+                    $aPathParam[$sKey] = $aPartPath[$iKey]; # save PathParam
+                }
+
+                // add leading and/or trailing slashes if route was defined so
+                $sRoute = ('/' === (substr($sValue, 0, 1))) ? '/' : '';
+                $sRoute.= implode('/', $aRoute) . (('*' === $sPart) ? '/' . $aPathParam['_tail'] : ''); # add tail if part is a wildcard
+                $sRoute.= ('/' === (substr($sValue, -1))) ? '/' : '';
+                $sRoute = str_replace('//', '/', $sRoute);
+
+                // now check if path and route do match
+                if ($sPath === $sRoute)
+                {
+                    (false === empty($aPathParam)) ? Request::setPathParam($aPathParam) : false;
+
+                    return $sValue;
+                }
             }
         }
 
