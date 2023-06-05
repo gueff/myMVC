@@ -125,9 +125,10 @@ function mvcStoreEnv(string $sEnvFile = '')
 }
 
 /**
+ * @param array $aConfig
  * @return array
  */
-function mvcConfigLoader()
+function mvcConfigLoader(array $aConfig = array())
 {
     // place of main myMVC config
     $aConfig['MVC_CONFIG_DIR'] = realpath(__DIR__ . '/../../../') . '/config';

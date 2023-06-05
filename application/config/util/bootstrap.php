@@ -31,7 +31,7 @@ MVC_ENV: {
 
 CONFIG: {
 
-    $aConfig = mvcConfigLoader();
+    $aConfig = mvcConfigLoader($aConfig);
 }
 
 FIRST_LOG_ENTRY_ON_NEW_REQUEST: {
