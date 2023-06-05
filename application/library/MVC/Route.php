@@ -340,8 +340,8 @@ class Route
 
                 if (false === empty($sKey))
                 {
-                    $aRoute[$iKey] = $aPartPath[$iKey];     # replace variable by concrete value from path
-                    $aPathParam[$sKey] = $aPartPath[$iKey]; # save PathParam
+                    $aRoute[$iKey] = get($aPartPath[$iKey]);     # replace variable by concrete value from path
+                    $aPathParam[$sKey] = get($aPartPath[$iKey]); # save PathParam
                 }
 
                 // add leading and/or trailing slashes if route was defined so
