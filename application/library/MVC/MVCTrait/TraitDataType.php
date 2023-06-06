@@ -1,6 +1,6 @@
 <?php
 /**
- * DataType.php
+ * TraitDataType.php
  *
  * @package myMVC
  * @copyright ueffing.net

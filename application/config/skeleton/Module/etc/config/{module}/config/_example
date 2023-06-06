@@ -6,11 +6,6 @@ error_reporting(E_ALL);
 date_default_timezone_set('Europe/Berlin');
 
 //-------------------------------------------------------------------------------------
-
-include '_session.php';
-include '_csp.php';
-
-//-------------------------------------------------------------------------------------
 // Module {module}
 
 $aConfig['MODULE']['{module}'] = array();
@@ -29,3 +24,8 @@ $aConfig['MODULE']['{module}']['SANITIZING'] = array(
         ),
     )
 );
+
+//-------------------------------------------------------------------------------------
+
+include '_session.php';
+include '_csp.php';

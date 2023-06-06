@@ -1,4 +1,6 @@
 {*
+application/library/MVC/templates/infoTool.tpl
+
 colors
 ---------
 blue: hsl(210,50%,50%)

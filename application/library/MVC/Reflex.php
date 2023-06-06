@@ -104,9 +104,8 @@ class Reflex
 
 				if (false === filter_var (($oReflectionObject instanceof \MVC\MVCInterface\Controller), FILTER_VALIDATE_BOOLEAN))
 				{
-					//@todo ERROR
 					$sMsg = 'ERROR: <br />Make sure `' . $sControllerClassName . '` <b>implements</b> \MVC\MVCInterface\Controller';
-					Log::write (strip_tags ($sMsg));
+                    Error::error(strip_tags ($sMsg));
 					Debug::stop ($sMsg);
 				}
 

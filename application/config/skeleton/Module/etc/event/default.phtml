@@ -24,7 +24,7 @@ $aEvent = [
     ),
     'mvc.application.setSession.before' => array(
         function(\MVC\DataType\DTArrayObject $oDTArrayObject) { // enable Session
-            \{module}\Event\Index::enableSession($oDTArrayObject);
+            \{module}\Model\Index::enableSession($oDTArrayObject);
         }
     ),
 ];
