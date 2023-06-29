@@ -56,6 +56,10 @@ pre.prettyprint {
     color: white !important;
     padding: 2px;
 }
+.myMvcToolbar-bg-warning {
+    background-color: orangered !important;
+    color: white !important;
+}
 .myMvcToolbar-bg-danger {
     background-color: darkred !important;
     color: white !important;

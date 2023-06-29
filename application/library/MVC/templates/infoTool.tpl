@@ -567,7 +567,7 @@ Request::getPathParam( $sKey )</pre>
 
 			<!-- menu -->
 			<navi>
-				<label for="subtab81">Malfunction</label>
+				<label for="subtab81">E_*</label>
 			</navi>
 
 			<!-- content -->
@@ -616,8 +616,8 @@ Request::getPathParam( $sKey )</pre>
 			<i class="fa fa-bar-chart-o"></i> Memory
 		</label>
 		{if !empty($aToolbar.aError)}
-			<label for="tab8" class="myMvcToolbar-bg-danger" style="position: relative;">
-				<i class="fa fa-warning myMvcToolbarBlink"></i> Malfunction <sup>({count($aToolbar.aError)})</sup>
+			<label for="tab8" class="myMvcToolbar-bg-primaryx" style="position: relative;">
+				<i class="fa fa-warning myMvcToolbarBlinkx"></i> E_* <sup>({count($aToolbar.aError)})</sup>
 			</label>
 		{/if}
 		<label id="myMvcToolbar_toggle" class="myMvcToolbar-bg-info" title="toggle"><b>&larr;&rarr;</b></label>

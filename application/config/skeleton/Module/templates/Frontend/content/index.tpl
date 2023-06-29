@@ -2,15 +2,17 @@
     <div class="container">
 
         <h1 class="display-3">
-            {module}
+            Foo
         </h1>
         <p>
             done by <b>myMVC</b>, the PHP MVC Framework.
-            <hr>
+        <hr>
 
         </p>
         <p>
-            <a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a>
+            <a class="btn btn-primary btn-lg" href="https://mymvc.ueffing.net/" role="button" target="_blank">
+                see myMVC Documentation
+            </a>
         </p>
 
     </div>

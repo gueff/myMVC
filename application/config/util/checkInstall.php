@@ -71,7 +71,7 @@ class MyMVCInstaller
             $this->prepareForOutput();
             $this->_text("\n<br><span class='text-info'><b>🛈</b> You need to install a Module to work on.</span>");
             $this->_text("\n<br>Open a console and enter:");
-            $this->_text("\n<hr><kbd>cd " . $this->_aConfig['MVC_BASE_PATH'] . "; " . PHP_BINDIR . "/php myMVC.phar</kbd>");
+            $this->_text("\n<hr><kbd>cd " . $this->_aConfig['MVC_BASE_PATH'] . "; " . PHP_BINDIR . "/php emvicy.php</kbd>");
 
             if ('cli' !== php_sapi_name())
             {

@@ -31,13 +31,6 @@ class Controller
 		$oReflex = new Reflex();
 		$bSuccess = $oReflex->reflect ();
 
-        Event::run ('mvc.controller.construct.after',
-            DTArrayObject::create()
-                ->add_aKeyValue(
-                    DTKeyValue::create()->set_sKey('bSuccess')->set_sValue($bSuccess)
-                )
-        );/** @deprecated  */
-
         Event::run ('mvc.controller.init.after',
             DTArrayObject::create()
                 ->add_aKeyValue(
@@ -99,16 +92,6 @@ class Controller
                     )
             );
         }
-
-        Event::run ('mvc.runTargetClassPreconstruct.after',
-            DTArrayObject::create()
-                ->add_aKeyValue(
-                    DTKeyValue::create()->set_sKey('sClass')->set_sValue($sTargetClass)
-                )
-                ->add_aKeyValue(
-                    DTKeyValue::create()->set_sKey('sMethod')->set_sValue($sMethodNamePreconstruct)
-                )
-        ); /** @deprecated  */
 
         Event::run ('mvc.controller.runTargetClassPreconstruct.after',
             DTArrayObject::create()

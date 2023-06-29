@@ -175,17 +175,6 @@ class Event
     }
 
     /**
-     * @deprecated use instead: Event::delete($sEvent)
-     * @param $sEvent
-     * @return bool
-     * @throws \ReflectionException
-     */
-    public static function unbind($sEvent = '')
-    {
-        return self::delete($sEvent);
-    }
-
-    /**
      * unbinds (delete) one or all events
      * if this parameter not is set, *all* events are going to be deleted
      * @param $sEvent
@@ -233,17 +222,5 @@ class Event
     public static function getEventArray()
     {
         return self::$aEvent;
-    }
-
-    /**
-     * @deprecated use: Config::get_MVC_EVENT()
-     * @return array
-     * @throws \ReflectionException
-     */
-    public static function getEventReport()
-    {
-        $aEventReport = Config::get_MVC_EVENT();
-
-        return $aEventReport;
     }
 }
