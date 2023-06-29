@@ -1,0 +1,46 @@
+========================
+commands
+========================
+
+help
+    php emvicy.php
+
+creating a module
+    creating a primary module (the leading one)
+        ------------------------------------------------------------------------------------------
+        php emvicy.php create module=foo;                       # creates primary module "Foo"; asks if modulename is correct
+        php emvicy.php create module=foo force=no;              # same
+        php emvicy.php create module=foo force=yes;             # no asking - instantly creating of primary module "Foo"
+        php emvicy.php create module=bar primary=yes;           # creates primary module "Foo"; asks if modulename is correct
+        php emvicy.php create module=bar primary=yes force=no;  # same
+        php emvicy.php create module=bar primary=yes force=yes; # no asking - instantly creating of primary module "Foo"
+        ------------------------------------------------------------------------------------------
+
+    creating a secondary module 
+        ------------------------------------------------------------------------------------------
+        php emvicy.php create module=bar primary=no force=no;   # creates module "Bar" as a secondary module; asks if modulename is correct 
+        php emvicy.php create module=baz primary=no force=yes;  # no asking - instantly creating of secondary module "Baz"
+        ------------------------------------------------------------------------------------------
+
+lint
+    php emvicy.php lint
+        returns a parsable JSON containing bool `bSuccess` and array `aMessage`.
+        Examples
+            no errors found
+                {
+                  "bSuccess": true,
+                  "aMessage": []
+                }
+            syntax error
+                {
+                  "bSuccess": false,
+                  "aMessage": [
+                    "PHP Parse error:  syntax error, unexpected token \"}\" in /var/www/myMVC_3.2.x/modules/Foo/Controller/Index.php on line 30",
+                    "Errors parsing /var/www/myMVC_3.2.x/modules/Foo/Controller/Index.php"
+                  ]
+                }
+serve
+    php emvicy.php serve
+
+
+
