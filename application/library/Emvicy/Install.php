@@ -48,6 +48,10 @@ class Install
             self::removePrimaryEssentials($aConfig['MVC_MODULES_DIR'] . '/' . $sModuleName);
         }
 
+        // set rights
+        chmod($aConfig['MVC_MODULES_DIR'] . '/' . $sModuleName . '/_install.sh', 0775);
+        chmod($aConfig['MVC_MODULES_DIR'] . '/' . $sModuleName . '/_publish.sh', 0775);
+
         echo " ✔ module created: " . $sModuleName . "\n\n";
     }
 
