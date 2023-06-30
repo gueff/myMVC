@@ -5,25 +5,14 @@ use MVC\Config;
 error_reporting(E_ALL);
 date_default_timezone_set('Europe/Berlin');
 
+// show InfoTool bar
+$aConfig['MVC_INFOTOOL_ENABLE'] = true;
+
 //-------------------------------------------------------------------------------------
 // Module {module}
 
 $aConfig['MODULE']['{module}'] = array();
 
-/**
- * SANITIZING Example; declaring sanitizing for parameter $_GET['a']
- * how to use @see /modules/{module}/etc/event/request.php
- */
-$aConfig['MODULE']['{module}']['SANITIZING'] = array(
-    '_GET' => array(
-        // key
-        'a' => array(
-            /** @see https://www.regular-expressions.info/unicode.html */
-            'regex' => "/[^\\p{L}\\p{M}\\p{Z}\\p{S}\\p{N}\\p{P}\|']+/u",
-            'length' => 256,
-        ),
-    )
-);
 
 //-------------------------------------------------------------------------------------
 

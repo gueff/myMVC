@@ -1,4 +1,11 @@
 <?php
+
+/**
+ * @usage php datatype.php
+ *          Classes created by this script are placed into folder: `/modules/{module}/DataType/`
+ * @see https://mymvc.ueffing.net/3.3.x/generating-datatype-classes
+ */
+
 #---------------------------------------------------------------
 require_once realpath(__DIR__ . '/../../../../../') . '/application/config/util/bootstrap.php';
 \MVC\Config::init(get($GLOBALS['aConfig'], array()));
@@ -7,10 +14,6 @@ require_once realpath(__DIR__ . '/../../../../../') . '/application/config/util/
 
 #---------------------------------------------------------------
 #  Defining DataType Classes
-
-// Classes created by this script are placed into folder:
-// `/modules/{module}/DataType/`
-// @see https://mymvc.ueffing.net/3.1.x/generating-datatype-classes
 
 $sCurrentModuleName = basename(realpath(__DIR__ . '/../../../'));
 $sDataTypeDir = realpath(__DIR__ . '/../../../') . '/DataType/';

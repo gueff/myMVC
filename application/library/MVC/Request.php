@@ -21,43 +21,6 @@ use MVC\DataType\DTRequestCurrent;
 class Request
 {
     /**
-     * @deprecated
-     * @param       $sMethod GET|POST|COOKIE
-     * @param array $aConfig
-     * @return void
-     */
-    public static function sanitize($sMethod = '', array $aConfig = array())
-    {
-        (substr($sMethod, 0, 1) !== '_')
-            ? $sMethod = '_' . $sMethod
-            : false
-        ;
-        $sMethod = strtoupper($sMethod);
-
-        if (isset($GLOBALS[$sMethod]))
-        {
-            foreach ($GLOBALS[$sMethod] as $sKey => $sValue)
-            {
-                // find matching config
-                if (array_key_exists($sKey, $aConfig))
-                {
-                    // sanitize in length
-                    (isset($aConfig[$sKey]['length']))
-                        ? $sValue = trim(mb_substr($sValue, 0, $aConfig[$sKey]['length'], 'UTF8'))
-                        : false;
-
-                    // sanitize by regex rule
-                    (isset($aConfig[$sKey]['regex']))
-                        ? $sValue = preg_replace($aConfig[$sKey]['regex'], '', $sValue)
-                        : false;
-
-                    $GLOBALS[$sMethod][$sKey] = $sValue;
-                }
-            }
-        }
-    }
-
-    /**
      * gets current request
      * @return \MVC\DataType\DTRequestCurrent
      * @throws \ReflectionException

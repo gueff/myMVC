@@ -2,7 +2,7 @@
     <div class="container">
 
         <h1 class="display-3">
-            Foo
+            {$oDTRoutingAdditional->get_sTitle()}
         </h1>
         <p>
             done by <b>myMVC</b>, the PHP MVC Framework.

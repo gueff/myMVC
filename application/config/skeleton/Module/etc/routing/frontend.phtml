@@ -23,11 +23,21 @@ $oDTRoutingAdditional = \{module}\DataType\DTRoutingAdditional::create()
         '/myMVC/assets/jquery-cookie/1.4.1/jquery.cookie.min.js',
         '/myMVC/assets/bootstrap-4.4.1-dist/js/bootstrap.min.js',
         '/myMVC/scripts/cookieConsent.min.js',
-    ))
-    ;
+    ));
 
 /*
  * Routes
  */
-\MVC\Route::MIX(['GET', 'POST'],'/', 'module={module}&c=index&m=index', $oDTRoutingAdditional->getPropertyJson());
-\MVC\Route::GET('/404/', 'module={module}&c=index&m=notFound', $oDTRoutingAdditional->set_sTitle('404')->set_sContent('Frontend/content/404.tpl')->getPropertyJson());
+\MVC\Route::MIX(
+    ['GET', 'POST'],
+    '/',
+    '\{module}\Controller\Index::index',
+    $oDTRoutingAdditional->getPropertyJson()
+);
+\MVC\Route::GET(
+    '/404/',
+    '\{module}\Controller\Index::notFound',
+    $oDTRoutingAdditional->set_sTitle('404')
+        ->set_sContent('Frontend/content/404.tpl')
+        ->getPropertyJson()
+);
