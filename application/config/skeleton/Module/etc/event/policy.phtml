@@ -1,10 +1,13 @@
 <?php
 
-#-------------------------------------------------------------
-# declare bindings
+\MVC\Event::processBindConfigStack([
 
-$aEvent = [
-    'policy.index.requestMethodHasToMatchRouteMethod.after' => array(
+    'policy.index.requestMethodHasToMatchRouteMethod.after' => [
+
+        /**
+         * this is Middleware to
+         * \{module}\Policy\Index::requestMethodHasToMatchRouteMethod
+         */
         function (\MVC\DataType\DTArrayObject $oDTArrayObject) { // Log policy rule result when on develop Environment
 
             // build message
@@ -15,20 +18,13 @@ $aEvent = [
             ;
             $oDTArrayObject->setDTKeyValueByKey(\MVC\DataType\DTKeyValue::create()->set_sKey('sMessage')->set_sValue($sMessage));
 
-            if ('develop' === \MVC\Config::get_MVC_ENV())
-            {
-                \MVC\Log::write(
-                    \MVC\Request::getCurrentRequest()->get_path()
-                    . ' (' . \MVC\Request::getCurrentRequest()->get_requestmethod() . ') => '
-                    . \MVC\Route::getCurrent()->get_method() . ' '
-                    . \MVC\Route::getCurrent()->get_path(), 'policy.log'
-                );
-                \MVC\Log::write($oDTArrayObject->getDTKeyValueByKey('sMessage')->get_sValue(), 'policy.log');
-            }
-        })
-];
-
-#-------------------------------------------------------------
-# process: bind the declared ones
-
-\MVC\Event::processBindConfigStack($aEvent);
+            \MVC\Log::write(
+                \MVC\Request::getCurrentRequest()->get_path()
+                . ' (' . \MVC\Request::getCurrentRequest()->get_requestmethod() . ') => '
+                . \MVC\Route::getCurrent()->get_method() . ' '
+                . \MVC\Route::getCurrent()->get_path(), 'policy.log'
+            );
+            \MVC\Log::write($oDTArrayObject->getDTKeyValueByKey('sMessage')->get_sValue(), 'policy.log');
+        }
+    ],
+]);

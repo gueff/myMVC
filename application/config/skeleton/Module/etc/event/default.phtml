@@ -1,35 +1,33 @@
 <?php
 
-#-------------------------------------------------------------
-# declare bindings
+\MVC\Event::processBindConfigStack([
 
-$aEvent = [
-    'mvc.reflex.reflect.targetObject.before' => array(
+    'mvc.reflex.reflect.targetObject.before' => [
         function(\MVC\DataType\DTArrayObject $oDTArrayObject) { // minify css/js files
             \MVC\Minify::init();
         }
-    ),
-    'mvc.reflex.reflect.targetObject.after' => array(
+    ],
+    'mvc.reflex.reflect.targetObject.after' => [
         function (\MVC\DataType\DTArrayObject $oDTArrayObject) { // switch on InfoTool
-            if (true === \MVC\Config::get_MVC_INFOTOOL_ENABLE())
-            {
+            if (true === \MVC\Config::get_MVC_INFOTOOL_ENABLE() && 'develop' === \MVC\Config::get_MVC_ENV()) {
                 new \MVC\InfoTool(\{module}\View\Index::init());
             }
         }
-    ),
-    'mvc.debug.stop.after' => array(
-        function (\MVC\DataType\DTArrayObject $oDTArrayObject) { // Logging stops
-            \MVC\Log::write("\n\n*** STOP ***\n" . print_r($oDTArrayObject->get_akeyvalue()[0]->get_sValue(), true));
-        }
-    ),
-    'mvc.application.setSession.before' => array(
+    ],
+    'mvc.application.setSession.before' => [
         function(\MVC\DataType\DTArrayObject $oDTArrayObject) { // enable Session
             \{module}\Model\Index::enableSession($oDTArrayObject);
         }
-    ),
-];
-
-#-------------------------------------------------------------
-# process: bind the declared ones
-
-\MVC\Event::processBindConfigStack($aEvent);
+    ],
+    'mvc.debug.stop.after' => [
+        function (\MVC\DataType\DTArrayObject $oDTArrayObject) { // Logging stops
+            \MVC\Log::write("\n\n*** STOP ***\n" . print_r($oDTArrayObject->get_akeyvalue()[0]->get_sValue(), true));
+        }
+    ],
+    'mvc.error' => [
+        // write errors into error log file
+        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
+            \MVC\Log::write($oDTArrayObject, 'error.log');
+        }
+    ],
+]);

@@ -1,24 +1,62 @@
 #!/bin/bash
 
 MODULENAME="$(basename "$(pwd)")";
-#-------------------
+sHere=`pwd`;
+sModuleDir=`realpath "../../modules/"`;
+xPhp=`type -p php`;
+/usr/bin/clear;
 
-unset MVC_ENV;
-sFallbackMvcEnv="develop";
+# read .env
+. ../../public/.env;
 
-if [ -z ${MVC_ENV+x} ]; then
-    echo "MVC_ENV has not been set yet.";
-    echo "MVC_ENV will now be set to '$sFallbackMvcEnv'.";
-    export MVC_ENV=$sFallbackMvcEnv;
-else
-    echo "MVC_ENV is set to '$MVC_ENV'";
-fi
+#------------------------------------------------------------
+# install further modules
 
-. publish.sh
+cd "$sHere";
+cd "$sModuleDir";
 
-MVC_APPLICATION_PATH='../../application';
-echo "installing module libraries...";
-php $MVC_APPLICATION_PATH/composer.phar --working-dir=./etc/config/$MODULENAME/ install;
-echo "...done!";
+# myMVC_module_DB
+/usr/bin/git clone --branch 3.3.x \
+https://github.com/gueff/myMVC_module_DB.git \
+DB;
 
+#OpenApi;
+/usr/bin/git clone --branch 1.1.x \
+https://github.com/gueff/myMVC_module_OpenApi.git \
+OpenApi;
+
+# myMVC_module_Idolon
+/usr/bin/git clone --branch 2.0.x \
+https://github.com/gueff/myMVC_module_Idolon.git \
+Idolon;
+
+# myMVC_module_Email
+/usr/bin/git clone --branch 1.3.x \
+https://github.com/gueff/myMVC_module_Email.git \
+Idolon;
+
+#------------------------------------------------------------
+# public files
+cd "$sHere";
+. _publish.sh
+
+#------------------------------------------------------------
+# init
+
+cd "$sHere";
+cd ../../public/;
+$xPhp index.php;
+
+#------------------------------------------------------------
+# generate DTClasses
+
+cd "$sHere";
+cd ./etc/config/DataType/;
+$xPhp *.php;
+
+#------------------------------------------------------------
+# done
+
+cd "$sHere";
+/bin/echo "...done!";
 
