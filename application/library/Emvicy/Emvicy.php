@@ -2,12 +2,21 @@
 
 namespace Emvicy;
 
-use MVC\Debug;
+use MVC\Config;
 
+/**
+ * @param $iAmount
+ * @return void
+ */
 function nl($iAmount = 1)
 {
     echo str_repeat("\n", $iAmount);
 }
+
+/**
+ * @param $sString
+ * @return void
+ */
 function hr($sString = '-')
 {
     nl();
@@ -72,7 +81,7 @@ class Emvicy
     public static function help()
     {
         $sHelpFile = realpath(__DIR__) . '/doc/help.txt';
-        echo readfile($sHelpFile);
+        echo file_get_contents($sHelpFile);
     }
 
     /**
@@ -123,6 +132,103 @@ class Emvicy
     public static function get_stdin(int $iLength = 10)
     {
         return trim(fread(STDIN, $iLength));
+    }
+
+    /**
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function clearcache()
+    {
+        $sDir = Config::get_MVC_CACHE_DIR() . '/*';
+        array_map('unlink', array_filter((array) glob($sDir)));
+    }
+
+    /**
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function cc()
+    {
+        self::clearcache();
+    }
+
+    /**
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function clearlog()
+    {
+        $sDir = Config::get_MVC_LOG_FILE_FOLDER() . '*';
+        array_map('unlink', array_filter((array) glob($sDir)));
+    }
+
+    /**
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function cl()
+    {
+        self::clearlog();
+    }
+
+    /**
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function clearsession()
+    {
+        $sDir = Config::get_MVC_SESSION_PATH() . '/*';
+        array_map('unlink', array_filter((array) glob($sDir)));
+    }
+
+    /**
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function cs()
+    {
+        self::clearsession();
+    }
+
+    /**
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function cleartemp()
+    {
+        $sDir = Config::get_MVC_SMARTY_TEMPLATE_CACHE_DIR(). '/*';
+        array_map('unlink', array_filter((array) glob($sDir)));
+    }
+
+    /**
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function ct()
+    {
+        self::cleartemp();
+    }
+
+    /**
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function clearall()
+    {
+        self::clearcache();
+        self::clearlog();
+        self::clearsession();
+        self::cleartemp();
+    }
+
+    /**
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function ca()
+    {
+        self::clearall();
     }
 
     /**

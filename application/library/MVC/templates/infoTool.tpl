@@ -60,7 +60,7 @@ blue: hsl(210,50%,50%)
 			<a href="https://mymvc.ueffing.net/" target="_blank">Documentation</a>
 		</span>
 		<br>
-		<span>myMVC: {$aToolbar.sMyMvcVersion}, MVC_ENV: {$aToolbar.sEnv}, MVC_UNIQUE_ID: {$aToolbar.sUniqueId}, session_id(): {$aToolbar.session_id}</span>
+		<span>{$aToolbar.sMyMvcVersion}, MVC_ENV: {$aToolbar.sEnv}, MVC_UNIQUE_ID: {$aToolbar.sUniqueId}, session_id(): {$aToolbar.session_id}</span>
 	</div>
 
 	<!-- invisible action detection -->

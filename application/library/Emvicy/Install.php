@@ -58,7 +58,7 @@ class Install
     protected static function removePrimaryEssentials(string $sModule = '')
     {
         $aRemove = array(
-            '/etc/config/_myMVC.php',
+            '/etc/config/_mvc.php',
         );
 
         foreach ($aRemove as $sRemove)

@@ -193,7 +193,7 @@ class Request
     public static function isCli()
     {
         /*
-         * @info detection of cli takes place in /config/_myMVC.php
+         * @info detection of cli takes place in /config/_mvc.php
          */
         if (true === Config::get_MVC_CLI())
         {
@@ -210,7 +210,7 @@ class Request
     public static function isHttp()
     {
         /*
-         * @info detection of cli takes place in /config/_myMVC.php
+         * @info detection of cli takes place in /config/_mvc.php
          */
         if (false === self::isCli())
         {

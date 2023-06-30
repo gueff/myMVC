@@ -11,15 +11,10 @@ application/vendor
 gen
 *.tar.gz
 vendor
-CliDialogue
 modules/*
 public/.env
 public/openapi
 public/api
-_*
-_clearTmpFiles.sh
-_createPhar.php
-_dataTypeCreation.php
 _gitPull.sh
 _gitPush.sh
 _gitPush.sh.example
@@ -28,4 +23,3 @@ Changelog.md
 myMVC
 **/*.min.css
 **/*.min.js
-_createPharEmvicy.php

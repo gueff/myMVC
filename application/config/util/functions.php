@@ -183,8 +183,8 @@ function mvcConfigLoader(array $aConfig = array())
 
     #-----------------------------
 
-    // load requirements from /application/config/util/_myMVC.php
-    require_once __DIR__ . '/_myMVC.php';
+    // load requirements from /application/config/util/_mvc.php
+    require_once __DIR__ . '/_mvc.php';
 
     return $aConfig;
 }
