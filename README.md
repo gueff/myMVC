@@ -12,7 +12,7 @@ the PHP Framework
 - Modular
 - Expandable
 - DataType Creation
-- PHP >= 7.4
+- PHP >= 8.0
 
 Documentation:  [https://mymvc.ueffing.net/](https://mymvc.ueffing.net/)  
 github:  [https://github.com/gueff/myMVC/](https://github.com/gueff/myMVC/)  
