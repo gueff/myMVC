@@ -300,6 +300,30 @@ class Config
     }
 
     /**
+     * @return array
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_LOG_DETAIL()
+    {
+        if (Registry::isRegistered('MVC_LOG_DETAIL'))
+        {
+            return (array) Registry::get('MVC_LOG_DETAIL');
+        }
+
+        return array();
+    }
+
+    /**
+     * @param array $aLogDetail
+     * @return void
+     */
+    public static function set_MVC_LOG_DETAIL(array $aLogDetail = array())
+    {
+        Registry::set('MVC_LOG_DETAIL', $aLogDetail);
+    }
+
+
+    /**
      * @return string
      * @throws \ReflectionException
      */

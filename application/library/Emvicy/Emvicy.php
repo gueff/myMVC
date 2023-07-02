@@ -277,6 +277,14 @@ class Emvicy
     }
 
     /**
+     * @return void
+     */
+    public static function c()
+    {
+        self::create();
+    }
+
+    /**
      * php emvicy.php serve
      * @return void
      * @throws \ReflectionException
@@ -288,6 +296,15 @@ class Emvicy
         echo $sCmd;
         hr();
         shell_exec($sCmd);
+    }
+
+    /**
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function s()
+    {
+        self::serve();
     }
 
     /**
@@ -310,6 +327,15 @@ class Emvicy
         {
             self::response(false, $aMessage);
         }
+    }
+
+    /**
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function l()
+    {
+        self::lint();
     }
 
     /**

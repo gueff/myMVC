@@ -6,26 +6,26 @@ help
     command: php emvicy.php
         displays this help text
 
-"creating a module"
-    creating a primary module (the leading one)
+create | c
+    primary module creation
         ------------------------------------------------------------------------------------------
         command:
-        php emvicy.php create module=foo;                       # creates primary module "Foo"; asks if modulename is correct
-        php emvicy.php create module=foo force=no;              # same
-        php emvicy.php create module=foo force=yes;             # no asking - instantly creating of primary module "Foo"
-        php emvicy.php create module=bar primary=yes;           # creates primary module "Foo"; asks if modulename is correct
-        php emvicy.php create module=bar primary=yes force=no;  # same
-        php emvicy.php create module=bar primary=yes force=yes; # no asking - instantly creating of primary module "Foo"
+        php emvicy.php c module=foo;                       # creates primary module "Foo"; asks if modulename is correct
+        php emvicy.php c module=foo force=no;              # same
+        php emvicy.php c module=foo force=yes;             # no asking - instantly creating of primary module "Foo"
+        php emvicy.php c module=bar primary=yes;           # creates primary module "Foo"; asks if modulename is correct
+        php emvicy.php c module=bar primary=yes force=no;  # same
+        php emvicy.php c module=bar primary=yes force=yes; # no asking - instantly creating of primary module "Foo"
         ------------------------------------------------------------------------------------------
 
-    creating a secondary module 
+    secondary module creation
         ------------------------------------------------------------------------------------------
         command:
-        php emvicy.php create module=bar primary=no force=no;   # creates module "Bar" as a secondary module; asks if modulename is correct 
-        php emvicy.php create module=baz primary=no force=yes;  # no asking - instantly creating of secondary module "Baz"
+        php emvicy.php c module=bar primary=no force=no;   # creates module "Bar" as a secondary module; asks if modulename is correct
+        php emvicy.php c module=baz primary=no force=yes;  # no asking - instantly creating of secondary module "Baz"
         ------------------------------------------------------------------------------------------
 
-lint
+lint | l
     command: php emvicy.php lint
         checks all codes on errors and returns a parsable JSON containing bool `bSuccess` and array `aMessage`.
         Examples
@@ -43,7 +43,7 @@ lint
                   ]
                 }
 
-serve
+serve | s
     command: php emvicy.php serve
         provides a local php server
 

@@ -93,11 +93,7 @@ MVC_APPLICATION_SETTINGS: {
     $aConfig['MVC_BASE_PATH'] = realpath(__DIR__ . '/../');
     $aConfig['MVC_APPLICATION_PATH'] = $aConfig['MVC_BASE_PATH'] . '/application';
     $aConfig['MVC_PUBLIC_PATH'] = $aConfig['MVC_BASE_PATH'] . '/public';
-    $aConfig['MVC_LOG_FILE_FOLDER'] = $aConfig['MVC_APPLICATION_PATH'] . '/log/';
-    $aConfig['MVC_LOG_FILE_DEFAULT'] = $aConfig['MVC_LOG_FILE_FOLDER'] . 'default.log';
-    $aConfig['MVC_LOG_FILE_ERROR'] = $aConfig['MVC_LOG_FILE_FOLDER'] . 'error.log';
-    $aConfig['MVC_LOG_FILE_WARNING'] = $aConfig['MVC_LOG_FILE_FOLDER'] . 'warning.log';
-    $aConfig['MVC_LOG_FILE_NOTICE'] = $aConfig['MVC_LOG_FILE_FOLDER'] . 'notice.log';
+
     $aConfig['MVC_APPLICATION_CONFIG_DIR'] = $aConfig['MVC_APPLICATION_PATH'] . '/config';
     $aConfig['MVC_VIEW_TEMPLATES'] = $aConfig['MVC_BASE_PATH'] . '/modules/Default/templates';
     $aConfig['MVC_LIBRARY'] = $aConfig['MVC_APPLICATION_PATH'] . '/library';
@@ -105,6 +101,28 @@ MVC_APPLICATION_SETTINGS: {
 
     // Main myMVC config folder
     $aConfig['MVC_CONFIG_DIR'] = $aConfig['MVC_BASE_PATH'] . '/config';
+
+    /**
+     * Log
+     */
+    $aConfig['MVC_LOG_FILE_FOLDER'] = $aConfig['MVC_APPLICATION_PATH'] . '/log/';
+    $aConfig['MVC_LOG_FILE_DEFAULT'] = $aConfig['MVC_LOG_FILE_FOLDER'] . 'default.log';
+    $aConfig['MVC_LOG_FILE_ERROR'] = $aConfig['MVC_LOG_FILE_FOLDER'] . 'error.log';
+    $aConfig['MVC_LOG_FILE_WARNING'] = $aConfig['MVC_LOG_FILE_FOLDER'] . 'warning.log';
+    $aConfig['MVC_LOG_FILE_NOTICE'] = $aConfig['MVC_LOG_FILE_FOLDER'] . 'notice.log';
+
+    // control log details
+    $aConfig['MVC_LOG_DETAIL'] = [
+        'date' => true,
+        'host' => true,
+        'env' => true,
+        'ip' => true,
+        'uniqueid' => true,
+        'sessionid' => true,
+        'count' => true,
+        'debug' => true,
+        'message' => true,
+    ];
 
     /**
      * Caching
@@ -201,5 +219,5 @@ MVC_POLICY: {
 
 MVC_MISC: {
 
-    $aConfig['MVC_UNIQUE_ID'] = uniqid();
+    $aConfig['MVC_UNIQUE_ID'] = date('YmdHis') . '' . uniqid();
 }

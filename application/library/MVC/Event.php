@@ -43,15 +43,24 @@ class Event
     {
         \MVC\Event::RUN('mvc.event.init');
 
+        $sEventDir = Config::get_MVC_MODULE_CURRENT_ETC_DIR() . '/event';
+
+        if (false === file_exists($sEventDir))
+        {
+            return false;
+        }
+
         //  require recursively all php files in module's routing dir
         /** @var \SplFileInfo $oSplFileInfo */
-        foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(Config::get_MVC_MODULE_CURRENT_ETC_DIR() . '/event')) as $oSplFileInfo)
+        foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($sEventDir)) as $oSplFileInfo)
         {
             if ('php' === strtolower($oSplFileInfo->getExtension()))
             {
                 require_once $oSplFileInfo->getPathname();
             }
         }
+
+        return true;
     }
 
     /**

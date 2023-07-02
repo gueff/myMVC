@@ -32,13 +32,18 @@ class Policy
     {
         \MVC\Event::RUN('mvc.policy.init.before');
 
-        //  require recursively all php files in module's policy dir
-        /** @var \SplFileInfo $oSplFileInfo */
-        foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(Config::get_MVC_MODULE_CURRENT_ETC_DIR() . '/policy')) as $oSplFileInfo)
+        $sPolicyDir = Config::get_MVC_MODULE_CURRENT_ETC_DIR() . '/policy';
+
+        if (true === file_exists($sPolicyDir))
         {
-            if ('php' === strtolower($oSplFileInfo->getExtension()))
+            //  require recursively all php files in module's policy dir
+            /** @var \SplFileInfo $oSplFileInfo */
+            foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($sPolicyDir)) as $oSplFileInfo)
             {
-                require_once $oSplFileInfo->getPathname();
+                if ('php' === strtolower($oSplFileInfo->getExtension()))
+                {
+                    require_once $oSplFileInfo->getPathname();
+                }
             }
         }
 

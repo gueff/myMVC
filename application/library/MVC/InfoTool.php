@@ -139,6 +139,7 @@ class InfoTool
         $aToolbar['sEnv'] = getenv('MVC_ENV');
         $aToolbar['aEnvGetenv'] = $this->buildMarkupListTree(getenv());
         $aToolbar['aEnvEnv'] = $this->buildMarkupListTree($_ENV);
+        $aToolbar['sEnvOfRequest'] = \MyMVCInstaller::getEnvironmentOfRequest();
         $aToolbar['aGet'] = $this->buildMarkupListTree($_GET);
         $aToolbar['aPost'] = $this->buildMarkupListTree($_POST);
         $aToolbar['aCookie'] = $this->buildMarkupListTree($_COOKIE);

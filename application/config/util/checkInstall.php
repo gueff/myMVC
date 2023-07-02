@@ -10,6 +10,7 @@
 /**
  * instantiate MyMVCInstaller
  */
+
 $oMyMVCInstaller = new MyMVCInstaller($GLOBALS['aConfig']);
 
 /**
@@ -43,8 +44,8 @@ class MyMVCInstaller
 		$this->checkForPHPExtensions();
         $this->installModuleLibraries();
 
-        // only call if not on emvicy
-        if (false === getenv('emvicy'))
+        // do not check if source of request is emvicy tool
+        if ('cli.emvicy' !== self::getEnvironmentOfRequest())
         {
             $this->checkOnModulesInstalled();
         }
@@ -60,23 +61,58 @@ class MyMVCInstaller
 	}
 
     /**
+     * @return string
+     */
+    public static function getEnvironmentOfRequest()
+    {
+        $bEmvicy = (bool) getenv('emvicy');
+        $bCli = $GLOBALS['aConfig']['MVC_CLI'];
+
+        // is webserver Request
+        if (false === $bEmvicy && false === $bCli)
+        {
+            return 'server.web';
+        }
+
+        // is cli-server request
+        if (true === $bEmvicy && false === $bCli)
+        {
+            return 'server.cli';
+        }
+
+        // is cli request
+        if (false === $bEmvicy && true === $bCli)
+        {
+            return 'cli';
+        }
+
+        // is emvicy request
+        if (true === $bEmvicy && true === $bCli)
+        {
+            return 'cli.emvicy';
+        }
+
+        return '';
+    }
+
+    /**
      * @return void
      */
-	protected function checkOnModulesInstalled()
+	public function checkOnModulesInstalled()
     {
+        // check on any module
         $aModule = glob($this->_aConfig['MVC_MODULES_DIR'] . '/*', GLOB_ONLYDIR);
 
-        if (empty($aModule))
+        // check on primary module
+        $aModulePrimary = glob($this->_aConfig['MVC_MODULES_DIR'] . '/*/etc/config/_mvc.php');
+
+        if (empty($aModule) || empty($aModulePrimary))
         {
             $this->prepareForOutput();
-            $this->_text("\n<br><span class='text-info'><b>🛈</b> You need to install a Module to work on.</span>");
+            $this->_text("\n<br><span class='text-info'><b>🛈</b> You need to install at least one Module as primary to be able to work.</span>");
             $this->_text("\n<br>Open a console and enter:");
-            $this->_text("\n<hr><kbd>cd " . $this->_aConfig['MVC_BASE_PATH'] . "; " . PHP_BINDIR . "/php emvicy.php</kbd>");
-
-            if ('cli' !== php_sapi_name())
-            {
-                exit();
-            }
+            $this->_text("\n\t<hr><kbd>cd " . $this->_aConfig['MVC_BASE_PATH'] . "; " . PHP_BINDIR . "/php emvicy.php</kbd>\n\n");
+            exit();
         }
     }
 
@@ -444,7 +480,7 @@ class MyMVCInstaller
 	{
 		if ('cli' === php_sapi_name())
 		{
-			$sText = trim(strip_tags($sText));
+			$sText = strip_tags($sText);
 			echo ('' === $sText) ? "." : html_entity_decode($sText) . "\n";
 		}
 		else

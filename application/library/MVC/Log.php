@@ -88,24 +88,24 @@ class Log
 			ob_end_clean ();
 		}
 
-		$sMessage = strip_tags ($sMessage);
+        $sMessage = strip_tags ($sMessage);
 
 		// count 1 up
 		self::$iCount++;
 
-		$sMessage = ''
-            . date ("Y-m-d H:i:s")
-            . "\t" . $_SERVER['HTTP_HOST']
-			. "\t" . ((false !== getenv('MVC_ENV')) ? getenv('MVC_ENV') : '---?---')
-			. "\t" . ((array_key_exists('REMOTE_ADDR', $_SERVER)) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1')
-			. "\t" . ((array_key_exists('MVC_UNIQUE_ID', $GLOBALS['aConfig'])) ? $GLOBALS['aConfig']['MVC_UNIQUE_ID'] : '---')
-			. "\t" . (('' !== session_id ()) ? session_id () : str_pad ('...........no.session', 32, '.'))
-			. "\t" . self::$iCount
-			. "\t" . print_r ($sDebug, true)
-			. "\t" . $sMessage
-			. "\n";
+        $sReport = '';
+        (true === (boolean) $GLOBALS['aConfig']['MVC_LOG_DETAIL']['date']) ? $sReport.= date ("Y-m-d H:i:s") : false;
+        (true === (boolean) $GLOBALS['aConfig']['MVC_LOG_DETAIL']['host']) ? $sReport.= "\t" . $_SERVER['HTTP_HOST'] : false;
+        (true === (boolean) $GLOBALS['aConfig']['MVC_LOG_DETAIL']['env']) ? $sReport.= "\t" . ((false !== getenv('MVC_ENV')) ? getenv('MVC_ENV') : '---?---') : false;
+        (true === (boolean) $GLOBALS['aConfig']['MVC_LOG_DETAIL']['ip']) ? $sReport.= "\t" . ((array_key_exists('REMOTE_ADDR', $_SERVER)) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1') : false;
+        (true === (boolean) $GLOBALS['aConfig']['MVC_LOG_DETAIL']['uniqueid']) ? $sReport.= "\t" . ((array_key_exists('MVC_UNIQUE_ID', $GLOBALS['aConfig'])) ? $GLOBALS['aConfig']['MVC_UNIQUE_ID'] : '---') : false;
+        (true === (boolean) $GLOBALS['aConfig']['MVC_LOG_DETAIL']['sessionid']) ? $sReport.= "\t" . (('' !== session_id ()) ? session_id () : str_pad ('...........no.session', 32, '.')) : false;
+        (true === (boolean) $GLOBALS['aConfig']['MVC_LOG_DETAIL']['count']) ? $sReport.= "\t" . self::$iCount : false;
+        (true === (boolean) $GLOBALS['aConfig']['MVC_LOG_DETAIL']['debug']) ? $sReport.= "\t" . print_r ($sDebug, true) : false;
+        (true === (boolean) $GLOBALS['aConfig']['MVC_LOG_DETAIL']['message']) ? $sReport.= "\t" . $sMessage : false;
+        $sReport.= "\n";
 
-		return $sMessage;
+		return $sReport;
 	}
 
 	/**

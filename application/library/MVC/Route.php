@@ -36,16 +36,22 @@ class Route
 
         DEFAULT_SOURCE_PHP_FILES: {
 
-        //  require recursively all php files in module's routing dir
-        /** @var \SplFileInfo $oSplFileInfo */
-        foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(Config::get_MVC_MODULE_CURRENT_ETC_DIR() . '/routing')) as $oSplFileInfo)
-        {
-            if ('php' === strtolower($oSplFileInfo->getExtension()))
+
+            $sRoutingDir = Config::get_MVC_MODULE_CURRENT_ETC_DIR() . '/routing';
+
+            if (true === file_exists($sRoutingDir))
             {
-                require_once $oSplFileInfo->getPathname();
+                //  require recursively all php files in module's routing dir
+                /** @var \SplFileInfo $oSplFileInfo */
+                foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($sRoutingDir)) as $oSplFileInfo)
+                {
+                    if ('php' === strtolower($oSplFileInfo->getExtension()))
+                    {
+                        require_once $oSplFileInfo->getPathname();
+                    }
+                }
             }
         }
-    }
 
         \MVC\Event::RUN('mvc.route.init.after');
     }
