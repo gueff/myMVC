@@ -1,15 +1,15 @@
 {
   "require": {
-    "php": ">=7.4",
+    "php": ">=8.0",
     "smarty/smarty": "4.3.*",
-    "ezyang/htmlpurifier": "v4.16.0",
-    "gueff/cachix": "1.0.2",
-    "mrclay/jsmin-php": "2.4.1"
+    "ezyang/htmlpurifier": "v4.16.*",
+    "gueff/cachix": "1.0.*",
+    "mrclay/jsmin-php": "2.4.*"
   },
   "require-dev": {
-    "phpunit/phpunit": "9.5.25",
+    "phpunit/phpunit": "9.*",
     "ext-zip": "*",
-    "php-webdriver/webdriver": "1.13.1",
-    "phpunit/phpunit-selenium": "9.0.1"
+    "php-webdriver/webdriver": "1.14.*",
+    "phpunit/phpunit-selenium": "9.0.*"
   }
 }
