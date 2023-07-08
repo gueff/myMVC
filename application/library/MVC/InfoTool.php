@@ -72,7 +72,7 @@ class InfoTool
 
             // DOMDocument::loadHTML will treat your string as being in ISO-8859-1 unless you tell it otherwise.
             // @see http://stackoverflow.com/a/8218649/2487859
-            $oDom->loadHTML(mb_convert_encoding($aToolbar['sRendered'], 'HTML-ENTITIES', 'UTF-8'));
+            $oDom->loadHTML(mb_encode_numericentity($aToolbar['sRendered'], [0x80, 0x10FFFF, 0, ~0], 'UTF-8'));
             libxml_clear_errors();
 
             // add toolbar tag as a placeholder before body closing tag

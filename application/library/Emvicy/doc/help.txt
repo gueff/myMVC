@@ -1,10 +1,80 @@
 ========================
-commands
+Emvicy commands
 ========================
 
 help
     command: php emvicy.php
         displays this help text
+
+version | v
+    command: php emvicy.php v
+        displays myMVC version
+
+serve | s
+    command: php emvicy.php s
+        provides a local php server
+
+clearcache | cc
+    command: php emvicy.php cc
+        clears all contents of cache directory:
+        - /application/cache/
+
+clearlog | cl
+    command: php emvicy.php cl
+        clears all contents of log directory:
+        - /application/log/
+
+clearsession | cs
+    command: php emvicy.php cs
+        clears all contents of session directory:
+        - /application/session/
+
+cleartemp | ct
+    command: php emvicy.php ct
+        clears all contents of templates_c directory:
+        - /application/templates_c/
+
+clearall | ca
+    command: php emvicy.php ca
+        clears all contents of temp directories:
+        - /application/cache/
+        - /application/log/
+        - /application/session/
+        - /application/templates_c/
+
+update
+    command: php emvicy.php update
+        updates myMVC Framework and its vendor installed libraries
+        requires:
+            - git installed
+
+log
+    command: php emvicy.php log id={id} nl=true|false
+        aggregates a unique log extract on STDOUT from all existing logfiles (*.log) matching to given logId (=== MVC_UNIQUE_ID)
+        ------------------------------------------------------------------------------------------
+        examples:
+        php emvicy.php log id=2023070711413964a7ddd36254a           # aggregates a unique log extract
+        php emvicy.php log id=2023070711413964a7ddd36254a nl=false  # same
+        php emvicy.php log id=2023070711413964a7ddd36254a nl=true   # replaces newline \n by a real linebreak
+        ------------------------------------------------------------------------------------------
+
+lint | l
+    command: php emvicy.php l
+        checks all codes on errors and returns a parsable JSON containing bool `bSuccess` and array `aMessage`.
+        Examples
+            no errors found
+                {
+                  "bSuccess": true,
+                  "aMessage": []
+                }
+            syntax error
+                {
+                  "bSuccess": false,
+                  "aMessage": [
+                    "PHP Parse error:  syntax error, unexpected token \"}\" in /var/www/myMVC_3.2.x/modules/Foo/Controller/Index.php on line 30",
+                    "Errors parsing /var/www/myMVC_3.2.x/modules/Foo/Controller/Index.php"
+                  ]
+                }
 
 create | c
     primary module creation
@@ -25,56 +95,7 @@ create | c
         php emvicy.php c module=baz primary=no force=yes;  # no asking - instantly creating of secondary module "Baz"
         ------------------------------------------------------------------------------------------
 
-lint | l
-    command: php emvicy.php lint
-        checks all codes on errors and returns a parsable JSON containing bool `bSuccess` and array `aMessage`.
-        Examples
-            no errors found
-                {
-                  "bSuccess": true,
-                  "aMessage": []
-                }
-            syntax error
-                {
-                  "bSuccess": false,
-                  "aMessage": [
-                    "PHP Parse error:  syntax error, unexpected token \"}\" in /var/www/myMVC_3.2.x/modules/Foo/Controller/Index.php on line 30",
-                    "Errors parsing /var/www/myMVC_3.2.x/modules/Foo/Controller/Index.php"
-                  ]
-                }
-
-serve | s
-    command: php emvicy.php serve
-        provides a local php server
-
-clearcache | cc
-    command: php emvicy.php cc
-        clears all contents of cache directory:
-        - /application/cache/
-
-clearlog | cl
-    command: php emvicy.php cl
-        clears all contents of log directory:
-        - /application/log/
-
-clearsession | cs
-    command: php emvicy.php cs
-        clears all contents of session directory:
-        - /application/session/
-
-cleartemp | ct
-    command: php emvicy.php cs
-        clears all contents of templates_c directory:
-        - /application/templates_c/
-
-clearall | ca
-    command: php emvicy.php ct
-        clears all contents of temp directories:
-        - /application/cache/
-        - /application/log/
-        - /application/session/
-        - /application/templates_c/
-
-
+    the creation of the necessary environment config file (e.g. 'develop.php') during this module creation process
+    depends on which `MVC_ENV` is set in `/.env`.
 
 

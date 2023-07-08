@@ -170,7 +170,11 @@ class Error
                 ->add_aKeyValue(DTKeyValue::create()->set_sKey('sMessage')->set_sValue($sMsg))
                 ->add_aKeyValue(DTKeyValue::create()->set_sKey('$oException')->set_sValue($oErrorException))
         );
-		Log::write ($sMsg, $sLogfile);
+		Log::write (
+            $sMsg,
+            $sLogfile,
+            false
+        );
 	}
 
 	/**

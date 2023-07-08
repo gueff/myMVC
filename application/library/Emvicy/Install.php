@@ -5,10 +5,10 @@ namespace Emvicy;
 class Install
 {
     /**
-     * @param       $sModuleName
+     * @param $sModuleName
      * @param array $aConfig
-     * @param bool  $bPrimary
-     * @return void
+     * @param bool $bPrimary
+     * @return false|void
      */
     public static function run($sModuleName = '', array $aConfig = array(), bool $bPrimary = true)
     {

@@ -45,6 +45,30 @@ class Emvicy
     }
 
     /**
+     * @param $sCmd
+     * @param $bEcho
+     * @return string
+     */
+    public static function shellExecute($sCmd = '', $bEcho = false)
+    {
+        if (true === $bEcho)
+        {
+            echo $sCmd;
+            nl();
+        }
+
+        $sResult = trim((string) shell_exec($sCmd));
+
+        if (true === $bEcho)
+        {
+            echo $sResult;
+            nl();
+        }
+
+        return $sResult;
+    }
+
+    /**
      * @return void
      */
     protected static function argToGet()
@@ -59,18 +83,24 @@ class Emvicy
     }
 
     /**
+     * @required /bin/bash
      * @param string $sWhereIsItem
-     * @return string abs path to executable
+     * @return string abs path to program
      */
     public static function whereis(string $sWhereIsItem = '')
     {
-        $sCmd = 'export sEmvicyWhereIs=' . escapeshellarg($sWhereIsItem) . ';';
-        $sCmd.= realpath(__DIR__) . '/bash/whereis.sh 2>&1;';
-        $sResult = trim(shell_exec($sCmd));
+        ob_start();
+        system('/bin/bash -c "type -p ' . escapeshellarg(trim($sWhereIsItem)) . '"', $iCode);
+        $mResult = ob_get_contents();
+        $sResult = trim(((false === $mResult) ? '' : $mResult));
+        ob_end_clean();
 
-        // unset var
-        $sCmd = 'unset sEmvicyWhereIs;';
-        shell_exec($sCmd);
+        if (true === empty($sResult))
+        {
+            echo 'program `' . $sWhereIsItem . '` not found. Abort.';
+            nl(2);
+            exit();
+        }
 
         return $sResult;
     }
@@ -238,6 +268,7 @@ class Emvicy
     {
         $bForce = self::get_force();
         $sModule = self::get_module();
+        $bPrimary = self::get_primary();
 
         if (true === empty($sModule))
         {
@@ -246,7 +277,7 @@ class Emvicy
 
         echo 'Modulename: ' . $sModule;
         nl();
-        echo 'primary: ' . self::get_primary();
+        echo 'primary: ' . $bPrimary;
         nl();
 
         if (false === $bForce)
@@ -272,7 +303,7 @@ class Emvicy
         $oInstall = \Emvicy\Install::run(
             $sModule,
             $GLOBALS['aConfig'],
-            self::get_primary()
+            $bPrimary
         );
     }
 
@@ -295,7 +326,7 @@ class Emvicy
               . PHP_BINARY . " -S 127.0.0.1:1969 -t " . \MVC\Config::get_MVC_WEB_ROOT() . '/public/';
         echo $sCmd;
         hr();
-        shell_exec($sCmd);
+        self::shellExecute($sCmd, true);
     }
 
     /**
@@ -316,7 +347,7 @@ class Emvicy
         $sCmd = self::whereis('find') . ' ' . \MVC\Config::get_MVC_BASE_PATH() . ' -type f -name "*.php" '
             . ' -exec ' . PHP_BINARY . ' -l {} \; 2>&1 '
             . '| (! ' . self::whereis('grep') . ' -v "errors detected")';
-        $sResult = trim((string) shell_exec($sCmd));
+        $sResult = self::shellExecute($sCmd, false);
         $aMessage = preg_split("@\n@", $sResult, -1, PREG_SPLIT_NO_EMPTY);
 
         if (true === empty(get($sResult, '')))
@@ -352,4 +383,74 @@ class Emvicy
 
         echo json_encode($aResponse);
     }
+
+    /**
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function update()
+    {
+        $xGit = self::whereis('git');
+        $sCmd = $xGit . ' pull';
+        self::shellExecute($sCmd, true);
+
+        $sCmd = 'cd ' . Config::get_MVC_APPLICATION_PATH() . '; ' . PHP_BINARY . ' composer.phar update; cd ' . Config::get_MVC_BASE_PATH() . ';';
+        self::shellExecute($sCmd, true);
+    }
+
+    /**
+     * @example php emvicy.php log id=2023070711413964a7ddd36254a nl=true
+     * @required grep, awk, sed
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function log()
+    {
+        $sLogId = (false === empty(get($_GET['id'])))
+            ? get($_GET['id'])
+            : Config::get_MVC_UNIQUE_ID()
+        ;
+
+        $bNewline = (false === empty(get($_GET['nl'])))
+            ? (boolean) get($_GET['nl'])
+            : false
+        ;
+
+        // sort with awk on 8. field (myMVC Log increment number)
+        $sCmd = "cd " . Config::get_MVC_LOG_FILE_FOLDER() . "; "
+                . self::whereis('grep') .  " " . $sLogId . " *.log "
+                . "| " . self::whereis('awk') . " '{ print $0 | \"" . self::whereis('sort') . " -nk8\"}'";
+
+        // replace string \n in output by a real linebreak
+        (true === $bNewline) ? $sCmd.= " | " . self::whereis('sed') . " -E 's/" . '\\\n' . "/" . '\n' . "/g'" : false;
+
+        hr();
+        echo $sCmd;
+        hr();
+        $sLog = trim((string) (shell_exec($sCmd)));
+
+        nl();
+        echo $sLog;
+        nl(2);
+    }
+
+    /**
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function version()
+    {
+        echo Config::get_MVC_VERSION();
+        nl();
+    }
+
+    /**
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function v()
+    {
+        self::version();
+    }
+
 }

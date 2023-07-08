@@ -7,7 +7,6 @@
  * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
  */
 
-
 MVC_FUNCTIONS: {
 
     require_once __DIR__ . '/functions.php';
@@ -15,13 +14,13 @@ MVC_FUNCTIONS: {
 
 READ_ENV: {
 
-    mvcStoreEnv(realpath(__DIR__ . '/../../../') . '/public/.env');
+    mvcStoreEnv(realpath(__DIR__ . '/../../../') . '/.env');
 }
 
 MVC_ENV: {
 
     // we need the variable MVC_ENV set.
-    // So this fallback sets it to develop if MVC_ENV is not already set before
+    // So this fallback sets it to "develop" if MVC_ENV is not already set before
     (false === getenv ('MVC_ENV'))
         ? putenv('MVC_ENV=develop')
         : false
@@ -34,43 +33,12 @@ CONFIG: {
     $aConfig = mvcConfigLoader($aConfig);
 }
 
-FIRST_LOG_ENTRY_ON_NEW_REQUEST: {
+LOAD_FIRST_ESSENTIALS:{
 
-    if ('cli' === php_sapi_name())
-    {
-        require_once realpath(__DIR__ . '/../../') . '/library/MVC/Request.php';
-        \MVC\Request::setServerVarsForCli();
-    }
-
-    $sMessage = substr(__FILE__, strlen(realpath(__DIR__ . '/../../../'))) . ', ' . __LINE__ . ' > '
-                . "\t" . str_repeat ('#', 10) . "\tnew Request"
-                . "\t" . php_sapi_name ()
-                . "\t" . (array_key_exists ('REQUEST_METHOD', $_SERVER) ? (string) $_SERVER['REQUEST_METHOD'] : '')
-                . ' ' . (array_key_exists ('REQUEST_URI', $_SERVER) ? (string) $_SERVER['REQUEST_URI'] : '');
-    $sMessage = ''
-                . date("Y-m-d H:i:s")
-                . "\t" . $_SERVER['HTTP_HOST']
-                . "\t" . ((false !== getenv('MVC_ENV')) ? getenv('MVC_ENV') : '---?---')
-                . "\t" . ((array_key_exists('REMOTE_ADDR', $_SERVER)) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1')
-                . "\t" . ((array_key_exists('MVC_UNIQUE_ID', $GLOBALS['aConfig'])) ? $GLOBALS['aConfig']['MVC_UNIQUE_ID'] : '---')
-                . "\t" . (('' !== session_id()) ? session_id() : str_pad('...........no.session', 32, '.'))
-                . "\t" . 0
-                . "\t" . $sMessage
-                . "\n";
-
-    if (false === file_exists($GLOBALS['aConfig']['MVC_LOG_FILE_FOLDER']))
-    {
-        mkdir($GLOBALS['aConfig']['MVC_LOG_FILE_FOLDER']);
-    }
-
-    if (false === file_exists($GLOBALS['aConfig']['MVC_LOG_FILE_DEFAULT']))
-    {
-        touch($GLOBALS['aConfig']['MVC_LOG_FILE_DEFAULT']);
-    }
-
-    file_put_contents($GLOBALS['aConfig']['MVC_LOG_FILE_DEFAULT'], $sMessage,FILE_APPEND);
-    $sMessage = null;
-    unset($sMessage);
+    require_once $aConfig['MVC_LIBRARY'] . '/MVC/Config.php';
+    require_once $aConfig['MVC_LIBRARY'] . '/MVC/Debug.php';
+    require_once $aConfig['MVC_LIBRARY'] . '/MVC/Log.php';
+    require_once $aConfig['MVC_LIBRARY'] . '/MVC/Registry.php';
 }
 
 MVC_INSTALL: {
@@ -111,59 +79,34 @@ MVC_AUTOLOADING: {
     }
 
     /**
-     * vanilla php autoloader
-     * http://www.sitepoint.com/autoloading-and-the-psr-0-standard/
-     * @param type $sClassName
+     * PSR4 autoloader
      */
-    function mvcAutoload ($sClassName)
-    {
-        $sClassName = ltrim ($sClassName, '\\');
-        $sFileName = '';
-        $sNamespace = '';
+    spl_autoload_register(function ($sClassName) {
 
-        if ($iLastNsPos = strripos ($sClassName, '\\'))
+        global $aConfig;
+
+        $sFileName = str_replace('\\', DIRECTORY_SEPARATOR, $sClassName) . '.php';
+
+        if (true === $aConfig['MVC_LOG_AUTOLOADER'])
         {
-            $sNamespace = substr ($sClassName, 0, $iLastNsPos);
-            $sClassName = substr ($sClassName, $iLastNsPos + 1);
-            $sFileName = str_replace ('\\', DIRECTORY_SEPARATOR, $sNamespace) . DIRECTORY_SEPARATOR;
+            \MVC\Log::write('AUTOLOADING' . "\t" . $sFileName);
         }
 
-        $sFileName .= str_replace ('_', DIRECTORY_SEPARATOR, $sClassName) . '.php';
-
-        $sRegistry = $GLOBALS['aConfig']['MVC_LIBRARY'] . '/MVC/Registry.php';
-        $sLog = $GLOBALS['aConfig']['MVC_LIBRARY'] . '/MVC/Log.php';
-
-        if (file_exists ($sLog))
-        {
-            require_once $sRegistry;
-            require_once $sLog;
-
-            if (true === $GLOBALS['aConfig']['MVC_LOG_AUTOLOADER'])
-            {
-                file_put_contents (
-                    $GLOBALS['aConfig']['MVC_LOG_FILE_DEFAULT'], MVC\Log::prepareMessage (
-                    'AUTOLOADING' . "\t" . $sFileName,
-                    substr(__FILE__, strlen(realpath(__DIR__ . '/../../../'))) . ', ' . __LINE__ . ' >'
-                ), FILE_APPEND
-                );
-            }
-        }
-
-        require $sFileName;
-    }
-
-    spl_autoload_register ("mvcAutoload");
+        require_once $sFileName;
+    });
 }
 
-LOAD_MVC_CLASSES: {
+FIRST_LOG_ENTRY_ON_NEW_REQUEST: {
 
-    foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($aConfig['MVC_LIBRARY'] . '/MVC/')) as $sMVCFileName)
+    if ('cli' === php_sapi_name())
     {
-        if ('php' === strtolower(pathinfo($sMVCFileName)['extension']))
-        {
-            require_once $sMVCFileName;
-            $sMVCFileName = null;
-            unset ($sMVCFileName);
-        }
+        \MVC\Request::setServerVarsForCli();
     }
+
+    $sMessage = str_repeat ('#', 10) . "\tnew Request"
+        . "\t" . php_sapi_name ()
+        . "\t" . (array_key_exists ('REQUEST_METHOD', $_SERVER) ? (string) $_SERVER['REQUEST_METHOD'] : '')
+        . ' ' . (array_key_exists ('REQUEST_URI', $_SERVER) ? (string) $_SERVER['REQUEST_URI'] : '');
+
+    \MVC\Log::write($sMessage);
 }

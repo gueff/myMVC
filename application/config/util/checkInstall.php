@@ -225,7 +225,7 @@ class MyMVCInstaller
 		(!file_exists ($this->_aConfig['MVC_CONFIG_DIR'])) ? mkdir ($this->_aConfig['MVC_CONFIG_DIR']) : FALSE;
 		(!file_exists ($this->_aConfig['MVC_LOG_FILE_FOLDER'])) ? mkdir ($this->_aConfig['MVC_LOG_FILE_FOLDER']) : FALSE;
 
-		if (!file_exists ($this->_aConfig['MVC_PUBLIC_PATH'] . '/.env'))
+		if (!file_exists ($this->_aConfig['MVC_BASE_PATH'] . '/.env'))
         {
             $sMsg = "# auto generated at " . date('Y-m-d H:i:s') . "\n";
             $sMsg.= "MVC_ENV=" . $this->_aConfig['MVC_ENV'];

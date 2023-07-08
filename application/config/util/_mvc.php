@@ -45,6 +45,5 @@ $aConfig['MVC_CORE'] = array(
     'phpFunctionsRequired' => array(
         'mb_strlen',
         'iconv',
-        'utf8_decode',
     ),
 );

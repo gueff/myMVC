@@ -41,8 +41,6 @@ class Event
      */
     public static function init()
     {
-        \MVC\Event::RUN('mvc.event.init');
-
         $sEventDir = Config::get_MVC_MODULE_CURRENT_ETC_DIR() . '/event';
 
         if (false === file_exists($sEventDir))
@@ -59,6 +57,8 @@ class Event
                 require_once $oSplFileInfo->getPathname();
             }
         }
+
+        \MVC\Event::RUN('mvc.event.init.after');
 
         return true;
     }
@@ -110,7 +110,11 @@ class Event
             self::$aEvent[$sEvent] = array();
         }
 
-        Log::write('BIND (' . $sEvent . ', ' . Closure::dump($oClosure) . ')' . ' --> called in: ' . $sDebug);
+        Log::write(
+            'BIND (' . $sEvent . ', ' . Closure::dump($oClosure) . ')' . ' --> called in: ' . $sDebug,
+            Config::get_MVC_LOG_FILE_EVENT(),
+            false
+        );
         Event::addToRegistry('BIND', 'BIND (' . $sEvent . ', ' . Closure::dump($oClosure) . ')' . ' --> called in: ' . $sDebug);
 
         // add listener to event
@@ -170,12 +174,20 @@ class Event
             // run bonded closure
             if (true === filter_var(Closure::is($sCallback), FILTER_VALIDATE_BOOLEAN))
             {
-                Log::write($sPreLog . ' --> bonded by `' . unserialize($sKey) . ', try to run its Closure: ' . Closure::toString($sCallback));
+                Log::write(
+                    $sPreLog . ' --> bonded by `' . unserialize($sKey) . ', try to run its Closure: ' . Closure::toString($sCallback),
+                    Config::get_MVC_LOG_FILE_EVENT(),
+                    false
+                );
 
                 // error occured
                 if (call_user_func($sCallback, $mPackage) === false)
                 {
-                    Log::write("ERROR\t" . $sPreLog . ' *** Closure could not be run: ' . serialize($sCallback), 'error.log');
+                    Log::write(
+                        "ERROR\t" . $sPreLog . ' *** Closure could not be run: ' . serialize($sCallback),
+                        Config::get_MVC_LOG_FILE_ERROR(),
+                        false
+                    );
                 }
             }
         }
@@ -194,20 +206,38 @@ class Event
     {
         $sDebug = Log::prepareDebug(debug_backtrace());
 
-        if (!isset (self::$aEvent[$sEvent]))
+        // delete all
+        if (true === empty($sEvent))
         {
             Event::addToRegistry('UNBIND', 'UNBIND: All Events deleted --> called in: ' . $sDebug);
 
             self::$aEvent = array();
-            Log::write('UNBIND: All Events deleted --> called in: ' . $sDebug);
+            Log::write(
+                'UNBIND: All Events deleted --> called in: ' . $sDebug,
+                Config::get_MVC_LOG_FILE_EVENT(),
+                false
+            );
 
             return true;
+        }
+
+        // key unknown
+        if (false === isset(self::$aEvent[$sEvent]))
+        {
+            Error::error('UNBIND: Failed due to unknown event `' . $sEvent . '` --> called in: ' . $sDebug);
+
+            return false;
         }
 
         Event::addToRegistry('UNBIND', 'UNBIND: Event `' . $sEvent . '` deleted --> called in: ' . $sDebug);
         self::$aEvent[$sEvent] = NULL;
         unset(self::$aEvent[$sEvent]);
-        Log::write('UNBIND: Event `' . $sEvent . '` deleted --> called in: ' . $sDebug);
+
+        Log::write(
+            'UNBIND: Event `' . $sEvent . '` deleted --> called in: ' . $sDebug,
+            Config::get_MVC_LOG_FILE_EVENT(),
+            false
+        );
 
         return true;
     }
@@ -216,6 +246,7 @@ class Event
      * adds a key/value pair to registry
      * @param $sKey
      * @param $sValue
+     * @return void
      * @throws \ReflectionException
      */
     public static function addToRegistry($sKey, $sValue)

@@ -30,6 +30,21 @@ function get(&$sVar, $mFallback = null)
 }
 
 /**
+ * dumps data using print_r
+ * @example pr(get_include_path(), ':');
+ * @param $mData
+ * @param $sSeparator
+ * @return void
+ */
+function pr($mData, $sSeparator = "\n")
+{
+    echo ('cli' === php_sapi_name())
+        ? print_r(array_filter(explode($sSeparator, $mData)), true) . "\n"
+        : '<pre>' . print_r(array_filter(explode($sSeparator, $mData)), true) . '</pre><hr>'
+    ;
+}
+
+/**
  * @return void
  * @throws \ReflectionException
  */
@@ -86,7 +101,7 @@ if (!function_exists('getallheaders'))
 function mvcStoreEnv(string $sEnvFile = '')
 {
     (true === empty($sEnvFile))
-        ? $sEnvFile = realpath(__DIR__ . '/../../../') . '/public/.env'
+        ? $sEnvFile = realpath(__DIR__ . '/../../../') . '/.env'
         : false
     ;
 

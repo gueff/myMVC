@@ -8,23 +8,38 @@
          * this is Middleware to
          * \{module}\Policy\Index::requestMethodHasToMatchRouteMethod
          */
-        function (\MVC\DataType\DTArrayObject $oDTArrayObject) { // Log policy rule result when on develop Environment
+        function (\MVC\DataType\DTArrayObject $oDTArrayObject) {
 
             // build message
             $sMessage = $oDTArrayObject->getDTKeyValueByKey('sMethod')->get_sValue()
                         . ', ' . ((true === $oDTArrayObject->getDTKeyValueByKey('bGrant')->get_sValue()) ? 'ALLOW' : 'DENY') . ', '
                         . 'Has to be: '. implode('|',\MVC\Route::getCurrent()->get_methodsAssigned())
-                        . ' - Is: ' . \MVC\Request::getCurrentRequest()->get_requestmethod()
-            ;
-            $oDTArrayObject->setDTKeyValueByKey(\MVC\DataType\DTKeyValue::create()->set_sKey('sMessage')->set_sValue($sMessage));
+                        . ' - Is: ' . \MVC\Request::getCurrentRequest()->get_requestmethod();
 
+            // write message back to object
+            $oDTArrayObject->setDTKeyValueByKey(
+                \MVC\DataType\DTKeyValue::create()
+                    ->set_sKey('sMessage')
+                    ->set_sValue($sMessage)
+            );
+
+            // log request
             \MVC\Log::write(
                 \MVC\Request::getCurrentRequest()->get_path()
                 . ' (' . \MVC\Request::getCurrentRequest()->get_requestmethod() . ') => '
                 . \MVC\Route::getCurrent()->get_method() . ' '
-                . \MVC\Route::getCurrent()->get_path(), 'policy.log'
+                . \MVC\Route::getCurrent()->get_path(),
+                \MVC\Config::get_MVC_LOG_FILE_POLICY(),
+                false
             );
-            \MVC\Log::write($oDTArrayObject->getDTKeyValueByKey('sMessage')->get_sValue(), 'policy.log');
-        }
+
+            // log policy rule result
+            \MVC\Log::write(
+                $oDTArrayObject->getDTKeyValueByKey('sMessage')
+                    ->get_sValue(),
+                \MVC\Config::get_MVC_LOG_FILE_POLICY(),
+                false
+            );
+        },
     ],
 ]);

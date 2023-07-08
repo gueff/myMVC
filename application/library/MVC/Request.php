@@ -11,7 +11,6 @@
 namespace MVC;
 
 use MVC\DataType\DTArrayObject;
-use MVC\DataType\DTFileinfo;
 use MVC\DataType\DTKeyValue;
 use MVC\DataType\DTRequestCurrent;
 
@@ -154,12 +153,16 @@ class Request
             : false;
 
         // standard
-        Log::write('Redirect to: ' . $sLocation . ' --> called in: ' . $sFile . ', ' . $sLine);
+        Log::write(
+            'Redirect to: ' . $sLocation . ' --> called in: ' . $sFile . ', ' . $sLine,
+            Config::get_MVC_LOG_FILE_DEFAULT(),
+            false
+        );
 
         // CLI
         if (true === self::isCli())
         {
-            echo shell_exec('php index.php "' . $sLocation . '"');
+            echo trim((string) shell_exec(Config::get_MVC_BIN_PHP_BINARY() . ' index.php "' . $sLocation . '"'));
 
             // Event
             \MVC\Event::run('mvc.request.redirect', DTArrayObject::create()
@@ -335,7 +338,7 @@ class Request
         $_SERVER = array ();
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI'] = $GLOBALS['argv'][1];
-        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+        $_SERVER['REMOTE_ADDR'] = '0.0.0.0';
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['SERVER_PORT'] = 80;
 

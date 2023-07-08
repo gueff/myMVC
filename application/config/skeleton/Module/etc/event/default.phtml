@@ -9,7 +9,7 @@
     ],
     'mvc.reflex.reflect.targetObject.after' => [
         function (\MVC\DataType\DTArrayObject $oDTArrayObject) { // switch on InfoTool
-            if (true === \MVC\Config::get_MVC_INFOTOOL_ENABLE() && 'develop' === \MVC\Config::get_MVC_ENV()) {
+            if (true === \MVC\Config::get_MVC_INFOTOOL_ENABLE()) {
                 new \MVC\InfoTool(\{module}\View\Index::init());
             }
         }
@@ -21,13 +21,20 @@
     ],
     'mvc.debug.stop.after' => [
         function (\MVC\DataType\DTArrayObject $oDTArrayObject) { // Logging stops
-            \MVC\Log::write("\n\n*** STOP ***\n" . print_r($oDTArrayObject->get_akeyvalue()[0]->get_sValue(), true));
+            \MVC\Log::write(
+                "\n\n*** STOP ***\n" . print_r($oDTArrayObject->get_akeyvalue()[0]->get_sValue(), true),
+                \MVC\Config::get_MVC_LOG_FILE_DEFAULT(),
+                false
+            );
         }
     ],
     'mvc.error' => [
-        // write errors into error log file
-        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            \MVC\Log::write($oDTArrayObject, 'error.log');
+        function(\MVC\DataType\DTArrayObject $oDTArrayObject) { // write errors into error log file
+            \MVC\Log::write(
+                $oDTArrayObject,
+                \MVC\Config::get_MVC_LOG_FILE_ERROR(),
+                false
+            );
         }
     ],
 ]);

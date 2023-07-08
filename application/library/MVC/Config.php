@@ -300,6 +300,34 @@ class Config
     }
 
     /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_LOG_FILE_POLICY()
+    {
+        if (Registry::isRegistered('MVC_LOG_FILE_POLICY'))
+        {
+            return (string) Registry::get('MVC_LOG_FILE_POLICY');
+        }
+
+        return '';
+    }
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_LOG_FILE_EVENT()
+    {
+        if (Registry::isRegistered('MVC_LOG_FILE_EVENT'))
+        {
+            return (string) Registry::get('MVC_LOG_FILE_EVENT');
+        }
+
+        return '';
+    }
+
+    /**
      * @return array
      * @throws \ReflectionException
      */
@@ -320,8 +348,8 @@ class Config
     public static function set_MVC_LOG_DETAIL(array $aLogDetail = array())
     {
         Registry::set('MVC_LOG_DETAIL', $aLogDetail);
+        $GLOBALS['aConfig']['MVC_LOG_DETAIL'] = $aLogDetail;
     }
-
 
     /**
      * @return string
@@ -414,6 +442,7 @@ class Config
     public static function set_MVC_CACHE_DIR($sCacheDir = '')
     {
         Registry::set('MVC_CACHE_DIR', $sCacheDir);
+        $GLOBALS['aConfig']['MVC_CACHE_DIR'] = $sCacheDir;
     }
 
     /**
@@ -507,6 +536,7 @@ class Config
     public static function set_MVC_SESSION_ENABLE($bEnable = true)
     {
         Registry::set('MVC_SESSION_ENABLE', $bEnable);
+        $GLOBALS['aConfig']['MVC_SESSION_ENABLE'] = $bEnable;
     }
 
     /**
@@ -630,6 +660,7 @@ class Config
     public static function set_MVC_POLICY(array $aPolicy = array())
     {
         Registry::set('MVC_POLICY', $aPolicy);
+        $GLOBALS['aConfig']['MVC_POLICY'] = $aPolicy;
     }
 
     /**
@@ -658,6 +689,7 @@ class Config
     public static function set_MVC_EVENT(array $aMvcEvent = array())
     {
         Registry::set('MVC_EVENT', $aMvcEvent);
+        $GLOBALS['aConfig']['MVC_EVENT'] = $aMvcEvent;
     }
 
     /**
@@ -672,6 +704,16 @@ class Config
         }
 
         return '---';
+    }
+
+    /**
+     * @param $sMvcUniqueId
+     * @return void
+     */
+    public static function set_MVC_UNIQUE_ID($sMvcUniqueId = '')
+    {
+        Registry::set('MVC_UNIQUE_ID', $sMvcUniqueId);
+        $GLOBALS['aConfig']['MVC_UNIQUE_ID'] = $sMvcUniqueId;
     }
 
     /**
@@ -698,6 +740,7 @@ class Config
     public static function set_MVC_SESSION(Session $oSession)
     {
         Registry::set ('MVC_SESSION', $oSession);
+        $GLOBALS['aConfig']['MVC_SESSION'] = $oSession;
     }
 
     /**
@@ -907,6 +950,7 @@ class Config
     public static function set_MVC_MODULE_CURRENT_VIEW(\MVC\View $oView)
     {
         Registry::set('MVC_MODULE_CURRENT_VIEW', $oView);
+        $GLOBALS['aConfig']['MVC_MODULE_CURRENT_VIEW'] = $oView;
     }
 
     /**

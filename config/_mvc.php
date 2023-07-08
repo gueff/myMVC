@@ -110,6 +110,8 @@ MVC_APPLICATION_SETTINGS: {
     $aConfig['MVC_LOG_FILE_ERROR'] = $aConfig['MVC_LOG_FILE_FOLDER'] . 'error.log';
     $aConfig['MVC_LOG_FILE_WARNING'] = $aConfig['MVC_LOG_FILE_FOLDER'] . 'warning.log';
     $aConfig['MVC_LOG_FILE_NOTICE'] = $aConfig['MVC_LOG_FILE_FOLDER'] . 'notice.log';
+    $aConfig['MVC_LOG_FILE_POLICY'] = $aConfig['MVC_LOG_FILE_FOLDER'] . 'policy.log';
+    $aConfig['MVC_LOG_FILE_EVENT'] = $aConfig['MVC_LOG_FILE_FOLDER'] . 'event.log';
 
     // control log details
     $aConfig['MVC_LOG_DETAIL'] = [
