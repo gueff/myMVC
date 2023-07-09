@@ -624,30 +624,3 @@ Request::getPathParam( $sKey )</pre>
 	</navi>
 </div>
 <script src="/myMVC/scripts/myMVCInfoTool.min.js" type="text/javascript"></script>
-<script defer>
-	{literal}
-	ready(function () {
-
-		console.log('%cmyMVC %cInfoTool', 'color: blue;', 'color: red;');
-		console.dir({/literal}{$aToolbar|json_encode|strip_tags}{literal});
-		var fMyMvcToolbar_toggle = localStorage.getItem('myMvcToolbar_toggle');
-
-		if (null === fMyMvcToolbar_toggle) {
-			localStorage.setItem("myMvcToolbar_toggle", 657);
-			fMyMvcToolbar_toggle = 0;
-		}
-
-		var iLeft = localStorage.getItem('myMvcToolbar_toggle');
-		localStorage.setItem("myMvcToolbar_toggle", parseInt(iLeft));
-		(iLeft < 0) ? iLeft = 0 : false;
-		{/literal}
-		{if empty($aToolbar.aError)}
-		(iLeft > 658) ? iLeft = 0 : false;
-		{/if}
-		{literal}
-
-		if (parseInt(iLeft) > 0){setExpand();}else{setShrink();}
-		document.getElementById('myMvcToolbar').style.display = 'block';
-	});
-	{/literal}
-</script>

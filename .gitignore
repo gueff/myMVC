@@ -1,5 +1,6 @@
 .git
 .idea
+.trash
 application/.composer
 application/cache/*
 application/log/*

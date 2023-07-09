@@ -46,7 +46,7 @@ update
     command: php emvicy.php update
         updates myMVC Framework and its vendor installed libraries
         requires:
-            - git installed
+            - bash, git
 
 log
     command: php emvicy.php log id={id} nl=true|false
@@ -57,6 +57,8 @@ log
         php emvicy.php log id=2023070711413964a7ddd36254a nl=false  # same
         php emvicy.php log id=2023070711413964a7ddd36254a nl=true   # replaces newline \n by a real linebreak
         ------------------------------------------------------------------------------------------
+        requires:
+            - bash, grep, awk, sort, sed
 
 lint | l
     command: php emvicy.php l
@@ -75,6 +77,8 @@ lint | l
                     "Errors parsing /var/www/myMVC_3.2.x/modules/Foo/Controller/Index.php"
                   ]
                 }
+        requires:
+            - bash, grep, find
 
 create | c
     primary module creation
@@ -83,16 +87,16 @@ create | c
         php emvicy.php c module=foo;                       # creates primary module "Foo"; asks if modulename is correct
         php emvicy.php c module=foo force=no;              # same
         php emvicy.php c module=foo force=yes;             # no asking - instantly creating of primary module "Foo"
-        php emvicy.php c module=bar primary=yes;           # creates primary module "Foo"; asks if modulename is correct
-        php emvicy.php c module=bar primary=yes force=no;  # same
-        php emvicy.php c module=bar primary=yes force=yes; # no asking - instantly creating of primary module "Foo"
+        php emvicy.php c module=foo primary=yes;           # creates primary module "Foo"; asks if modulename is correct
+        php emvicy.php c module=foo primary=yes force=no;  # same
+        php emvicy.php c module=foo primary=yes force=yes; # no asking - instantly creating of primary module "Foo"
         ------------------------------------------------------------------------------------------
 
     secondary module creation
         ------------------------------------------------------------------------------------------
         command:
         php emvicy.php c module=bar primary=no force=no;   # creates module "Bar" as a secondary module; asks if modulename is correct
-        php emvicy.php c module=baz primary=no force=yes;  # no asking - instantly creating of secondary module "Baz"
+        php emvicy.php c module=bar primary=no force=yes;  # no asking - instantly creating of secondary module "Baz"
         ------------------------------------------------------------------------------------------
 
     the creation of the necessary environment config file (e.g. 'develop.php') during this module creation process
