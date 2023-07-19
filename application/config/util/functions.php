@@ -33,15 +33,29 @@ function get(&$sVar, $mFallback = null)
  * dumps data using print_r
  * @example pr(get_include_path(), ':');
  * @param $mData
- * @param $sSeparator
+ * @param $sSeparator optional works on strings
  * @return void
  */
 function pr($mData, $sSeparator = "\n")
 {
-    echo ('cli' === php_sapi_name())
-        ? print_r(array_filter(explode($sSeparator, $mData)), true) . "\n"
-        : '<pre>' . print_r(array_filter(explode($sSeparator, $mData)), true) . '</pre><hr>'
-    ;
+    if (true === is_string($mData))
+    {
+        echo ('cli' === php_sapi_name())
+            ? print_r(array_filter(explode($sSeparator, $mData)), true) . "\n"
+            : '<pre>' . print_r(array_filter(explode($sSeparator, $mData)), true) . '</pre><hr>';
+    }
+    elseif (true === is_array($mData))
+    {
+        echo ('cli' === php_sapi_name())
+            ? print_r(array_filter($mData), true) . "\n"
+            : '<pre>' . print_r(array_filter($mData), true) . '</pre><hr>';
+    }
+    else
+    {
+        echo ('cli' === php_sapi_name())
+            ? print_r($mData) . "\n"
+            : '<pre>' . print_r($mData) . '</pre><hr>';
+    }
 }
 
 /**
