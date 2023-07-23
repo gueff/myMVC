@@ -390,12 +390,43 @@ class Emvicy
      */
     public static function update()
     {
+        // update framework
         $xGit = self::whereis('git');
         $sCmd = $xGit . ' pull';
         self::shellExecute($sCmd, true);
-
         $sCmd = 'cd ' . Config::get_MVC_APPLICATION_PATH() . '; ' . PHP_BINARY . ' composer.phar update; cd ' . Config::get_MVC_BASE_PATH() . ';';
         self::shellExecute($sCmd, true);
+
+        // update vendor libs in modules
+        $bUnlink = false;
+        $aModule = preg_grep('/^([^.])/', scandir($GLOBALS['aConfig']['MVC_MODULES_DIR']));
+
+        foreach ($aModule as $sModule)
+        {
+            // search for composer.lock files and unlink them
+            $sModuleConfigFile = $GLOBALS['aConfig']['MVC_MODULES_DIR'] . '/' . $sModule . '/etc/config/' . $sModule . '/composer.lock';
+
+            if (true === file_exists($sModuleConfigFile))
+            {
+                $bUnlink = true;
+                unlink($sModuleConfigFile);
+            }
+        }
+
+        if (true == $bUnlink)
+        {
+            $sCmd = PHP_BINARY . ' emvicy.php;';
+            self::shellExecute($sCmd, true);
+        }
+    }
+
+    /**
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function up()
+    {
+        self::update();
     }
 
     /**

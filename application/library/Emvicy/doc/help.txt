@@ -42,9 +42,10 @@ clearall | ca
         - /application/session/
         - /application/templates_c/
 
-update
+update | up
     command: php emvicy.php update
-        updates myMVC Framework and its vendor installed libraries
+        updates myMVC Framework and its vendor installed libraries and also
+        vendor installed libraries of existing modules
         requires:
             - bash, git
 
