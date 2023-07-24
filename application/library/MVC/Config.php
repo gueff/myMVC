@@ -1030,20 +1030,6 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_BIN_RENAME()
-    {
-        if (Registry::isRegistered('MVC_BIN_RENAME'))
-        {
-            return (string) Registry::get('MVC_BIN_RENAME');
-        }
-
-        return '';
-    }
-
-    /**
-     * @return string
-     * @throws \ReflectionException
-     */
     public static function get_MVC_BIN_XARGS()
     {
         if (Registry::isRegistered('MVC_BIN_XARGS'))

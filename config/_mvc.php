@@ -40,15 +40,14 @@ MVC_RUNTIME_SETTINGS: {
 
 MVC_BIN: {
 
-    $aConfig['MVC_BIN_SED'] = '/bin/sed';           # sed - stream editor for filtering and transforming text
-    $aConfig['MVC_BIN_FIND'] = '/usr/bin/find';     # find - search for files in a directory hierarchy
-    $aConfig['MVC_BIN_GREP'] = '/bin/grep';         # grep, egrep, fgrep, rgrep - print lines that match patterns
-    $aConfig['MVC_BIN_MOVE'] = '/bin/mv';           # mv - move (rename) files
-    $aConfig['MVC_BIN_XARGS'] = '/usr/bin/xargs';   # xargs - build and execute command lines from standard input
-    $aConfig['MVC_BIN_RENAME'] = '/usr/bin/rename'; # rename - renames multiple files
-    $aConfig['MVC_BIN_REMOVE'] = '/bin/rm';         # rm - remove files or directories
-    $aConfig['MVC_BIN_PS'] = '/bin/ps';             # ps - report a snapshot of the current processes.
     $aConfig['MVC_BIN_PHP_BINARY'] = PHP_BINARY;
+    $aConfig['MVC_BIN_PS'] = whereis('ps');         # ps - report a snapshot of the current processes.
+    $aConfig['MVC_BIN_SED'] = whereis('sed');       # sed - stream editor for filtering and transforming text
+    $aConfig['MVC_BIN_MOVE'] = whereis('mv');       # mv - move (rename) files
+    $aConfig['MVC_BIN_GREP'] = whereis('grep');     # grep, egrep, fgrep, rgrep - print lines that match patterns
+    $aConfig['MVC_BIN_FIND'] = whereis('find');     # find - search for files in a directory hierarchy
+    $aConfig['MVC_BIN_REMOVE'] = whereis('rm');     # rm - remove files or directories
+    $aConfig['MVC_BIN_XARGS'] = whereis('xargs');   # xargs - build and execute command lines from standard input
 }
 
 MVC_APPLICATION_SETTINGS: {

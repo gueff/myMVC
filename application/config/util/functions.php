@@ -119,6 +119,14 @@ function mvcStoreEnv(string $sEnvFile = '')
         : false
     ;
 
+    if (false === file_exists($sEnvFile))
+    {
+        file_put_contents(
+            $sEnvFile,
+            "# auto-created " . date('Y-m-d H:i:s') . "\nMVC_ENV=develop\n"
+        );
+    }
+
     // read .env file in the public folder
     if (file_exists($sEnvFile))
     {
@@ -146,7 +154,8 @@ function mvcStoreEnv(string $sEnvFile = '')
     else
     {
         $sMessage = "missing file:\n" . $sEnvFile . "\n\n";
-        die(('cli' != php_sapi_name()) ? nl2br($sMessage) : $sMessage);
+        echo (('cli' != php_sapi_name()) ? nl2br($sMessage) : $sMessage . "\n");
+        (false === getenv('emvicy')) ? exit() : false;
     }
 
     $sEnvFile = null;
@@ -216,4 +225,25 @@ function mvcConfigLoader(array $aConfig = array())
     require_once __DIR__ . '/_mvc.php';
 
     return $aConfig;
+}
+
+/**
+ * @param string $sWhereIsItem
+ * @return string|void
+ */
+function whereis(string $sWhereIsItem = '')
+{
+    ob_start();
+    system('/bin/bash -c "type -p ' . escapeshellarg(trim($sWhereIsItem)) . '"', $iCode);
+    $mResult = ob_get_contents();
+    $sResult = trim(((false === $mResult) ? '' : $mResult));
+    ob_end_clean();
+
+    if (true === empty($sResult))
+    {
+        echo 'program `' . $sWhereIsItem . '` not found. Abort.' . "\n\n";
+        exit();
+    }
+
+    return $sResult;
 }

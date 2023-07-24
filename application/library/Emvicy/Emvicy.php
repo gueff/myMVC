@@ -83,29 +83,6 @@ class Emvicy
     }
 
     /**
-     * @required /bin/bash
-     * @param string $sWhereIsItem
-     * @return string abs path to program
-     */
-    public static function whereis(string $sWhereIsItem = '')
-    {
-        ob_start();
-        system('/bin/bash -c "type -p ' . escapeshellarg(trim($sWhereIsItem)) . '"', $iCode);
-        $mResult = ob_get_contents();
-        $sResult = trim(((false === $mResult) ? '' : $mResult));
-        ob_end_clean();
-
-        if (true === empty($sResult))
-        {
-            echo 'program `' . $sWhereIsItem . '` not found. Abort.';
-            nl(2);
-            exit();
-        }
-
-        return $sResult;
-    }
-
-    /**
      * @return void
      */
     public static function help()
@@ -344,9 +321,9 @@ class Emvicy
      */
     public static function lint()
     {
-        $sCmd = self::whereis('find') . ' ' . \MVC\Config::get_MVC_BASE_PATH() . ' -type f -name "*.php" '
+        $sCmd = whereis('find') . ' ' . \MVC\Config::get_MVC_BASE_PATH() . ' -type f -name "*.php" '
             . ' -exec ' . PHP_BINARY . ' -l {} \; 2>&1 '
-            . '| (! ' . self::whereis('grep') . ' -v "errors detected")';
+            . '| (! ' . whereis('grep') . ' -v "errors detected")';
         $sResult = self::shellExecute($sCmd, false);
         $aMessage = preg_split("@\n@", $sResult, -1, PREG_SPLIT_NO_EMPTY);
 
@@ -390,33 +367,23 @@ class Emvicy
      */
     public static function update()
     {
-        // update framework
-        $xGit = self::whereis('git');
-        $sCmd = $xGit . ' pull';
-        self::shellExecute($sCmd, true);
-        $sCmd = 'cd ' . Config::get_MVC_APPLICATION_PATH() . '; ' . PHP_BINARY . ' composer.phar update; cd ' . Config::get_MVC_BASE_PATH() . ';';
-        self::shellExecute($sCmd, true);
-
-        // update vendor libs in modules
-        $bUnlink = false;
-        $aModule = preg_grep('/^([^.])/', scandir($GLOBALS['aConfig']['MVC_MODULES_DIR']));
-
-        foreach ($aModule as $sModule)
-        {
-            // search for composer.lock files and unlink them
-            $sModuleConfigFile = $GLOBALS['aConfig']['MVC_MODULES_DIR'] . '/' . $sModule . '/etc/config/' . $sModule . '/composer.lock';
-
-            if (true === file_exists($sModuleConfigFile))
-            {
-                $bUnlink = true;
-                unlink($sModuleConfigFile);
-            }
+        UPDATE_FRAMEWORK: {
+            $xGit = whereis('git');
+            $sCmd = $xGit . ' pull';
+            self::shellExecute($sCmd, true);
+            $sCmd = 'cd ' . Config::get_MVC_APPLICATION_PATH() . '; ' . PHP_BINARY . ' composer.phar update;';
+            self::shellExecute($sCmd, true);
         }
 
-        if (true == $bUnlink)
-        {
-            $sCmd = PHP_BINARY . ' emvicy.php;';
-            self::shellExecute($sCmd, true);
+        UPDATE_MODULES_VENDOR_LIBS: {
+            $aModule = preg_grep('/^([^.])/', scandir($GLOBALS['aConfig']['MVC_MODULES_DIR']));
+
+            foreach ($aModule as $sModule)
+            {
+                $sModuleConfigPathAbs = $GLOBALS['aConfig']['MVC_MODULES_DIR'] . '/' . $sModule . '/etc/config/' . $sModule;
+                $sCmd = 'cd ' . $sModuleConfigPathAbs . '; ' . PHP_BINARY . ' ' . Config::get_MVC_APPLICATION_PATH() . '/composer.phar update;';
+                self::shellExecute($sCmd, true);
+            }
         }
     }
 
@@ -449,11 +416,11 @@ class Emvicy
 
         // sort with awk on 8. field (myMVC Log increment number)
         $sCmd = "cd " . Config::get_MVC_LOG_FILE_FOLDER() . "; "
-                . self::whereis('grep') .  " " . $sLogId . " *.log "
-                . "| " . self::whereis('awk') . " '{ print $0 | \"" . self::whereis('sort') . " -nk8\"}'";
+                . whereis('grep') .  " " . $sLogId . " *.log "
+                . "| " . whereis('awk') . " '{ print $0 | \"" . whereis('sort') . " -nk8\"}'";
 
         // replace string \n in output by a real linebreak
-        (true === $bNewline) ? $sCmd.= " | " . self::whereis('sed') . " -E 's/" . '\\\n' . "/" . '\n' . "/g'" : false;
+        (true === $bNewline) ? $sCmd.= " | " . whereis('sed') . " -E 's/" . '\\\n' . "/" . '\n' . "/g'" : false;
 
         hr();
         echo $sCmd;
