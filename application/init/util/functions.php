@@ -171,7 +171,7 @@ function mvcConfigLoader(array $aConfig = array())
     // place of main myMVC config
     $aConfig['MVC_CONFIG_DIR'] = realpath(__DIR__ . '/../../../') . '/config';
 
-    // load main config from /application/config/*.php
+    // load main config from /config/*.php
     foreach (glob ($aConfig['MVC_CONFIG_DIR'] . '/*.php') as $sFile)
     {
         require_once $sFile;
@@ -221,7 +221,7 @@ function mvcConfigLoader(array $aConfig = array())
 
     #-----------------------------
 
-    // load requirements from /application/config/util/_mvc.php
+    // load requirements from /application/init/util/_mvc.php
     require_once __DIR__ . '/_mvc.php';
 
     return $aConfig;

@@ -7,7 +7,7 @@
  * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
  */
 // bootstrap
-require_once '../application/config/util/bootstrap.php';
+require_once '../application/init/util/bootstrap.php';
 
 // run
 $oMVCApplication = new \MVC\Application();

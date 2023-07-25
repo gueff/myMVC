@@ -4,7 +4,7 @@
  *
  * @package myMVC
  * @copyright ueffing.net
- * @author Guido K.B.W. Üffing <info@ueffing.net>
+ * @author Guido K.B.W. Üffing <mymvc@ueffing.net>
  * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
  */
 
@@ -355,11 +355,11 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_APPLICATION_CONFIG_DIR()
+    public static function get_MVC_APPLICATION_INIT_DIR()
     {
-        if (Registry::isRegistered('MVC_APPLICATION_CONFIG_DIR'))
+        if (Registry::isRegistered('MVC_APPLICATION_INIT_DIR'))
         {
-            return (string) Registry::get('MVC_APPLICATION_CONFIG_DIR');
+            return (string) Registry::get('MVC_APPLICATION_INIT_DIR');
         }
 
         return '';

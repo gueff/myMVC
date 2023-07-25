@@ -24,7 +24,7 @@ class Install
         echo "\n...creating module/" . $sModuleName . "/* with subdirectories and -files\n";
 
         // copy new module skeleton
-        self::recursiveCopy($aConfig['MVC_APPLICATION_CONFIG_DIR'] . '/skeleton/Module', $aConfig['MVC_MODULES_DIR'] . '/' . $sModuleName);
+        self::recursiveCopy($aConfig['MVC_APPLICATION_INIT_DIR'] . '/skeleton/Module', $aConfig['MVC_MODULES_DIR'] . '/' . $sModuleName);
 
         // replace placeholder
         Emvicy::shellExecute(whereis('grep') . ' -rl "{module}" ' . $aConfig['MVC_MODULES_DIR'] . '/' . $sModuleName . ' | '
@@ -96,7 +96,7 @@ class Install
         }
 
         // copy new module skeleton
-        Emvicy::shellExecute('cp ' . $aConfig['MVC_APPLICATION_CONFIG_DIR'] . '/skeleton/Module/Controller/Index.phtml' . ' ' . $sControllerFile);
+        Emvicy::shellExecute('cp ' . $aConfig['MVC_APPLICATION_INIT_DIR'] . '/skeleton/Module/Controller/Index.phtml' . ' ' . $sControllerFile);
         Emvicy::shellExecute('find ' . $aConfig['MVC_MODULES_DIR'] . '/' . $sModuleName . '/ -name "*.phtml" -exec rename \'s/.phtml$/.php/\' {} \;');
 
         echo " ✔ Controller created: " . $sControllerFile . "\n\n";

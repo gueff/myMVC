@@ -7,7 +7,7 @@
  */
 
 #---------------------------------------------------------------
-require_once realpath(__DIR__ . '/../../../../../') . '/application/config/util/bootstrap.php';
+require_once realpath(__DIR__ . '/../../../../../') . '/application/init/util/bootstrap.php';
 \MVC\Config::init(get($GLOBALS['aConfig'], array()));
 \MVC\Cache::init(\MVC\Config::get_MVC_CACHE_CONFIG());
 \MVC\Cache::autoDeleteCache('DataType', 0);
