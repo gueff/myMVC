@@ -381,8 +381,13 @@ class Emvicy
             foreach ($aModule as $sModule)
             {
                 $sModuleConfigPathAbs = $GLOBALS['aConfig']['MVC_MODULES_DIR'] . '/' . $sModule . '/etc/config/' . $sModule;
-                $sCmd = 'cd ' . $sModuleConfigPathAbs . '; ' . PHP_BINARY . ' ' . Config::get_MVC_APPLICATION_PATH() . '/composer.phar update;';
-                self::shellExecute($sCmd, true);
+                $sComposerJson = $sModuleConfigPathAbs . '/composer.json';
+
+                if (true === file_exists($sComposerJson))
+                {
+                    $sCmd = 'cd ' . $sModuleConfigPathAbs . '; ' . PHP_BINARY . ' ' . Config::get_MVC_APPLICATION_PATH() . '/composer.phar update;';
+                    self::shellExecute($sCmd, true);
+                }
             }
         }
     }
