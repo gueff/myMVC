@@ -148,7 +148,21 @@ class Emvicy
     public static function clearcache()
     {
         $sDir = Config::get_MVC_CACHE_DIR() . '/*';
-        array_map('unlink', array_filter((array) glob($sDir)));
+        $aPath = array_filter((array) glob($sDir));
+
+        foreach ($aPath as $sPath)
+        {
+            if (true === is_file($sPath))
+            {
+                unlink($sPath);
+            }
+            elseif (true === is_dir($sPath))
+            {
+                $aSubFile = glob($sPath . '/{,.}[!.,!..]*', GLOB_MARK|GLOB_BRACE);
+                array_map('unlink', $aSubFile);
+                rmdir($sPath);
+            }
+        }
     }
 
     /**
