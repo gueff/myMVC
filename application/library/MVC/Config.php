@@ -355,6 +355,30 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
+    public static function get_MVC_LOG_FORCE_LINEBREAK()
+    {
+        if (Registry::isRegistered('MVC_LOG_FORCE_LINEBREAK'))
+        {
+            return (string) Registry::get('MVC_LOG_FORCE_LINEBREAK');
+        }
+
+        return '';
+    }
+
+    /**
+     * @param $bForce
+     * @return void
+     */
+    public static function set_MVC_LOG_FORCE_LINEBREAK($bForce = false)
+    {
+        Registry::set('MVC_LOG_FORCE_LINEBREAK', (boolean) $bForce);
+        $GLOBALS['aConfig']['MVC_LOG_FORCE_LINEBREAK'] = (boolean) $bForce;
+    }
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
     public static function get_MVC_APPLICATION_INIT_DIR()
     {
         if (Registry::isRegistered('MVC_APPLICATION_INIT_DIR'))

@@ -123,7 +123,7 @@ class Log
             self::prepareDebug(debug_backtrace())
         );
 
-        (false == $bNewline)
+        (false == $bNewline && false == Config::get_MVC_LOG_FORCE_LINEBREAK())
             ? $sMessage = str_replace("\n", '\n', $sMessage) . "\n"
             : false;
 

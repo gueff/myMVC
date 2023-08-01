@@ -126,6 +126,10 @@ MVC_APPLICATION_SETTINGS: {
         'message' => true,
     ];
 
+    // force linebreaks in logfiles no matter what
+    $aConfig['MVC_LOG_FORCE_LINEBREAK'] = false;
+
+
     /**
      * Caching
      */

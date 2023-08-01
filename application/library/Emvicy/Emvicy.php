@@ -3,6 +3,7 @@
 namespace Emvicy;
 
 use MVC\Config;
+use MVC\File;
 
 /**
  * @param $iAmount
@@ -76,7 +77,7 @@ class Emvicy
         parse_str(
             implode(
                 '&',
-                array_slice($GLOBALS['argv'], 1)
+                str_replace(':', '=', array_slice($GLOBALS['argv'], 1))
             ),
             $_GET
         );
