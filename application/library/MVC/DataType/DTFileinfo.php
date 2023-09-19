@@ -116,6 +116,11 @@ class DTFileinfo
 	 */
 	protected $filectime;
 
+    /**
+     * @var string
+     */
+    protected $mimetype;
+
 	/**
 	 * DTFileinfo constructor.
 	 * @param array $aData
@@ -141,6 +146,7 @@ class DTFileinfo
 		$this->shell = '';
 		$this->filemtime = 0;
 		$this->filectime = 0;
+        $this->mimetype = '';
 
 		foreach ($aData as $sKey => $mValue)
 		{
@@ -395,6 +401,20 @@ class DTFileinfo
 		return $this;
 	}
 
+    /**
+     * @param int $sValue
+     * @return $this
+     * @throws \ReflectionException
+     */
+    public function set_mimetype($sValue)
+    {
+        \MVC\Event::RUN ('DTFileinfo.set_mimetype.before', \MVC\DataType\DTArrayObject::create(array('mimetype' => $sValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+
+        $this->mimetype = (string) $sValue;
+
+        return $this;
+    }
+
 	/**
 	 * @return string
 	 * @throws \ReflectionException
@@ -570,6 +590,17 @@ class DTFileinfo
 
 		return $this->filectime;
 	}
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public function get_mimetype()
+    {
+        \MVC\Event::RUN ('DTFileinfo.get_mimetype.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('mimetype')->set_sValue($this->filectime))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+
+        return $this->mimetype;
+    }
 
 	/**
 	 * @return string

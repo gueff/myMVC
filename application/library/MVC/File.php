@@ -10,6 +10,7 @@
 
 namespace MVC;
 
+use Emvicy\Emvicy;
 use MVC\DataType\DTFileinfo;
 
 class File
@@ -34,6 +35,7 @@ class File
         $aInfo['is_dir'] = is_dir($sFile);
         $aInfo['filemtime'] = filemtime($sFile);
         $aInfo['filectime'] = filemtime($sFile);
+        $aInfo['mimetype'] = self::getMimeType($sFile);
         $aPathInfo = pathinfo($sFile);
         $aInfo = array_merge($aInfo, $aPathInfo);
         $oDTFileinfo = DTFileinfo::create($aInfo);
@@ -55,5 +57,19 @@ class File
 
         /**@var string */
         return $sAbsoluteFilePath;
+    }
+
+    /**
+     * @param string $sFileAbsolute
+     * @return string
+     */
+    public static function getMimeType(string $sFileAbsolute = '')
+    {
+        // get mime type of file (e.g.: application/pdf; charset=binary)
+        $sCmd = whereis('file') . ' -bi -- ' . escapeshellarg($sFileAbsolute);
+        $mMimeType = strtok(Emvicy::shellExecute($sCmd),';');
+        $sMimeType = (false === $mMimeType) ? '' : $mMimeType;
+
+        return $sMimeType;
     }
 }
