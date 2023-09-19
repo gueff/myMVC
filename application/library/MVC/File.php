@@ -66,6 +66,11 @@ class File
     public static function getMimeType(string $sFileAbsolute = '')
     {
         // get mime type of file (e.g.: application/pdf; charset=binary)
+        if (false === file_exists($sFileAbsolute))
+        {
+            return '';
+        }
+
         $sCmd = whereis('file') . ' -bi -- ' . escapeshellarg($sFileAbsolute);
         $mMimeType = strtok(Emvicy::shellExecute($sCmd),';');
         $sMimeType = (false === $mMimeType) ? '' : $mMimeType;
