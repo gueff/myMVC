@@ -2,7 +2,7 @@
 
 /**
  * @usage php datatype.php
- *          Classes created by this script are placed into folder: `/modules/{module}/DataType/`
+ *          Classes created by this script are placed into folder: `/modules/Ara/DataType/`
  * @see https://mymvc.ueffing.net/3.3.x/generating-datatype-classes
  */
 
@@ -15,12 +15,11 @@ require_once realpath(__DIR__ . '/../../../../../') . '/application/init/util/bo
 #---------------------------------------------------------------
 #  Defining DataType Classes
 
-$sCurrentModuleName = basename(realpath(__DIR__ . '/../../../'));
-$sDataTypeDir = realpath(__DIR__ . '/../../../') . '/DataType/';
+$sNamespace = str_replace('/', '\\', substr(\MVC\Config::get_MVC_MODULE_CURRENT_DATATYPE_DIR(), strlen(\MVC\Config::get_MVC_MODULES_DIR() . '/')));
 
 // base setup
 $aDataType = array(
-    'dir' => $sDataTypeDir,
+    'dir' => \MVC\Config::get_MVC_MODULE_CURRENT_DATATYPE_DIR() . '/',
     'unlinkDir' => false
 );
 
@@ -28,7 +27,7 @@ $aDataType = array(
 $aDataType['class'][] = array(
     'name' => 'DTRoutingAdditional',
     'file' => 'DTRoutingAdditional.php',
-    'namespace' => $sCurrentModuleName . '\\DataType',
+    'namespace' => $sNamespace,
     'createHelperMethods' => true,
     'constant' => array(),
     'property' => array(
@@ -98,4 +97,4 @@ $aDataType['class'][] = array(
 #---------------------------------------------------------------
 #  create!
 
-\MVC\Generator\DataType::create(56)->initConfigArray($aDataType);
+\MVC\Generator\DataType::create()->initConfigArray($aDataType);

@@ -8,7 +8,10 @@ $aConfig['MVC_MODULE_CURRENT_NAME'] = '{module}';
 $aConfig['MVC_MODULE_CURRENT_DIR'] = $aConfig['MVC_MODULES_DIR'] . '/' . $aConfig['MVC_MODULE_CURRENT_NAME'];
 $aConfig['MVC_MODULE_CURRENT_CONFIG_DIR'] = $aConfig['MVC_MODULE_CURRENT_DIR'] . '/etc/config';
 $aConfig['MVC_MODULE_CURRENT_CONTROLLER_DIR'] = $aConfig['MVC_MODULE_CURRENT_DIR'] . '/Controller';
+
+// this datatype directory needs to be below your module directory
 $aConfig['MVC_MODULE_CURRENT_DATATYPE_DIR'] = $aConfig['MVC_MODULE_CURRENT_DIR'] . '/DataType';
+
 $aConfig['MVC_MODULE_CURRENT_ETC_DIR'] = $aConfig['MVC_MODULE_CURRENT_DIR'] . '/etc';
 $aConfig['MVC_MODULE_CURRENT_STAGING_CONFIG_DIR'] = $aConfig['MVC_MODULE_CURRENT_CONFIG_DIR'] . '/' . $aConfig['MVC_MODULE_CURRENT_NAME'] . '/config';
 $aConfig['MVC_MODULE_CURRENT_EVENT_DIR'] = $aConfig['MVC_MODULES_DIR'] . '/Event';

@@ -8,6 +8,9 @@ date_default_timezone_set('Europe/Berlin');
 // show InfoTool bar
 $aConfig['MVC_INFOTOOL_ENABLE'] = true;
 
+// force linebreaks in logfiles no matter what
+$aConfig['MVC_LOG_FORCE_LINEBREAK'] = false;
+
 //-------------------------------------------------------------------------------------
 // Module {module}
 
