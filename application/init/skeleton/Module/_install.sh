@@ -4,10 +4,11 @@ MODULENAME="$(basename "$(pwd)")";
 sHere=`pwd`;
 sModuleDir=`realpath "../../modules/"`;
 xPhp=`type -p php`;
+xGit=`type -p git`;
 /usr/bin/clear;
 
 # read .env
-. ../../public/.env;
+. ../../.env;
 
 #------------------------------------------------------------
 # install further modules
@@ -28,6 +29,10 @@ cd "$sHere";
 cd "$sHere";
 cd ../../public/;
 $xPhp index.php;
+
+cd "$sHere";
+cd ../../;
+$xPhp emvicy.php up;
 
 #------------------------------------------------------------
 # generate DTClasses
