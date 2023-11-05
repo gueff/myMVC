@@ -14,12 +14,12 @@ use MVC\DataType\DTArrayObject;
 
 /**
  * @example
- * \MVC\Event::BIND('test', function() {\MVC\Debug::display('Hello from anonymous function');});
- * \MVC\Event::RUN ('test');
- * \MVC\Event::RUN ('test', array('some' => 'value'));
- * \MVC\Event::RUN ('test', $oObject);
- * \MVC\Event::RUN ('test', function(){...});
- * \MVC\Event::UNBIND ('test');
+ * \MVC\Event::bind('test', function() {\MVC\Debug::display('Hello from anonymous function');});
+ * \MVC\Event::run('test');
+ * \MVC\Event::run('test', array('some' => 'value'));
+ * \MVC\Event::run('test', $oObject);
+ * \MVC\Event::run('test', function(){...});
+ * \MVC\Event::delete('test');
  */
 class Event
 {
@@ -119,6 +119,21 @@ class Event
 
         // add listener to event
         self::addListenerToEvent($sEvent, $oClosure, $oObject, $sDebug);
+    }
+
+    /**
+     * binds a callback closure to an event
+     * @notice alternative writing to Event::bind()
+     * @param string   $sEvent
+     * @param \Closure $oClosure
+     * @param          $oObject
+     * @param array    $aDebug
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function listen(string $sEvent, \Closure $oClosure, $oObject = null, array $aDebug = array())
+    {
+        self::bind($sEvent, $oClosure, $oObject, $aDebug);
     }
 
     /**
@@ -257,10 +272,26 @@ class Event
     }
 
     /**
+     * @deprecated use instead: \MVC\Event::get
      * @return array
      */
     public static function getEventArray()
     {
         return self::$aEvent;
+    }
+
+    /**
+     * returns array with Listeners of all Events (default), or of the certain event $sEvent
+     * @param string $sEvent
+     * @return array
+     */
+    public static function get(string $sEvent = '')
+    {
+        if (true === empty($sEvent))
+        {
+            return self::$aEvent;
+        }
+
+        return (array) get(self::$aEvent[$sEvent], array());
     }
 }
