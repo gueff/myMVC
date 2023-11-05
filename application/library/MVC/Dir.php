@@ -13,6 +13,7 @@ namespace MVC;
 class Dir
 {
     /**
+     * @notice Dir::remove('/tmp/foo/') will delete folder 'foo' as well; a trailing slash has no meaning
      * @param string $sDirectory
      * @param bool   $bForce default=false; if set to true: ignores if directory is not empty; removes given directory no matter what
      * @return bool
@@ -20,23 +21,26 @@ class Dir
      */
     public static function remove(string $sDirectory = '', bool $bForce = false): bool
     {
+        if (strstr($sDirectory, '*'))
+        {
+            Error::error('$sDirectory may not contain an asterisk: ' . $sDirectory);
+
+            return false;
+        }
+
         Registry::set('Dir_remove_bForce', $bForce);
 
         array_map(
             function(string $sFile){
-                $sFile = File::secureFilePath($sFile);
-
-                if (is_dir($sFile))
+                if (true === Registry::get('Dir_remove_bForce'))
                 {
-                    (true === Registry::get('Dir_remove_bForce')) ? self::remove($sFile, Registry::get('Dir_remove_bForce')) : false;
+                    $sFile = File::secureFilePath($sFile);
+                    (is_file($sFile)) ? unlink($sFile) : false;
+                    (is_dir($sFile)) ? self::remove($sFile, Registry::get('Dir_remove_bForce')) : false;
                 }
-
-                (true === Registry::get('Dir_remove_bForce')) ? unlink($sFile) : false;
             },
             glob($sDirectory . '/{,.}[!.,!..]*', GLOB_BRACE)
         );
-
-        Registry::delete('Dir_remove_bForce');
 
         return rmdir($sDirectory);
     }
