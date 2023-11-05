@@ -16,6 +16,7 @@ use MVC\DataType\DTConfig;
 use MVC\DataType\DTConstant;
 use MVC\DataType\DTProperty;
 use MVC\Debug;
+use MVC\Dir;
 use MVC\Lock;
 
 class DataType
@@ -222,10 +223,7 @@ class DataType
     {
         if (file_exists($sDataTypeClassDir))
         {
-            $sCmd = 'rm -rf ' . $sDataTypeClassDir;
-            $mResult = shell_exec($sCmd);
-
-            return (boolean)$mResult;
+            return Dir::remove($sDataTypeClassDir, true);
         }
 
         return false;
@@ -240,7 +238,7 @@ class DataType
     {
         if (true === $bCreateDirIfnotExist)
         {
-            if (false === file_exists($sDataTypeClassDir) && false === mkdir($sDataTypeClassDir, 0777, true))
+            if (false === file_exists($sDataTypeClassDir) && false === Dir::make($sDataTypeClassDir))
             {
                 return null;
             }
@@ -496,9 +494,6 @@ class DataType
                     $sContent .= $this->createHelpfulPropertyGetter();
                     $sContent .= $this->createHelpfulConstantGetter();
                     $sContent .= $this->createHelpfulPropertySetter();
-
-                    /** @todo buggy */
-                    #$sContent .= $this->createGetDataTypeConfigJSON($oDTDataTypeGeneratorClass);
                 }
             }
 
@@ -869,6 +864,7 @@ class DataType
     }
 
     /**
+     * @deprecated
      * @param \MVC\DataType\DTClass $oDTDataTypeGeneratorClass
      * @return string
      */

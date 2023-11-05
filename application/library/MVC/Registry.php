@@ -31,7 +31,7 @@ class Registry
 	 * Constructor
 	 * @return void
 	 */
-	protected function __construct ()
+	protected function __construct()
 	{
 		;
 	}
@@ -40,7 +40,7 @@ class Registry
 	 * Singleton instance
 	 * @return \MVC\Registry
 	 */
-	public static function getInstance ()
+	public static function getInstance()
 	{
 		if (null === self::$_oRegistry)
 		{
@@ -54,7 +54,7 @@ class Registry
 	 *  prevent any cloning
 	 * @return void
 	 */
-	private function __clone ()
+	private function __clone()
 	{
 		;
 	}
@@ -64,7 +64,7 @@ class Registry
 	 * Primarily used in tearDown() in unit tests.
 	 * @return void
 	 */
-	public static function _unsetInstance ()
+	public static function _unsetInstance()
 	{
 		self::$_oRegistry = null;
 	}
@@ -75,7 +75,7 @@ class Registry
      * @return mixed
      * @throws \ReflectionException
      */
-	public static function get ($sIndex)
+	public static function get($sIndex)
 	{
 		if (!array_key_exists ($sIndex, self::$_aStorage))
 		{
@@ -88,7 +88,7 @@ class Registry
             Error::exception(new \ErrorException ($sMsg, 0, E_USER_ERROR, __FILE__, __LINE__));
 		}
 
-		return self::$_aStorage[$sIndex];
+		return get(self::$_aStorage[$sIndex]);
 	}
 
 	/**
@@ -97,16 +97,33 @@ class Registry
 	 * @param mixed $mValue The Value ti be set
 	 * @return void
 	 */
-	public static function set ($sIndex, $mValue)
+	public static function set($sIndex, $mValue)
 	{
 		self::$_aStorage[$sIndex] = $mValue;
 	}
+
+    /**
+     * @param $sIndex
+     * @return bool
+     */
+    public static function delete($sIndex)
+    {
+        if (false === self::isRegistered($sIndex))
+        {
+            return false;
+        }
+
+        self::$_aStorage[$sIndex] = null;
+        unset(self::$_aStorage[$sIndex]);
+
+        return true;
+    }
 
 	/**
 	 * gets the storage array
      * @return array
      */
-	public static function getStorageArray ()
+	public static function getStorageArray()
 	{
 		return self::$_aStorage;
 	}
@@ -117,13 +134,13 @@ class Registry
      * @param $sIndex
      * @return bool
      */
-	public static function isRegistered ($sIndex)
+	public static function isRegistered($sIndex)
 	{
 		if (null === self::getInstance())
 		{
 			return false;
 		}
 
-		return array_key_exists ($sIndex, self::$_aStorage);
+		return array_key_exists($sIndex, self::$_aStorage);
 	}
 }

@@ -11,7 +11,12 @@
 namespace MVC;
 
 use Emvicy\Emvicy;
+use MVC\DataType\DTArrayObject;
 use MVC\DataType\DTFileinfo;
+use MVC\DataType\DTFileSecureFilePath;
+use MVC\DataType\DTFileSsecureFilePath;
+use MVC\DataType\DTKeyValue;
+use MVC\DataType\DTProperty;
 
 class File
 {

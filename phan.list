@@ -1,3 +1,4 @@
+application/library/MVC/Dir.php
 application/library/MVC/Closure.php
 application/library/MVC/Error.php
 application/library/MVC/Debug.php
@@ -10,8 +11,10 @@ application/library/MVC/InfoTool.php
 application/library/MVC/DataType/DTClass.php
 application/library/MVC/DataType/DTKeyValue.php
 application/library/MVC/DataType/DTRequestCurrent.php
+application/library/MVC/DataType/test/DTFileSecureFilePath.php
 application/library/MVC/DataType/DTFileinfo.php
 application/library/MVC/DataType/DTArrayObject.php
+application/library/MVC/DataType/_datatype.php
 application/library/MVC/DataType/DTRoute.php
 application/library/MVC/DataType/DTConstant.php
 application/library/MVC/DataType/DTProperty.php

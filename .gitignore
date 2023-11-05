@@ -10,6 +10,9 @@ application/templates_c/*
 application/composer.lock
 application/library/MVC/*.tar.gz
 application/vendor
+application/library/MVC/DataType/_datatype.php
+application/library/MVC/DataType/.trash
+application/library/MVC/DataType/test
 gen
 *.tar.gz
 vendor
