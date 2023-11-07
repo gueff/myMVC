@@ -54,13 +54,13 @@ class Policy
 
     /**
      * sets a policy rule
-     * @param $sClass
-     * @param $sMethod
-     * @param $mTarget string|array
+     * @param string $sClass
+     * @param string $sMethod
+     * @param        $mTarget
      * @return void
      * @throws \ReflectionException
      */
-    public static function set($sClass = '', $sMethod = '', $mTarget = null)
+    public static function set(string $sClass = '', string $sMethod = '', $mTarget = null)
     {
         $aPolicy = Config::get_MVC_POLICY();
 
@@ -108,13 +108,13 @@ class Policy
 
     /**
      * unsets a policy rule
-     * @param $sClass
-     * @param $sMethod
-     * @param $mTarget
+     * @param string $sClass
+     * @param string $sMethod
+     * @param        $mTarget
      * @return void
      * @throws \ReflectionException
      */
-    public static function unset($sClass = '', $sMethod = '', $mTarget = null)
+    public static function unset(string $sClass = '', string $sMethod = '', $mTarget = null)
     {
         $aPolicy = Config::get_MVC_POLICY();
 
@@ -200,7 +200,7 @@ class Policy
     }
 
     /**
-     * gets the policy rules; if one matches to the current request, it will be executed
+     * applies the policy rules; if one matches to the current request, it will be executed
      * @return void
      * @throws \ReflectionException
      */
@@ -246,7 +246,7 @@ class Policy
 
     /**
      * gets the matching policy rules on the current request
-     * @return array|mixed
+     * @return array
      * @throws \ReflectionException
      */
     public static function getPolicyRuleOnCurrentRequest ()

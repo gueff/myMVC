@@ -175,7 +175,7 @@ class InfoTool
         $aToolbar['aEventBINDNAME'] = $this->buildMarkupListTree(Event::$aEvent);
         $aToolbar['aEventRUN'] = $this->buildMarkupListTree($aToolbar['aEvent']['RUN']);
         $aToolbar['aEventRUNBONDED'] = (isset($aToolbar['aEvent']['RUN_BONDED']) && false === empty($aToolbar['aEvent']['RUN_BONDED'])) ? $this->buildMarkupListTree($aToolbar['aEvent']['RUN_BONDED']) : array();
-        $aToolbar['aEventUNBIND'] = (isset($aToolbar['aEvent']['UNBIND']) && false === empty($aToolbar['aEvent']['UNBIND'])) ? $this->buildMarkupListTree($aToolbar['aEvent']['UNBIND']) : array();
+        $aToolbar['aEventDELETE'] = (isset($aToolbar['aEvent']['DELETE']) && false === empty($aToolbar['aEvent']['DELETE'])) ? $this->buildMarkupListTree($aToolbar['aEvent']['DELETE']) : array();
         $aToolbar['aRouting'] = array(
             'aRequest' => Request::getCurrentRequest()->getPropertyArray(),
             'sModule' => Route::getCurrent()->get_module(),
@@ -292,7 +292,7 @@ class InfoTool
      * @return array
      * @throws \ReflectionException
      */
-    protected function getCaches ()
+    protected function getCaches()
     {
         $aCache = array ();
         $oObjects = new \RecursiveIteratorIterator (

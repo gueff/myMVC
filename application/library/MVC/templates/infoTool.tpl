@@ -307,25 +307,25 @@ Request::getPathParam( $sKey )</pre>
 				<div class="subtab23">
 					<h6>Overview</h6>
 					<ul>
-						<li><a href="#myMvcToolbar_BINDindex">BIND <small>list by index</small></a></li>
-						<li><a href="#myMvcToolbar_BINDname">BIND <small>group by event name</small></a></li>
-						<li><a href="#myMvcToolbar_RUN">RUN</a></li>
-						<li><a href="#myMvcToolbar_UNBIND">UNBIND</a></li>
+						<li><a href="#myMvcToolbar_BINDindex">bind() <small>list by index</small></a></li>
+						<li><a href="#myMvcToolbar_BINDname">bind() <small>group by event name</small></a></li>
+						<li><a href="#myMvcToolbar_RUN">run()</a></li>
+						<li><a href="#myMvcToolbar_DELETE">delete()</a></li>
 					</ul>
 
-					<h6>BIND <small>list by index</small> <a id="myMvcToolbar_BINDindex"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top2">&uarr; top</a></small></span></h6>
+					<h6>bind() <small>list by index</small> <a id="myMvcToolbar_BINDindex"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top2">&uarr; top</a></small></span></h6>
 					<p>
 						{$aToolbar.aEventBIND}
 					</p>
 					<pre>Event::bind('event.name', \Closure $oClosure, $oObject = NULL);</pre>
 
-					<h6>BIND <small>group by event name</small> <a id="myMvcToolbar_BINDname"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top2">&uarr; top</a></small></span></h6>
+					<h6>bind() <small>group by event name</small> <a id="myMvcToolbar_BINDname"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top2">&uarr; top</a></small></span></h6>
 					<p>
 						{$aToolbar.aEventBINDNAME}
 					</p>
 					<pre>Event::bind('event.name', \Closure $oClosure, $oObject = NULL);</pre>
 
-					<h6>RUN <a id="myMvcToolbar_RUN"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top2">&uarr; top</a></small></span></h6>
+					<h6>run() <a id="myMvcToolbar_RUN"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top2">&uarr; top</a></small></span></h6>
 					<p>
 						{$aToolbar.aEventRUN}
 					</p>
@@ -338,13 +338,13 @@ Request::getPathParam( $sKey )</pre>
 						</p>
 					{/if}
 
-					<h6>UNBIND <a id="myMvcToolbar_UNBIND"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top2">&uarr; top</a></small></span></h6>
-					{if !empty($aToolbar.aEventUNBIND)}
+					<h6>delete() <a id="myMvcToolbar_DELETE"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top2">&uarr; top</a></small></span></h6>
+					{if !empty($aToolbar.aEventDELETE)}
 						<p>
-							{$aToolbar.aEventUNBIND}
+							{$aToolbar.aEventDELETE}
 						</p>
 					{/if}
-					<pre>Event::unbind('event.name');</pre>
+					<pre>Event::delete('event.name');</pre>
 				</div>
 				<div class="subtab24">
 					<h6>Target Controller method <a id="myMvcToolbar_Target"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top2">&uarr; top</a></small></span></h6>

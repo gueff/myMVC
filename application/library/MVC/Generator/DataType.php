@@ -218,8 +218,9 @@ class DataType
     /**
      * @param string $sDataTypeClassDir
      * @return bool
+     * @throws \ReflectionException
      */
-    private function unlinkDataTypeClassDir($sDataTypeClassDir = '')
+    private function unlinkDataTypeClassDir(string $sDataTypeClassDir = '')
     {
         if (file_exists($sDataTypeClassDir))
         {
@@ -234,7 +235,7 @@ class DataType
      * @param bool   $bCreateDirIfnotExist | default=false
      * @return $this|null
      */
-    private function setDataTypeClassDir($sDataTypeClassDir = '', $bCreateDirIfnotExist = false)
+    private function setDataTypeClassDir(string $sDataTypeClassDir = '', bool $bCreateDirIfnotExist = false)
     {
         if (true === $bCreateDirIfnotExist)
         {
@@ -256,7 +257,7 @@ class DataType
      * @param string $sClassname
      * @return $this|null
      */
-    private function setClassName($sClassname = '')
+    private function setClassName(string $sClassname = '')
     {
         if (empty($sClassname))
         {
@@ -273,7 +274,7 @@ class DataType
      * @param string $sClassFileName
      * @return $this|null
      */
-    private function setClassFileName($sClassFileName = '')
+    private function setClassFileName(string $sClassFileName = '')
     {
         if (empty($sClassFileName))
         {
@@ -289,7 +290,7 @@ class DataType
      * @param string $sClassNameSpace
      * @return $this|null
      */
-    private function setClassNameSpace($sClassNameSpace = '')
+    private function setClassNameSpace(string $sClassNameSpace = '')
     {
         if (empty($sClassNameSpace))
         {
@@ -305,7 +306,7 @@ class DataType
      * @param string $sClassExtends
      * @return $this|null
      */
-    private function setClassExtends($sClassExtends = '')
+    private function setClassExtends(string $sClassExtends = '')
     {
         if (empty($sClassExtends))
         {
@@ -324,7 +325,7 @@ class DataType
      * @param string $sVisibility
      * @return $this|null
      */
-    private function setProperty($sPropertyName = '', $sVarType = 'string', $mValue = null, $sVisibility = 'protected')
+    private function setProperty(string $sPropertyName = '', string $sVarType = 'string', $mValue = null, string $sVisibility = 'protected')
     {
         if (0 == strlen($sPropertyName) || 0 == strlen($sVarType))
         {
@@ -347,8 +348,9 @@ class DataType
     }
 
     /**
-     * @param DTConfig $oDTDataTypeGeneratorConfig
+     * @param \MVC\DataType\DTConfig $oDTDataTypeGeneratorConfig
      * @return bool
+     * @throws \ReflectionException
      */
     private function iterateConfig(DTConfig $oDTDataTypeGeneratorConfig)
     {
@@ -385,7 +387,7 @@ class DataType
      * @param string $sNameSpace
      * @return string
      */
-    private function createNamespace($sNameSpace = '')
+    private function createNamespace(string $sNameSpace = '')
     {
         $sContent = '';
         $sNameSpaceVar = preg_replace('/[^a-zA-Z_]+/', '', trim($sNameSpace));
@@ -674,7 +676,7 @@ class DataType
      * @param string $sClassName
      * @return string
      */
-    private function createStaticCreator($sClassName = '')
+    private function createStaticCreator(string $sClassName = '')
     {
         $sContent = "    /**
      * @param array " . '$aData' . "
@@ -881,11 +883,11 @@ class DataType
 
     /**
      * @param \MVC\DataType\DTProperty $oProperty
-     * @param                          $sClassName
+     * @param string                   $sClassName
      * @return string
      * @throws \ReflectionException
      */
-    private function createSetter(DTProperty $oProperty, $sClassName = '')
+    private function createSetter(DTProperty $oProperty, string $sClassName = '')
     {
         if (false === $oProperty->get_setter())
         {
@@ -963,11 +965,11 @@ class DataType
 
     /**
      * @param \MVC\DataType\DTProperty $oProperty
-     * @param                          $sClassName
+     * @param string                   $sClassName
      * @return string
      * @throws \ReflectionException
      */
-    private function createGetter(DTProperty $oProperty, $sClassName = '')
+    private function createGetter(DTProperty $oProperty, string $sClassName = '')
     {
         if (false === $oProperty->get_getter())
         {
@@ -1017,7 +1019,7 @@ class DataType
      * @param string $sContent
      * @return bool
      */
-    private function writeInto($sFile = '', $sContent = '')
+    private function writeInto($sFile = '', string $sContent = '')
     {
         return (boolean)file_put_contents($sFile, $sContent . PHP_EOL, FILE_APPEND);
     }

@@ -97,7 +97,7 @@ class DTProperty
      */
     public function __construct(array $aData = array())
     {
-        \MVC\Event::RUN ('DTProperty.__construct.before', \MVC\DataType\DTArrayObject::create($aData)->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+        \MVC\Event::RUN ('DTProperty.__construct.before', $aData);
 
         $this->key = '';
         $this->var = "string";
@@ -124,7 +124,7 @@ class DTProperty
             }
         }
 
-        \MVC\Event::RUN ('DTProperty.__construct.after', \MVC\DataType\DTArrayObject::create($aData));
+        \MVC\Event::RUN ('DTProperty.__construct.after', $aData);
     }
 
     /**
@@ -134,11 +134,11 @@ class DTProperty
      */
     public static function create(array $aData = array())
     {
-        \MVC\Event::RUN ('DTProperty.create.before', \MVC\DataType\DTArrayObject::create($aData)->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+        \MVC\Event::RUN ('DTProperty.create.before', $aData);
 
         $oObject = new self($aData);
 
-        \MVC\Event::RUN ('DTProperty.create.after', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('DTProperty')->set_sValue($oObject)));
+        \MVC\Event::RUN ('DTProperty.create.after', $oObject);
 
         return $oObject;
     }
@@ -150,7 +150,7 @@ class DTProperty
      */
     public function set_key($sValue)
     {
-        \MVC\Event::RUN ('DTProperty.set_key.before', \MVC\DataType\DTArrayObject::create(array('key' => $sValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+        \MVC\Event::RUN ('DTProperty.set_key.before', $sValue);
 
         $this->key = $sValue;
 
@@ -164,7 +164,7 @@ class DTProperty
      */
     public function set_var($sValue)
     {
-        \MVC\Event::RUN ('DTProperty.set_var.before', \MVC\DataType\DTArrayObject::create(array('var' => $sValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+        \MVC\Event::RUN ('DTProperty.set_var.before', $sValue);
 
         $this->var = $sValue;
 
@@ -178,7 +178,7 @@ class DTProperty
      */
     public function set_value($mValue)
     {
-        \MVC\Event::RUN ('DTProperty.set_value.before', \MVC\DataType\DTArrayObject::create(array('value' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+        \MVC\Event::RUN ('DTProperty.set_value.before', $mValue);
 
         $this->value = $mValue;
 
@@ -192,7 +192,7 @@ class DTProperty
      */
     public function set_visibility($sValue)
     {
-        \MVC\Event::RUN ('DTProperty.set_visibility.before', \MVC\DataType\DTArrayObject::create(array('visibility' => $sValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+        \MVC\Event::RUN ('DTProperty.set_visibility.before', $sValue);
 
         $this->visibility = $sValue;
 
@@ -206,7 +206,7 @@ class DTProperty
      */
     public function set_static($bValue)
     {
-        \MVC\Event::RUN ('DTProperty.set_static.before', \MVC\DataType\DTArrayObject::create(array('static' => $bValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+        \MVC\Event::RUN ('DTProperty.set_static.before', $bValue);
 
         $this->static = $bValue;
 
@@ -220,7 +220,7 @@ class DTProperty
      */
     public function set_setter($bValue)
     {
-        \MVC\Event::RUN ('DTProperty.set_setter.before', \MVC\DataType\DTArrayObject::create(array('setter' => $bValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+        \MVC\Event::RUN ('DTProperty.set_setter.before', $bValue);
 
         $this->setter = $bValue;
 
@@ -234,7 +234,7 @@ class DTProperty
      */
     public function set_getter($bValue)
     {
-        \MVC\Event::RUN ('DTProperty.set_getter.before', \MVC\DataType\DTArrayObject::create(array('getter' => $bValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+        \MVC\Event::RUN ('DTProperty.set_getter.before', $bValue);
 
         $this->getter = $bValue;
 
@@ -248,7 +248,7 @@ class DTProperty
      */
     public function set_explicitMethodForValue($bValue)
     {
-        \MVC\Event::RUN ('DTProperty.set_explicitMethodForValue.before', \MVC\DataType\DTArrayObject::create(array('explicitMethodForValue' => $bValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+        \MVC\Event::RUN ('DTProperty.set_explicitMethodForValue.before', $bValue);
 
         $this->explicitMethodForValue = $bValue;
 
@@ -262,7 +262,7 @@ class DTProperty
      */
     public function set_listProperty($bValue)
     {
-        \MVC\Event::RUN ('DTProperty.set_listProperty.before', \MVC\DataType\DTArrayObject::create(array('listProperty' => $bValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+        \MVC\Event::RUN ('DTProperty.set_listProperty.before', $bValue);
 
         $this->listProperty = $bValue;
 
@@ -276,7 +276,7 @@ class DTProperty
      */
     public function set_createStaticPropertyGetter($bValue)
     {
-        \MVC\Event::RUN ('DTProperty.set_createStaticPropertyGetter.before', \MVC\DataType\DTArrayObject::create(array('createStaticPropertyGetter' => $bValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+        \MVC\Event::RUN ('DTProperty.set_createStaticPropertyGetter.before', $bValue);
 
         $this->createStaticPropertyGetter = $bValue;
 
@@ -290,7 +290,7 @@ class DTProperty
      */
     public function set_setValueInConstructor($bValue)
     {
-        \MVC\Event::RUN ('DTProperty.set_setValueInConstructor.before', \MVC\DataType\DTArrayObject::create(array('setValueInConstructor' => $bValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+        \MVC\Event::RUN ('DTProperty.set_setValueInConstructor.before', $bValue);
 
         $this->setValueInConstructor = $bValue;
 
@@ -304,7 +304,7 @@ class DTProperty
      */
     public function set_forceCasting($bValue)
     {
-        \MVC\Event::RUN ('DTProperty.set_forceCasting.before', \MVC\DataType\DTArrayObject::create(array('forceCasting' => $bValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+        \MVC\Event::RUN ('DTProperty.set_forceCasting.before', $bValue);
 
         $this->forceCasting = $bValue;
 
@@ -318,7 +318,7 @@ class DTProperty
      */
     public function set_required($bValue)
     {
-        \MVC\Event::RUN ('DTProperty.set_required.before', \MVC\DataType\DTArrayObject::create(array('required' => $bValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+        \MVC\Event::RUN ('DTProperty.set_required.before', $bValue);
 
         $this->required = $bValue;
 
@@ -332,7 +332,7 @@ class DTProperty
      */
     public function set_addMyMVCEvents($aValue)
     {
-        \MVC\Event::RUN ('DTProperty.set_addMyMVCEvents.before', \MVC\DataType\DTArrayObject::create(array('addMyMVCEvents' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+        \MVC\Event::RUN ('DTProperty.set_addMyMVCEvents.before', $aValue);
 
         $this->addMyMVCEvents = $aValue;
 
@@ -345,7 +345,7 @@ class DTProperty
      */
     public function get_key()
     {
-        \MVC\Event::RUN ('DTProperty.get_key.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('key')->set_sValue($this->key))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+        \MVC\Event::RUN ('DTProperty.get_key.before', $this->key);
 
         return $this->key;
     }
@@ -356,7 +356,7 @@ class DTProperty
      */
     public function get_var()
     {
-        \MVC\Event::RUN ('DTProperty.get_var.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('var')->set_sValue($this->var))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+        \MVC\Event::RUN ('DTProperty.get_var.before', $this->var);
 
         return $this->var;
     }
@@ -367,7 +367,7 @@ class DTProperty
      */
     public function get_value()
     {
-        \MVC\Event::RUN ('DTProperty.get_value.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('value')->set_sValue($this->value))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+        \MVC\Event::RUN ('DTProperty.get_value.before', $this->value);
 
         return $this->value;
     }
@@ -378,7 +378,7 @@ class DTProperty
      */
     public function get_visibility()
     {
-        \MVC\Event::RUN ('DTProperty.get_visibility.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('visibility')->set_sValue($this->visibility))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+        \MVC\Event::RUN ('DTProperty.get_visibility.before', $this->visibility);
 
         return $this->visibility;
     }
@@ -389,7 +389,7 @@ class DTProperty
      */
     public function get_static()
     {
-        \MVC\Event::RUN ('DTProperty.get_static.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('static')->set_sValue($this->static))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+        \MVC\Event::RUN ('DTProperty.get_static.before', $this->static);
 
         return $this->static;
     }
@@ -400,7 +400,7 @@ class DTProperty
      */
     public function get_setter()
     {
-        \MVC\Event::RUN ('DTProperty.get_setter.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('setter')->set_sValue($this->setter))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+        \MVC\Event::RUN ('DTProperty.get_setter.before', $this->setter);
 
         return $this->setter;
     }
@@ -411,7 +411,7 @@ class DTProperty
      */
     public function get_getter()
     {
-        \MVC\Event::RUN ('DTProperty.get_getter.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('getter')->set_sValue($this->getter))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+        \MVC\Event::RUN ('DTProperty.get_getter.before', $this->getter);
 
         return $this->getter;
     }
@@ -422,7 +422,7 @@ class DTProperty
      */
     public function get_explicitMethodForValue()
     {
-        \MVC\Event::RUN ('DTProperty.get_explicitMethodForValue.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('explicitMethodForValue')->set_sValue($this->explicitMethodForValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+        \MVC\Event::RUN ('DTProperty.get_explicitMethodForValue.before', $this->explicitMethodForValue);
 
         return $this->explicitMethodForValue;
     }
@@ -433,7 +433,7 @@ class DTProperty
      */
     public function get_listProperty()
     {
-        \MVC\Event::RUN ('DTProperty.get_listProperty.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('listProperty')->set_sValue($this->listProperty))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+        \MVC\Event::RUN ('DTProperty.get_listProperty.before', $this->listProperty);
 
         return $this->listProperty;
     }
@@ -444,7 +444,7 @@ class DTProperty
      */
     public function get_createStaticPropertyGetter()
     {
-        \MVC\Event::RUN ('DTProperty.get_createStaticPropertyGetter.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('createStaticPropertyGetter')->set_sValue($this->createStaticPropertyGetter))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+        \MVC\Event::RUN ('DTProperty.get_createStaticPropertyGetter.before', $this->createStaticPropertyGetter);
 
         return $this->createStaticPropertyGetter;
     }
@@ -455,7 +455,7 @@ class DTProperty
      */
     public function get_setValueInConstructor()
     {
-        \MVC\Event::RUN ('DTProperty.get_setValueInConstructor.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('setValueInConstructor')->set_sValue($this->setValueInConstructor))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+        \MVC\Event::RUN ('DTProperty.get_setValueInConstructor.before', $this->setValueInConstructor);
 
         return $this->setValueInConstructor;
     }
@@ -466,7 +466,7 @@ class DTProperty
      */
     public function get_forceCasting()
     {
-        \MVC\Event::RUN ('DTProperty.get_forceCasting.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('forceCasting')->set_sValue($this->forceCasting))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+        \MVC\Event::RUN ('DTProperty.get_forceCasting.before', $this->forceCasting);
 
         return $this->forceCasting;
     }
@@ -477,7 +477,7 @@ class DTProperty
      */
     public function get_required()
     {
-        \MVC\Event::RUN ('DTProperty.get_required.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('required')->set_sValue($this->forceCasting))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+        \MVC\Event::RUN ('DTProperty.get_required.before', $this->required);
 
         return $this->required;
     }
@@ -488,7 +488,7 @@ class DTProperty
      */
     public function get_addMyMVCEvents()
     {
-        \MVC\Event::RUN ('DTProperty.get_addMyMVCEvents.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('addMyMVCEvents')->set_sValue($this->addMyMVCEvents))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+        \MVC\Event::RUN ('DTProperty.get_addMyMVCEvents.before', $this->addMyMVCEvents);
 
         return $this->addMyMVCEvents;
     }
@@ -658,5 +658,4 @@ class DTProperty
 
         return $this;
     }
-
 }

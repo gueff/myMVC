@@ -22,7 +22,7 @@ class Reflex
 	 * Constructor
 	 * @return void
 	 */
-	public function __construct ()
+	public function __construct()
 	{
 		;
 	}
@@ -32,7 +32,7 @@ class Reflex
      * @return bool
      * @throws \ReflectionException
      */
-	public function reflect ()
+	public function reflect()
 	{
         $oDTRoute = Route::getCurrent();
         $sModule = $oDTRoute->get_module();

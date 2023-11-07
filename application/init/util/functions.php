@@ -32,11 +32,11 @@ function get(&$sVar, $mFallback = null)
 /**
  * dumps data using print_r
  * @example pr(get_include_path(), ':');
- * @param $mData
- * @param $sSeparator optional works on strings
+ * @param mixed  $mData
+ * @param string $sSeparator optional works on strings
  * @return void
  */
-function pr($mData, $sSeparator = "\n")
+function pr($mData, string $sSeparator = "\n")
 {
     if (true === is_string($mData))
     {

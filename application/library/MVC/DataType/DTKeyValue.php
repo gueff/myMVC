@@ -47,11 +47,13 @@ class DTKeyValue
     protected $mOptional3;
 
     /**
-     * DTKeyValue constructor.
      * @param array $aData
+     * @throws \ReflectionException
      */
     public function __construct(array $aData = array())
     {
+        \MVC\Event::RUN ('DTKeyValue.__construct.before', $aData);
+
         $this->sKey = '';
         $this->sValue = null;
         $this->mOptional1 = null;
@@ -67,80 +69,105 @@ class DTKeyValue
                 $this->$sMethod($mValue);
             }
         }
+
+        \MVC\Event::RUN ('DTKeyValue.__construct.after', $aData);
     }
 
     /**
      * @param array $aData
-     * @return DTKeyValue
+     * @return self
+     * @throws \ReflectionException
      */
     public static function create(array $aData = array())
     {
+        \MVC\Event::RUN ('DTKeyValue.create.before', $aData);
+
         $oObject = new self($aData);
+
+        \MVC\Event::RUN ('DTKeyValue.create.before', $oObject);
 
         return $oObject;
     }
 
     /**
-     * @param string $mValue
+     * @param $mValue
      * @return $this
+     * @throws \ReflectionException
      */
     public function set_sKey($mValue)
     {
+        \MVC\Event::RUN ('DTKeyValue.set_sKey.before', $mValue);
+
         $this->sKey = $mValue;
 
         return $this;
     }
 
     /**
-     * @param integer $iIndex
+     * @param $iIndex
      * @return $this
+     * @throws \ReflectionException
      */
     public function set_iIndex($iIndex = null)
     {
+        \MVC\Event::RUN ('DTKeyValue.set_iIndex.before', $iIndex);
+
         $this->iIndex = $iIndex;
 
         return $this;
     }
 
     /**
-     * @param mixed $mValue
+     * @param $mValue
      * @return $this
+     * @throws \ReflectionException
      */
     public function set_sValue($mValue)
     {
+        \MVC\Event::RUN ('DTKeyValue.set_sValue.before', $mValue);
+
         $this->sValue = $mValue;
 
         return $this;
     }
 
     /**
-     * @param mixed $mValue
+     * @param $mValue
      * @return $this
+     * @throws \ReflectionException
      */
     public function set_mOptional1($mValue)
     {
+        \MVC\Event::RUN ('DTKeyValue.set_mOptional1.before', $mValue);
+
         $this->mOptional1 = $mValue;
 
         return $this;
     }
 
     /**
-     * @param mixed $mValue
+     * @param $mValue
      * @return $this
+     * @throws \ReflectionException
      */
     public function set_mOptional2($mValue)
     {
+        \MVC\Event::RUN ('DTKeyValue.set_mOptional2.before', $mValue);
+
         $this->mOptional2 = $mValue;
 
         return $this;
     }
 
     /**
-     * @param mixed $mValue
+     * @param $mValue
      * @return $this
+     * @throws \ReflectionException
      */
     public function set_mOptional3($mValue)
     {
+        \MVC\Event::RUN ('DTKeyValue.set_mOptional3.before', $mValue);
+
         $this->mOptional3 = $mValue;
 
         return $this;
@@ -148,9 +175,12 @@ class DTKeyValue
 
     /**
      * @return string
+     * @throws \ReflectionException
      */
     public function get_sKey()
     {
+        \MVC\Event::RUN ('DTKeyValue.get_sKey.before', $this->sKey);
+
         return $this->sKey;
     }
 
@@ -159,38 +189,52 @@ class DTKeyValue
      */
     public function get_iIndex()
     {
+        \MVC\Event::RUN ('DTKeyValue.get_iIndex.before', $this->iIndex);
+
         return $this->iIndex;
     }
 
     /**
-     * @return mixed
+     * @return mixed|null
+     * @throws \ReflectionException
      */
     public function get_sValue()
     {
+        \MVC\Event::RUN ('DTKeyValue.get_sValue.before', $this->sValue);
+
         return $this->sValue;
     }
 
     /**
-     * @return mixed
+     * @return mixed|null
+     * @throws \ReflectionException
      */
     public function get_mOptional1()
     {
+        \MVC\Event::RUN ('DTKeyValue.get_mOptional1.before', $this->mOptional1);
+
         return $this->mOptional1;
     }
 
     /**
-     * @return mixed
+     * @return mixed|null
+     * @throws \ReflectionException
      */
     public function get_mOptional2()
     {
+        \MVC\Event::RUN ('DTKeyValue.get_mOptional2.before', $this->mOptional2);
+
         return $this->mOptional2;
     }
 
     /**
-     * @return mixed
+     * @return mixed|null
+     * @throws \ReflectionException
      */
     public function get_mOptional3()
     {
+        \MVC\Event::RUN ('DTKeyValue.get_mOptional3.before', $this->mOptional3);
+
         return $this->mOptional3;
     }
 

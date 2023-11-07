@@ -12,7 +12,6 @@ namespace MVC;
 
 use MVC\DataType\DTArrayObject;
 use MVC\DataType\DTKeyValue;
-use Webbixx\Controller\Api;
 
 class Debug
 {
@@ -139,13 +138,13 @@ class Debug
      * Stops any further execution: exits the script.
      * Shows a Message from where the STOP command was called (default).
      * @param       $mData
-     * @param       $bShowWhereStop
-     * @param       $bDump
+     * @param bool  $bShowWhereStop
+     * @param bool  $bDump
      * @param array $aBacktrace
      * @return void
      * @throws \ReflectionException
      */
-    public static function stop($mData = '', $bShowWhereStop = true, $bDump = true, array $aBacktrace = array())
+    public static function stop($mData = '', bool $bShowWhereStop = true, bool $bDump = true, array $aBacktrace = array())
     {
         static $iCount;
         $iCount++;

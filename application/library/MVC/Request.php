@@ -71,22 +71,22 @@ class Request
 
     /**
      * gets the http uri protocol
-     * @param null $mSsl
+     * @param mixed $mSsl
      * @return string
      * @throws \ReflectionException
      */
     public static function getUriProtocol($mSsl = null)
     {
         // detect on ssl or not
-        if (isset ($mSsl))
+        if (isset($mSsl))
         {
             // http
-            if ((int)$mSsl === 0 || $mSsl == false)
+            if ((int) $mSsl === 0 || $mSsl == false)
             {
                 return 'http://';
             }
             // https
-            elseif ((int)$mSsl === 1 || $mSsl == true)
+            elseif ((int) $mSsl === 1 || $mSsl == true)
             {
                 return 'https://';
             }
@@ -115,8 +115,8 @@ class Request
     }
 
     /**
-     * check page is running in ssl mode
-     * @return bool|mixed
+     * check request is secure
+     * @return bool
      * @throws \ReflectionException
      */
     public static function detectSsl()
@@ -133,11 +133,12 @@ class Request
     }
 
     /**
-     * redirects to given URI
-     * @param $sLocation
+     * redirects to given Location URI
+     * @param string $sLocation
+     * @return void
      * @throws \ReflectionException
      */
-    public static function redirect($sLocation)
+    public static function redirect(string $sLocation = '')
     {
         // source
         $aBacktrace = debug_backtrace();
@@ -190,14 +191,12 @@ class Request
     }
 
     /**
+     * @info detection of cli takes place in /config/_mvc.php
      * @return bool
      * @throws \ReflectionException
      */
     public static function isCli()
     {
-        /*
-         * @info detection of cli takes place in /config/_mvc.php
-         */
         if (true === Config::get_MVC_CLI())
         {
             return true;
@@ -207,14 +206,12 @@ class Request
     }
 
     /**
+     * @info detection of cli takes place in /config/_mvc.php
      * @return bool
      * @throws \ReflectionException
      */
     public static function isHttp()
     {
-        /*
-         * @info detection of cli takes place in /config/_mvc.php
-         */
         if (false === self::isCli())
         {
             return true;
@@ -246,12 +243,12 @@ class Request
     /**
      * @example '/foo/bar/baz/'
      *          array(3) {[0]=> string(3) "foo" [1]=> string(3) "bar" [2]=> string(3) "baz"}
-     * @param $sUrl
-     * @param $bReverse
+     * @param string $sUrl
+     * @param bool   $bReverse
      * @return array
      * @throws \ReflectionException
      */
-    public static function getPathArray($sUrl = '', $bReverse = false)
+    public static function getPathArray(string $sUrl = '', bool $bReverse = false)
     {
         if ('' === $sUrl)
         {
@@ -267,15 +264,16 @@ class Request
             $aPath = array_reverse($aPath);
         }
 
+        /** @var array */
         return $aPath;
     }
 
     /**
-     * @param $sKey
+     * @param string $sKey
      * @return array|string
      * @throws \ReflectionException
      */
-    public static function getPathParam($sKey = '')
+    public static function getPathParam(string $sKey = '')
     {
         if (Registry::isRegistered('aPathParam'))
         {
@@ -305,17 +303,16 @@ class Request
 
     /**
      * enables using myMvc via commandline
-     * example usage
-     * 		$ php index.php "/"
+     * @example php index.php '/'
      */
     public static function cliWrapper ()
     {
         // check user/file permission
-        $sIndex = realpath (__DIR__ . '/../../../public') . '/index.php';
+        $sIndex = Config::get_MVC_PUBLIC_PATH() . '/index.php';
 
-        if (posix_getuid () != File::info($sIndex)->get_uid())
+        if (posix_getuid() != File::info($sIndex)->get_uid())
         {
-            $aUser = posix_getpwuid (posix_getuid ());
+            $aUser = posix_getpwuid(posix_getuid ());
 
             die (
                 "\n\tERROR\tCLI - access granted for User `" . File::info($sIndex)->get_name() . "` only "
@@ -365,10 +362,10 @@ class Request
     }
 
     /**
-     * @param $sKey
+     * @param string $sKey
      * @return string
      */
-    public static function getHeader($sKey = '')
+    public static function getHeader(string $sKey = '')
     {
         $aHeader = self::getHeaderArray();
 
@@ -387,5 +384,4 @@ class Request
 
         return (string) $sIpAddress;
     }
-
 }

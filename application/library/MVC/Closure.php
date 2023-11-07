@@ -118,7 +118,7 @@ class Closure
      * @return string
      * @throws \ReflectionException
      */
-    public static function toString(\Closure $oClosure, $bShrink = true)
+    public static function toString(\Closure $oClosure, bool $bShrink = true)
     {
         $oReflectionFunction = new \ReflectionFunction($oClosure);
         $sFileName = $oReflectionFunction->getFileName();

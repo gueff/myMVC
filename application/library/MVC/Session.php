@@ -19,13 +19,13 @@ class Session
      * Session object provides storage for shared objects.
      * @var \MVC\Session
      */
-    protected static $_oInstance = NULL;
+    protected static $_oInstance = null;
 
     /**
      * Options
      * @var array
      */
-    protected $_aOption = array ();
+    protected $_aOption = array();
 
     /**
      * namespace
@@ -39,11 +39,10 @@ class Session
     protected $_bSessionEnable = false;
 
     /**
-     * Session constructor.
      * @param string $sNamespace
      * @throws \ReflectionException
      */
-    protected function __construct ($sNamespace = '')
+    protected function __construct(string $sNamespace = '')
     {
         $this->setNamespace($sNamespace);
         $this->_aOption = Config::get_MVC_SESSION_OPTIONS();
@@ -81,7 +80,7 @@ class Session
      * @param bool $bEnable
      * @return Session
      */
-    public function enable($bEnable = true)
+    public function enable(bool $bEnable = true)
     {
         $this->_bSessionEnable = $bEnable;
         Config::set_MVC_SESSION_ENABLE($bEnable);
@@ -94,11 +93,11 @@ class Session
      * @return Session
      * @throws \ReflectionException
      */
-    public static function is ($sNamespace = '')
+    public static function is(string $sNamespace = '')
     {
         if (null === self::$_oInstance)
         {
-            self::$_oInstance = new self ($sNamespace);
+            self::$_oInstance = new self($sNamespace);
         }
         else
         {
@@ -115,7 +114,7 @@ class Session
      * prevent any cloning
      * @return void
      */
-    protected function __clone ()
+    protected function __clone()
     {
         ;
     }
@@ -126,7 +125,7 @@ class Session
      * @return Session
      * @throws \ReflectionException
      */
-    public function setNamespace ($sNamespace = '')
+    public function setNamespace(string $sNamespace = '')
     {
         ('' === $sNamespace)
             // fallback
@@ -142,18 +141,18 @@ class Session
      * gets the namespace
      * @return string namespace
      */
-    public function getNamespace ()
+    public function getNamespace()
     {
         return $this->_sNamespace;
     }
 
     /**
      * sets a value by its key
-     * @param $sKey
-     * @param $mValue
-     * @return Session
+     * @param string $sKey
+     * @param mixed  $mValue
+     * @return \MVC\Session|null
      */
-    public function set ($sKey, $mValue)
+    public function set(string $sKey = '', $mValue = null)
     {
         $_SESSION[$this->_sNamespace][$sKey] = $mValue;
 
@@ -161,10 +160,10 @@ class Session
     }
 
     /**
-     * @param $sKey
+     * @param string $sKey
      * @return bool
      */
-    public function has ($sKey)
+    public function has(string $sKey = '')
     {
         if (isset($_SESSION[$this->_sNamespace][$sKey]))
         {
@@ -179,7 +178,7 @@ class Session
      * @param string $sKey
      * @return string value
      */
-    public function get ($sKey)
+    public function get(string $sKey = '')
     {
         if (!isset($_SESSION[$this->_sNamespace][$sKey]))
         {
@@ -208,21 +207,22 @@ class Session
      * gets session key/values on the current namespace
      * @return array|mixed
      */
-    public function getAll ()
+    public function getAll()
     {
-        $aData = (isset($_SESSION[$this->_sNamespace]))
+        $mData = (isset($_SESSION[$this->_sNamespace]))
             ? $_SESSION[$this->_sNamespace]
             : array()
         ;
 
-        return $aData;
+        return $mData;
     }
 
     /**
      * kills current session
-     * @return Session
+     * @param bool $bDeleteOldSession
+     * @return \MVC\Session|null
      */
-    public function kill ($bDeleteOldSession = true)
+    public function kill(bool $bDeleteOldSession = true)
     {
         if (false === empty(session_id()))
         {

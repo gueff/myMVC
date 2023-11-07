@@ -111,7 +111,7 @@ class DTRequestCurrent
 	 */
 	public function __construct(array $aData = array())
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.__construct.before', \MVC\DataType\DTArrayObject::create($aData)->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRequestCurrent.__construct.before', $aData);
 
 		$this->scheme = '';
 		$this->host = '';
@@ -138,7 +138,7 @@ class DTRequestCurrent
 			}
 		}
 
-		\MVC\Event::RUN ('DTRequestCurrent.__construct.after', \MVC\DataType\DTArrayObject::create($aData));
+		\MVC\Event::RUN ('DTRequestCurrent.__construct.after', $aData);
 	}
 
     /**
@@ -148,12 +148,12 @@ class DTRequestCurrent
      */
     public static function create(array $aData = array())
     {
-        \MVC\Event::RUN ('DTRequestCurrent.create.before', \MVC\DataType\DTArrayObject::create($aData)->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
-        
+        \MVC\Event::RUN ('DTRequestCurrent.create.before', $aData);
+
         $oObject = new self($aData);
 
-        \MVC\Event::RUN ('DTRequestCurrent.create.after', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('DTRequestCurrent')->set_sValue($oObject)));
-        
+        \MVC\Event::RUN ('DTRequestCurrent.create.after', $oObject);
+
         return $oObject;
     }
 
@@ -164,7 +164,7 @@ class DTRequestCurrent
 	 */
 	public function set_scheme($aValue)
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.set_scheme.before', \MVC\DataType\DTArrayObject::create(array('scheme' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRequestCurrent.set_scheme.before', $aValue);
 
 		$this->scheme = $aValue;
 
@@ -178,9 +178,9 @@ class DTRequestCurrent
 	 */
 	public function set_host($aValue)
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.set_host.before', \MVC\DataType\DTArrayObject::create(array('host' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRequestCurrent.set_host.before', $aValue);
 
-		$this->host = $aValue;
+        $this->host = $aValue;
 
 		return $this;
 	}
@@ -192,9 +192,9 @@ class DTRequestCurrent
 	 */
 	public function set_path($aValue)
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.set_path.before', \MVC\DataType\DTArrayObject::create(array('path' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRequestCurrent.set_path.before', $aValue);
 
-		$this->path = $aValue;
+        $this->path = $aValue;
 
 		return $this;
 	}
@@ -206,9 +206,9 @@ class DTRequestCurrent
 	 */
 	public function set_query($aValue)
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.set_query.before', \MVC\DataType\DTArrayObject::create(array('query' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRequestCurrent.set_query.before', $aValue);
 
-		$this->query = $aValue;
+        $this->query = $aValue;
 
 		return $this;
 	}
@@ -220,9 +220,9 @@ class DTRequestCurrent
 	 */
 	public function set_queryArray($aValue)
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.set_queryArray.before', \MVC\DataType\DTArrayObject::create(array('queryArray' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRequestCurrent.set_queryArray.before', $aValue);
 
-		$this->queryArray = $aValue;
+        $this->queryArray = $aValue;
 
 		return $this;
 	}
@@ -234,9 +234,9 @@ class DTRequestCurrent
 	 */
 	public function set_requesturi($aValue)
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.set_requesturi.before', \MVC\DataType\DTArrayObject::create(array('requesturi' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRequestCurrent.set_requesturi.before', $aValue);
 
-		$this->requesturi = $aValue;
+        $this->requesturi = $aValue;
 
 		return $this;
 	}
@@ -248,9 +248,9 @@ class DTRequestCurrent
 	 */
 	public function set_requestmethod($aValue)
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.set_requestmethod.before', \MVC\DataType\DTArrayObject::create(array('requestmethod' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRequestCurrent.set_requestmethod.before', $aValue);
 
-		$this->requestmethod = $aValue;
+        $this->requestmethod = $aValue;
 
 		return $this;
 	}
@@ -262,9 +262,9 @@ class DTRequestCurrent
 	 */
 	public function set_protocol($aValue)
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.set_protocol.before', \MVC\DataType\DTArrayObject::create(array('protocol' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRequestCurrent.set_protocol.before', $aValue);
 
-		$this->protocol = $aValue;
+        $this->protocol = $aValue;
 
 		return $this;
 	}
@@ -276,9 +276,9 @@ class DTRequestCurrent
 	 */
 	public function set_full($aValue)
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.set_full.before', \MVC\DataType\DTArrayObject::create(array('full' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRequestCurrent.set_full.before', $aValue);
 
-		$this->full = $aValue;
+        $this->full = $aValue;
 
 		return $this;
 	}
@@ -290,9 +290,9 @@ class DTRequestCurrent
 	 */
 	public function set_input($aValue)
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.set_input.before', \MVC\DataType\DTArrayObject::create(array('input' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRequestCurrent.set_input.before', $aValue);
 
-		$this->input = $aValue;
+        $this->input = $aValue;
 
 		return $this;
 	}
@@ -304,9 +304,9 @@ class DTRequestCurrent
 	 */
 	public function set_isSecure($aValue)
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.set_isSecure.before', \MVC\DataType\DTArrayObject::create(array('isSecure' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRequestCurrent.set_isSecure.before', $aValue);
 
-		$this->isSecure = $aValue;
+        $this->isSecure = $aValue;
 
 		return $this;
 	}
@@ -318,9 +318,9 @@ class DTRequestCurrent
 	 */
 	public function set_headerArray($aValue)
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.set_headerArray.before', \MVC\DataType\DTArrayObject::create(array('headerArray' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRequestCurrent.set_headerArray.before', $aValue);
 
-		$this->headerArray = $aValue;
+        $this->headerArray = $aValue;
 
 		return $this;
 	}
@@ -332,9 +332,9 @@ class DTRequestCurrent
 	 */
 	public function set_pathParam($aValue)
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.set_pathParam.before', \MVC\DataType\DTArrayObject::create(array('pathParam' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRequestCurrent.set_pathParam.before', $aValue);
 
-		$this->pathParam = $aValue;
+        $this->pathParam = $aValue;
 
 		return $this;
 	}
@@ -346,9 +346,9 @@ class DTRequestCurrent
 	 */
 	public function set_ip($aValue)
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.set_ip.before', \MVC\DataType\DTArrayObject::create(array('ip' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRequestCurrent.set_ip.before',$aValue);
 
-		$this->ip = $aValue;
+        $this->ip = $aValue;
 
 		return $this;
 	}
@@ -359,7 +359,7 @@ class DTRequestCurrent
 	 */
 	public function get_scheme()
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.get_scheme.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('scheme')->set_sValue($this->scheme))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRequestCurrent.get_scheme.before', $this->scheme);
 
 		return $this->scheme;
 	}
@@ -370,9 +370,9 @@ class DTRequestCurrent
 	 */
 	public function get_host()
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.get_host.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('host')->set_sValue($this->host))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRequestCurrent.get_host.before', $this->host);
 
-		return $this->host;
+        return $this->host;
 	}
 
 	/**
@@ -381,9 +381,9 @@ class DTRequestCurrent
 	 */
 	public function get_path()
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.get_path.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('path')->set_sValue($this->path))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRequestCurrent.get_path.before', $this->path);
 
-		return $this->path;
+        return $this->path;
 	}
 
 	/**
@@ -392,9 +392,9 @@ class DTRequestCurrent
 	 */
 	public function get_query()
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.get_query.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('query')->set_sValue($this->query))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRequestCurrent.get_query.before', $this->query);
 
-		return $this->query;
+        return $this->query;
 	}
 
 	/**
@@ -403,9 +403,9 @@ class DTRequestCurrent
 	 */
 	public function get_queryArray()
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.get_queryArray.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('queryArray')->set_sValue($this->queryArray))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRequestCurrent.get_queryArray.before', $this->queryArray);
 
-		return $this->queryArray;
+        return $this->queryArray;
 	}
 
 	/**
@@ -414,9 +414,9 @@ class DTRequestCurrent
 	 */
 	public function get_requesturi()
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.get_requesturi.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('requesturi')->set_sValue($this->requesturi))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRequestCurrent.get_requesturi.before', $this->requesturi);
 
-		return $this->requesturi;
+        return $this->requesturi;
 	}
 
 	/**
@@ -425,9 +425,9 @@ class DTRequestCurrent
 	 */
 	public function get_requestmethod()
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.get_requestmethod.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('requestmethod')->set_sValue($this->requestmethod))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRequestCurrent.get_requestmethod.before', $this->requestmethod);
 
-		return $this->requestmethod;
+        return $this->requestmethod;
 	}
 
 	/**
@@ -436,9 +436,9 @@ class DTRequestCurrent
 	 */
 	public function get_protocol()
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.get_protocol.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('protocol')->set_sValue($this->protocol))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRequestCurrent.get_protocol.before', $this->protocol);
 
-		return $this->protocol;
+        return $this->protocol;
 	}
 
 	/**
@@ -447,9 +447,9 @@ class DTRequestCurrent
 	 */
 	public function get_full()
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.get_full.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('full')->set_sValue($this->full))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRequestCurrent.get_full.before', $this->full);
 
-		return $this->full;
+        return $this->full;
 	}
 
 	/**
@@ -458,9 +458,9 @@ class DTRequestCurrent
 	 */
 	public function get_input()
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.get_input.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('input')->set_sValue($this->input))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRequestCurrent.get_input.before', $this->input);
 
-		return $this->input;
+        return $this->input;
 	}
 
 	/**
@@ -469,9 +469,9 @@ class DTRequestCurrent
 	 */
 	public function get_isSecure()
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.get_isSecure.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('isSecure')->set_sValue($this->isSecure))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRequestCurrent.get_isSecure.before', $this->isSecure);
 
-		return $this->isSecure;
+        return $this->isSecure;
 	}
 
 	/**
@@ -480,9 +480,9 @@ class DTRequestCurrent
 	 */
 	public function get_headerArray()
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.get_headerArray.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('headerArray')->set_sValue($this->headerArray))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRequestCurrent.get_headerArray.before', $this->headerArray);
 
-		return $this->headerArray;
+        return $this->headerArray;
 	}
 
 	/**
@@ -491,9 +491,9 @@ class DTRequestCurrent
 	 */
 	public function get_pathParam()
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.get_pathParam.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('pathParam')->set_sValue($this->pathParam))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRequestCurrent.get_pathParam.before', $this->pathParam);
 
-		return $this->pathParam;
+        return $this->pathParam;
 	}
 
 	/**
@@ -502,9 +502,9 @@ class DTRequestCurrent
 	 */
 	public function get_ip()
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.get_ip.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('ip')->set_sValue($this->ip))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTRequestCurrent.get_ip.before', $this->ip);
 
-		return $this->ip;
+        return $this->ip;
 	}
 
 	/**
@@ -672,5 +672,4 @@ class DTRequestCurrent
 
 		return $this;
 	}
-
 }

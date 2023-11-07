@@ -19,8 +19,8 @@ namespace  MVC\MVCInterface;
 interface Controller
 {	
 	/**
-	 * this method is autom. called by MVC_Application::runTargetClassPreconstruct()<br />
-	 * this methodname is noted in the config:<br />
+	 * this method is autom. called by MVC_Application::runTargetClassPreconstruct()
+	 * this methodname is noted in the config:
 	 * $aConfig['MVC_METHODNAME_PRECONSTRUCT']
 	 */	
 	public static function __preconstruct ();

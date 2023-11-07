@@ -63,14 +63,15 @@ class Error
 
 	/**
 	 * this catches an error on runtime, creates a new ErrorException Object of it and passes it to Exception Handler
-     * @param $iCode
-     * @param $sMessage
-     * @param $sFilename
-     * @param $iLineNr
-     * @param string $mContext
+     * @param int    $iCode
+     * @param string $sMessage
+     * @param string $sFilename
+     * @param int    $iLineNr
+     * @param        $mContext
+     * @return void
      * @throws \ReflectionException
      */
-	public static function errorHandler ($iCode, $sMessage, $sFilename, $iLineNr, $mContext = '')
+	public static function errorHandler(int $iCode, string $sMessage, string $sFilename, int $iLineNr, $mContext = '')
 	{	
 		$oErrorException = new \ErrorException ($sMessage, (int) $iCode, (int) $iSeverity = 0, $sFilename, (int) $iLineNr );		
 		
@@ -80,13 +81,14 @@ class Error
 	/**
 	 * Error handler, passes flow over the exception logger with new ErrorException.
      * @param string $sMessage
-     * @param int $iCode
-     * @param int $iSeverity
+     * @param int    $iCode
+     * @param int    $iSeverity
      * @param string $sFilename
-     * @param int $iLineNr
+     * @param int    $iLineNr
+     * @return void
      * @throws \ReflectionException
      */
-	public static function error ($sMessage = '', $iCode = E_ERROR, $iSeverity = 0, $sFilename = '', $iLineNr = 0)
+	public static function error (string $sMessage = '', int $iCode = E_ERROR, int $iSeverity = 0, string $sFilename = '', int $iLineNr = 0)
 	{
         $aDebug = Debug::prepareBacktraceArray(debug_backtrace());
         (true === empty($sFilename)) ? $sFilename = $aDebug['sFile'] : false;
@@ -97,15 +99,15 @@ class Error
 	}
 
     /**
-     * @param $sMessage
-     * @param $iCode
-     * @param $iSeverity
-     * @param $sFilename
-     * @param $iLineNr
+     * @param string $sMessage
+     * @param int    $iCode
+     * @param int    $iSeverity
+     * @param string $sFilename
+     * @param int    $iLineNr
      * @return void
      * @throws \ReflectionException
      */
-    public static function warning ($sMessage = '', $iCode = E_WARNING, $iSeverity = 0, $sFilename = '', $iLineNr = 0)
+    public static function warning (string $sMessage = '', int $iCode = E_WARNING, int $iSeverity = 0, string $sFilename = '', int $iLineNr = 0)
     {
         $aDebug = Debug::prepareBacktraceArray(debug_backtrace());
         (true === empty($sFilename)) ? $sFilename = $aDebug['sFile'] : false;
@@ -116,15 +118,15 @@ class Error
     }
 
     /**
-     * @param $sMessage
-     * @param $iCode
-     * @param $iSeverity
-     * @param $sFilename
-     * @param $iLineNr
+     * @param string $sMessage
+     * @param int    $iCode
+     * @param int    $iSeverity
+     * @param string $sFilename
+     * @param int    $iLineNr
      * @return void
      * @throws \ReflectionException
      */
-    public static function notice ($sMessage = '', $iCode = E_NOTICE, $iSeverity = 0, $sFilename = '', $iLineNr = 0)
+    public static function notice (string $sMessage = '', int $iCode = E_NOTICE, int $iSeverity = 0, string $sFilename = '', int $iLineNr = 0)
     {
         $aDebug = Debug::prepareBacktraceArray(debug_backtrace());
         (true === empty($sFilename)) ? $sFilename = $aDebug['sFile'] : false;
@@ -136,10 +138,11 @@ class Error
 
 	/**
 	 * Uncaught exception handler
-     * @param $oErrorException
+     * @param \ErrorException|null $oErrorException
+     * @return void
      * @throws \ReflectionException
      */
-	public static function exception($oErrorException)
+	public static function exception(\ErrorException $oErrorException = null)
 	{
 		$sLogfile = Config::get_MVC_LOG_FILE_ERROR();
 		$sMsg = '';
@@ -199,11 +202,10 @@ class Error
 
 	/**
 	 * adds an error to the error array 
-	 * @access public
-	 * @static
-	 * @param DTArrayObject $oDTArrayObject
-	 * @return void
-	 */
+     * @param \MVC\DataType\DTArrayObject $oDTArrayObject
+     * @return void
+     * @throws \ReflectionException
+     */
 	public static function addERROR (DTArrayObject $oDTArrayObject)
 	{
 	    // add time

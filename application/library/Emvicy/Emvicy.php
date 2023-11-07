@@ -3,22 +3,21 @@
 namespace Emvicy;
 
 use MVC\Config;
-use MVC\File;
 
 /**
- * @param $iAmount
+ * @param int $iAmount
  * @return void
  */
-function nl($iAmount = 1)
+function nl(int $iAmount = 1)
 {
     echo str_repeat("\n", $iAmount);
 }
 
 /**
- * @param $sString
+ * @param string $sString
  * @return void
  */
-function hr($sString = '-')
+function hr(string $sString = '-')
 {
     nl();
     echo str_repeat($sString, 80);
@@ -46,11 +45,11 @@ class Emvicy
     }
 
     /**
-     * @param $sCmd
-     * @param $bEcho
+     * @param string $sCmd
+     * @param bool   $bEcho
      * @return string
      */
-    public static function shellExecute($sCmd = '', $bEcho = false)
+    public static function shellExecute(string $sCmd = '', bool $bEcho = false)
     {
         if (true === $bEcho)
         {
@@ -470,5 +469,4 @@ class Emvicy
     {
         self::version();
     }
-
 }

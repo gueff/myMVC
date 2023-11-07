@@ -59,7 +59,7 @@ class Route
     /**
      * @param string $sPath
      * @param string $sQuery
-     * @param        $mOptional
+     * @param mixed  $mOptional
      * @return void
      * @throws \ReflectionException
      */
@@ -72,7 +72,7 @@ class Route
      * @param array  $aMethod
      * @param string $sPath
      * @param string $sQuery
-     * @param        $mOptional
+     * @param mixed  $mOptional
      * @return void
      * @throws \ReflectionException
      */
@@ -87,7 +87,7 @@ class Route
     /**
      * @param string $sPath
      * @param string $sQuery
-     * @param        $mOptional
+     * @param mixed  $mOptional
      * @return void
      * @throws \ReflectionException
      */
@@ -99,7 +99,7 @@ class Route
     /**
      * @param string $sPath
      * @param string $sQuery
-     * @param        $mOptional
+     * @param mixed  $mOptional
      * @return void
      * @throws \ReflectionException
      */
@@ -111,7 +111,7 @@ class Route
     /**
      * @param string $sPath
      * @param string $sQuery
-     * @param        $mOptional
+     * @param mixed  $mOptional
      * @return void
      * @throws \ReflectionException
      */
@@ -123,7 +123,7 @@ class Route
     /**
      * @param string $sPath
      * @param string $sQuery
-     * @param        $mOptional
+     * @param mixed  $mOptional
      * @return void
      * @throws \ReflectionException
      */
@@ -208,7 +208,7 @@ class Route
 
     /**
      * @param bool $bWildcardsOnly
-     * @return array|false
+     * @return array
      */
     public static function getIndices(bool $bWildcardsOnly = false)
     {
@@ -221,7 +221,9 @@ class Route
 
         // wildcards only
         $aIndex = preg_grep("/\/\*/i", $aIndex);
+        (false === $aIndex) ? $aIndex = array() : false;
 
+        /** @var array */
         return $aIndex;
     }
 

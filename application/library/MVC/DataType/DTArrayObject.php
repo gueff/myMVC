@@ -13,8 +13,6 @@
 namespace MVC\DataType;
 
 
-use MVC\Debug;
-
 class DTArrayObject
 {
     const DTHASH = '75575fbb25ada598d5a34e03168fbfa7';
@@ -25,11 +23,13 @@ class DTArrayObject
     protected $aKeyValue;
 
     /**
-     * ArrayObject constructor.
      * @param array $aData
+     * @throws \ReflectionException
      */
     public function __construct(array $aData = array())
     {
+        \MVC\Event::RUN ('DTArrayObject.__construct.before', $aData);
+
         $this->aKeyValue = array();
 
         foreach ($aData as $sKey => $mValue)
@@ -47,25 +47,35 @@ class DTArrayObject
                     ->set_sValue($mValue));
             }
         }
+
+        \MVC\Event::RUN ('DTArrayObject.__construct.after', $aData);
     }
 
     /**
      * @param array $aData
-     * @return DTArrayObject
+     * @return self
+     * @throws \ReflectionException
      */
     public static function create(array $aData = array())
     {
+        \MVC\Event::RUN ('DTArrayObject.create.before', $aData);
+
         $oObject = new self($aData);
+
+        \MVC\Event::RUN ('DTArrayObject.create.before', $oObject);
 
         return $oObject;
     }
 
     /**
-     * @param array $aValue
+     * @param $aValue
      * @return $this
+     * @throws \ReflectionException
      */
     public function set_aKeyValue($aValue)
     {
+        \MVC\Event::RUN ('DTArrayObject.set_aKeyValue.before', $aValue);
+
         foreach ($aValue as $mKey => $aData)
         {
             if (false === ($aData instanceof \MVC\DataType\DTKeyValue))
@@ -82,19 +92,25 @@ class DTArrayObject
     /**
      * @param \MVC\DataType\DTKeyValue $mValue
      * @return $this
+     * @throws \ReflectionException
      */
     public function add_aKeyValue(\MVC\DataType\DTKeyValue $mValue)
     {
+        \MVC\Event::RUN ('DTArrayObject.add_aKeyValue.before', $mValue);
+
         $this->aKeyValue[] = $mValue;
 
         return $this;
     }
 
     /**
-     * @return \MVC\DataType\DTKeyValue[]
+     * @return array|\MVC\DataType\DTKeyValue[]
+     * @throws \ReflectionException
      */
     public function get_aKeyValue()
     {
+        \MVC\Event::RUN ('DTArrayObject.get_aKeyValue.before', $this->aKeyValue);
+
         return $this->aKeyValue;
     }
 
@@ -112,9 +128,12 @@ class DTArrayObject
      * @param \MVC\DataType\DTKeyValue|null $oDTKeyValueNew
      * @param bool                          $bUnset
      * @return $this
+     * @throws \ReflectionException
      */
-    function setDTKeyValueByKey(DTKeyValue $oDTKeyValueNew = null, $bUnset = false)
+    function setDTKeyValueByKey(DTKeyValue $oDTKeyValueNew = null, bool $bUnset = false)
     {
+        \MVC\Event::RUN ('DTArrayObject.setDTKeyValueByKey.before', $oDTKeyValueNew);
+
         if (null === $oDTKeyValueNew)
         {
             return $this;
@@ -149,12 +168,15 @@ class DTArrayObject
     }
 
     /**
-     * @param string             $sKey
-     * @param DTArrayObject|null $oDTArrayObject optional another $oDTArrayObject
-     * @return DTKeyValue
+     * @param                                  $sKey
+     * @param \MVC\DataType\DTArrayObject|null $oDTArrayObject optional another $oDTArrayObject
+     * @return mixed|\MVC\DataType\DTKeyValue
+     * @throws \ReflectionException
      */
     function getDTKeyValueByKey($sKey = '', DTArrayObject $oDTArrayObject = null)
     {
+        \MVC\Event::RUN ('DTArrayObject.getDTKeyValueByKey.before', $sKey);
+
         if (null === $oDTArrayObject)
         {
             $oDTArrayObject = $this;
@@ -230,6 +252,7 @@ class DTArrayObject
      * returns a simple "key" and "value" array of key value pairs stored in this object
      * notice: it does only use "sKey" and "sValue" of the DTKeyValue Object
      * @return array
+     * @throws \ReflectionException
      */
     public function flatten()
     {
@@ -244,13 +267,5 @@ class DTArrayObject
         }
 
         return $aFlatten;
-    }
-
-    /**
-     * @return string JSON
-     */
-    public function getDataTypeConfigJSON()
-    {
-        return '{"name":"DTArrayObject","file":"DTArrayObject.php","extends":"","namespace":"MVC\\\\DataType","constant":[],"property":[{"key":"aKeyValue","var":"\\\\MVC\\\\DataType\\\\DTKeyValue[]","value":"array()","visibility":"protected","static":false,"setter":true,"getter":true,"explicitMethodForValue":false,"listProperty":true,"createStaticPropertyGetter":true,"setValueInConstructor":true}],"createHelperMethods":true}';
     }
 }

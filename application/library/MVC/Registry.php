@@ -71,11 +71,11 @@ class Registry
 
 	/**
 	 * gets a value by its key
-     * @param $sIndex
-     * @return mixed
+     * @param string $sIndex
+     * @return mixed|null
      * @throws \ReflectionException
      */
-	public static function get($sIndex)
+	public static function get(string $sIndex = '')
 	{
 		if (!array_key_exists ($sIndex, self::$_aStorage))
 		{
@@ -93,20 +93,20 @@ class Registry
 
 	/**
 	 * saves a key/value pair to registry storage
-	 * @param string $sIndex Index of the Storage
-	 * @param mixed $mValue The Value ti be set
-	 * @return void
-	 */
-	public static function set($sIndex, $mValue)
+     * @param string $sIndex index of storage
+     * @param mixed  $mValue value to be set
+     * @return void
+     */
+	public static function set(string $sIndex = '', $mValue = null)
 	{
 		self::$_aStorage[$sIndex] = $mValue;
 	}
 
     /**
-     * @param $sIndex
+     * @param string $sIndex
      * @return bool
      */
-    public static function delete($sIndex)
+    public static function delete(string $sIndex = '')
     {
         if (false === self::isRegistered($sIndex))
         {
@@ -131,10 +131,10 @@ class Registry
 	/**
 	 * Returns true if the $index is a named value in the registry,
 	 * or FALSE if $index was not found in the registry.
-     * @param $sIndex
+     * @param string $sIndex
      * @return bool
      */
-	public static function isRegistered($sIndex)
+	public static function isRegistered(string $sIndex = '')
 	{
 		if (null === self::getInstance())
 		{

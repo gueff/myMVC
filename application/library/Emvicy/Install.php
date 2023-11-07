@@ -2,15 +2,17 @@
 
 namespace Emvicy;
 
+use MVC\Dir;
+
 class Install
 {
     /**
-     * @param $sModuleName
-     * @param array $aConfig
-     * @param bool $bPrimary
+     * @param string $sModuleName
+     * @param array  $aConfig
+     * @param bool   $bPrimary
      * @return false|void
      */
-    public static function run($sModuleName = '', array $aConfig = array(), bool $bPrimary = true)
+    public static function run(string $sModuleName = '', array $aConfig = array(), bool $bPrimary = true)
     {
         $sModuleName = ucfirst(trim($sModuleName));
 
@@ -18,13 +20,14 @@ class Install
         if (is_dir($aConfig['MVC_MODULES_DIR'] . '/' . $sModuleName ))
         {
             echo "\nERROR\tmodule '" . $sModuleName . "' already exists. Exit.\n\n";
+
             return false;
         }
 
         echo "\n...creating module/" . $sModuleName . "/* with subdirectories and -files\n";
 
         // copy new module skeleton
-        self::recursiveCopy($aConfig['MVC_APPLICATION_INIT_DIR'] . '/skeleton/Module', $aConfig['MVC_MODULES_DIR'] . '/' . $sModuleName);
+        Dir::recursiveCopy($aConfig['MVC_APPLICATION_INIT_DIR'] . '/skeleton/Module', $aConfig['MVC_MODULES_DIR'] . '/' . $sModuleName);
 
         // replace placeholder
         Emvicy::shellExecute(whereis('grep') . ' -rl "{module}" ' . $aConfig['MVC_MODULES_DIR'] . '/' . $sModuleName . ' | '
@@ -76,12 +79,12 @@ class Install
     }
 
     /**
-     * @param       $sModuleName
-     * @param       $sControllerName
-     * @param array $aConfig
+     * @param string $sModuleName
+     * @param string $sControllerName
+     * @param array  $aConfig
      * @return void
      */
-    public static function createController($sModuleName = '', $sControllerName = '', array $aConfig = array())
+    public static function createController(string $sModuleName = '', string $sControllerName = '', array $aConfig = array())
     {
         $sModuleName = ucfirst(trim($sModuleName));
         $sControllerFile = $aConfig['MVC_MODULES_DIR'] . '/' . $sModuleName . '/Controller/' . $sControllerName . '.php';
@@ -103,30 +106,14 @@ class Install
     }
 
     /**
-     * copies recursively
+     * @deprecated use instead: \MVC\Dir::recursiveCopy
      * @param string $sSource
      * @param string $sDestination
+     * @return void
+     * @throws \ReflectionException
      */
-    public static function recursiveCopy($sSource, $sDestination)
+    public static function recursiveCopy(string $sSource = '', string $sDestination = '')
     {
-        $dir = opendir($sSource);
-        @mkdir($sDestination);
-
-        while (false !== ( $file = readdir($dir)))
-        {
-            if (( $file != '.' ) && ( $file != '..' ))
-            {
-                if (is_dir($sSource . '/' . $file))
-                {
-                    self::recursiveCopy($sSource . '/' . $file, $sDestination . '/' . $file);
-                }
-                else
-                {
-                    copy($sSource . '/' . $file, $sDestination . '/' . $file);
-                }
-            }
-        }
-
-        closedir($dir);
+        Dir::recursiveCopy($sSource, $sDestination);
     }
 }

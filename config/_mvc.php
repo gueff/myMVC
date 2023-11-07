@@ -103,6 +103,23 @@ MVC_APPLICATION_SETTINGS: {
     $aConfig['MVC_CONFIG_DIR'] = $aConfig['MVC_BASE_PATH'] . '/config';
 
     /**
+     * Event
+     */
+    // allow declaring listeners with wildcard, e.g.:   Event::bind('foo.bar.*', ... );
+    // matches to event 'foo.bar.baz':                  Event::run('foo.bar.baz');
+    // mandatory: asterisk `*` at the end
+    // notice: wildcard listeners are processed before the regular event listeners
+    $aConfig['MVC_EVENT_ENABLE_WILDCARD'] = true;
+
+    // logging of each simple "RUN" event into MVC_LOG_FILE_EVENT
+    // remember:
+    // - events marked as "RUN": fired events without any listener (nothing happens)
+    // - events marked as "RUN+": fired events with bonded listeners / closures to be executed
+    // be aware that setting this to "true" would produce much data in the logfile (consider using logrotate!)
+    // anyway this might be useful for a develop environment, as it helps debugging and understanding
+    $aConfig['MVC_EVENT_LOG_RUN'] = false;
+
+    /**
      * Log
      */
     $aConfig['MVC_LOG_FILE_FOLDER'] = $aConfig['MVC_APPLICATION_PATH'] . '/log/';

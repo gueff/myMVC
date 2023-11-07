@@ -13,12 +13,12 @@ namespace MVC\MVCTrait;
 trait TraitDataType
 {
     /**
-     * @param $sProperty
-     * @param $sDocCommentKey
+     * @param string $sProperty
+     * @param string $sDocCommentKey
      * @return string
      * @throws \ReflectionException
      */
-    function getDocCommentValueOfProperty($sProperty = '', $sDocCommentKey = '@var')
+    function getDocCommentValueOfProperty(string $sProperty = '', string $sDocCommentKey = '@var')
     {
         // get array of properties
         $oReflectionClass = new \ReflectionClass($this);

@@ -19,7 +19,7 @@ class Dir
      * @return bool
      * @throws \ReflectionException
      */
-    public static function remove(string $sDirectory = '', bool $bForce = false): bool
+    public static function remove(string $sDirectory = '', bool $bForce = false) : bool
     {
         if (strstr($sDirectory, '*'))
         {
@@ -50,26 +50,33 @@ class Dir
      * @param string $sDirectory
      * @return bool folder is empty
      */
-    public static function isEmpty(string $sDirectory = '')
+    public static function isEmpty(string $sDirectory = '') : bool
     {
         return !(new \FilesystemIterator($sDirectory))->valid();
     }
 
     /**
      * @param string $sDirectory
-     * @param int    $iPermission e.g. 0640, 0755, 0777
-     * @param bool   $bRecursive default=true
+     * @param int    $iPermission
+     * @param bool   $bRecursive
      * @return bool
+     * @throws \ReflectionException
      */
-    public static function make(string $sDirectory = '', int $iPermission = 0755, bool $bRecursive = true)
+    public static function make(string $sDirectory = '', int $iPermission = 0755, bool $bRecursive = true) : bool
     {
-        if (
-            // a similar file or dir already exists
-            (true === file_exists($sDirectory)) ||
-            // creating that dir fails
-            (false === mkdir($sDirectory, $iPermission, $bRecursive))
-        )
+        // a similar file or dir already exists
+        if (true === file_exists($sDirectory))
         {
+            return false;
+        }
+
+        $bMkdir = mkdir($sDirectory, $iPermission, $bRecursive);
+
+        // creating that dir fails
+        if (false === $bMkdir)
+        {
+            Error::error('mkdir failed: `' . $sDirectory . '`');
+
             return false;
         }
 
@@ -87,8 +94,40 @@ class Dir
      * @param string $sDirectory
      * @return bool exists
      */
-    public static function exists(string $sDirectory = '')
+    public static function exists(string $sDirectory = '') : bool
     {
         return (true === file_exists($sDirectory) && true === is_dir($sDirectory));
+    }
+
+    /**
+     * copies a directory recursively
+     * @param string $sSource
+     * @param string $sDestination
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function recursiveCopy(string $sSource = '', string $sDestination = '')
+    {
+        $rDir = opendir($sSource);
+        $bMkdir = mkdir($sDestination);
+        (false === $bMkdir) ? Error::error('mkdir failed: `' . $sDestination . '`') : false;
+
+        while (false !== ( $file = readdir($rDir)))
+        {
+            if (( $file != '.' ) && ( $file != '..' ))
+            {
+                if (is_dir($sSource . '/' . $file))
+                {
+                    self::recursiveCopy($sSource . '/' . $file, $sDestination . '/' . $file);
+                }
+                else
+                {
+                    $bCopy = copy($sSource . '/' . $file, $sDestination . '/' . $file);
+                    (false === $bCopy) ? Error::error('copy failed: from `' . $sSource . '/' . $file . '` => to => `' . $sDestination . '/' . $file . '`') : false;
+                }
+            }
+        }
+
+        closedir($rDir);
     }
 }

@@ -25,18 +25,14 @@ class Controller
      */
 	public static function init()
 	{
-		Event::run ('mvc.controller.init.before', DTArrayObject::create());
+		Event::run('mvc.controller.init.before');
 
 		// start requested Module/Class/Method
 		$oReflex = new Reflex();
 		$bSuccess = $oReflex->reflect ();
 
-        Event::run ('mvc.controller.init.after',
-            DTArrayObject::create()
-                ->add_aKeyValue(
-                    DTKeyValue::create()->set_sKey('bSuccess')->set_sValue($bSuccess)
-                )
-        );
+        Event::run('mvc.controller.init.after', $bSuccess);
+
         return $bSuccess;
 	}
 
@@ -82,7 +78,7 @@ class Controller
         }
         else
         {
-            Event::run ('mvc.error',
+            Event::run('mvc.error',
                 DTArrayObject::create()
                     ->add_aKeyValue(
                         DTKeyValue::create()->set_sKey('iLevel')->set_sValue(1)
@@ -93,7 +89,7 @@ class Controller
             );
         }
 
-        Event::run ('mvc.controller.runTargetClassPreconstruct.after',
+        Event::run('mvc.controller.runTargetClassPreconstruct.after',
             DTArrayObject::create()
                 ->add_aKeyValue(
                     DTKeyValue::create()->set_sKey('sClass')->set_sValue($sTargetClass)
@@ -109,7 +105,7 @@ class Controller
      */
 	public function __destruct ()
 	{
-        Event::run ('mvc.controller.destruct.before',
+        Event::run('mvc.controller.destruct.before',
             DTArrayObject::create()
                 ->add_aKeyValue(
                     DTKeyValue::create()->set_sKey('oController')->set_sValue($this)

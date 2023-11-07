@@ -17,7 +17,7 @@ class Strings
      * @param string $sString
      * @return string
      */
-    public static function removeDoubleDotSlashesFromString($sString = '')
+    public static function removeDoubleDotSlashesFromString(string $sString = '')
     {
         // removes any "../"
         $sString = (string) preg_replace('#(\.\.\/)+#', '', trim($sString));
@@ -31,7 +31,7 @@ class Strings
      * @param bool   $bIgnoreProtocols default=false; on true leaves :// as it is
      * @return string
      */
-    public static function replaceMultipleForwardSlashesByOneFromString($sString = '', $bIgnoreProtocols = false)
+    public static function replaceMultipleForwardSlashesByOneFromString(string $sString = '', bool $bIgnoreProtocols = false)
     {
         // removes multiple "/" [e.g.: //, ///, ////, etc.]
         if (true === $bIgnoreProtocols)
@@ -48,12 +48,12 @@ class Strings
 
     /**
      * replaces special chars, umlauts by `-` (or given char)
-     * @param $sString
-     * @param $sReplacement
-     * @param $bStrToLower
+     * @param string $sString
+     * @param string $sReplacement
+     * @param bool   $bStrToLower
      * @return string
      */
-    public static function seofy ($sString = '', $sReplacement = '-', $bStrToLower = true)
+    public static function seofy(string $sString = '', string $sReplacement = '-', bool $bStrToLower = true)
     {
         $sString = preg_replace('/[^\\pL\d_]+/u', $sReplacement, $sString);
         $sString = trim($sString, $sReplacement);
@@ -66,10 +66,10 @@ class Strings
     }
 
     /**
-     * @param $sString
+     * @param string $sString
      * @return bool
      */
-    public static function isJson($sString = '')
+    public static function isJson(string $sString = '')
     {
         if (false === is_string($sString))
         {
@@ -83,10 +83,10 @@ class Strings
     }
 
     /**
-     * @param $sString
-     * @return bool string is utf8
+     * @param string $sString
+     * @return bool
      */
-    public static function isUtf8($sString = '')
+    public static function isUtf8(string $sString = '')
     {
         $iStrlen = strlen($sString);
 

@@ -22,10 +22,10 @@ class Lock
     /**
      * @param string $sKey
      * @param bool   $bReturn
-     * @return bool
+     * @return bool|void
      * @throws \ReflectionException
      */
-    public static function create($sKey = '', $bReturn = false)
+    public static function create(string $sKey = '', bool $bReturn = false)
     {
         $aBacktrace = Debug::prepareBacktraceArray(debug_backtrace());
         $sCacheDir = Config::get_MVC_CACHE_DIR();

@@ -26,7 +26,7 @@ class Log
      * @param array $aBacktrace
      * @return string
      */
-	public static function prepareDebug (array $aBacktrace = array ())
+	public static function prepareDebug(array $aBacktrace = array ())
 	{
         $aData = Debug::prepareBacktraceArray($aBacktrace);
 
@@ -42,11 +42,11 @@ class Log
 
 	/**
 	 * prepares logfile
-     * @param $sLogfile
-     * @return mixed|string
+     * @param string $sLogfile
+     * @return string
      * @throws \ReflectionException
      */
-	public static function prepareLogfile ($sLogfile = '')
+	public static function prepareLogfile(string $sLogfile = '')
 	{
 		// make sure it is a logfile inside the configured log directory
 		($sLogfile === '')

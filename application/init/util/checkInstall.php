@@ -24,7 +24,7 @@ class MyMVCInstaller
     protected $_aConfig;
 
     /**
-     * @var
+     * @var array
      */
 	protected $_aBootstrapperFileInfo;
 
@@ -263,7 +263,7 @@ class MyMVCInstaller
      * @param string $sInstallLock
      * @return bool
      */
-    protected function writeInstallLock($sInstallLock = '')
+    protected function writeInstallLock(string $sInstallLock = '')
     {
         if ('' !== $sInstallLock && false === file_exists($sInstallLock))
         {
@@ -277,7 +277,7 @@ class MyMVCInstaller
      * @param string $sInstallLock
      * @return bool
      */
-    protected function removeInstallLock($sInstallLock = '')
+    protected function removeInstallLock(string $sInstallLock = '')
     {
         if ('' !== $sInstallLock && true === file_exists($sInstallLock))
         {
@@ -313,10 +313,10 @@ class MyMVCInstaller
     }
 
     /**
-     * @param $sInstallLock
+     * @param string $sInstallLock
      * @return void
      */
-    protected function prepareForOutput($sInstallLock = '')
+    protected function prepareForOutput(string $sInstallLock = '')
     {
         if (false === self::$_bOutputStarted)
         {
@@ -328,7 +328,7 @@ class MyMVCInstaller
             if ('' !== $sInstallLock)
             {
                 // abort if installer is still running
-                if (file_exists ($sInstallLock))
+                if (file_exists($sInstallLock))
                 {
                     $this->_text('<dd>The Installer seems to be running in the background. Please wait a few minutes before reloading this page.</dd>');
                     exit();
@@ -356,10 +356,10 @@ class MyMVCInstaller
     }
 
     /**
-     * @param $sComposerDir
+     * @param string $sComposerDir
      * @return int
      */
-	protected function installVendor($sComposerDir = '')
+	protected function installVendor(string $sComposerDir = '')
 	{
         $iPid = 0;
 
@@ -400,7 +400,7 @@ class MyMVCInstaller
                 . $this->_aConfig['MVC_BIN_REMOVE'] . ' ' . $sInstallLock . ';';
 
         file_put_contents($sInstallLock, "#!/bin/bash\n" . $sCmd);
-        $iPid = $this->_runInBackground ('/bin/bash ' . $sInstallLock);
+        $iPid = $this->_runInBackground('/bin/bash ' . $sInstallLock);
         $this->_text('<dd>&bull; Installing required <kbd>Module libraries</kbd> via composer in Background with PID <code>' . $iPid . '</code>. Please wait.</dd>');
 
         while (true === $this->_isProcessRunning ($iPid))
@@ -436,7 +436,7 @@ class MyMVCInstaller
      * @param $sCommand
      * @return int
      */
-	protected function _runInBackground ($sCommand)
+	protected function _runInBackground(string $sCommand = '')
 	{
 		$iPid = (int) trim(shell_exec($sCommand . ' > /dev/null 2>/dev/null & echo $!'));
 
@@ -444,10 +444,10 @@ class MyMVCInstaller
 	}
 
     /**
-     * @param $iPid
+     * @param int $iPid
      * @return bool
      */
-	protected function _isProcessRunning ($iPid = 0)
+	protected function _isProcessRunning(int $iPid = 0)
 	{
 	    if (0 === $iPid)
         {
@@ -463,7 +463,7 @@ class MyMVCInstaller
     /**
      * @return void
      */
-	protected function _flush ()
+	protected function _flush()
 	{
 		$this->_text("<i class='fa fa-asterisk fa-spin text-primary'></i>");
 		
@@ -473,10 +473,10 @@ class MyMVCInstaller
 	}
 
     /**
-     * @param $sText
+     * @param string $sText
      * @return void
      */
-	protected function _text($sText = '')
+	protected function _text(string $sText = '')
 	{
 		if ('cli' === php_sapi_name())
 		{

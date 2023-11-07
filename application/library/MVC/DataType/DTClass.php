@@ -58,7 +58,7 @@ class DTClass
 	 */
 	public function __construct(array $aData = array())
 	{
-		\MVC\Event::RUN ('DTClass.__construct.before', \MVC\DataType\DTArrayObject::create($aData)->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTClass.__construct.before', $aData);
 
 		$this->name = '';
 		$this->file = '';
@@ -78,7 +78,7 @@ class DTClass
 			}
 		}
 
-		\MVC\Event::RUN ('DTClass.__construct.after', \MVC\DataType\DTArrayObject::create($aData));
+		\MVC\Event::RUN ('DTClass.__construct.after', $aData);
 	}
 
     /**
@@ -88,11 +88,11 @@ class DTClass
      */
     public static function create(array $aData = array())
     {
-        \MVC\Event::RUN ('DTClass.create.before', \MVC\DataType\DTArrayObject::create($aData)->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+        \MVC\Event::RUN ('DTClass.create.before', $aData);
         
         $oObject = new self($aData);
 
-        \MVC\Event::RUN ('DTClass.create.after', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('DTClass')->set_sValue($oObject)));
+        \MVC\Event::RUN ('DTClass.create.after', $oObject);
         
         return $oObject;
     }
@@ -104,7 +104,7 @@ class DTClass
 	 */
 	public function set_name(string $mValue)
 	{
-		\MVC\Event::RUN ('DTClass.set_name.before', \MVC\DataType\DTArrayObject::create(array('name' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTClass.set_name.before', $mValue);
 
 		$this->name = $mValue;
 
@@ -118,7 +118,7 @@ class DTClass
 	 */
 	public function set_file(string $mValue)
 	{
-		\MVC\Event::RUN ('DTClass.set_file.before', \MVC\DataType\DTArrayObject::create(array('file' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTClass.set_file.before', $mValue);
 
 		$this->file = $mValue;
 
@@ -132,7 +132,7 @@ class DTClass
 	 */
 	public function set_extends(string $mValue)
 	{
-		\MVC\Event::RUN ('DTClass.set_extends.before', \MVC\DataType\DTArrayObject::create(array('extends' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTClass.set_extends.before', $mValue);
 
 		$this->extends = $mValue;
 
@@ -146,7 +146,7 @@ class DTClass
 	 */
 	public function set_namespace(string $mValue)
 	{
-		\MVC\Event::RUN ('DTClass.set_namespace.before', \MVC\DataType\DTArrayObject::create(array('namespace' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTClass.set_namespace.before', $mValue);
 
 		$this->namespace = $mValue;
 
@@ -160,7 +160,7 @@ class DTClass
 	 */
 	public function set_constant(array $aValue)
 	{
-		\MVC\Event::RUN ('DTClass.set_constant.before', \MVC\DataType\DTArrayObject::create(array('constant' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTClass.set_constant.before', $aValue);
 
 		foreach ($aValue as $mKey => $aData)
         {
@@ -181,6 +181,8 @@ class DTClass
 	 */
 	public function add_DTconstant(\MVC\DataType\DTConstant $mValue)
 	{
+        \MVC\Event::RUN ('DTClass.add_DTconstant.before', $mValue);
+
 		$this->constant[] = $mValue;
 
 		return $this;
@@ -193,7 +195,7 @@ class DTClass
 	 */
 	public function set_property(array $aValue)
 	{
-		\MVC\Event::RUN ('DTClass.set_property.before', \MVC\DataType\DTArrayObject::create(array('property' => $aValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTClass.set_property.before', $aValue);
 
 		foreach ($aValue as $mKey => $aData)
         {
@@ -214,6 +216,8 @@ class DTClass
 	 */
 	public function add_DTproperty(\MVC\DataType\DTProperty $mValue)
 	{
+        \MVC\Event::RUN ('DTClass.add_DTproperty.before', $mValue);
+
 		$this->property[] = $mValue;
 
 		return $this;
@@ -226,7 +230,7 @@ class DTClass
 	 */
 	public function set_createHelperMethods(bool $mValue)
 	{
-		\MVC\Event::RUN ('DTClass.set_createHelperMethods.before', \MVC\DataType\DTArrayObject::create(array('createHelperMethods' => $mValue))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTClass.set_createHelperMethods.before', $mValue);
 
 		$this->createHelperMethods = $mValue;
 
@@ -239,7 +243,7 @@ class DTClass
 	 */
 	public function get_name() : string
 	{
-		\MVC\Event::RUN ('DTClass.get_name.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('name')->set_sValue($this->name))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTClass.get_name.before', $this->name);
 
 		return $this->name;
 	}
@@ -250,7 +254,7 @@ class DTClass
 	 */
 	public function get_file() : string
 	{
-		\MVC\Event::RUN ('DTClass.get_file.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('file')->set_sValue($this->file))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTClass.get_file.before', $this->file);
 
 		return $this->file;
 	}
@@ -261,7 +265,7 @@ class DTClass
 	 */
 	public function get_extends() : string
 	{
-		\MVC\Event::RUN ('DTClass.get_extends.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('extends')->set_sValue($this->extends))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTClass.get_extends.before', $this->extends);
 
 		return $this->extends;
 	}
@@ -272,7 +276,7 @@ class DTClass
 	 */
 	public function get_namespace() : string
 	{
-		\MVC\Event::RUN ('DTClass.get_namespace.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('namespace')->set_sValue($this->namespace))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTClass.get_namespace.before', $this->namespace);
 
 		return $this->namespace;
 	}
@@ -283,7 +287,7 @@ class DTClass
 	 */
 	public function get_constant()
 	{
-		\MVC\Event::RUN ('DTClass.get_constant.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('constant')->set_sValue($this->constant))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTClass.get_constant.before', $this->constant);
 
 		return $this->constant;
 	}
@@ -294,7 +298,7 @@ class DTClass
 	 */
 	public function get_property()
 	{
-		\MVC\Event::RUN ('DTClass.get_property.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('property')->set_sValue($this->property))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTClass.get_property.before', $this->property);
 
 		return $this->property;
 	}
@@ -305,7 +309,7 @@ class DTClass
 	 */
 	public function get_createHelperMethods() : bool
 	{
-		\MVC\Event::RUN ('DTClass.get_createHelperMethods.before', \MVC\DataType\DTArrayObject::create()->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('createHelperMethods')->set_sValue($this->createHelperMethods))->add_aKeyValue(\MVC\DataType\DTKeyValue::create()->set_sKey('aBacktrace')->set_sValue(\MVC\Debug::prepareBacktraceArray(debug_backtrace()))));
+		\MVC\Event::RUN ('DTClass.get_createHelperMethods.before', $this->createHelperMethods);
 
 		return $this->createHelperMethods;
 	}
@@ -418,13 +422,5 @@ class DTClass
 		}
 
 		return $this;
-	}
-
-	/**
-	 * @return string JSON
-	 */
-	public function getDataTypeConfigJSON()
-	{
-		return '{"name":"DTClass","file":"DTClass.php","extends":"","namespace":"MVC\\\\DataType","constant":[{"key":"","value":null,"visibility":""},{"key":"","value":null,"visibility":""},{"key":"","value":null,"visibility":""},{"key":"","value":null,"visibility":""},{"key":"","value":null,"visibility":""},{"key":"","value":null,"visibility":""},{"key":"","value":null,"visibility":""}],"property":[{"key":"name","var":"string","value":"","visibility":"protected","static":false,"setter":true,"getter":true,"explicitMethodForValue":false,"listProperty":true,"createStaticPropertyGetter":true,"setValueInConstructor":true,"forceCasting":false},{"key":"file","var":"string","value":"","visibility":"protected","static":false,"setter":true,"getter":true,"explicitMethodForValue":false,"listProperty":true,"createStaticPropertyGetter":true,"setValueInConstructor":true,"forceCasting":false},{"key":"extends","var":"string","value":"","visibility":"protected","static":false,"setter":true,"getter":true,"explicitMethodForValue":false,"listProperty":true,"createStaticPropertyGetter":true,"setValueInConstructor":true,"forceCasting":false},{"key":"namespace","var":"string","value":"","visibility":"protected","static":false,"setter":true,"getter":true,"explicitMethodForValue":false,"listProperty":true,"createStaticPropertyGetter":true,"setValueInConstructor":true,"forceCasting":false},{"key":"constant","var":"\\\\MVC\\\\DataType\\\\DTConstant[]","value":"array()","visibility":"protected","static":false,"setter":true,"getter":true,"explicitMethodForValue":false,"listProperty":true,"createStaticPropertyGetter":true,"setValueInConstructor":true,"forceCasting":false},{"key":"property","var":"\\\\MVC\\\\DataType\\\\DTProperty[]","value":"array()","visibility":"protected","static":false,"setter":true,"getter":true,"explicitMethodForValue":false,"listProperty":true,"createStaticPropertyGetter":true,"setValueInConstructor":true,"forceCasting":false},{"key":"createHelperMethods","var":"bool","value":true,"visibility":"protected","static":false,"setter":true,"getter":true,"explicitMethodForValue":false,"listProperty":true,"createStaticPropertyGetter":true,"setValueInConstructor":true,"forceCasting":false}],"createHelperMethods":true}';
 	}
 }

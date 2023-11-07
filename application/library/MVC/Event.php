@@ -103,6 +103,8 @@ class Event
      */
     public static function bind(string $sEvent, \Closure $oClosure, $oObject = null, array $aDebug = array())
     {
+        $sEvent = trim($sEvent);
+
         $sDebug = Log::prepareDebug(((true === empty($aDebug)) ? debug_backtrace() : $aDebug));
 
         if (!isset (self::$aEvent[$sEvent]))
@@ -156,41 +158,106 @@ class Event
     }
 
     /**
-     * runs an event
-     * @param $sEvent
-     * @param null $mPackage
+     * @param string $sEvent
+     * @param        $mPackage
      * @return bool
      * @throws \ReflectionException
      */
-    public static function run($sEvent, $mPackage = null)
+    public static function run(string $sEvent = '', $mPackage = null)
     {
         if (null === $mPackage)
         {
             $mPackage = DTArrayObject::create();
         }
 
+        $sEvent = trim($sEvent);
         $sDebug = Log::prepareDebug(debug_backtrace());
-        $sPreLog = '(' . $sEvent . ') --> called in: ' . $sDebug;
+        $sPreLog = ' (' . $sEvent . ') --> called in: ' . $sDebug;
 
-        // nothing bonded
+        // nothing bonded; "RUN"
         if (!isset (self::$aEvent[$sEvent]))
         {
-            // 'RUN  ' . $sPreLog
+            (true === Config::get_MVC_EVENT_LOG_RUN()) ? Log::write('RUN' . $sPreLog, Config::get_MVC_LOG_FILE_EVENT()) : false;
+
             return false;
         }
 
-        $sPreLog = 'RUN+ ' . $sPreLog;
+        #------------
+        # run wildcard listeners
+
+        if (true === Config::get_MVC_EVENT_ENABLE_WILDCARD())
+        {
+            $aListener = self::getWildcardListenersOnEvent($sEvent);
+
+            if (false === empty($aListener))
+            {
+                foreach ($aListener as $sListenerEvent)
+                {
+                    $sPreLogWildCard = ' (' . $sListenerEvent . ' [' . $sEvent . ']) --> called in: ' . $sDebug;
+                    Event::addToRegistry('RUN', $sPreLogWildCard);
+                    self::execute(self::$aEvent[$sListenerEvent], $mPackage, 'RUN+', $sPreLogWildCard);
+                }
+            }
+        }
+
+        #------------
+        # run regular listeners
 
         Event::addToRegistry('RUN', $sPreLog);
+        self::execute(self::$aEvent[$sEvent], $mPackage, 'RUN+', $sPreLog);
 
-        // iterate bonded
-        foreach (self::$aEvent[$sEvent] as $sKey => $sCallback)
+        #------------
+
+        return true;
+    }
+
+    /**
+     * @param string $sEvent
+     * @return array
+     */
+    protected static function getWildcardListenersOnEvent(string $sEvent = '')
+    {
+        $aListener = array_filter(
+            array_filter(array_map(function($sValue){
+                if ('*' === substr($sValue, -1)) // reduce to listeners with * at the end
+                {
+                    return $sValue;
+                }
+                return '';
+            }, array_map(
+                'trim',
+                preg_grep('/\*/', array_keys(self::$aEvent)) // get all listeners containing a *
+            ))),
+            function($sValue) use ($sEvent){
+                $sValue = str_replace('*', '', $sValue); // remove *
+
+                if ($sValue === substr($sEvent, 0, strlen($sValue)))
+                {
+                    return $sValue;
+                }
+            }
+        );
+
+        return $aListener;
+    }
+
+    /**
+     * @param array  $aEvent
+     * @param        $mPackage
+     * @param string $sPreName
+     * @param string $sPreLog
+     * @return void
+     * @throws \ReflectionException
+     */
+    protected static function execute(array $aEvent = array(), $mPackage = null, string $sPreName = '', string $sPreLog = '')
+    {
+        foreach ($aEvent as $sKey => $sCallback)
         {
             // run bonded closure
             if (true === filter_var(Closure::is($sCallback), FILTER_VALIDATE_BOOLEAN))
             {
                 Log::write(
-                    $sPreLog . ' --> bonded by `' . unserialize($sKey) . ', try to run its Closure: ' . Closure::toString($sCallback),
+                    $sPreName . $sPreLog . ' --> bonded by `' . unserialize($sKey) . ', try to run its Closure: ' . Closure::toString($sCallback),
                     Config::get_MVC_LOG_FILE_EVENT(),
                     false
                 );
@@ -199,25 +266,23 @@ class Event
                 if (call_user_func($sCallback, $mPackage) === false)
                 {
                     Log::write(
-                        "ERROR\t" . $sPreLog . ' *** Closure could not be run: ' . serialize($sCallback),
+                        "ERROR\t" . $sPreName . $sPreLog . ' *** Closure could not be run: ' . serialize($sCallback),
                         Config::get_MVC_LOG_FILE_ERROR(),
                         false
                     );
                 }
             }
         }
-
-        return true;
     }
 
     /**
-     * unbinds (delete) one or all events
-     * if this parameter not is set, *all* events are going to be deleted
-     * @param $sEvent
-     * @return true
+     * deletes (unbinds) one or all events
+     * if none parameter is given, *all* events are going to be deleted
+     * @param string $sEvent
+     * @return bool
      * @throws \ReflectionException
      */
-    public static function delete($sEvent = '')
+    public static function delete(string $sEvent = '')
     {
         $sDebug = Log::prepareDebug(debug_backtrace());
 
@@ -259,12 +324,12 @@ class Event
 
     /**
      * adds a key/value pair to registry
-     * @param $sKey
-     * @param $sValue
+     * @param string $sKey
+     * @param string $sValue
      * @return void
      * @throws \ReflectionException
      */
-    public static function addToRegistry($sKey, $sValue)
+    public static function addToRegistry(string $sKey = '', string $sValue = '')
     {
         $aMvcEvent = Config::get_MVC_EVENT();
         $aMvcEvent[$sKey][] = $sValue;
@@ -272,7 +337,7 @@ class Event
     }
 
     /**
-     * @deprecated use instead: \MVC\Event::get
+     * @deprecated use instead: \MVC\Event::getBonded
      * @return array
      */
     public static function getEventArray()
@@ -285,7 +350,7 @@ class Event
      * @param string $sEvent
      * @return array
      */
-    public static function get(string $sEvent = '')
+    public static function getBonded(string $sEvent = '')
     {
         if (true === empty($sEvent))
         {
@@ -293,5 +358,15 @@ class Event
         }
 
         return (array) get(self::$aEvent[$sEvent], array());
+    }
+
+    /**
+     * @notice alternative writing to Event::getBonded()
+     * @param string $sEvent
+     * @return array
+     */
+    public static function getListeners(string $sEvent = '')
+    {
+        return self::getBonded($sEvent);
     }
 }

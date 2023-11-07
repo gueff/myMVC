@@ -28,7 +28,7 @@ class View extends \Smarty
 
     /**
      * switch echo out
-     * @var boolean
+     * @var bool
      */
     public static $bEchoOut = true;
 
@@ -59,8 +59,7 @@ class View extends \Smarty
 
     /**
      * smarty version
-     *
-     * @var integer
+     * @var int
      */
     public $iSmartyVersion;
 
@@ -69,9 +68,9 @@ class View extends \Smarty
      * instantiates smarty object and set major smarty configs
      * @throws \ReflectionException
      */
-    public function __construct ()
+    public function __construct()
     {
-        parent::__construct ();
+        parent::__construct();
 
         $this->sTemplateDir = Config::get_MVC_VIEW_TEMPLATES();
 
@@ -91,19 +90,19 @@ class View extends \Smarty
         $this->setPluginsDir ($aPlugInDir);
         $this->checkDirs();
 
-        \MVC\Event::bind('mvc.view.render.off', function () {
+        \MVC\Event::bind('mvc.view.render.off', function() {
             \MVC\View::$bRender = false;
         });
 
-        \MVC\Event::bind('mvc.view.render.on', function () {
+        \MVC\Event::bind('mvc.view.render.on', function() {
             \MVC\View::$bRender = true;
         });
 
-        \MVC\Event::bind('mvc.view.echoOut.off', function () {
+        \MVC\Event::bind('mvc.view.echoOut.off', function() {
             \MVC\View::$bEchoOut = false;
         });
 
-        \MVC\Event::bind('mvc.view.echoOut.on', function () {
+        \MVC\Event::bind('mvc.view.echoOut.on', function() {
             \MVC\View::$bEchoOut = true;
         });
     }
@@ -112,7 +111,7 @@ class View extends \Smarty
      * checks if required dirs exist. If not, it tries to create them
      * @throws \ReflectionException
      */
-    private function checkDirs ()
+    private function checkDirs()
     {
         if (!file_exists (Config::get_MVC_SMARTY_TEMPLATE_CACHE_DIR()))
         {
@@ -130,7 +129,7 @@ class View extends \Smarty
      * @return string
      * @throws \SmartyException
      */
-    public function loadTemplateAsString ($sTemplate = '')
+    public function loadTemplateAsString(string $sTemplate = '')
     {
         return $this->fetch ('string:' . file_get_contents ($sTemplate, true));
     }
@@ -138,12 +137,13 @@ class View extends \Smarty
     /**
      * renders a given string and print it out (depending on self::$_bEchoOut)
      * @param string $sTemplateString
+     * @return void
      * @throws \ReflectionException
      * @throws \SmartyException
      */
-    public function renderString ($sTemplateString = '')
+    public function renderString(string $sTemplateString = '')
     {
-        Event::run ('mvc.view.renderString.before',
+        Event::run('mvc.view.renderString.before',
             DTArrayObject::create()
                 ->add_aKeyValue(
                     DTKeyValue::create()->set_sKey('sTemplateString')->set_sValue($sTemplateString)
@@ -154,7 +154,7 @@ class View extends \Smarty
 
         if (true === self::$bRender)
         {
-            $sRendered = $this->fetch ('string:' . $sTemplateString);
+            $sRendered = $this->fetch('string:' . $sTemplateString);
 
             if (true === self::$bEchoOut)
             {
@@ -162,7 +162,7 @@ class View extends \Smarty
             }
         }
 
-        Event::run ('mvc.view.renderString.after',
+        Event::run('mvc.view.renderString.after',
             DTArrayObject::create()
                 ->add_aKeyValue(
                     DTKeyValue::create()->set_sKey('sTemplateString')->set_sValue($sTemplateString)
@@ -178,12 +178,13 @@ class View extends \Smarty
 
     /**
      * renders the template $this->sTemplate
+     * @return void
      * @throws \ReflectionException
      * @throws \SmartyException
      */
-    public function render ()
+    public function render()
     {
-        Event::run ('mvc.view.render.before',
+        Event::run('mvc.view.render.before',
             DTArrayObject::create()
                 ->add_aKeyValue(
                     DTKeyValue::create()->set_sKey('oView')->set_sValue($this)
@@ -194,7 +195,7 @@ class View extends \Smarty
         $sTemplate = (true === is_file($this->sTemplate)) ? file_get_contents ($this->sTemplate, true) : '';
         $this->renderString ($sTemplate);
 
-        Event::run ('mvc.view.render.after',
+        Event::run('mvc.view.render.after',
             DTArrayObject::create()
                 ->add_aKeyValue(
                     DTKeyValue::create()->set_sKey('oView')->set_sValue($this)
@@ -207,13 +208,14 @@ class View extends \Smarty
 
     /**
      * assigns a value to a Template Variable
-     * @param string $sValue
+     * @param mixed $mValue
      * @param string $sVar
+     * @return void
      */
-    public function assignValue ($sValue, $sVar = '')
+    public function assignValue($mValue, string $sVar = '')
     {
         ('' === $sVar) ? $sVar = $this->sContentVar : false;
-        $this->assign ($sVar, $sValue);
+        $this->assign($sVar, $mValue);
     }
 
     /**
@@ -221,7 +223,7 @@ class View extends \Smarty
      * @param string $sTemplate
      * @return void
      */
-    public function setTemplate ($sTemplate)
+    public function setTemplate(string $sTemplate = '')
     {
         $this->sTemplate = $sTemplate;
     }
@@ -231,23 +233,23 @@ class View extends \Smarty
      * @param string $sAbsolutePathToTemplateDir
      * @throws \ReflectionException
      */
-    public function setAbsolutePathToTemplateDir ($sAbsolutePathToTemplateDir = '')
+    public function setAbsolutePathToTemplateDir(string $sAbsolutePathToTemplateDir = '')
     {
-        if (is_dir ($sAbsolutePathToTemplateDir))
+        if (is_dir($sAbsolutePathToTemplateDir))
         {
-            $aIncludePath = explode (PATH_SEPARATOR, get_include_path ());
+            $aIncludePath = explode(PATH_SEPARATOR, get_include_path ());
 
-            if (!in_array ($sAbsolutePathToTemplateDir, $aIncludePath))
+            if (!in_array($sAbsolutePathToTemplateDir, $aIncludePath))
             {
                 $aIncludePath[] = $sAbsolutePathToTemplateDir;
             }
 
-            $sImplodePaths = implode (PATH_SEPARATOR, $aIncludePath);
+            $sImplodePaths = implode(PATH_SEPARATOR, $aIncludePath);
 
-            set_include_path ($sImplodePaths);
+            set_include_path($sImplodePaths);
         }
 
-        $this->setTemplateDir ($sAbsolutePathToTemplateDir);
+        $this->setTemplateDir($sAbsolutePathToTemplateDir);
     }
 
     /**
@@ -255,7 +257,7 @@ class View extends \Smarty
      * @param string $sContentVar
      * @return void
      */
-    public function setContentVar ($sContentVar)
+    public function setContentVar(string $sContentVar = 'sContent')
     {
         $this->sContentVar = $sContentVar;
     }

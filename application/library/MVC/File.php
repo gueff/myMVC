@@ -11,37 +11,32 @@
 namespace MVC;
 
 use Emvicy\Emvicy;
-use MVC\DataType\DTArrayObject;
 use MVC\DataType\DTFileinfo;
-use MVC\DataType\DTFileSecureFilePath;
-use MVC\DataType\DTFileSsecureFilePath;
-use MVC\DataType\DTKeyValue;
-use MVC\DataType\DTProperty;
 
 class File
 {
     /**
      * get infos about a file via stat, posix_getpwuid, pathinfo
-     * @param $sFile
+     * @param string $sFilePathAbs
      * @return \MVC\DataType\DTFileinfo
      * @throws \ReflectionException
      */
-    public static function info($sFile = null)
+    public static function info(string $sFilePathAbs = '')
     {
-        if (false === isset($sFile))
+        if (true === empty($sFilePathAbs))
         {
             return DTFileinfo::create();
         }
 
-        $aStat = stat($sFile);
+        $aStat = stat($sFilePathAbs);
         $aInfo = posix_getpwuid($aStat['uid']);
-        $aInfo['path'] = $sFile;
-        $aInfo['is_file'] = is_file($sFile);
-        $aInfo['is_dir'] = is_dir($sFile);
-        $aInfo['filemtime'] = filemtime($sFile);
-        $aInfo['filectime'] = filemtime($sFile);
-        $aInfo['mimetype'] = self::getMimeType($sFile);
-        $aPathInfo = pathinfo($sFile);
+        $aInfo['path'] = $sFilePathAbs;
+        $aInfo['is_file'] = is_file($sFilePathAbs);
+        $aInfo['is_dir'] = is_dir($sFilePathAbs);
+        $aInfo['filemtime'] = filemtime($sFilePathAbs);
+        $aInfo['filectime'] = filemtime($sFilePathAbs);
+        $aInfo['mimetype'] = self::getMimeType($sFilePathAbs);
+        $aPathInfo = pathinfo($sFilePathAbs);
         $aInfo = array_merge($aInfo, $aPathInfo);
         $oDTFileinfo = DTFileinfo::create($aInfo);
 
@@ -55,7 +50,7 @@ class File
      * @param bool   $bIgnoreProtocols default=false; on true leaves :// as it is
      * @return string
      */
-    public static function secureFilePath($sAbsoluteFilePath = '', $bIgnoreProtocols = false)
+    public static function secureFilePath(string $sAbsoluteFilePath = '', bool $bIgnoreProtocols = false)
     {
         $sAbsoluteFilePath = Strings::removeDoubleDotSlashesFromString($sAbsoluteFilePath);
         $sAbsoluteFilePath = Strings::replaceMultipleForwardSlashesByOneFromString($sAbsoluteFilePath, $bIgnoreProtocols);

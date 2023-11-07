@@ -1105,4 +1105,52 @@ class Config
 
         return '';
     }
+
+    /**
+     * @return bool
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_EVENT_LOG_RUN()
+    {
+        if (Registry::isRegistered('MVC_EVENT_LOG_RUN'))
+        {
+            return (boolean) filter_var(Registry::get('MVC_EVENT_LOG_RUN'), FILTER_VALIDATE_BOOLEAN);
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $bVar
+     * @return void
+     */
+    public static function set_MVC_EVENT_LOG_RUN($bVar = false)
+    {
+        Registry::set('MVC_EVENT_LOG_RUN', (boolean) $bVar);
+        $GLOBALS['aConfig']['MVC_EVENT_LOG_RUN'] = (boolean) $bVar;
+    }
+
+    /**
+     * @return bool
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_EVENT_ENABLE_WILDCARD()
+    {
+        if (Registry::isRegistered('MVC_EVENT_ENABLE_WILDCARD'))
+        {
+            return (boolean) filter_var(Registry::get('MVC_EVENT_ENABLE_WILDCARD'), FILTER_VALIDATE_BOOLEAN);
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $bVar
+     * @return void
+     */
+    public static function set_MVC_EVENT_ENABLE_WILDCARD($bVar = false)
+    {
+        Registry::set('MVC_EVENT_ENABLE_WILDCARD', (boolean) $bVar);
+        $GLOBALS['aConfig']['MVC_EVENT_ENABLE_WILDCARD'] = (boolean) $bVar;
+    }
 }
