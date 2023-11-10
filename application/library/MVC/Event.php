@@ -25,22 +25,15 @@ use MVC\DataType\DTEventContext;
 class Event
 {
     /**
-     * contains the events
      * @var array
      */
     public static $aEvent = array();
 
     /**
-     * contains packages relating to the event, optionally given by the event
-     * @var array
-     */
-    public static $aPackage = array();
-
-    /**
-     * @return void
+     * @return bool
      * @throws \ReflectionException
      */
-    public static function init()
+    public static function init() : bool
     {
         $sEventDir = Config::get_MVC_MODULE_CURRENT_ETC_DIR() . '/event';
 
@@ -59,7 +52,7 @@ class Event
             }
         }
 
-        \MVC\Event::RUN('mvc.event.init.after');
+        Event::RUN('mvc.event.init.after');
 
         return true;
     }
@@ -75,7 +68,7 @@ class Event
      *                  \MVC\Minify::init();
      *              })];
      */
-    public static function processBindConfigStack(array $aEvent = array())
+    public static function processBindConfigStack(array $aEvent = array()) : void
     {
         foreach ($aEvent as $sEventName => $mData)
         {
@@ -97,12 +90,12 @@ class Event
      * binds a callback closure to an event
      * @param string   $sEvent
      * @param \Closure $oClosure
-     * @param          $oObject
-     * @param array    $aDebug
+     * @param          $oObject @deprecated
+     * @param array    $aDebug @deprecated
      * @return void
      * @throws \ReflectionException
      */
-    public static function bind(string $sEvent, \Closure $oClosure, $oObject = null, array $aDebug = array())
+    public static function bind(string $sEvent, \Closure $oClosure, $oObject = null, array $aDebug = array()) : void
     {
         $sEvent = trim($sEvent);
 
@@ -134,7 +127,7 @@ class Event
      * @return void
      * @throws \ReflectionException
      */
-    public static function listen(string $sEvent, \Closure $oClosure, $oObject = null, array $aDebug = array())
+    public static function listen(string $sEvent, \Closure $oClosure, $oObject = null, array $aDebug = array()) : void
     {
         self::bind($sEvent, $oClosure, $oObject, $aDebug);
     }
@@ -145,9 +138,8 @@ class Event
      * @param          $oObject
      * @param string   $sDebug
      * @return void
-     * @throws \ReflectionException
      */
-    protected static function addListenerToEvent(string $sEvent, \Closure $oClosure, $oObject = null, string $sDebug = '')
+    protected static function addListenerToEvent(string $sEvent, \Closure $oClosure, $oObject = null, string $sDebug = '') : void
     {
         // make $sSource a unique one
         $sDebug.= ' (' . uniqid() . ')';
@@ -164,7 +156,7 @@ class Event
      * @return bool
      * @throws \ReflectionException
      */
-    public static function run(string $sEvent = '', $mPackage = null)
+    public static function run(string $sEvent = '', mixed $mPackage = null) : bool
     {
         if (null === $mPackage)
         {
@@ -179,7 +171,7 @@ class Event
         if (true === Config::get_MVC_EVENT_ENABLE_WILDCARD())
         {
             #------------
-            # run explicitely wildcard listener `*`; "RUN+"
+            # run explicitly wildcard listener `*`; "RUN+"
 
             if (true === isset(self::$aEvent['*']))
             {
@@ -210,7 +202,10 @@ class Event
         # nothing special bonded; simple "RUN" and leave
         if (!isset (self::$aEvent[$sEvent]))
         {
-            (true === Config::get_MVC_EVENT_LOG_RUN()) ? Log::write('RUN' . $sPreLog, Config::get_MVC_LOG_FILE_EVENT()) : false;
+            if (true === Config::get_MVC_EVENT_LOG_RUN())
+            {
+                Log::write('RUN' . $sPreLog, Config::get_MVC_LOG_FILE_EVENT());
+            }
 
             return $bReturn;
         }
@@ -220,41 +215,41 @@ class Event
 
         Event::addToRegistry('RUN', $sPreLog);
         self::execute(self::$aEvent[$sEvent], $mPackage, 'RUN+', $sPreLog, $sEvent, $sEvent, $sDebug);
-        $bReturn = true;
 
         #------------
 
-        return $bReturn;
+        return true;
     }
 
     /**
      * @param string $sEvent
      * @return array
      */
-    protected static function getWildcardListenersOnEvent(string $sEvent = '')
+    protected static function getWildcardListenersOnEvent(string $sEvent = '') : array
     {
-        $aListener = array_filter(
+        return array_filter(
             array_filter(array_map(function($sValue){
-                if ('*' === substr($sValue, -1)) // reduce to listeners with an * at the end
+
+                if (true === str_ends_with($sValue, '*')) // reduce to listeners with an * at the end
                 {
                     return $sValue;
                 }
+
                 return '';
             }, array_map(
                 'trim',
                 preg_grep('/\*/', array_keys(self::$aEvent)) // get all listeners containing an *
-            ))),
-            function($sValue) use ($sEvent){
+            ))), callback: function($sValue) use ($sEvent){
                 $sValue = str_replace('*', '', $sValue); // remove *
 
-                if ($sValue === substr($sEvent, 0, strlen($sValue)))
+                if (true === str_starts_with($sEvent, $sValue))
                 {
                     return $sValue;
                 }
+
+                return '';
             }
         );
-
-        return $aListener;
     }
 
     /**
@@ -268,7 +263,7 @@ class Event
      * @return void
      * @throws \ReflectionException
      */
-    protected static function execute(array $aBonded = array(), $mRunPackage = null, string $sRunType = '', string $sPreLog = '', string $sEvent = '', string $sEventOrigin = '', string $sCalledIn = '')
+    protected static function execute(array $aBonded = array(), $mRunPackage = null, string $sRunType = '', string $sPreLog = '', string $sEvent = '', string $sEventOrigin = '', string $sCalledIn = '') : void
     {
         foreach ($aBonded as $sKey => $sCallback)
         {
@@ -289,11 +284,11 @@ class Event
                     ->set_aBonded($aBonded)
                     ->set_sBondedBy($sKey)
                     ->set_sCalledIn($sCalledIn)
-                    ->set_oCallback($sCallback) // get closure alternative way: Event::$aEvent[$oDTEventContext->get_sEvent()][$oDTEventContext->get_sBondedBy()]
+                    ->set_oCallback($sCallback) /** @info get closure alternative way: Event::$aEvent[$oDTEventContext->get_sEvent()][$oDTEventContext->get_sBondedBy()] */
                     ->set_sMessage($sMessage)
                 ;
 
-                // error occured
+                // error occurred
                 if (call_user_func($sCallback, $mRunPackage, $oDTEventContext) === false)
                 {
                     Log::write(
@@ -313,7 +308,7 @@ class Event
      * @return bool
      * @throws \ReflectionException
      */
-    public static function delete(string $sEvent = '')
+    public static function delete(string $sEvent = '') : bool
     {
         $sDebug = Log::prepareDebug(debug_backtrace());
 
@@ -360,7 +355,7 @@ class Event
      * @return void
      * @throws \ReflectionException
      */
-    public static function addToRegistry(string $sKey = '', string $sValue = '')
+    public static function addToRegistry(string $sKey = '', string $sValue = '') : void
     {
         $aMvcEvent = Config::get_MVC_EVENT();
         $aMvcEvent[$sKey][] = $sValue;
@@ -371,7 +366,7 @@ class Event
      * @deprecated use instead: \MVC\Event::getBonded
      * @return array
      */
-    public static function getEventArray()
+    public static function getEventArray() : array
     {
         return self::$aEvent;
     }
@@ -381,7 +376,7 @@ class Event
      * @param string $sEvent
      * @return array
      */
-    public static function getBonded(string $sEvent = '')
+    public static function getBonded(string $sEvent = '') : array
     {
         if (true === empty($sEvent))
         {
@@ -396,7 +391,7 @@ class Event
      * @param string $sEvent
      * @return array
      */
-    public static function getListeners(string $sEvent = '')
+    public static function getListeners(string $sEvent = '') : array
     {
         return self::getBonded($sEvent);
     }

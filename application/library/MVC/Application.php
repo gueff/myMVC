@@ -38,7 +38,10 @@ class Application
         Cache::init();
 
 		// add a CLI wrapper to enable requests from command line
-		(true === Request::isCli()) ? Request::cliWrapper() : false;
+		if (true === Request::isCli())
+        {
+            Request::cliWrapper();
+        }
 
         // handle Routing
         Route::init();
@@ -63,7 +66,7 @@ class Application
      * @return bool init
      * @throws \ReflectionException
      */
-	public static function initSession()
+	public static function initSession() : bool
 	{
         // don't run again if this already has been run
         if (null !== Config::get_MVC_SESSION())
@@ -73,7 +76,10 @@ class Application
 
 		Event::run ('mvc.application.setSession.before');
 
-        (!file_exists (Config::get_MVC_SESSION_PATH())) ? mkdir (Config::get_MVC_SESSION_PATH()) : false;
+        if (false === file_exists(Config::get_MVC_SESSION_PATH()))
+        {
+            mkdir(Config::get_MVC_SESSION_PATH());
+        }
 
         $oSession = Session::is();
         $fMicrotime = microtime (true);

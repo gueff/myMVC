@@ -15,10 +15,9 @@ namespace MVC;
  */
 class Log
 {
-	/**
-	 * counter
-	 * @var integer
-	 */
+    /**
+     * @var int
+     */
 	public static $iCount = 0;
 
 	/**
@@ -26,18 +25,16 @@ class Log
      * @param array $aBacktrace
      * @return string
      */
-	public static function prepareDebug(array $aBacktrace = array ())
+	public static function prepareDebug(array $aBacktrace = array ()) : string
 	{
         $aData = Debug::prepareBacktraceArray($aBacktrace);
 
-        if (substr($aData['sFile'], 0, strlen($GLOBALS['aConfig']['MVC_BASE_PATH'])) === $GLOBALS['aConfig']['MVC_BASE_PATH'])
+        if (true === str_starts_with($aData['sFile'], $GLOBALS['aConfig']['MVC_BASE_PATH']))
         {
-            $aData['sFile'] = substr($aData['sFile'], strlen($GLOBALS['aConfig']['MVC_BASE_PATH']));
+            $aData['sFile'] = $GLOBALS['aConfig']['MVC_BASE_PATH'];
         }
 
-		$sDebug = $aData['sFile'] . ', ' . $aData['sLine'];
-
-		return $sDebug;
+        return $aData['sFile'] . ', ' . $aData['sLine'];
 	}
 
 	/**
@@ -46,7 +43,7 @@ class Log
      * @return string
      * @throws \ReflectionException
      */
-	public static function prepareLogfile(string $sLogfile = '')
+	public static function prepareLogfile(string $sLogfile = '') : string
 	{
 		// make sure it is a logfile inside the configured log directory
 		($sLogfile === '')
@@ -72,7 +69,7 @@ class Log
      * @param string $sDebug
      * @return string
      */
-	public static function prepareMessage ($mMessage = '', string $sDebug = '')
+	public static function prepareMessage(mixed $mMessage = '', string $sDebug = '') : string
 	{
 		if (is_array ($mMessage))
 		{
@@ -116,7 +113,7 @@ class Log
      * @return void
      * @throws \ReflectionException
      */
-    public static function write($mMessage, string $sLogfile = '', bool $bNewline = true)
+    public static function write(mixed $mMessage, string $sLogfile = '', bool $bNewline = true) : void
     {
         $sMessage = self::prepareMessage(
             $mMessage,
@@ -138,7 +135,7 @@ class Log
      * @return string
      * @throws \ReflectionException
      */
-    public static function getLogFileDefault()
+    public static function getLogFileDefault() : string
     {
         $sLogFileDefault = Config::get_MVC_LOG_FILE_DEFAULT();
 

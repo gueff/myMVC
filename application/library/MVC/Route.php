@@ -30,9 +30,9 @@ class Route
      * @return void
      * @throws \ReflectionException
      */
-    public static function init()
+    public static function init() : void
     {
-        \MVC\Event::RUN('mvc.route.init.before');
+        Event::RUN('mvc.route.init.before');
 
         DEFAULT_SOURCE_PHP_FILES: {
 
@@ -53,7 +53,7 @@ class Route
             }
         }
 
-        \MVC\Event::RUN('mvc.route.init.after');
+        Event::RUN('mvc.route.init.after');
     }
 
     /**
@@ -63,7 +63,7 @@ class Route
      * @return void
      * @throws \ReflectionException
      */
-    public static function ANY(string $sPath = '', string $sQuery = '', $mOptional = '')
+    public static function ANY(string $sPath = '', string $sQuery = '', mixed $mOptional = '') : void
     {
         self::add('*', $sPath, $sQuery, $mOptional);
     }
@@ -76,7 +76,7 @@ class Route
      * @return void
      * @throws \ReflectionException
      */
-    public static function MIX(array $aMethod = array(), string $sPath = '', string $sQuery = '', $mOptional = '')
+    public static function MIX(array $aMethod = array(), string $sPath = '', string $sQuery = '', mixed $mOptional = '') : void
     {
         foreach ($aMethod as $sMethod)
         {
@@ -91,7 +91,7 @@ class Route
      * @return void
      * @throws \ReflectionException
      */
-    public static function GET(string $sPath = '', string $sQuery = '', $mOptional = '')
+    public static function GET(string $sPath = '', string $sQuery = '', mixed $mOptional = '') : void
     {
         self::add('GET', $sPath, $sQuery, $mOptional);
     }
@@ -103,7 +103,7 @@ class Route
      * @return void
      * @throws \ReflectionException
      */
-    public static function POST(string $sPath = '', string $sQuery = '', $mOptional = '')
+    public static function POST(string $sPath = '', string $sQuery = '', mixed $mOptional = '') : void
     {
         self::add('POST', $sPath, $sQuery, $mOptional);
     }
@@ -115,7 +115,7 @@ class Route
      * @return void
      * @throws \ReflectionException
      */
-    public static function PUT(string $sPath = '', string $sQuery = '', $mOptional = '')
+    public static function PUT(string $sPath = '', string $sQuery = '', mixed $mOptional = '') : void
     {
         self::add('PUT', $sPath, $sQuery, $mOptional);
     }
@@ -127,7 +127,7 @@ class Route
      * @return void
      * @throws \ReflectionException
      */
-    public static function DELETE(string $sPath = '', string $sQuery = '', $mOptional = '')
+    public static function DELETE(string $sPath = '', string $sQuery = '', mixed $mOptional = ''): void
     {
         self::add('DELETE', $sPath, $sQuery, $mOptional);
     }
@@ -140,7 +140,7 @@ class Route
      * @return void
      * @throws \ReflectionException
      */
-    protected static function add(string $sMethod = '*', string $sPath = '', string $sQuery = '', $mOptional = '')
+    protected static function add(string $sMethod = '*', string $sPath = '', string $sQuery = '', mixed $mOptional = '') : void
     {
         parse_str(get($sQuery), $aQuery);
 
@@ -210,9 +210,9 @@ class Route
      * @param bool $bWildcardsOnly
      * @return array
      */
-    public static function getIndices(bool $bWildcardsOnly = false)
+    public static function getIndices(bool $bWildcardsOnly = false) : array
     {
-        $aIndex = (array) array_keys(self::$aRoute);
+        $aIndex = array_keys(self::$aRoute);
 
         if (false === $bWildcardsOnly)
         {
@@ -232,7 +232,7 @@ class Route
      * @param string $sValue
      * @return array
      */
-    public static function getRouteIndexArrayOnKey(string $sKey = 'query', string $sValue = '')
+    public static function getRouteIndexArrayOnKey(string $sKey = 'query', string $sValue = '') : array
     {
         $aRoute = Convert::objectToArray(self::$aRoute);
         $aIndex = array();
@@ -249,7 +249,7 @@ class Route
      * @return \MVC\DataType\DTRoute
      * @throws \ReflectionException
      */
-    public static function getCurrent()
+    public static function getCurrent() : DTRoute
     {
         // Request
         $sPath = Request::getCurrentRequest()->get_path();
@@ -283,7 +283,7 @@ class Route
      * @param string $sPath
      * @return string
      */
-    public static function getIndexOnWildcard(string $sPath = '')
+    public static function getIndexOnWildcard(string $sPath = '') : string
     {
         $aIndex = self::getIndices(true);
 
@@ -292,7 +292,7 @@ class Route
             // cutt off "*"
             $sIndexCutOff = substr($sIndex, 0, -1);
 
-            if (substr($sPath, 0, strlen($sIndexCutOff)) === $sIndexCutOff)
+            if (true === str_starts_with($sPath, $sIndexCutOff))
             {
                 $aPathParam['_tail'] = substr($sPath, strlen($sIndexCutOff));
                 Request::setPathParam($aPathParam);
@@ -308,7 +308,7 @@ class Route
      * @param string $sPath
      * @return string matching route path | empty
      */
-    public static function getPathOnPlaceholderIndex(string $sPath = '')
+    public static function getPathOnPlaceholderIndex(string $sPath = '') : string
     {
         // Request
         $aPartPath = preg_split('@/@', $sPath, 0, PREG_SPLIT_NO_EMPTY);
@@ -374,7 +374,7 @@ class Route
      * @return \MVC\DataType\DTRoute
      * @throws \ReflectionException
      */
-    protected static function handleFallback()
+    protected static function handleFallback() : DTRoute
     {
         $sIndex = current(self::getRouteIndexArrayOnKey('query', Config::get_MVC_ROUTING_FALLBACK()));
 

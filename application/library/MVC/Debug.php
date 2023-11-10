@@ -16,10 +16,10 @@ use MVC\DataType\DTKeyValue;
 class Debug
 {
     /**
-     * @param $sData
-     * @return false|string
+     * @param mixed $mData
+     * @return string
      */
-    protected static function dump($mData = '')
+    protected static function obDump(mixed $mData = '') : string
     {
         ob_start();
         echo (Closure::is($mData)) ? '// type: Closure' : '// type: ' . gettype($mData);
@@ -32,19 +32,20 @@ class Debug
         $sData = str_replace("=> \n", '=>', $sData);
         ob_end_clean();
 
+        /** @var string $sData */
         return $sData;
     }
 
     /**
      * Mini OnScreen Debugger
-     * @param string|array $mData
+     * @param mixed $mData
      * @return void
      */
-    public static function info($mData = '')
+    public static function info(mixed $mData = '') : void
     {
         // source
         $aBacktrace = self::prepareBacktraceArray(debug_backtrace());
-        $mData = self::dump($mData);
+        $mData = self::obDump($mData);
 
         // output CLI
         if (isset ($GLOBALS['argc']))
@@ -53,23 +54,22 @@ class Debug
             echo "\nFile:\t\t\t" . $aBacktrace['sFile'] . "";
             echo "\nLine:\t\t\t" . $aBacktrace['sLine'] . "";
             echo "\nClass::function:\t" . $aBacktrace['sClass'] . '::' . $aBacktrace['sFunction'] . "\n";
-            if (isset ($mData))
-            {
-                echo "\n" . '$data:' . "\n" . $mData . "\n\n";
-            }
+            echo "\n" . '$data:' . "\n" . $mData . "\n\n";
             echo "\n---/DEBUG------------------------\n\n";
         }
         // output Web
         else
         {
-            echo '<div class="draggable" style="position: fixed !important; bottom:30px !important;left:5px !important;z-index:65535 !important;float:left !important;text-align:left !important;background-color:white !important;border:1px solid gray !important;padding:5px !important;filter: Alpha (opacity=80) !important;opacity: 0.8 !important; moz-opacity: 0.8 !important;-moz-border-radius: 3px !important; border-radius: 3px !important;width: 600px !important;height: 550px !important;">
-				<h1 style="color:red !important;margin:0 !important;padding:2px 0 0 0 !important;font-size:16px !important;">DEBUG</h1>
-                <div style="overflow-wrap: break-word !important;word-wrap: break-word !important;hyphens: auto !important;">
-                    <b>File:</b> ' . $aBacktrace['sFile'] . '<br>
-                    <b>Line:</b> ' . $aBacktrace['sLine'] . '<br>
-                    <b>Class/Method:</b> ' . $aBacktrace['sClass'] . '::' . $aBacktrace['sFunction'] . '<br>
-                </div>
-				<textarea style="float:left !important;border:1px solid red !important;width:100% !important;min-height:400px !important;font-size:12px !important;-moz-border-radius: 3px !important; border-radius: 3px !important;padding:10px !important;font-family: monospace !important;">' . $mData . '</textarea>
+            echo '<div class="draggable" style="box-shadow: 0px 0px 10px 0px rgba(100, 100, 100, 1); position: fixed !important; bottom:80px !important;left:20px !important;z-index:65535 !important;float:left !important;text-align:left !important;background-color:white !important;border:1px solid grey !important;padding:5px !important;filter: Alpha (opacity=80) !important;opacity: 0.8 !important; moz-opacity: 0.8 !important;-moz-border-radius: 3px !important; border-radius: 3px !important;width: 50% !important;min-height: 550px !important;">
+                <div style="overflow: auto !important;font-weight: normal;font-family: \'FreeMono\', \'Andale Mono\', monospace; color: #000;"><!--overflow-wrap: break-word !important;word-wrap: break-word !important;hyphens: auto !important;">-->
+                    <nobr><b>File:</b> ' . $aBacktrace['sFile'] . '</nobr><br>
+                    <nobr><b>Line:</b> ' . $aBacktrace['sLine'] . '</nobr><br>
+                    <nobr><b>Class/Method:</b> ' . $aBacktrace['sClass'] . '::' . $aBacktrace['sFunction'] . '</nobr><br>
+                </div>				
+                <div class="draggable" style="overflow: auto !important;float:left !important;border:1px dotted grey !important;background-color: whitesmoke; width:100% !important;height:465px !important;font-size:medium !important;-moz-border-radius: 3px !important; border-radius: 3px !important;padding:10px !important;font-family: monospace !important;"><b>';
+                $sHighlight = highlight_string('<?php' . "\n" . $mData, true);
+                echo trim(str_replace('&lt;?php', '', $sHighlight));
+                echo '</b></div>				
 			</div>';
         }
     }
@@ -78,12 +78,10 @@ class Debug
      * shows a smaller message on the screen right side.
      * if you call display more than once, all messages are showed among each other
      * use it to debug a string or array or whatever
-     * @access public
-     * @static
      * @param mixed $mData
      * @return void
      */
-    public static function display($mData = '')
+    public static function display(mixed $mData = '') : void
     {
         static $sDisplay;
         static $iCount;
@@ -92,7 +90,7 @@ class Debug
 
         // Source
         $aBacktrace = self::prepareBacktraceArray(debug_backtrace());
-        $mData = self::dump($mData);
+        $mData = self::obDump($mData);
 
         // Output for CLI
         if (isset ($GLOBALS['argc']))
@@ -102,10 +100,7 @@ class Debug
             echo "\nFile:\t\t\t" . $aBacktrace['sFile'] . "";
             echo "\nLine:\t\t\t" . $aBacktrace['sLine'] . "";
             echo "\nClass::function:\t" . $aBacktrace['sClass'] . '::' . $aBacktrace['sFunction'] . "\n";
-            if (isset ($mData))
-            {
-                echo "\n" . '$data:' . "\n" . $mData . "\n\n";
-            }
+            echo "\n" . '$data:' . "\n" . $mData . "\n\n";
             echo "\n---/DISPLAY------------------------\n\n";
         }
         // Output Web
@@ -128,7 +123,7 @@ class Debug
             $sDisplay .= $sConsultation . '<textarea style="font-size:10px;width:100% !important;min-height: 60px !important;margin:0 !important;background-color:blue !important;color:white !important;border: none !important;padding: 5px !important;font-family: monospace !important;">' . $mData . '</textarea>';
 
             // Display
-            echo '<div class="draggable" style="overflow: auto !important;max-height: 90%;z-index:65535 !important;position:fixed !important;bottom:10px !important;right:10px !important;background-color:blue !important;color:white !important;border:1px solid #333 !important;width:500px !important;-moz-border-radius:3px !important; border-radius: 3px !important;font-size:12px !important;font-family: monospace !important;"><b>';
+            echo '<div class="draggable" style="box-shadow: 0px 0px 10px 0px rgba(100, 100, 100, 1); overflow: auto !important;max-height: 90%;z-index:65535 !important;position:fixed !important;bottom:10px !important;right:10px !important;background-color:blue !important;color:white !important;border:1px solid #333 !important;width:500px !important;-moz-border-radius:3px !important; border-radius: 3px !important;font-size:12px !important;font-family: monospace !important;"><b>';
             echo $sDisplay;
             echo '</b></div>';
         }
@@ -137,14 +132,14 @@ class Debug
     /**
      * Stops any further execution: exits the script.
      * Shows a Message from where the STOP command was called (default).
-     * @param       $mData
+     * @param mixed $mData
      * @param bool  $bShowWhereStop
      * @param bool  $bDump
      * @param array $aBacktrace
      * @return void
      * @throws \ReflectionException
      */
-    public static function stop($mData = '', bool $bShowWhereStop = true, bool $bDump = true, array $aBacktrace = array())
+    public static function stop(mixed $mData = '', bool $bShowWhereStop = true, bool $bDump = true, array $aBacktrace = array()) : void
     {
         static $iCount;
         $iCount++;
@@ -169,15 +164,15 @@ class Debug
         {
             $sConsultation = "\n---STOP-------------------------";
             $sConsultation .= "\nStopped at:";
-            $sConsultation .= "\nFile:\t\t\t" . $aBacktrace['sFile'] . "";
-            $sConsultation .= "\nLine:\t\t\t" . $aBacktrace['sLine'] . "";
+            $sConsultation .= "\nFile:\t\t\t" . $aBacktrace['sFile'];
+            $sConsultation .= "\nLine:\t\t\t" . $aBacktrace['sLine'];
             $sConsultation .= "\nClass::function:\t" . $aBacktrace['sClass'] . '::' . $aBacktrace['sFunction'] . "\n";
 
             echo ($bShowWhereStop === true)
                 ? $sConsultation
                 : '';
 
-            if (isset ($mData) && !empty ($mData))
+            if (false === empty ($mData))
             {
                 echo ($bShowWhereStop === true)
                     ? "\nData:\n"
@@ -208,7 +203,7 @@ class Debug
                 ? '<h1 style="font-size:20px !important;">STOP</h1><p>Stopped at:</p>' . $sConsultation
                 : '';
 
-            if (isset ($mData) && !empty ($mData))
+            if (false === empty($mData))
             {
                 echo ($bShowWhereStop === true)
                     ? '<h2>Data</h2><p>'
@@ -229,7 +224,7 @@ class Debug
                 ->set_sKey('bOccurrence')
                 ->set_sValue($bShowWhereStop)));
 
-        (true === \MVC\Request::isCli()) ? \MVC\Config::get_MVC_MODULE_CURRENT_VIEW()::$bRender = false : false;
+        (true === Request::isCli()) && Config::get_MVC_MODULE_CURRENT_VIEW()::$bRender = false;
         exit ();
     }
 
@@ -240,7 +235,7 @@ class Debug
      * @param array $aBacktrace
      * @return array
      */
-    public static function prepareBacktraceArray(array $aBacktrace = array())
+    public static function prepareBacktraceArray(array $aBacktrace = array()) : array
     {
         $aData = array();
         $aData['sFile'] = get($aBacktrace[0]['file'], '');
@@ -252,12 +247,12 @@ class Debug
     }
 
     /**
-     * @param      $mData
-     * @param bool $bReturn             default=false
-     * @param bool $bShortArraySyntax   default=true
-     * @return string|void
+     * @param mixed $mData
+     * @param bool  $bReturn
+     * @param bool  $bShortArraySyntax
+     * @return void|string
      */
-    public static function varExport($mData, bool $bReturn = false, bool $bShortArraySyntax = true)
+    public static function varExport(mixed $mData, bool $bReturn = false, bool $bShortArraySyntax = true)
     {
         $sExport = var_export($mData, true);
         $sExport = preg_replace("/^([ ]*)(.*)/m", '$1$1$2', $sExport);
@@ -280,6 +275,6 @@ class Debug
             return (string) $sExport;
         }
 
-        echo (string) $sExport;
+        echo $sExport;
     }
 }

@@ -21,7 +21,7 @@ class File
      * @return \MVC\DataType\DTFileinfo
      * @throws \ReflectionException
      */
-    public static function info(string $sFilePathAbs = '')
+    public static function info(string $sFilePathAbs = '') : DTFileinfo
     {
         if (true === empty($sFilePathAbs))
         {
@@ -38,9 +38,8 @@ class File
         $aInfo['mimetype'] = self::getMimeType($sFilePathAbs);
         $aPathInfo = pathinfo($sFilePathAbs);
         $aInfo = array_merge($aInfo, $aPathInfo);
-        $oDTFileinfo = DTFileinfo::create($aInfo);
 
-        return $oDTFileinfo;
+        return DTFileinfo::create($aInfo);
     }
 
     /**
@@ -50,20 +49,19 @@ class File
      * @param bool   $bIgnoreProtocols default=false; on true leaves :// as it is
      * @return string
      */
-    public static function secureFilePath(string $sAbsoluteFilePath = '', bool $bIgnoreProtocols = false)
+    public static function secureFilePath(string $sAbsoluteFilePath = '', bool $bIgnoreProtocols = false) : string
     {
-        $sAbsoluteFilePath = Strings::removeDoubleDotSlashesFromString($sAbsoluteFilePath);
-        $sAbsoluteFilePath = Strings::replaceMultipleForwardSlashesByOneFromString($sAbsoluteFilePath, $bIgnoreProtocols);
-
-        /**@var string */
-        return $sAbsoluteFilePath;
+        return Strings::replaceMultipleForwardSlashesByOneFromString(
+            Strings::removeDoubleDotSlashesFromString($sAbsoluteFilePath),
+            $bIgnoreProtocols
+        );
     }
 
     /**
      * @param string $sFileAbsolute
      * @return string
      */
-    public static function getMimeType(string $sFileAbsolute = '')
+    public static function getMimeType(string $sFileAbsolute = '') : string
     {
         // get mime type of file (e.g.: application/pdf; charset=binary)
         if (false === file_exists($sFileAbsolute))
@@ -73,8 +71,7 @@ class File
 
         $sCmd = whereis('file') . ' -bi -- ' . escapeshellarg($sFileAbsolute);
         $mMimeType = strtok(Emvicy::shellExecute($sCmd),';');
-        $sMimeType = (false === $mMimeType) ? '' : $mMimeType;
 
-        return $sMimeType;
+        return (false === $mMimeType) ? '' : $mMimeType;
     }
 }

@@ -10,6 +10,7 @@
 
 namespace MVC;
 
+use JetBrains\PhpStorm\NoReturn;
 use MVC\DataType\DTArrayObject;
 use MVC\DataType\DTKeyValue;
 use MVC\DataType\DTRequestCurrent;
@@ -24,14 +25,12 @@ class Request
      * @return \MVC\DataType\DTRequestCurrent
      * @throws \ReflectionException
      */
-    public static function getCurrentRequest()
+    public static function getCurrentRequest() : DTRequestCurrent
     {
         // run only once
         if (true === Registry::isRegistered('oDTRequestCurrent'))
         {
-            $oDTRequestCurrent = Registry::get('oDTRequestCurrent');
-
-            return $oDTRequestCurrent;
+            return Registry::get('oDTRequestCurrent');
         }
 
         $aUriInfo = parse_url(self::getUriProtocol() . $_SERVER['HTTP_HOST'] . self::getServerRequestUri());
@@ -75,7 +74,7 @@ class Request
      * @return string
      * @throws \ReflectionException
      */
-    public static function getUriProtocol($mSsl = null)
+    public static function getUriProtocol(mixed $mSsl = null) : string
     {
         // detect on ssl or not
         if (isset($mSsl))
@@ -119,7 +118,7 @@ class Request
      * @return bool
      * @throws \ReflectionException
      */
-    public static function detectSsl()
+    public static function detectSsl() : bool
     {
         if (!empty(Config::get_MVC_SECURE_REQUEST()))
         {
@@ -132,13 +131,14 @@ class Request
         );
     }
 
+    #[NoReturn]
     /**
      * redirects to given Location URI
      * @param string $sLocation
      * @return void
      * @throws \ReflectionException
      */
-    public static function redirect(string $sLocation = '')
+    public static function redirect(string $sLocation = '') : void
     {
         // source
         $aBacktrace = debug_backtrace();
@@ -195,7 +195,7 @@ class Request
      * @return bool
      * @throws \ReflectionException
      */
-    public static function isCli()
+    public static function isCli() : bool
     {
         if (true === Config::get_MVC_CLI())
         {
@@ -210,7 +210,7 @@ class Request
      * @return bool
      * @throws \ReflectionException
      */
-    public static function isHttp()
+    public static function isHttp() : bool
     {
         if (false === self::isCli())
         {
@@ -223,21 +223,17 @@ class Request
     /**
      * @return string
      */
-    public static function getServerRequestUri()
+    public static function getServerRequestUri() : string
     {
-        $sRequestUri = (array_key_exists ('REQUEST_URI', $_SERVER) ? (string) $_SERVER['REQUEST_URI'] : '');
-
-        return $sRequestUri;
+        return (array_key_exists('REQUEST_URI', $_SERVER) ? (string) $_SERVER['REQUEST_URI'] : '');
     }
 
     /**
      * @return string
      */
-    public static function getServerRequestMethod()
+    public static function getServerRequestMethod() : string
     {
-        $sRequestMethod = (array_key_exists ('REQUEST_METHOD', $_SERVER) ? (string) $_SERVER['REQUEST_METHOD'] : '');
-
-        return $sRequestMethod;
+        return (array_key_exists('REQUEST_METHOD', $_SERVER) ? (string) $_SERVER['REQUEST_METHOD'] : '');
     }
 
     /**
@@ -248,7 +244,7 @@ class Request
      * @return array
      * @throws \ReflectionException
      */
-    public static function getPathArray(string $sUrl = '', bool $bReverse = false)
+    public static function getPathArray(string $sUrl = '', bool $bReverse = false) : array
     {
         if ('' === $sUrl)
         {
@@ -273,7 +269,7 @@ class Request
      * @return array|string
      * @throws \ReflectionException
      */
-    public static function getPathParam(string $sKey = '')
+    public static function getPathParam(string $sKey = '') : array|string
     {
         if (Registry::isRegistered('aPathParam'))
         {
@@ -296,7 +292,7 @@ class Request
      * @param array $aPathParam
      * @return void
      */
-    public static function setPathParam(array $aPathParam = array())
+    public static function setPathParam(array $aPathParam = array()) : void
     {
         Registry::set('aPathParam', $aPathParam);
     }
@@ -304,8 +300,10 @@ class Request
     /**
      * enables using myMvc via commandline
      * @example php index.php '/'
+     * @return void
+     * @throws \ReflectionException
      */
-    public static function cliWrapper ()
+    public static function cliWrapper() : void
     {
         // check user/file permission
         $sIndex = Config::get_MVC_PUBLIC_PATH() . '/index.php';
@@ -327,7 +325,7 @@ class Request
     /**
      * @return void
      */
-    public static function setServerVarsForCli()
+    public static function setServerVarsForCli() : void
     {
         (!array_key_exists (1, $GLOBALS['argv'])) ? $GLOBALS['argv'][1] = '' : false;
         $aParseUrl = parse_url ($GLOBALS['argv'][1]);
@@ -349,7 +347,7 @@ class Request
     /**
      * @return array
      */
-    public static function getHeaderArray()
+    public static function getHeaderArray() : array
     {
         $aHeader = getallheaders();
 
@@ -365,7 +363,7 @@ class Request
      * @param string $sKey
      * @return string
      */
-    public static function getHeader(string $sKey = '')
+    public static function getHeader(string $sKey = '') : string
     {
         $aHeader = self::getHeaderArray();
 
@@ -375,13 +373,11 @@ class Request
     /**
      * @return string
      */
-    public static function getIpAddress()
+    public static function getIpAddress() : string
     {
-        $sIpAddress = isset($_SERVER['HTTP_CLIENT_IP'])
+        return (string) (true === isset($_SERVER['HTTP_CLIENT_IP']))
             ? $_SERVER['HTTP_CLIENT_IP']
-            : (isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR']: $_SERVER['REMOTE_ADDR'])
+            : get($_SERVER['HTTP_X_FORWARDED_FOR'], $_SERVER['REMOTE_ADDR'])
         ;
-
-        return (string) $sIpAddress;
     }
 }

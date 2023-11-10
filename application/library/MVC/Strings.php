@@ -17,12 +17,10 @@ class Strings
      * @param string $sString
      * @return string
      */
-    public static function removeDoubleDotSlashesFromString(string $sString = '')
+    public static function removeDoubleDotSlashesFromString(string $sString = '') : string
     {
         // removes any "../"
-        $sString = (string) preg_replace('#(\.\.\/)+#', '', trim($sString));
-
-        return $sString;
+        return (string) preg_replace('#(\.\.\/)+#', '', trim($sString));
     }
 
     /**
@@ -31,7 +29,7 @@ class Strings
      * @param bool   $bIgnoreProtocols default=false; on true leaves :// as it is
      * @return string
      */
-    public static function replaceMultipleForwardSlashesByOneFromString(string $sString = '', bool $bIgnoreProtocols = false)
+    public static function replaceMultipleForwardSlashesByOneFromString(string $sString = '', bool $bIgnoreProtocols = false) : string
     {
         // removes multiple "/" [e.g.: //, ///, ////, etc.]
         if (true === $bIgnoreProtocols)
@@ -53,7 +51,7 @@ class Strings
      * @param bool   $bStrToLower
      * @return string
      */
-    public static function seofy(string $sString = '', string $sReplacement = '-', bool $bStrToLower = true)
+    public static function seofy(string $sString = '', string $sReplacement = '-', bool $bStrToLower = true) : string
     {
         $sString = preg_replace('/[^\\pL\d_]+/u', $sReplacement, $sString);
         $sString = trim($sString, $sReplacement);
@@ -69,7 +67,7 @@ class Strings
      * @param string $sString
      * @return bool
      */
-    public static function isJson(string $sString = '')
+    public static function isJson(string $sString = '') : bool
     {
         if (false === is_string($sString))
         {
@@ -77,16 +75,15 @@ class Strings
         }
 
         json_decode($sString);
-        $bIsJson = (json_last_error() === JSON_ERROR_NONE);
 
-        return $bIsJson;
+        return (json_last_error() === JSON_ERROR_NONE);
     }
 
     /**
      * @param string $sString
      * @return bool
      */
-    public static function isUtf8(string $sString = '')
+    public static function isUtf8(string $sString = '') : bool
     {
         $iStrlen = strlen($sString);
 
@@ -132,7 +129,7 @@ class Strings
      * @example 889abaf2-461d-42a1-86f4-07eb3e9876a5
      * @return string
      */
-    public static function uuid4()
+    public static function uuid4() : string
     {
         return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
             mt_rand(0, 0xffff), mt_rand(0, 0xffff),

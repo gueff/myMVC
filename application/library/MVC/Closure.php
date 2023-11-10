@@ -15,12 +15,10 @@ class Closure
 {
     /**
      * checks whether the unknown parameter is a closure object
-     * @access public
-     * @static
      * @param mixed $mUnknown
-     * @return boolean
+     * @return bool
      */
-    public static function is($mUnknown)
+    public static function is(mixed $mUnknown) : bool
     {
         return is_object($mUnknown) && ($mUnknown instanceof \Closure);
     }
@@ -33,19 +31,18 @@ class Closure
      * @return string
      * @throws \ReflectionException
      */
-    public static function dump($mClosure)
+    public static function dump(mixed $mClosure) : string
     {
-        $oReflectionFunction = new \ReflectionFunction ($mClosure);
+        $oReflectionFunction = new \ReflectionFunction($mClosure);
         $aParam = array();
 
-        /** @var ReflectionParameter $oReflectionParameter */
         foreach ($oReflectionFunction->getParameters() as $oReflectionParameter)
         {
             $sTemp = '';
-            $oRflectionType = $oReflectionParameter->getType();
-            $aType = $oRflectionType instanceof ReflectionUnionType
-                ? $oRflectionType->getTypes()
-                : [$oRflectionType];
+            $oReflectionType = $oReflectionParameter->getType();
+            $aType = $oReflectionType instanceof \ReflectionUnionType
+                ? $oReflectionType->getTypes()
+                : [$oReflectionType];
 
             $aType = array_filter(
                 $aType,
@@ -118,7 +115,7 @@ class Closure
      * @return string
      * @throws \ReflectionException
      */
-    public static function toString(\Closure $oClosure, bool $bShrink = true)
+    public static function toString(\Closure $oClosure, bool $bShrink = true) : string
     {
         $oReflectionFunction = new \ReflectionFunction($oClosure);
         $sFileName = $oReflectionFunction->getFileName();
@@ -135,7 +132,7 @@ class Closure
             (substr_count($aExplode[$iLastLineNumber], '}') > 1)
         )
         {
-            \MVC\Error::error(
+            Error::error(
                 "Too complex context definition in: `$sFileName`. Check lines: $iStartLine & $iEndLine.",
                 1,
                 0,

@@ -34,7 +34,7 @@ class DTRequestCurrent
 
 	/**
 	 * @required false
-	 * @var array
+	 * @var string
 	 */
 	protected $path;
 
@@ -115,7 +115,7 @@ class DTRequestCurrent
 
 		$this->scheme = '';
 		$this->host = '';
-		$this->path = array();
+		$this->path = '';
 		$this->query = '';
 		$this->queryArray = array();
 		$this->requesturi = '';
@@ -186,15 +186,15 @@ class DTRequestCurrent
 	}
 
 	/**
-	 * @param array $aValue 
+	 * @param string $sValue
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_path($aValue)
+	public function set_path($sValue)
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.set_path.before', $aValue);
+		\MVC\Event::RUN ('DTRequestCurrent.set_path.before', $sValue);
 
-        $this->path = $aValue;
+        $this->path = $sValue;
 
 		return $this;
 	}
@@ -376,7 +376,7 @@ class DTRequestCurrent
 	}
 
 	/**
-	 * @return array
+	 * @return string
 	 * @throws \ReflectionException
 	 */
 	public function get_path()

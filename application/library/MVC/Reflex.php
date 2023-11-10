@@ -18,10 +18,6 @@ use MVC\DataType\DTKeyValue;
  */
 class Reflex
 {
-	/**
-	 * Constructor
-	 * @return void
-	 */
 	public function __construct()
 	{
 		;
@@ -32,7 +28,7 @@ class Reflex
      * @return bool
      * @throws \ReflectionException
      */
-	public function reflect()
+	public function reflect() : bool
 	{
         $oDTRoute = Route::getCurrent();
         $sModule = $oDTRoute->get_module();
@@ -117,6 +113,8 @@ class Reflex
 					}
 					catch (\ReflectionException $oReflectionException)
 					{
+                        Error::exception($oReflectionException);
+
 						return false;
 					}
 

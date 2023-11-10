@@ -17,11 +17,12 @@ class Convert
      * @param mixed $mObject
      * @return array
      */
-    public static function objectToArray($mObject)
+    public static function objectToArray(mixed $mObject) : array
     {
-        (is_object($mObject))
-            ? $mObject = (array)$mObject
-            : false;
+        if (true === is_object($mObject))
+        {
+            $mObject = (array) $mObject;
+        }
 
         if (is_array($mObject))
         {
@@ -30,9 +31,12 @@ class Convert
             foreach ($mObject as $sKey => $mValue)
             {
                 $sFirstChar = trim(substr(trim($sKey), 0, 1));
-                (('*' === $sFirstChar))
-                    ? $sKey = trim(substr(trim($sKey), 1))
-                    : false;
+
+                if (('*' === $sFirstChar))
+                {
+                    $sKey = trim(substr(trim($sKey), 1));
+                }
+
                 $aNew[$sKey] = self::objectToArray($mValue);
             }
         }
@@ -41,6 +45,7 @@ class Convert
             $aNew = $mObject;
         }
 
+        /** @var array $aNew */
         return $aNew;
     }
 }

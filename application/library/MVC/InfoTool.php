@@ -16,19 +16,13 @@ namespace MVC;
 class InfoTool
 {
     /**
-     * toolbar array
-     * @var array
-     */
-    protected $aToolbar = array ();
-
-    /**
      * Index constructor.
      * adds Event Listener to 'mvc.view.render.before'
      * starts collecting Infos and save it to Registry
      * @param \Smarty $oView
      * @throws \ReflectionException
      */
-    public function __construct (\Smarty $oView)
+    public function __construct(\Smarty $oView)
     {
         // add toolbar at the right time
         Event::BIND ('mvc.view.render.before', function (\MVC\DataType\DTArrayObject $oDTArrayObject) {
@@ -45,8 +39,9 @@ class InfoTool
      * @return void
      * @throws \DOMException
      * @throws \ReflectionException
+     * @throws \SmartyException
      */
-    public static function injectToolbar (\Smarty $oView)
+    public static function injectToolbar(\Smarty $oView) : void
     {
         $aToolbar = Registry::get ('aToolbar');
         $sHtml = '';
@@ -62,7 +57,7 @@ class InfoTool
         View::$bEchoOut = false;
 
         // inject toolbar var to regular string output via DOM
-        if (true === isset($aToolbar['sRendered']) && false === empty($aToolbar['sRendered']))
+        if (false === empty(get($aToolbar['sRendered'], '')))
         {
             $oDom = new \DOMDocument('', '');
 
@@ -102,8 +97,9 @@ class InfoTool
      * @param \Smarty $oView
      * @return array
      * @throws \ReflectionException
+     * @throws \Exception
      */
-    protected function collectInfo (\Smarty $oView)
+    protected function collectInfo(\Smarty $oView) : array
     {
         $aToolbar = array ();
 
@@ -112,7 +108,7 @@ class InfoTool
 
         foreach ($aMethod as $sMethod)
         {
-            if ('get' === substr($sMethod, 0, 3))
+            if (true === str_starts_with($sMethod, 'get'))
             {
                 $sTmpVar = str_replace('get_', '', $sMethod);
                 $aTmp['sVar'] = $sTmpVar;
@@ -155,14 +151,15 @@ class InfoTool
         $aToolbar['aSessionFiles'] = $this->buildMarkupListTree(
             preg_grep('/^([^.])/', scandir(Config::get_MVC_SESSION_OPTIONS()['save_path']))
         );
-        $aToolbar['aSessionRules']['aEnableSessionForController'] = (false === empty(\MVC\Config::MODULE()['SESSION']['aEnableSessionForController']))
-            ? $this->buildMarkupListTree(\MVC\Config::MODULE()['SESSION']['aEnableSessionForController'])
+        $aToolbar['aSessionRules']['aEnableSessionForController'] = (false === empty(Config::MODULE()['SESSION']['aEnableSessionForController']))
+            ? $this->buildMarkupListTree(Config::MODULE()['SESSION']['aEnableSessionForController'])
             : 'none'
         ;
-        $aToolbar['aSessionRules']['aDisableSessionForController'] = (false === empty(\MVC\Config::MODULE()['SESSION']['aDisableSessionForController']))
-            ? $this->buildMarkupListTree(\MVC\Config::MODULE()['SESSION']['aDisableSessionForController'])
+        $aToolbar['aSessionRules']['aDisableSessionForController'] = (false === empty(Config::MODULE()['SESSION']['aDisableSessionForController']))
+            ? $this->buildMarkupListTree(Config::MODULE()['SESSION']['aDisableSessionForController'])
             : 'none'
         ;
+
         $aToolbar['aSmartyTemplateVars'] = $oView->getTemplateVars();
         $aToolbar['sSmartyTemplateVars'] = $this->buildMarkupListTree($oView->getTemplateVars());
         $aConstants = get_defined_constants (true);
@@ -174,8 +171,8 @@ class InfoTool
         $aToolbar['aEventBIND'] = $this->buildMarkupListTree($aToolbar['aEvent']['BIND']);
         $aToolbar['aEventBINDNAME'] = $this->buildMarkupListTree(Event::$aEvent);
         $aToolbar['aEventRUN'] = $this->buildMarkupListTree($aToolbar['aEvent']['RUN']);
-        $aToolbar['aEventRUNBONDED'] = (isset($aToolbar['aEvent']['RUN_BONDED']) && false === empty($aToolbar['aEvent']['RUN_BONDED'])) ? $this->buildMarkupListTree($aToolbar['aEvent']['RUN_BONDED']) : array();
-        $aToolbar['aEventDELETE'] = (isset($aToolbar['aEvent']['DELETE']) && false === empty($aToolbar['aEvent']['DELETE'])) ? $this->buildMarkupListTree($aToolbar['aEvent']['DELETE']) : array();
+        $aToolbar['aEventRUNBONDED'] = (false === empty(get($aToolbar['aEvent']['RUN_BONDED'], array()))) ? $this->buildMarkupListTree($aToolbar['aEvent']['RUN_BONDED']) : array();
+        $aToolbar['aEventDELETE'] = (false === empty(get($aToolbar['aEvent']['DELETE'], array()))) ? $this->buildMarkupListTree($aToolbar['aEvent']['DELETE']) : array();
         $aToolbar['aRouting'] = array(
             'aRequest' => Request::getCurrentRequest()->getPropertyArray(),
             'sModule' => Route::getCurrent()->get_module(),
@@ -232,13 +229,24 @@ class InfoTool
         $sMicrotime = sprintf ("%06d", ($fMicrotime - floor ($fMicrotime)) * 1000000);
         $oDateTime = new \DateTime (date ('Y-m-d H:i:s.' . $sMicrotime));
 
-        $oStart = (false === empty(Session::is()->get('startDateTime')))
-            ? Session::is()->get('startDateTime')
-            : new \DateTime (date ('Y-m-d H:i:s.' . $sMicrotime))
-        ;
+        try
+        {
+            $oStart = (false === empty(Session::is()
+                    ->get('startDateTime')))
+                ? Session::is()
+                    ->get('startDateTime')
+                : new \DateTime (date('Y-m-d H:i:s.' . $sMicrotime));
+        }
+        catch (\ReflectionException $oReflectionException)
+        {
+            Error::exception($oReflectionException);
+            $aToolbar['sConstructionTime'] = 0;
 
-        $dDiff = (date_format ($oDateTime, "s.u") - date_format ($oStart, "s.u"));
-        $aToolbar['sConstructionTime'] = round ($dDiff, 3);
+            return $aToolbar;
+        }
+
+        $dDiff = (date_format ($oDateTime, "s.u") - date_format (get($oStart), "s.u"));
+        $aToolbar['sConstructionTime'] = round($dDiff, 3);
 
         return $aToolbar;
     }
@@ -247,7 +255,7 @@ class InfoTool
      * @param $aData
      * @return string
      */
-    protected function buildMarkupListTree($aData)
+    protected function buildMarkupListTree($aData) : string
     {
         if (false === is_array($aData))
         {
@@ -292,7 +300,7 @@ class InfoTool
      * @return array
      * @throws \ReflectionException
      */
-    protected function getCaches()
+    protected function getCaches() : array
     {
         $aCache = array ();
         $oObjects = new \RecursiveIteratorIterator (

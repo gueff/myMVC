@@ -21,7 +21,7 @@ class Dir
      */
     public static function remove(string $sDirectory = '', bool $bForce = false) : bool
     {
-        if (strstr($sDirectory, '*'))
+        if (true === str_contains($sDirectory, '*'))
         {
             Error::error('$sDirectory may not contain an asterisk: ' . $sDirectory);
 
@@ -35,8 +35,8 @@ class Dir
                 if (true === Registry::get('Dir_remove_bForce'))
                 {
                     $sFile = File::secureFilePath($sFile);
-                    (is_file($sFile)) ? unlink($sFile) : false;
-                    (is_dir($sFile)) ? self::remove($sFile, Registry::get('Dir_remove_bForce')) : false;
+                    (is_file($sFile)) && unlink($sFile);
+                    (is_dir($sFile)) && self::remove($sFile, Registry::get('Dir_remove_bForce'));
                 }
             },
             glob($sDirectory . '/{,.}[!.,!..]*', GLOB_BRACE)
@@ -106,7 +106,7 @@ class Dir
      * @return void
      * @throws \ReflectionException
      */
-    public static function recursiveCopy(string $sSource = '', string $sDestination = '')
+    public static function recursiveCopy(string $sSource = '', string $sDestination = '') : void
     {
         $rDir = opendir($sSource);
         $bMkdir = mkdir($sDestination);

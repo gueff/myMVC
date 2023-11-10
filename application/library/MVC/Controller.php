@@ -23,7 +23,7 @@ class Controller
      * @return bool
      * @throws \ReflectionException
      */
-	public static function init()
+	public static function init() : bool
 	{
 		Event::run('mvc.controller.init.before');
 
@@ -39,9 +39,10 @@ class Controller
     /**
      * calls the "__preconstruct()" method
      * at the requested Controller
+     * @return void
      * @throws \ReflectionException
      */
-    public static function runTargetClassPreconstruct ()
+    public static function runTargetClassPreconstruct () : void
     {
         $sTargetModule = Config::get_MVC_MODULES_DIR() . '/' . Route::getCurrent()->get_module();
         $sTargetClass = Route::getCurrent()->get_class();
@@ -57,7 +58,12 @@ class Controller
                         . str_repeat('-', 80) . "\n\n"
                         . "Documentation\nhttps://mymvc.ueffing.net/creating-a-module/\n\n"
             ;
-            (Request::isHttp()) ? $sMessage = nl2br($sMessage) : false;
+
+            if (true === Request::isHttp())
+            {
+                $sMessage = nl2br($sMessage);
+            }
+
             echo $sMessage;
             Error::error(trim($sMessage));
             die();

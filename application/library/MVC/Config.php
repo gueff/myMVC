@@ -24,7 +24,7 @@ class Config
      * @param array $aConfig
      * @return void
      */
-    public static function init (array $aConfig = array ())
+    public static function init (array $aConfig = array ()) : void
     {
         // save config array to registry in key value manner
         foreach ($aConfig as $sKey => $sValue)
@@ -37,7 +37,7 @@ class Config
      * @return bool
      * @throws \ReflectionException
      */
-    public static function get_MVC_LOG_AUTOLOADER()
+    public static function get_MVC_LOG_AUTOLOADER() : bool
     {
         if (Registry::isRegistered('MVC_LOG_AUTOLOADER'))
         {
@@ -51,7 +51,7 @@ class Config
      * @return string
      * @throws \ReflectionException#
      */
-    public static function get_MVC_ROUTE_QUERY_PARAM_MODULE()
+    public static function get_MVC_ROUTE_QUERY_PARAM_MODULE() : string
     {
         if (Registry::isRegistered('MVC_ROUTE_QUERY_PARAM_MODULE'))
         {
@@ -65,7 +65,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_ROUTE_QUERY_PARAM_C()
+    public static function get_MVC_ROUTE_QUERY_PARAM_C() : string
     {
         if (Registry::isRegistered('MVC_ROUTE_QUERY_PARAM_C'))
         {
@@ -79,7 +79,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_ROUTE_QUERY_PARAM_M()
+    public static function get_MVC_ROUTE_QUERY_PARAM_M() : string
     {
         if (Registry::isRegistered('MVC_ROUTE_QUERY_PARAM_M'))
         {
@@ -93,7 +93,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_MODULE_CURRENT_DIR()
+    public static function get_MVC_MODULE_CURRENT_DIR() : string
     {
         if (Registry::isRegistered('MVC_MODULE_CURRENT_DIR'))
         {
@@ -107,7 +107,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_MODULE_CURRENT_CONTROLLER_DIR()
+    public static function get_MVC_MODULE_CURRENT_CONTROLLER_DIR() : string
     {
         if (Registry::isRegistered('MVC_MODULE_CURRENT_CONTROLLER_DIR'))
         {
@@ -121,7 +121,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_MODULE_CURRENT_DATATYPE_DIR()
+    public static function get_MVC_MODULE_CURRENT_DATATYPE_DIR() : string
     {
         if (Registry::isRegistered('MVC_MODULE_CURRENT_DATATYPE_DIR'))
         {
@@ -135,7 +135,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_MODULE_CURRENT_ETC_DIR()
+    public static function get_MVC_MODULE_CURRENT_ETC_DIR() : string
     {
         if (Registry::isRegistered('MVC_MODULE_CURRENT_ETC_DIR'))
         {
@@ -149,7 +149,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_ROUTING_FALLBACK()
+    public static function get_MVC_ROUTING_FALLBACK() : string
     {
         if (Registry::isRegistered('MVC_ROUTING_FALLBACK'))
         {
@@ -163,7 +163,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_METHODNAME_PRECONSTRUCT()
+    public static function get_MVC_METHODNAME_PRECONSTRUCT() : string
     {
         if (Registry::isRegistered('MVC_METHODNAME_PRECONSTRUCT'))
         {
@@ -177,7 +177,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_WEB_ROOT()
+    public static function get_MVC_WEB_ROOT() : string
     {
         if (Registry::isRegistered('MVC_WEB_ROOT'))
         {
@@ -191,7 +191,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_BASE_PATH()
+    public static function get_MVC_BASE_PATH() : string
     {
         if (Registry::isRegistered('MVC_BASE_PATH'))
         {
@@ -205,7 +205,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_APPLICATION_PATH()
+    public static function get_MVC_APPLICATION_PATH() : string
     {
         if (Registry::isRegistered('MVC_APPLICATION_PATH'))
         {
@@ -219,7 +219,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_PUBLIC_PATH()
+    public static function get_MVC_PUBLIC_PATH() : string
     {
         if (Registry::isRegistered('MVC_PUBLIC_PATH'))
         {
@@ -233,7 +233,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_LOG_FILE_FOLDER()
+    public static function get_MVC_LOG_FILE_FOLDER() : string
     {
         if (Registry::isRegistered('MVC_LOG_FILE_FOLDER'))
         {
@@ -247,7 +247,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_LOG_FILE_DEFAULT()
+    public static function get_MVC_LOG_FILE_DEFAULT() : string
     {
         if (Registry::isRegistered('MVC_LOG_FILE_DEFAULT'))
         {
@@ -261,7 +261,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_LOG_FILE_ERROR()
+    public static function get_MVC_LOG_FILE_ERROR() : string
     {
         if (Registry::isRegistered('MVC_LOG_FILE_ERROR'))
         {
@@ -275,7 +275,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_LOG_FILE_WARNING()
+    public static function get_MVC_LOG_FILE_WARNING() : string
     {
         if (Registry::isRegistered('MVC_LOG_FILE_WARNING'))
         {
@@ -289,7 +289,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_LOG_FILE_NOTICE()
+    public static function get_MVC_LOG_FILE_NOTICE() : string
     {
         if (Registry::isRegistered('MVC_LOG_FILE_NOTICE'))
         {
@@ -303,7 +303,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_LOG_FILE_POLICY()
+    public static function get_MVC_LOG_FILE_POLICY() : string
     {
         if (Registry::isRegistered('MVC_LOG_FILE_POLICY'))
         {
@@ -317,7 +317,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_LOG_FILE_EVENT()
+    public static function get_MVC_LOG_FILE_EVENT() : string
     {
         if (Registry::isRegistered('MVC_LOG_FILE_EVENT'))
         {
@@ -331,7 +331,7 @@ class Config
      * @return array
      * @throws \ReflectionException
      */
-    public static function get_MVC_LOG_DETAIL()
+    public static function get_MVC_LOG_DETAIL() : array
     {
         if (Registry::isRegistered('MVC_LOG_DETAIL'))
         {
@@ -345,7 +345,7 @@ class Config
      * @param array $aLogDetail
      * @return void
      */
-    public static function set_MVC_LOG_DETAIL(array $aLogDetail = array())
+    public static function set_MVC_LOG_DETAIL(array $aLogDetail = array()) : void
     {
         Registry::set('MVC_LOG_DETAIL', $aLogDetail);
         $GLOBALS['aConfig']['MVC_LOG_DETAIL'] = $aLogDetail;
@@ -355,7 +355,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_LOG_FORCE_LINEBREAK()
+    public static function get_MVC_LOG_FORCE_LINEBREAK() : string
     {
         if (Registry::isRegistered('MVC_LOG_FORCE_LINEBREAK'))
         {
@@ -366,20 +366,20 @@ class Config
     }
 
     /**
-     * @param $bForce
+     * @param bool $bForce
      * @return void
      */
-    public static function set_MVC_LOG_FORCE_LINEBREAK($bForce = false)
+    public static function set_MVC_LOG_FORCE_LINEBREAK(bool $bForce = false) : void
     {
-        Registry::set('MVC_LOG_FORCE_LINEBREAK', (boolean) $bForce);
-        $GLOBALS['aConfig']['MVC_LOG_FORCE_LINEBREAK'] = (boolean) $bForce;
+        Registry::set('MVC_LOG_FORCE_LINEBREAK', $bForce);
+        $GLOBALS['aConfig']['MVC_LOG_FORCE_LINEBREAK'] = $bForce;
     }
 
     /**
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_APPLICATION_INIT_DIR()
+    public static function get_MVC_APPLICATION_INIT_DIR() : string
     {
         if (Registry::isRegistered('MVC_APPLICATION_INIT_DIR'))
         {
@@ -393,7 +393,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_VIEW_TEMPLATES()
+    public static function get_MVC_VIEW_TEMPLATES() : string
     {
         if (Registry::isRegistered('MVC_VIEW_TEMPLATES'))
         {
@@ -407,7 +407,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_LIBRARY()
+    public static function get_MVC_LIBRARY() : string
     {
         if (Registry::isRegistered('MVC_LIBRARY'))
         {
@@ -421,7 +421,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_MODULES_DIR()
+    public static function get_MVC_MODULES_DIR() : string
     {
         if (Registry::isRegistered('MVC_MODULES_DIR'))
         {
@@ -435,7 +435,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_CONFIG_DIR()
+    public static function get_MVC_CONFIG_DIR() : string
     {
         if (Registry::isRegistered('MVC_CONFIG_DIR'))
         {
@@ -449,7 +449,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_CACHE_DIR()
+    public static function get_MVC_CACHE_DIR() : string
     {
         if (Registry::isRegistered('MVC_CACHE_DIR'))
         {
@@ -460,10 +460,10 @@ class Config
     }
 
     /**
-     * @param $sCacheDir
+     * @param string $sCacheDir
      * @return void
      */
-    public static function set_MVC_CACHE_DIR($sCacheDir = '')
+    public static function set_MVC_CACHE_DIR(string $sCacheDir = '') : void
     {
         Registry::set('MVC_CACHE_DIR', $sCacheDir);
         $GLOBALS['aConfig']['MVC_CACHE_DIR'] = $sCacheDir;
@@ -473,7 +473,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_SSL_PORT()
+    public static function get_MVC_SSL_PORT() : string
     {
         if (Registry::isRegistered('MVC_SSL_PORT'))
         {
@@ -487,7 +487,7 @@ class Config
      * @return bool
      * @throws \ReflectionException
      */
-    public static function get_MVC_SECURE_REQUEST()
+    public static function get_MVC_SECURE_REQUEST() : bool
     {
         if (Registry::isRegistered('MVC_SECURE_REQUEST'))
         {
@@ -501,7 +501,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_SESSION_NAMESPACE()
+    public static function get_MVC_SESSION_NAMESPACE() : string
     {
         if (Registry::isRegistered('MVC_SESSION_NAMESPACE'))
         {
@@ -515,7 +515,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_SESSION_PATH()
+    public static function get_MVC_SESSION_PATH() : string
     {
         if (Registry::isRegistered('MVC_SESSION_PATH'))
         {
@@ -529,7 +529,7 @@ class Config
      * @return array
      * @throws \ReflectionException
      */
-    public static function get_MVC_SESSION_OPTIONS()
+    public static function get_MVC_SESSION_OPTIONS() : array
     {
         if (Registry::isRegistered('MVC_SESSION_OPTIONS'))
         {
@@ -543,7 +543,7 @@ class Config
      * @return bool
      * @throws \ReflectionException
      */
-    public static function get_MVC_SESSION_ENABLE()
+    public static function get_MVC_SESSION_ENABLE() : bool
     {
         if (Registry::isRegistered('MVC_SESSION_ENABLE'))
         {
@@ -554,10 +554,10 @@ class Config
     }
 
     /**
-     * @param $bEnable
+     * @param bool $bEnable
      * @return void
      */
-    public static function set_MVC_SESSION_ENABLE($bEnable = true)
+    public static function set_MVC_SESSION_ENABLE(bool $bEnable = true) : void
     {
         Registry::set('MVC_SESSION_ENABLE', $bEnable);
         $GLOBALS['aConfig']['MVC_SESSION_ENABLE'] = $bEnable;
@@ -567,7 +567,7 @@ class Config
      * @return bool
      * @throws \ReflectionException
      */
-    public static function get_MVC_CLI()
+    public static function get_MVC_CLI() : bool
     {
         if (Registry::isRegistered('MVC_CLI'))
         {
@@ -581,7 +581,7 @@ class Config
      * @return bool
      * @throws \ReflectionException
      */
-    public static function get_MVC_SMARTY_CACHE_STATUS()
+    public static function get_MVC_SMARTY_CACHE_STATUS() : bool
     {
         if (Registry::isRegistered('MVC_SMARTY_CACHE_STATUS'))
         {
@@ -595,7 +595,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_SMARTY_CACHE_DIR()
+    public static function get_MVC_SMARTY_CACHE_DIR() : string
     {
         if (Registry::isRegistered('MVC_SMARTY_CACHE_DIR'))
         {
@@ -609,7 +609,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_SMARTY_TEMPLATE_DIR()
+    public static function get_MVC_SMARTY_TEMPLATE_DIR() : string
     {
         if (Registry::isRegistered('MVC_SMARTY_TEMPLATE_DIR'))
         {
@@ -623,7 +623,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_SMARTY_TEMPLATE_DEFAULT()
+    public static function get_MVC_SMARTY_TEMPLATE_DEFAULT() : string
     {
         if (Registry::isRegistered('MVC_SMARTY_TEMPLATE_DEFAULT'))
         {
@@ -637,7 +637,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_SMARTY_TEMPLATE_CACHE_DIR()
+    public static function get_MVC_SMARTY_TEMPLATE_CACHE_DIR() : string
     {
         if (Registry::isRegistered('MVC_SMARTY_TEMPLATE_CACHE_DIR'))
         {
@@ -651,7 +651,7 @@ class Config
      * @return array
      * @throws \ReflectionException
      */
-    public static function get_MVC_SMARTY_PLUGINS_DIR()
+    public static function get_MVC_SMARTY_PLUGINS_DIR() : array
     {
         if (Registry::isRegistered('MVC_SMARTY_PLUGINS_DIR'))
         {
@@ -666,7 +666,7 @@ class Config
      * @return array
      * @throws \ReflectionException
      */
-    public static function get_MVC_POLICY()
+    public static function get_MVC_POLICY() : array
     {
         if (Registry::isRegistered('MVC_POLICY'))
         {
@@ -681,7 +681,7 @@ class Config
      * @param array $aPolicy
      * @return void
      */
-    public static function set_MVC_POLICY(array $aPolicy = array())
+    public static function set_MVC_POLICY(array $aPolicy = array()) : void
     {
         Registry::set('MVC_POLICY', $aPolicy);
         $GLOBALS['aConfig']['MVC_POLICY'] = $aPolicy;
@@ -691,7 +691,7 @@ class Config
      * @return array
      * @throws \ReflectionException
      */
-    public static function get_MVC_EVENT()
+    public static function get_MVC_EVENT() : array
     {
         if (false === Registry::isRegistered('MVC_EVENT'))
         {
@@ -710,7 +710,7 @@ class Config
      * @param array $aMvcEvent
      * @return void
      */
-    public static function set_MVC_EVENT(array $aMvcEvent = array())
+    public static function set_MVC_EVENT(array $aMvcEvent = array()) : void
     {
         Registry::set('MVC_EVENT', $aMvcEvent);
         $GLOBALS['aConfig']['MVC_EVENT'] = $aMvcEvent;
@@ -720,7 +720,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_UNIQUE_ID()
+    public static function get_MVC_UNIQUE_ID() : string
     {
         if (Registry::isRegistered('MVC_UNIQUE_ID'))
         {
@@ -731,10 +731,10 @@ class Config
     }
 
     /**
-     * @param $sMvcUniqueId
+     * @param string $sMvcUniqueId
      * @return void
      */
-    public static function set_MVC_UNIQUE_ID($sMvcUniqueId = '')
+    public static function set_MVC_UNIQUE_ID(string $sMvcUniqueId = '') : void
     {
         Registry::set('MVC_UNIQUE_ID', $sMvcUniqueId);
         $GLOBALS['aConfig']['MVC_UNIQUE_ID'] = $sMvcUniqueId;
@@ -744,7 +744,7 @@ class Config
      * @return \MVC\Session|null
      * @throws \ReflectionException
      */
-    public static function get_MVC_SESSION()
+    public static function get_MVC_SESSION() : Session|null
     {
         if (Registry::isRegistered('MVC_SESSION'))
         {
@@ -761,17 +761,17 @@ class Config
      * @param \MVC\Session $oSession
      * @return void
      */
-    public static function set_MVC_SESSION(Session $oSession)
+    public static function set_MVC_SESSION(Session $oSession) : void
     {
         Registry::set ('MVC_SESSION', $oSession);
         $GLOBALS['aConfig']['MVC_SESSION'] = $oSession;
     }
 
     /**
-     * @return string
+     * @return bool
      * @throws \ReflectionException
      */
-    public static function get_MVC_INFOTOOL_ENABLE()
+    public static function get_MVC_INFOTOOL_ENABLE() : bool
     {
         if (Registry::isRegistered('MVC_INFOTOOL_ENABLE'))
         {
@@ -782,11 +782,11 @@ class Config
     }
 
     /**
-     * returns config settings array of current module | or config of given module
+     * @param string $sModule
      * @return array
      * @throws \ReflectionException
      */
-    public static function MODULE($sModule = '')
+    public static function MODULE(string $sModule = '') : array
     {
         if ('' === $sModule)
         {
@@ -802,11 +802,10 @@ class Config
     }
 
     /**
-     * returns config settings array of current module | or config of given module
      * @return array
      * @throws \ReflectionException
      */
-    public static function get_MVC_CORE($sModule = '')
+    public static function get_MVC_CORE() : array
     {
         if (Registry::isRegistered('MVC_CORE'))
         {
@@ -820,7 +819,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_ENV()
+    public static function get_MVC_ENV() : string
     {
         if (Registry::isRegistered('MVC_ENV'))
         {
@@ -834,7 +833,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_VERSION()
+    public static function get_MVC_VERSION() : string
     {
         return (Registry::isRegistered('MVC_CORE') && isset(Registry::get('MVC_CORE')['version']))
             ? Registry::get('MVC_CORE')['version']
@@ -845,7 +844,7 @@ class Config
      * @return array
      * @throws \ReflectionException
      */
-    public static function get_MVC_CACHE_CONFIG()
+    public static function get_MVC_CACHE_CONFIG() : array
     {
         if (Registry::isRegistered('MVC_CACHE_CONFIG'))
         {
@@ -859,7 +858,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_MODULE_CURRENT_COMPOSER_DIR()
+    public static function get_MVC_MODULE_CURRENT_COMPOSER_DIR() : string
     {
         if (Registry::isRegistered('MVC_MODULE_CURRENT_COMPOSER_DIR'))
         {
@@ -873,7 +872,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_MODULE_CURRENT_CONFIG_DIR()
+    public static function get_MVC_MODULE_CURRENT_CONFIG_DIR() : string
     {
         if (Registry::isRegistered('MVC_MODULE_CURRENT_CONFIG_DIR'))
         {
@@ -887,7 +886,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_MODULE_CURRENT_EVENT_DIR()
+    public static function get_MVC_MODULE_CURRENT_EVENT_DIR() : string
     {
         if (Registry::isRegistered('MVC_MODULE_CURRENT_EVENT_DIR'))
         {
@@ -901,7 +900,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_MODULE_CURRENT_MODEL_DIR()
+    public static function get_MVC_MODULE_CURRENT_MODEL_DIR() : string
     {
         if (Registry::isRegistered('MVC_MODULE_CURRENT_MODEL_DIR'))
         {
@@ -915,7 +914,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_MODULE_CURRENT_POLICY_DIR()
+    public static function get_MVC_MODULE_CURRENT_POLICY_DIR() : string
     {
         if (Registry::isRegistered('MVC_MODULE_CURRENT_POLICY_DIR'))
         {
@@ -929,7 +928,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_MODULE_CURRENT_VIEW_DIR()
+    public static function get_MVC_MODULE_CURRENT_VIEW_DIR() : string
     {
         if (Registry::isRegistered('MVC_MODULE_CURRENT_VIEW_DIR'))
         {
@@ -943,7 +942,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_MODULE_CURRENT_STAGING_CONFIG_DIR()
+    public static function get_MVC_MODULE_CURRENT_STAGING_CONFIG_DIR() : string
     {
         if (Registry::isRegistered('MVC_MODULE_CURRENT_STAGING_CONFIG_DIR'))
         {
@@ -957,7 +956,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_MODULE_CURRENT_NAME()
+    public static function get_MVC_MODULE_CURRENT_NAME() : string
     {
         if (Registry::isRegistered('MVC_MODULE_CURRENT_NAME'))
         {
@@ -971,7 +970,7 @@ class Config
      * @param \MVC\View $oView
      * @return void
      */
-    public static function set_MVC_MODULE_CURRENT_VIEW(\MVC\View $oView)
+    public static function set_MVC_MODULE_CURRENT_VIEW(View $oView) : void
     {
         Registry::set('MVC_MODULE_CURRENT_VIEW', $oView);
         $GLOBALS['aConfig']['MVC_MODULE_CURRENT_VIEW'] = $oView;
@@ -981,7 +980,7 @@ class Config
      * @return \MVC\View|null
      * @throws \ReflectionException
      */
-    public static function get_MVC_MODULE_CURRENT_VIEW()
+    public static function get_MVC_MODULE_CURRENT_VIEW() : View|null
     {
         $oView = null;
 
@@ -998,7 +997,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_BIN_REMOVE()
+    public static function get_MVC_BIN_REMOVE() : string
     {
         if (Registry::isRegistered('MVC_BIN_REMOVE'))
         {
@@ -1012,7 +1011,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_BIN_FIND()
+    public static function get_MVC_BIN_FIND() : string
     {
         if (Registry::isRegistered('MVC_BIN_FIND'))
         {
@@ -1026,7 +1025,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_BIN_GREP()
+    public static function get_MVC_BIN_GREP() : string
     {
         if (Registry::isRegistered('MVC_BIN_GREP'))
         {
@@ -1040,7 +1039,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_BIN_MOVE()
+    public static function get_MVC_BIN_MOVE() : string
     {
         if (Registry::isRegistered('MVC_BIN_MOVE'))
         {
@@ -1054,7 +1053,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_BIN_XARGS()
+    public static function get_MVC_BIN_XARGS() : string
     {
         if (Registry::isRegistered('MVC_BIN_XARGS'))
         {
@@ -1068,7 +1067,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_BIN_SED()
+    public static function get_MVC_BIN_SED() : string
     {
         if (Registry::isRegistered('MVC_BIN_SED'))
         {
@@ -1082,7 +1081,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_BIN_PHP_BINARY()
+    public static function get_MVC_BIN_PHP_BINARY() : string
     {
         if (Registry::isRegistered('MVC_BIN_PHP_BINARY'))
         {
@@ -1096,7 +1095,7 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_BIN_PS()
+    public static function get_MVC_BIN_PS() : string
     {
         if (Registry::isRegistered('MVC_BIN_PS'))
         {
@@ -1110,7 +1109,7 @@ class Config
      * @return bool
      * @throws \ReflectionException
      */
-    public static function get_MVC_EVENT_LOG_RUN()
+    public static function get_MVC_EVENT_LOG_RUN() : bool
     {
         if (Registry::isRegistered('MVC_EVENT_LOG_RUN'))
         {
@@ -1121,20 +1120,20 @@ class Config
     }
 
     /**
-     * @param $bVar
+     * @param bool $bVar
      * @return void
      */
-    public static function set_MVC_EVENT_LOG_RUN($bVar = false)
+    public static function set_MVC_EVENT_LOG_RUN(bool $bVar = false) : void
     {
-        Registry::set('MVC_EVENT_LOG_RUN', (boolean) $bVar);
-        $GLOBALS['aConfig']['MVC_EVENT_LOG_RUN'] = (boolean) $bVar;
+        Registry::set('MVC_EVENT_LOG_RUN', $bVar);
+        $GLOBALS['aConfig']['MVC_EVENT_LOG_RUN'] = $bVar;
     }
 
     /**
      * @return bool
      * @throws \ReflectionException
      */
-    public static function get_MVC_EVENT_ENABLE_WILDCARD()
+    public static function get_MVC_EVENT_ENABLE_WILDCARD() : bool
     {
         if (Registry::isRegistered('MVC_EVENT_ENABLE_WILDCARD'))
         {
@@ -1145,12 +1144,12 @@ class Config
     }
 
     /**
-     * @param $bVar
+     * @param bool $bVar
      * @return void
      */
-    public static function set_MVC_EVENT_ENABLE_WILDCARD($bVar = false)
+    public static function set_MVC_EVENT_ENABLE_WILDCARD(bool $bVar = false) : void
     {
-        Registry::set('MVC_EVENT_ENABLE_WILDCARD', (boolean) $bVar);
-        $GLOBALS['aConfig']['MVC_EVENT_ENABLE_WILDCARD'] = (boolean) $bVar;
+        Registry::set('MVC_EVENT_ENABLE_WILDCARD', $bVar);
+        $GLOBALS['aConfig']['MVC_EVENT_ENABLE_WILDCARD'] = $bVar;
     }
 }

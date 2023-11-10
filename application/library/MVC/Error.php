@@ -19,7 +19,7 @@ use MVC\DataType\DTKeyValue;
 class Error
 {
     /**
-     * @var string[]
+     * @var array
      */
     public static $aExceptionTranslation = [
         E_ERROR => "E_ERROR",
@@ -40,24 +40,25 @@ class Error
         E_ALL => "E_ALL"
     ];
 
-	/**
-	 * @var array error
-	 */
+    /**
+     * @var array
+     */
 	protected static $_aError;
 
 	/**
 	 * sets error handlers;
 	 * bind event 'mvc.error' to function
+     * @return void
      * @throws \ReflectionException
      */
-	public static function init()
+	public static function init() : void
 	{
 		register_shutdown_function ("\MVC\Error::fatal");
 		set_error_handler ("\MVC\Error::errorHandler");
 		set_exception_handler ("\MVC\Error::exception");
 
 		Event::bind ('mvc.error', function(DTArrayObject $oDTArrayObject) {
-			\MVC\Error::addERROR ($oDTArrayObject);
+			Error::addERROR ($oDTArrayObject);
 		});
 	}
 
@@ -67,15 +68,15 @@ class Error
      * @param string $sMessage
      * @param string $sFilename
      * @param int    $iLineNr
-     * @param        $mContext
+     * @param mixed  $mContext
      * @return void
      * @throws \ReflectionException
      */
-	public static function errorHandler(int $iCode, string $sMessage, string $sFilename, int $iLineNr, $mContext = '')
+	public static function errorHandler(int $iCode, string $sMessage, string $sFilename, int $iLineNr, mixed $mContext = '') : void
 	{	
-		$oErrorException = new \ErrorException ($sMessage, (int) $iCode, (int) $iSeverity = 0, $sFilename, (int) $iLineNr );		
+		$oErrorException = new \ErrorException ($sMessage, $iCode, $iSeverity = 1, $sFilename, $iLineNr);
 		
-		self::exception ($oErrorException);
+		self::exception($oErrorException);
 	}	
 	
 	/**
@@ -88,7 +89,7 @@ class Error
      * @return void
      * @throws \ReflectionException
      */
-	public static function error (string $sMessage = '', int $iCode = E_ERROR, int $iSeverity = 0, string $sFilename = '', int $iLineNr = 0)
+	public static function error (string $sMessage = '', int $iCode = E_ERROR, int $iSeverity = 0, string $sFilename = '', int $iLineNr = 0) : void
 	{
         $aDebug = Debug::prepareBacktraceArray(debug_backtrace());
         (true === empty($sFilename)) ? $sFilename = $aDebug['sFile'] : false;
@@ -107,12 +108,12 @@ class Error
      * @return void
      * @throws \ReflectionException
      */
-    public static function warning (string $sMessage = '', int $iCode = E_WARNING, int $iSeverity = 0, string $sFilename = '', int $iLineNr = 0)
+    public static function warning (string $sMessage = '', int $iCode = E_WARNING, int $iSeverity = 0, string $sFilename = '', int $iLineNr = 0) : void
     {
         $aDebug = Debug::prepareBacktraceArray(debug_backtrace());
         (true === empty($sFilename)) ? $sFilename = $aDebug['sFile'] : false;
-        (true === empty($iLineNr)) ? $iLineNr = $aDebug['sLine'] : false;
-        $oErrorException = new \ErrorException ($sMessage, (int) $iCode, (int) $iSeverity, $sFilename, (int) $iLineNr );
+        (true === empty($iLineNr)) ? $iLineNr = (int) $aDebug['sLine'] : false;
+        $oErrorException = new \ErrorException ($sMessage, $iCode, $iSeverity, $sFilename, $iLineNr );
 
         self::exception ($oErrorException);
     }
@@ -126,12 +127,12 @@ class Error
      * @return void
      * @throws \ReflectionException
      */
-    public static function notice (string $sMessage = '', int $iCode = E_NOTICE, int $iSeverity = 0, string $sFilename = '', int $iLineNr = 0)
+    public static function notice (string $sMessage = '', int $iCode = E_NOTICE, int $iSeverity = 0, string $sFilename = '', int $iLineNr = 0) : void
     {
         $aDebug = Debug::prepareBacktraceArray(debug_backtrace());
         (true === empty($sFilename)) ? $sFilename = $aDebug['sFile'] : false;
-        (true === empty($iLineNr)) ? $iLineNr = $aDebug['sLine'] : false;
-        $oErrorException = new \ErrorException ($sMessage, (int) $iCode, (int) $iSeverity, $sFilename, (int) $iLineNr );
+        (true === empty($iLineNr)) ? $iLineNr = (int) $aDebug['sLine'] : false;
+        $oErrorException = new \ErrorException ($sMessage, $iCode, $iSeverity, $sFilename, $iLineNr );
 
         self::exception ($oErrorException);
     }
@@ -141,7 +142,7 @@ class Error
      * @return void
      * @throws \ReflectionException
      */
-	public static function exception($oErrorException = null)
+	public static function exception($oErrorException = null) : void
 	{
 		$sLogfile = Config::get_MVC_LOG_FILE_ERROR();
 		$sMsg = '';
@@ -181,9 +182,10 @@ class Error
 
 	/**
 	 * Checks for a fatal error, work around for set_error_handler not working on fatal errors.
+     * @return void
      * @throws \ReflectionException
      */
-	public static function fatal()
+	public static function fatal() : void
 	{
 		$aError = error_get_last ();
 
@@ -205,7 +207,7 @@ class Error
      * @return void
      * @throws \ReflectionException
      */
-	public static function addERROR (DTArrayObject $oDTArrayObject)
+	public static function addERROR(DTArrayObject $oDTArrayObject) : void
 	{
 	    // add time
         $oDTArrayObject->add_aKeyValue(
@@ -218,11 +220,9 @@ class Error
 
 	/**
 	 * returns error array 
-	 * @access public
-	 * @static
-	 * @return array
-	 */
-	public static function getERROR ()
+     * @return array
+     */
+	public static function getERROR() : array
 	{
 		return self::$_aError;
 	}

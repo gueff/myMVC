@@ -15,9 +15,17 @@ namespace MVC;
  */
 class Cache extends \Cachix
 {
-    public static function init(array $aConfig = array())
+    /**
+     * @param array $aConfig
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function init(array $aConfig = array()) : void
     {
-        (empty($aConfig)) ? $aConfig = Config::get_MVC_CACHE_CONFIG() : false;
+        if (true === empty($aConfig))
+        {
+            $aConfig = Config::get_MVC_CACHE_CONFIG();
+        }
 
         parent::init($aConfig);
     }

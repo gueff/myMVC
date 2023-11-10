@@ -16,14 +16,14 @@ class Date
      * checks if a requested value equals to the requested date format
      * @example var_dump(MVC\Date::validateDate('2022-10-09', 'Y-m-d')); # true
      * @credits https://www.php.net/manual/en/function.checkdate.php#113205
-     * @param mixed $mValue
+     * @param string  $sValue
      * @param string $sFormat default='Y-m-d H:i:s'
      * @return bool
      */
-    public static function validateDate($mValue, string $sFormat = 'Y-m-d H:i:s')
+    public static function validateDate(string $sValue, string $sFormat = 'Y-m-d H:i:s') : bool
     {
-        $oDateTime = \DateTime::createFromFormat($sFormat, $mValue);
-        return $oDateTime && $oDateTime->format($sFormat) == $mValue;
+        $oDateTime = \DateTime::createFromFormat($sFormat, $sValue);
+        return $oDateTime && $oDateTime->format($sFormat) == $sValue;
     }
 
     /**
@@ -32,13 +32,16 @@ class Date
      * @return int week number (KW)
      * @throws \Exception
      */
-    public static function getWeekNumberOnIsoDate(string $sDateIso = '')
+    public static function getWeekNumberOnIsoDate(string $sDateIso = '') : int
     {
-        ('' === $sDateIso) ? $sDateIso = date('Y-m-d') : false;
-        $oDateTime = new \DateTime($sDateIso);
-        $iWeekNumber = (int) $oDateTime->format("W");
+        if ('' === $sDateIso)
+        {
+            $sDateIso = date('Y-m-d');
+        }
 
-        return $iWeekNumber;
+        $oDateTime = new \DateTime($sDateIso);
+
+        return (int) $oDateTime->format("W");
     }
 
     /**
@@ -46,13 +49,11 @@ class Date
      * @param int $iYear
      * @return int amount week numbers
      */
-    public static function getAmountOfWeekNumbersOfYear(int $iYear = 0)
+    public static function getAmountOfWeekNumbersOfYear(int $iYear = 0) : int
     {
-        $iYear = (0 === $iYear) ? date('Y') : (int) $iYear;
+        $iYear = (0 === $iYear) ? date('Y') : $iYear;
 
-        $iAmountWeekNumberOfYear = (int) idate('W', mktime(0, 0, 0, 12, 28, $iYear));
-
-        return $iAmountWeekNumberOfYear;
+        return (int) idate('W', mktime(0, 0, 0, 12, 28, $iYear));
     }
 
     /**
@@ -62,7 +63,7 @@ class Date
      * @param string $sDateIso
      * @return bool
      */
-    public static function dateIsBetween2Dates(string $sDateIsoRangeStart = '', string $sDateIsoRangeEnd = '', string $sDateIso = '')
+    public static function dateIsBetween2Dates(string $sDateIsoRangeStart = '', string $sDateIsoRangeEnd = '', string $sDateIso = '') : bool
     {
         // Fallback: today
         ('' === $sDateIso) ? $sDateIso = date('Y-m-d', strtotime(date('Y-m-d'))) : false;

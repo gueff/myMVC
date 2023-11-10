@@ -28,9 +28,9 @@ class Policy
      * @return void
      * @throws \ReflectionException
      */
-    public static function init()
+    public static function init() : void
     {
-        \MVC\Event::RUN('mvc.policy.init.before');
+        Event::RUN('mvc.policy.init.before');
 
         $sPolicyDir = Config::get_MVC_MODULE_CURRENT_ETC_DIR() . '/policy';
 
@@ -49,22 +49,22 @@ class Policy
 
         self::apply();
 
-        \MVC\Event::RUN('mvc.policy.init.after');
+        Event::RUN('mvc.policy.init.after');
     }
 
     /**
      * sets a policy rule
-     * @param string $sClass
-     * @param string $sMethod
-     * @param        $mTarget
+     * @param string     $sClass
+     * @param string     $sMethod
+     * @param mixed|null $mTarget
      * @return void
      * @throws \ReflectionException
      */
-    public static function set(string $sClass = '', string $sMethod = '', $mTarget = null)
+    public static function set(string $sClass = '', string $sMethod = '', mixed $mTarget = null) : void
     {
         $aPolicy = Config::get_MVC_POLICY();
 
-        \MVC\Event::RUN('mvc.policy.set.before', $aPolicy);
+        Event::RUN('mvc.policy.set.before', $aPolicy);
 
         if (true === isset($aPolicy[$sClass]))
         {
@@ -101,24 +101,24 @@ class Policy
             ;
         }
 
-        \MVC\Event::RUN('mvc.policy.set.after', $aPolicy);
+        Event::RUN('mvc.policy.set.after', $aPolicy);
 
         Config::set_MVC_POLICY($aPolicy);
     }
 
     /**
      * unsets a policy rule
-     * @param string $sClass
-     * @param string $sMethod
-     * @param        $mTarget
+     * @param string     $sClass
+     * @param string     $sMethod
+     * @param mixed|null $mTarget
      * @return void
      * @throws \ReflectionException
      */
-    public static function unset(string $sClass = '', string $sMethod = '', $mTarget = null)
+    public static function unset(string $sClass = '', string $sMethod = '', mixed $mTarget = null) : void
     {
         $aPolicy = Config::get_MVC_POLICY();
 
-        \MVC\Event::RUN('mvc.policy.unset.before', $aPolicy);
+        Event::RUN('mvc.policy.unset.before', $aPolicy);
 
         // Unset all rules set to controller
         if ('' !== $sClass && '' === $sMethod && null === $mTarget)
@@ -147,7 +147,7 @@ class Policy
         // Unset certain target method(s)
         elseif ('' !== $sClass && '' !== $sMethod && null !== $mTarget)
         {
-            if (is_array($mTarget))
+            if (true === is_array($mTarget))
             {
                 foreach ($mTarget as $sTarget)
                 {
@@ -194,7 +194,7 @@ class Policy
             }
         }
 
-        \MVC\Event::RUN('mvc.policy.unset.after', $aPolicy);
+        Event::RUN('mvc.policy.unset.after', $aPolicy);
 
         Config::set_MVC_POLICY($aPolicy);
     }
@@ -204,11 +204,11 @@ class Policy
      * @return void
      * @throws \ReflectionException
      */
-    protected static function apply()
+    protected static function apply() : void
     {
         $aPolicy = self::getPolicyRuleOnCurrentRequest();
 
-        \MVC\Event::RUN('mvc.policy.apply.before', $aPolicy);
+        Event::RUN('mvc.policy.apply.before', $aPolicy);
 
         if (!empty ($aPolicy))
         {
@@ -249,16 +249,19 @@ class Policy
      * @return array
      * @throws \ReflectionException
      */
-    public static function getPolicyRuleOnCurrentRequest ()
+    public static function getPolicyRuleOnCurrentRequest() : array
     {
         $aPolicyRule = Config::get_MVC_POLICY();
         $oDTRoute = Route::getCurrent();
         $aPolicy = array();
 
         // check if there is a policy for this request
-        $sClass = (substr ($oDTRoute->get_class(), 0, 1) !== '\\') ? '\\' . $oDTRoute->get_class() : $oDTRoute->get_class();
+        $sClass = (false === str_starts_with($oDTRoute->get_class(), '\\'))
+            ? '\\' . $oDTRoute->get_class()
+            : $oDTRoute->get_class()
+        ;
 
-        if (array_key_exists ($sClass, $aPolicyRule))
+        if (array_key_exists($sClass, $aPolicyRule))
         {
             if (array_key_exists ('*', $aPolicyRule[$sClass]))
             {
@@ -268,7 +271,7 @@ class Policy
                 );
             }
 
-            if (array_key_exists ($oDTRoute->get_m(), $aPolicyRule[$sClass]))
+            if (array_key_exists($oDTRoute->get_m(), $aPolicyRule[$sClass]))
             {
                 $aPolicy = array_merge(
                     $aPolicyRule[$sClass][$oDTRoute->get_m()],
@@ -284,7 +287,7 @@ class Policy
      * @return array
      * @throws \ReflectionException
      */
-    public static function getRules()
+    public static function getRules() : array
     {
         return Config::get_MVC_POLICY();
     }
@@ -292,18 +295,18 @@ class Policy
     /**
      * @return array
      */
-    public static function getRulesApplied()
+    public static function getRulesApplied() : array
     {
         return self::$aApplied;
     }
 
     /**
      * @param \MVC\DataType\DTRoute $oDTRoute
-     * @param                       $mTarget
+     * @param mixed|null            $mTarget
      * @return void
      * @throws \ReflectionException
      */
-    public static function bindOnRoute(DTRoute $oDTRoute, $mTarget = null)
+    public static function bindOnRoute(DTRoute $oDTRoute, mixed $mTarget = null) : void
     {
         self::set(
             '\\' . $oDTRoute->get_class(),
@@ -314,11 +317,11 @@ class Policy
 
     /**
      * @param \MVC\DataType\DTRoute $oDTRoute
-     * @param                       $mTarget
+     * @param mixed|null            $mTarget
      * @return void
      * @throws \ReflectionException
      */
-    public static function unbindRoute(DTRoute $oDTRoute, $mTarget = null)
+    public static function unbindRoute(DTRoute $oDTRoute, mixed $mTarget = null) : void
     {
         self::unset(
             '\\' . $oDTRoute->get_class(),

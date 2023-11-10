@@ -90,28 +90,29 @@ class View extends \Smarty
         $this->setPluginsDir ($aPlugInDir);
         $this->checkDirs();
 
-        \MVC\Event::bind('mvc.view.render.off', function() {
-            \MVC\View::$bRender = false;
+        Event::bind('mvc.view.render.off', function() {
+            View::$bRender = false;
         });
 
-        \MVC\Event::bind('mvc.view.render.on', function() {
-            \MVC\View::$bRender = true;
+        Event::bind('mvc.view.render.on', function() {
+            View::$bRender = true;
         });
 
-        \MVC\Event::bind('mvc.view.echoOut.off', function() {
-            \MVC\View::$bEchoOut = false;
+        Event::bind('mvc.view.echoOut.off', function() {
+            View::$bEchoOut = false;
         });
 
-        \MVC\Event::bind('mvc.view.echoOut.on', function() {
-            \MVC\View::$bEchoOut = true;
+        Event::bind('mvc.view.echoOut.on', function() {
+            View::$bEchoOut = true;
         });
     }
 
     /**
      * checks if required dirs exist. If not, it tries to create them
+     * @return void
      * @throws \ReflectionException
      */
-    private function checkDirs()
+    private function checkDirs() : void
     {
         if (!file_exists (Config::get_MVC_SMARTY_TEMPLATE_CACHE_DIR()))
         {
@@ -129,7 +130,7 @@ class View extends \Smarty
      * @return string
      * @throws \SmartyException
      */
-    public function loadTemplateAsString(string $sTemplate = '')
+    public function loadTemplateAsString(string $sTemplate = '') : string
     {
         return $this->fetch ('string:' . file_get_contents ($sTemplate, true));
     }
@@ -141,7 +142,7 @@ class View extends \Smarty
      * @throws \ReflectionException
      * @throws \SmartyException
      */
-    public function renderString(string $sTemplateString = '')
+    public function renderString(string $sTemplateString = '') : void
     {
         Event::run('mvc.view.renderString.before',
             DTArrayObject::create()
@@ -182,7 +183,7 @@ class View extends \Smarty
      * @throws \ReflectionException
      * @throws \SmartyException
      */
-    public function render()
+    public function render() : void
     {
         Event::run('mvc.view.render.before',
             DTArrayObject::create()
@@ -212,7 +213,7 @@ class View extends \Smarty
      * @param string $sVar
      * @return void
      */
-    public function assignValue($mValue, string $sVar = '')
+    public function assignValue(mixed $mValue, string $sVar = '') : void
     {
         ('' === $sVar) ? $sVar = $this->sContentVar : false;
         $this->assign($sVar, $mValue);
@@ -223,7 +224,7 @@ class View extends \Smarty
      * @param string $sTemplate
      * @return void
      */
-    public function setTemplate(string $sTemplate = '')
+    public function setTemplate(string $sTemplate = '') : void
     {
         $this->sTemplate = $sTemplate;
     }
@@ -231,9 +232,9 @@ class View extends \Smarty
     /**
      * set absolute Path to Smarty Template Dir and saves this into includePath
      * @param string $sAbsolutePathToTemplateDir
-     * @throws \ReflectionException
+     * @return void
      */
-    public function setAbsolutePathToTemplateDir(string $sAbsolutePathToTemplateDir = '')
+    public function setAbsolutePathToTemplateDir(string $sAbsolutePathToTemplateDir = '') : void
     {
         if (is_dir($sAbsolutePathToTemplateDir))
         {
@@ -257,7 +258,7 @@ class View extends \Smarty
      * @param string $sContentVar
      * @return void
      */
-    public function setContentVar(string $sContentVar = 'sContent')
+    public function setContentVar(string $sContentVar = 'sContent') : void
     {
         $this->sContentVar = $sContentVar;
     }
@@ -266,7 +267,7 @@ class View extends \Smarty
      * @return string
      * @throws \ReflectionException
      */
-    public static function getSmartyTemplateDefault()
+    public static function getSmartyTemplateDefault() : string
     {
         return Config::get_MVC_SMARTY_TEMPLATE_DEFAULT();
     }
@@ -275,34 +276,34 @@ class View extends \Smarty
      * @return array
      * @throws \ReflectionException
      */
-    public static function getSmartyPlugInsDir()
+    public static function getSmartyPlugInsDir() : array
     {
         return Config::get_MVC_SMARTY_PLUGINS_DIR();
     }
 
     /**
-     * @return mixed|string
+     * @return string
      * @throws \ReflectionException
      */
-    public static function getSmartyTemplateCacheDir()
+    public static function getSmartyTemplateCacheDir() : string
     {
         return Config::get_MVC_SMARTY_TEMPLATE_CACHE_DIR();
     }
 
     /**
-     * @return mixed|string
+     * @return string
      * @throws \ReflectionException
      */
-    public static function getSmartyCacheDir()
+    public static function getSmartyCacheDir() : string
     {
         return Config::get_MVC_SMARTY_CACHE_DIR();
     }
 
     /**
-     * @return mixed|string
+     * @return bool
      * @throws \ReflectionException
      */
-    public static function getSmartyCacheStatus()
+    public static function getSmartyCacheStatus() : bool
     {
         return Config::get_MVC_SMARTY_CACHE_STATUS();
     }

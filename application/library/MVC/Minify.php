@@ -29,7 +29,7 @@ class Minify
      * @return bool
      * @throws \ReflectionException
      */
-    public static function init(array $aContentFilterMinify = array())
+    public static function init(array $aContentFilterMinify = array()) : bool
     {
         (true === empty($aContentFilterMinify)) ? $aContentFilterMinify = array(Config::get_MVC_PUBLIC_PATH()) : false;
         $bSuccess = true;
@@ -68,11 +68,11 @@ class Minify
             // skip .min.* files
             if ($sLastChars === $sMinSuffix) {continue;}
 
-            ('js' == $sSuffix) ? $bSuccess = self::minifyJs($oSplFileInfo) : false;
-            ('css' == $sSuffix) ? $bSuccess = self::minifyCss($oSplFileInfo) : false;
+            ('js' == $sSuffix) && $bSuccess = self::minifyJs($oSplFileInfo);
+            ('css' == $sSuffix) && $bSuccess = self::minifyCss($oSplFileInfo);
 
             // if it only fails once set success to false
-            (false === $bSuccess) ? self::$bMinifySuccess = false : false;
+            (false === $bSuccess) && self::$bMinifySuccess = false;
         }
 
         // update cache
@@ -86,7 +86,7 @@ class Minify
      * @param \SplFileInfo $oSplFileInfo
      * @return bool
      */
-    public static function minifyJs(\SplFileInfo $oSplFileInfo)
+    public static function minifyJs(\SplFileInfo $oSplFileInfo) : bool
     {
         if (false === file_exists($oSplFileInfo->getPathname()))
         {
@@ -106,9 +106,8 @@ class Minify
     /**
      * @param \SplFileInfo $oSplFileInfo
      * @return bool
-     * @throws \ReflectionException
      */
-    public static function minifyCss(\SplFileInfo $oSplFileInfo)
+    public static function minifyCss(\SplFileInfo $oSplFileInfo) : bool
     {
         if (false === file_exists($oSplFileInfo->getPathname()))
         {
