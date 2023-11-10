@@ -136,13 +136,12 @@ class Error
         self::exception ($oErrorException);
     }
 
-	/**
-	 * Uncaught exception handler
-     * @param \ErrorException|null $oErrorException
+    /**
+     * @param $oErrorException
      * @return void
      * @throws \ReflectionException
      */
-	public static function exception(\ErrorException $oErrorException = null)
+	public static function exception($oErrorException = null)
 	{
 		$sLogfile = Config::get_MVC_LOG_FILE_ERROR();
 		$sMsg = '';

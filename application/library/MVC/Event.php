@@ -11,6 +11,7 @@
 namespace MVC;
 
 use MVC\DataType\DTArrayObject;
+use MVC\DataType\DTEventContext;
 
 /**
  * @example
@@ -159,7 +160,7 @@ class Event
 
     /**
      * @param string $sEvent
-     * @param        $mPackage
+     * @param mixed  $mPackage
      * @return bool
      * @throws \ReflectionException
      */
@@ -170,23 +171,27 @@ class Event
             $mPackage = DTArrayObject::create();
         }
 
+        $bReturn = false;
         $sEvent = trim($sEvent);
         $sDebug = Log::prepareDebug(debug_backtrace());
         $sPreLog = ' (' . $sEvent . ') --> called in: ' . $sDebug;
 
-        // nothing bonded; "RUN"
-        if (!isset (self::$aEvent[$sEvent]))
-        {
-            (true === Config::get_MVC_EVENT_LOG_RUN()) ? Log::write('RUN' . $sPreLog, Config::get_MVC_LOG_FILE_EVENT()) : false;
-
-            return false;
-        }
-
-        #------------
-        # run wildcard listeners
-
         if (true === Config::get_MVC_EVENT_ENABLE_WILDCARD())
         {
+            #------------
+            # run explicitely wildcard listener `*`; "RUN+"
+
+            if (true === isset(self::$aEvent['*']))
+            {
+                $sPreLogWildCard = ' (* [' . $sEvent . ']) --> called in: ' . $sDebug;
+                Event::addToRegistry('RUN', $sPreLogWildCard);
+                self::execute(self::$aEvent['*'], $mPackage, 'RUN+', $sPreLogWildCard, '*', $sEvent, $sDebug);
+                $bReturn = true;
+            }
+
+            #------------
+            # run any possible wildcard listeners; "RUN+"
+
             $aListener = self::getWildcardListenersOnEvent($sEvent);
 
             if (false === empty($aListener))
@@ -195,20 +200,31 @@ class Event
                 {
                     $sPreLogWildCard = ' (' . $sListenerEvent . ' [' . $sEvent . ']) --> called in: ' . $sDebug;
                     Event::addToRegistry('RUN', $sPreLogWildCard);
-                    self::execute(self::$aEvent[$sListenerEvent], $mPackage, 'RUN+', $sPreLogWildCard);
+                    self::execute(self::$aEvent[$sListenerEvent], $mPackage, 'RUN+', $sPreLogWildCard, $sListenerEvent, $sEvent, $sDebug);
+                    $bReturn = true;
                 }
             }
         }
 
         #------------
-        # run regular listeners
+        # nothing special bonded; simple "RUN" and leave
+        if (!isset (self::$aEvent[$sEvent]))
+        {
+            (true === Config::get_MVC_EVENT_LOG_RUN()) ? Log::write('RUN' . $sPreLog, Config::get_MVC_LOG_FILE_EVENT()) : false;
+
+            return $bReturn;
+        }
+
+        #------------
+        # run regular listeners; "RUN+"
 
         Event::addToRegistry('RUN', $sPreLog);
-        self::execute(self::$aEvent[$sEvent], $mPackage, 'RUN+', $sPreLog);
+        self::execute(self::$aEvent[$sEvent], $mPackage, 'RUN+', $sPreLog, $sEvent, $sEvent, $sDebug);
+        $bReturn = true;
 
         #------------
 
-        return true;
+        return $bReturn;
     }
 
     /**
@@ -219,14 +235,14 @@ class Event
     {
         $aListener = array_filter(
             array_filter(array_map(function($sValue){
-                if ('*' === substr($sValue, -1)) // reduce to listeners with * at the end
+                if ('*' === substr($sValue, -1)) // reduce to listeners with an * at the end
                 {
                     return $sValue;
                 }
                 return '';
             }, array_map(
                 'trim',
-                preg_grep('/\*/', array_keys(self::$aEvent)) // get all listeners containing a *
+                preg_grep('/\*/', array_keys(self::$aEvent)) // get all listeners containing an *
             ))),
             function($sValue) use ($sEvent){
                 $sValue = str_replace('*', '', $sValue); // remove *
@@ -242,31 +258,46 @@ class Event
     }
 
     /**
-     * @param array  $aEvent
-     * @param        $mPackage
-     * @param string $sPreName
+     * @param array  $aBonded
+     * @param        $mRunPackage
+     * @param string $sRunType
      * @param string $sPreLog
+     * @param string $sEvent
+     * @param string $sEventOrigin
+     * @param string $sCalledIn
      * @return void
      * @throws \ReflectionException
      */
-    protected static function execute(array $aEvent = array(), $mPackage = null, string $sPreName = '', string $sPreLog = '')
+    protected static function execute(array $aBonded = array(), $mRunPackage = null, string $sRunType = '', string $sPreLog = '', string $sEvent = '', string $sEventOrigin = '', string $sCalledIn = '')
     {
-        foreach ($aEvent as $sKey => $sCallback)
+        foreach ($aBonded as $sKey => $sCallback)
         {
             // run bonded closure
             if (true === filter_var(Closure::is($sCallback), FILTER_VALIDATE_BOOLEAN))
             {
+                $sMessage = $sRunType . $sPreLog . ' --> bonded by `' . unserialize($sKey) . ', try to run its Closure: ' . Closure::toString($sCallback);
                 Log::write(
-                    $sPreName . $sPreLog . ' --> bonded by `' . unserialize($sKey) . ', try to run its Closure: ' . Closure::toString($sCallback),
+                    $sMessage,
                     Config::get_MVC_LOG_FILE_EVENT(),
                     false
                 );
 
+                $oDTEventContext = DTEventContext::create()
+                    ->set_sEvent($sEvent)
+                    ->set_sEventOrigin($sEventOrigin)
+                    ->set_mRunPackage($mRunPackage)
+                    ->set_aBonded($aBonded)
+                    ->set_sBondedBy($sKey)
+                    ->set_sCalledIn($sCalledIn)
+                    ->set_oCallback($sCallback) // get closure alternative way: Event::$aEvent[$oDTEventContext->get_sEvent()][$oDTEventContext->get_sBondedBy()]
+                    ->set_sMessage($sMessage)
+                ;
+
                 // error occured
-                if (call_user_func($sCallback, $mPackage) === false)
+                if (call_user_func($sCallback, $mRunPackage, $oDTEventContext) === false)
                 {
                     Log::write(
-                        "ERROR\t" . $sPreName . $sPreLog . ' *** Closure could not be run: ' . serialize($sCallback),
+                        "ERROR\t" . $sRunType . $sPreLog . ' *** Closure could not be run: ' . serialize($sCallback),
                         Config::get_MVC_LOG_FILE_ERROR(),
                         false
                     );
