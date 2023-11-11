@@ -508,7 +508,35 @@ class Config
             return (string) Registry::get('MVC_SESSION_NAMESPACE');
         }
 
-        return 'myMVC';
+        return get($GLOBALS['aConfig']['MVC_SESSION_NAMESPACE'], 'myMVC');
+    }
+
+    /**
+     * @param string $sNamespace
+     * @return bool success
+     * @throws \ReflectionException
+     */
+    public static function set_MVC_SESSION_NAMESPACE(string $sNamespace = '') : bool
+    {
+        $sClass = get(debug_backtrace()[1]['class'], '');
+        $sFunction = get(debug_backtrace()[1]['function'], '');
+
+        if (true === empty($sClass) || true === empty($sFunction))
+        {
+            return false;
+        }
+
+        $sCaller = $sClass . '::' . $sFunction;
+
+        if (false === ('MVC\\Session::setNamespace' === $sCaller))
+        {
+            Session::is()->setNamespace($sNamespace);
+        }
+
+        Registry::set('MVC_SESSION_NAMESPACE', $sNamespace);
+        $GLOBALS['aConfig']['MVC_SESSION_NAMESPACE'] = $sNamespace;
+
+        return true;
     }
 
     /**

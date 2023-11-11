@@ -1,4 +1,4 @@
-<!doctype html>
+<!doctype html>{* @see https://getbootstrap.com/docs/5.3/getting-started/introduction/ *}
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
@@ -22,7 +22,7 @@
 	</head>
 
 	<body>
-		<a name="top"></a>
+		<a id="top"></a>
 
 		{{module}\View\Index::init()->loadTemplateAsString($oDTRoutingAdditional->get_sMainmenu())}
 

@@ -19,7 +19,7 @@ class Session
      * Session object provides storage for shared objects.
      * @var \MVC\Session
      */
-    protected static $_oInstance;
+    protected static $_oInstance = null;
 
     /**
      * Options
@@ -134,6 +134,8 @@ class Session
 
         $this->_sNamespace = $sNamespace;
 
+        Config::set_MVC_SESSION_NAMESPACE($sNamespace);
+
         return self::$_oInstance;
     }
 
@@ -214,21 +216,21 @@ class Session
 
     /**
      * kills current session
-     * @param bool $bDeleteOldSession
-     * @return \MVC\Session
-     * @throws \ReflectionException
+     * @param bool $bRegenerateId
+     * @return null
      */
-    public function kill(bool $bDeleteOldSession = true) : Session
+    public function kill(bool $bRegenerateId = true)
     {
         if (false === empty(session_id()))
         {
-            session_regenerate_id ($bDeleteOldSession);
-            session_destroy ();
+            session_regenerate_id($bRegenerateId);
+            session_destroy();
             self::$_oInstance = null;
             $_SESSION = NULL;
             unset ($_SESSION);
+            Config::set_MVC_SESSION(self::$_oInstance);
         }
 
-        return self::is();
+        return self::$_oInstance;
     }
 }
