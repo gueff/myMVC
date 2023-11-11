@@ -26,6 +26,5 @@ _gitPush.sh.example
 _phanlistcreate.sh
 _curl.php
 Changelog.md
-myMVC
 **/*.min.css
 **/*.min.js
