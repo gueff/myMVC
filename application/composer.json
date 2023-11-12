@@ -1,11 +1,26 @@
 {
   "require": {
     "php": ">=8.0",
-    "ext-posix": "*",
+    "ext-core": "*",
+    "ext-ctype": "*",
+    "ext-curl": "*",
+    "ext-date": "*",
     "ext-dom": "*",
-    "ext-libxml": "*",
+    "ext-fileinfo": "*",
+    "ext-filter": "*",
     "ext-iconv": "*",
     "ext-intl": "*",
+    "ext-json": "*",
+    "ext-libxml": "*",
+    "ext-mbstring": "*",
+    "ext-phar": "*",
+    "ext-posix": "*",
+    "ext-reflection": "*",
+    "ext-session": "*",
+    "ext-simplexml": "*",
+    "ext-standard": "*",
+    "ext-spl": "*",
+    "ext-zip": "*",
     "gueff/cachix": "1.0.*",
     "smarty/smarty": "4.3.*",
     "mrclay/jsmin-php": "2.4.*",
@@ -16,7 +31,6 @@
   },
   "require-dev": {
     "phpunit/phpunit": "9.*",
-    "ext-zip": "*",
     "php-webdriver/webdriver": "1.14.*",
     "phpunit/phpunit-selenium": "9.0.*"
   }
