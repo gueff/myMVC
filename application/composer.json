@@ -30,8 +30,8 @@
     "symfony/http-foundation": "@stable"
   },
   "require-dev": {
-    "phpunit/phpunit": "9.*",
-    "php-webdriver/webdriver": "1.14.*",
+    "phpunit/phpunit": "10.*",
+    "php-webdriver/webdriver": "1.15.*",
     "phpunit/phpunit-selenium": "9.0.*"
   }
 }
