@@ -51,7 +51,8 @@ pre.prettyprint {
     background-color: darkgray !important;
 }
 .myMvcToolbar-bg-primary {
-    background-color: hsl(210,50%,50%) !important;
+    /*background-color: hsl(210,50%,50%) !important;*/
+    background-color: #0D6EFD !important;
     border-radius: 3px;
     color: white !important;
     padding: 2px;
@@ -115,7 +116,8 @@ navi label {
     padding: 15px 15px;
     border-top: 1px solid silver;
     border-right: 1px solid silver;
-    background: hsl(210,50%,50%);
+    /*background: hsl(210,50%,50%);*/
+    background-color: #0D6EFD !important; /* according to bootstrap 5.3.2 bg-primary */
     color: #eee;
     cursor: pointer;
     margin: 0;

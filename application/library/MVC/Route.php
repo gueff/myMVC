@@ -37,7 +37,7 @@ class Route
         DEFAULT_SOURCE_PHP_FILES: {
 
 
-            $sRoutingDir = Config::get_MVC_MODULE_CURRENT_ETC_DIR() . '/routing';
+            $sRoutingDir = Config::get_MVC_MODULE_PRIMARY_ETC_DIR() . '/routing';
 
             if (true === file_exists($sRoutingDir))
             {

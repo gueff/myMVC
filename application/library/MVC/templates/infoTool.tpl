@@ -50,7 +50,8 @@ blue: hsl(210,50%,50%)
 	#subtab99:checked ~ navi label[for="subtab99"]:after {content: "";display: block;position: absolute;height: 2px;width: 100%;background: whitesmoke;left: 0;bottom: -1px;}
 	{/literal}
 	{literal}
-	#myMvcToolbar pre {background-color: lightgray; font-family: monospace, monospace; padding: 2px 5px; border: 1px dashed #333}
+	/*#myMvcToolbar pre {background-color: lightgray; font-family: monospace, monospace; padding: 2px 5px; border: 1px dashed #333}*/
+	#myMvcToolbar pre {background-color: #333; font-family: monospace, monospace; padding: 2px 5px; border: none; color: whitesmoke;}
 	{/literal}
 </style>
 <div id="myMvcToolbar" class="myMvcToolbar_expand">
@@ -125,17 +126,17 @@ blue: hsl(210,50%,50%)
 					<h6>Session Status
 						<a id="myMvcToolbar_Session_Status"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top">&uarr; top</a></small></span>
 					</h6>
-					<b>enabled: {MVC\Session::is()->enabled()}</b>
+					enabled: <code>{if "1" == MVC\Session::is()->enabled()}true{else}false{/if}</code>
 					<pre>Session::is()->enabled()</pre>
-					<b>Session ID</b>
-					<p>{MVC\Session::is()->getSessionId()}</p>
+					<b>Session ID</b><br>
+					<code>{MVC\Session::is()->getSessionId()}</code>
 					<pre>Session::is()->getSessionId()</pre>
 
 					<h6>Session Values
 						<a id="myMvcToolbar_Session_Values"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top">&uarr; top</a></small></span>
 					</h6>
 					<b>Namespace</b>
-					<p>{MVC\Session::is()->getNamespace()}</p>
+					<code>{MVC\Session::is()->getNamespace()}</code>
 					<pre>Session::is()->getNamespace()</pre>
 
 					<b>Values</b>
@@ -168,7 +169,7 @@ $_SESSION['{MVC\Session::is()->getNamespace()}']</pre>
 					</p>
 					<pre>Config::MODULE()['SESSION']
 OR
-Config::MODULE('{MVC\Config::get_MVC_MODULE_CURRENT_NAME()}')['SESSION']</pre>
+Config::MODULE('{MVC\Config::get_MVC_MODULE_PRIMARY_NAME()}')['SESSION']</pre>
 
 					<!------------------------------------------->
 
@@ -232,23 +233,23 @@ Config::MODULE('{MVC\Config::get_MVC_MODULE_CURRENT_NAME()}')['SESSION']</pre>
 
 				<div class="subtab26">
 					<h6>Config Directories</h6>
-					<b>Config Directory of current Module</b>
-					<p>
-						{MVC\Config::get_MVC_MODULE_CURRENT_CONFIG_DIR()}
-					</p>
-					<pre>Config::get_MVC_MODULE_CURRENT_CONFIG_DIR()</pre>
+					<b>Config Directory of primary Module</b><br>
+					<code>
+						{MVC\Config::get_MVC_MODULE_PRIMARY_CONFIG_DIR()}
+					</code>
+					<pre>Config::get_MVC_MODULE_PRIMARY_CONFIG_DIR()</pre>
 
-					<b>Staging (develop|test|live) config Files Directory of current Module</b>
-					<p>
-						{MVC\Config::get_MVC_MODULE_CURRENT_STAGING_CONFIG_DIR()}
-					</p>
-					<pre>Config::get_MVC_MODULE_CURRENT_STAGING_CONFIG_DIR()</pre>
+					<b>Staging (develop|test|live) config Files Directory of primary Module</b><br>
+					<code>
+						{MVC\Config::get_MVC_MODULE_PRIMARY_STAGING_CONFIG_DIR()}
+					</code>
+					<pre>Config::get_MVC_MODULE_PRIMARY_STAGING_CONFIG_DIR()</pre>
 
-					<b>Config Directory of current Module for composer.json</b>
-					<p>
-						{MVC\Config::get_MVC_MODULE_CURRENT_COMPOSER_DIR()}
-					</p>
-					<pre>Config::get_MVC_MODULE_CURRENT_COMPOSER_DIR()</pre>
+					<b>Config Directory of primary Module for <code>composer.json</code></b><br>
+					<code>
+						{MVC\Config::get_MVC_MODULE_PRIMARY_COMPOSER_DIR()}
+					</code>
+					<pre>Config::get_MVC_MODULE_PRIMARY_COMPOSER_DIR()</pre>
 
 					<h6>Current Module Config</h6>
 					<p>{$aToolbar.aModuleCurrentConfig}</p>
@@ -259,7 +260,7 @@ Config::MODULE('{MVC\Config::get_MVC_MODULE_CURRENT_NAME()}')['SESSION']</pre>
 					<p>
 						{foreach key=key item=aData from=$aToolbar.aConfig}
 						<b>{$aData.sVar}</b><br>
-					<p>{$aData.mResult|@print_r:true}</p>
+					<code>{$aData.mResult|@print_r:true}</code>
 					<pre>{$aData.sMethod}</pre>
 					<hr>
 					{/foreach}
@@ -275,35 +276,35 @@ Config::MODULE('{MVC\Config::get_MVC_MODULE_CURRENT_NAME()}')['SESSION']</pre>
 				</div>
 				<div class="subtab22">
 					<h6>Path <small>requested</small><a id="myMvcToolbar_Path"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top2">&uarr; top</a></small></span></h6>
-					<p>{$aToolbar.sRoutingPath|escape:"htmlall":"UTF-8"}</p>
+					<code>{$aToolbar.sRoutingPath|escape:"htmlall":"UTF-8"}</code>
 					<pre>Request::getCurrentRequest()->get_path()</pre>
 
 					<h6>Path Param Array</h6>
-					<p>
+					<code>
 						{if true == empty($aToolbar.aPathParam)}
 							...no path parameters
 						{else}
 							{$aToolbar.sPathParam}
 						{/if}
-					</p>
+					</code>
 					<pre>Request::getPathParam();
 Request::getPathParam( $sKey )</pre>
 
 					<h6>Query <small>requested</small><a id="myMvcToolbar_Query"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top2">&uarr; top</a></small></span></h6>
-					<p>
+					<code>
 						{if '' === $aToolbar.sRoutingQuery}
 							...no GET query
 						{else}
 							{$aToolbar.sRoutingQuery|unescape:"url"|escape:"htmlall":"UTF-8"}
 						{/if}
-					</p>
+					</code>
 					<pre>Request::getCurrentRequest()->get_query()</pre>
 
 					<h6>Current Request Object</h6>
 					<pre>{MVC\Request::getCurrentRequest()|@print_r:true}</pre>
-					<i>MVC\DataType\DTRequestCurrent</i>
 					<pre>Request::getCurrentRequest()</pre>
 				</div>
+
 				<div class="subtab23">
 					<h6>Overview</h6>
 					<ul>
@@ -317,26 +318,34 @@ Request::getPathParam( $sKey )</pre>
 					<p>
 						{$aToolbar.aEventBIND}
 					</p>
+
+					<i>get all bonded</i><br>
+					<pre>Config::get_MVC_EVENT()['BIND'];</pre>
+
+					<i><code>bind</code> to an event</i><br>
 					<pre>Event::bind('event.name', \Closure $oClosure, $oObject = NULL);</pre>
 
 					<h6>bind() <small>group by event name</small> <a id="myMvcToolbar_BINDname"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top2">&uarr; top</a></small></span></h6>
 					<p>
 						{$aToolbar.aEventBINDNAME}
 					</p>
+
+					<i>get all bonded</i><br>
+					<pre>Config::get_MVC_EVENT()['BIND'];</pre>
+
+					<i><code>bind</code> to an event</i><br>
 					<pre>Event::bind('event.name', \Closure $oClosure, $oObject = NULL);</pre>
 
 					<h6>run() <a id="myMvcToolbar_RUN"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top2">&uarr; top</a></small></span></h6>
 					<p>
 						{$aToolbar.aEventRUN}
 					</p>
-					<pre>Event::run('event.name', DTArrayObject::create());</pre>
 
-					{if !empty($aToolbar.aEventRUNBONDED)}
-						<p>
-							<b>BONDED</b><br>
-							{$aToolbar.aEventRUNBONDED}
-						</p>
-					{/if}
+					<i>get all events run</i><br>
+					<pre>Config::get_MVC_EVENT()['RUN'];</pre>
+
+					<i><code>run</code> an event</i><br>
+					<pre>Event::run('event.name', DTArrayObject::create());</pre>
 
 					<h6>delete() <a id="myMvcToolbar_DELETE"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top2">&uarr; top</a></small></span></h6>
 					{if !empty($aToolbar.aEventDELETE)}
@@ -350,11 +359,12 @@ Request::getPathParam( $sKey )</pre>
 					<h6>Target Controller method <a id="myMvcToolbar_Target"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top2">&uarr; top</a></small></span></h6>
 					{*					<p>\{$aToolbar.aRouting.sModule}\Controller\{$aToolbar.aRouting.sController}::{$aToolbar.aRouting.sMethod}({$aToolbar.aRouting.sArg|escape:"htmlall":"UTF-8"})	</p>*}
 					{if isset($aToolbar.aRouting.aRoutingCurrent.class)}
-						<p>\{$aToolbar.aRouting.aRoutingCurrent.class}::{$aToolbar.aRouting.aRoutingCurrent.m}()</p>
+						<code>\{$aToolbar.aRouting.aRoutingCurrent.class}::{$aToolbar.aRouting.aRoutingCurrent.m}()</code>
 						<pre>Route::getCurrent()->get_class()  ::  Route::getCurrent()->get_m()</pre>
 					{else}
-						<p>unknown</p>
+						<code>unknown</code>
 					{/if}
+
 					<h6>Current Route <a id="myMvcToolbar_Routing"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top2">&uarr; top</a></small></span></h6>
 					<p>{$aToolbar.aRouting.sRoutingCurrent}</p>
 					<i>array</i>
@@ -372,17 +382,17 @@ Request::getPathParam( $sKey )</pre>
 				<div class="subtab25">
 					<h6>Overview</h6>
 					<ul>
-						<li><a href="#myMvcToolbar_RULES">POLICY RULES</a></li>
-						<li><a href="#myMvcToolbar_APPLIED">POLICY RULES APPLIED</a></li>
+						<li><a href="#myMvcToolbar_RULES">Policy Rules</a></li>
+						<li><a href="#myMvcToolbar_APPLIED">Policy Rules actually applied</a></li>
 					</ul>
 
-					<h6>POLICY RULES <a id="myMvcToolbar_RULES"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top2">&uarr; top</a></small></span></h6>
+					<h6>Policy Rules <a id="myMvcToolbar_RULES"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top2">&uarr; top</a></small></span></h6>
 					<p>
 						{$aToolbar.aPolicy.aRule}
 					</p>
 					<pre>Policy::getRules()</pre>
 
-					<h6>POLICY RULES ACTUALLY APPLIED <a id="myMvcToolbar_APPLIED"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top2">&uarr; top</a></small></span></h6>
+					<h6>Policy Rules actually applied <a id="myMvcToolbar_APPLIED"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top2">&uarr; top</a></small></span></h6>
 					<p>
 						{$aToolbar.aPolicy.aApplied}
 					</p>
@@ -411,49 +421,52 @@ Request::getPathParam( $sKey )</pre>
 
 				<div class="subtab31">
 					<h6>Current View</h6>
-					{assign var=oViewCurrent value=MVC\Config::get_MVC_MODULE_CURRENT_VIEW()}
-
-					<p>{get_class(MVC\Config::get_MVC_MODULE_CURRENT_VIEW())}</p>
+					{assign var=oViewCurrent value=MVC\Config::get_MVC_MODULE_PRIMARY_VIEW()}
+					<code>{get_class(MVC\Config::get_MVC_MODULE_PRIMARY_VIEW())}</code>
+					<br>
 					<i>ClassName</i>
-					<pre>get_class(Config::get_MVC_MODULE_CURRENT_VIEW())</pre>
+					<pre>get_class(Config::get_MVC_MODULE_PRIMARY_VIEW())</pre>
 					<i>Object</i>
-					<pre>Config::get_MVC_MODULE_CURRENT_VIEW()</pre>
+					<pre>Config::get_MVC_MODULE_PRIMARY_VIEW()</pre>
 
 					<h6>Template Folder</h6>
-					<p>
-						{MVC\Config::get_MVC_VIEW_TEMPLATES()|escape:'htmlall'}
-					</p>
-					<pre>\{get_class(MVC\Config::get_MVC_MODULE_CURRENT_VIEW())}::init()->sTemplateDir</pre>
+					<code>
+						{MVC\Config::get_MVC_VIEW_TEMPLATE_DIR()|escape:'htmlall'}
+					</code>
+					<pre>\{get_class(MVC\Config::get_MVC_MODULE_PRIMARY_VIEW())}::init()->sTemplateDir</pre>
 
 					<h6>Template Files</h6>
-					<b>Current Template relative</b>
-					<p>
+					<b>Current Template relative</b><br>
+					<code>
 						{$oViewCurrent->sTemplateRelative}
-					</p>
-					<pre>\{get_class(MVC\Config::get_MVC_MODULE_CURRENT_VIEW())}::init()->sTemplateRelative</pre>
+					</code>
+					<pre>\{get_class(MVC\Config::get_MVC_MODULE_PRIMARY_VIEW())}::init()->sTemplateRelative</pre>
 
-					<b>Current Template absolute</b>
-					<p>
+					<b>Current Template absolute</b><br>
+					<code>
 						{$oViewCurrent::init()->sTemplate}
-					</p>
-					<pre>\{get_class(MVC\Config::get_MVC_MODULE_CURRENT_VIEW())}::init()->sTemplate</pre>
+					</code>
+					<pre>\{get_class(MVC\Config::get_MVC_MODULE_PRIMARY_VIEW())}::init()->sTemplate</pre>
 
-					<b>Default Template</b>
-					<p>{MVC\View::getSmartyTemplateDefault()}</p>
+					<b>Default Template</b><br>
+					<code>{MVC\View::getSmartyTemplateDefault()}</code>
 					<pre>View::getSmartyTemplateDefault()</pre>
 
 					<h6>Template Content</h6>
-					<!-- maybe later... @see https://www.w3schools.com/howto/tryit.asp?filename=tryhow_syntax_highlight -->
-					<pre class="prettyprint">{$aToolbar.sTemplateContent|escape:'htmlall'}</pre>
-					<pre>file_get_contents(\{get_class(MVC\Config::get_MVC_MODULE_CURRENT_VIEW())}::init()->sTemplate, true)</pre>
+					<div class="padding5" style="font-size: 14px; background-color: #EFEFEF;">
+						{$aToolbar.sTemplateContent}
+					</div>
+					<pre>file_get_contents(\{get_class(MVC\Config::get_MVC_MODULE_PRIMARY_VIEW())}::init()->sTemplate, true)</pre>
 				</div>
 				<div class="subtab32">
 					<p>{$aToolbar.sSmartyTemplateVars}</p>
-					<pre>\{get_class(MVC\Config::get_MVC_MODULE_CURRENT_VIEW())}::init()->getTemplateVars()</pre>
+					<pre>\{get_class(MVC\Config::get_MVC_MODULE_PRIMARY_VIEW())}::init()->getTemplateVars()</pre>
 				</div>
 				<div class="subtab33">
-					<pre class="prettyprint"><code class="html">{$aToolbar.sRendered|escape:'htmlall'}</code></pre>
-					<pre>\{get_class(MVC\Config::get_MVC_MODULE_CURRENT_VIEW())}::init()->fetch('string:' . file_get_contents(\{get_class(MVC\Config::get_MVC_MODULE_CURRENT_VIEW())}::init()->sTemplate))</pre>
+					<div class="padding5" style="font-size: 14px;background-color: #EFEFEF;">
+						{$aToolbar.sRenderedHighlight}
+					</div>
+					<pre>\{get_class(MVC\Config::get_MVC_MODULE_PRIMARY_VIEW())}::init()->fetch('string:' . file_get_contents(\{get_class(MVC\Config::get_MVC_MODULE_PRIMARY_VIEW())}::init()->sTemplate))</pre>
 				</div>
 			</figure>
 		</div>
@@ -474,10 +487,11 @@ Request::getPathParam( $sKey )</pre>
 
 				<div class="subtab41">
 					<h6>MVC_BASE_PATH</h6>
-					<p>
+					<code>
 						{$aToolbar.aRegistry.MVC_BASE_PATH|escape:'htmlall'}
-					</p>
+					</code>
 					<pre>Config::get_MVC_BASE_PATH()</pre>
+
 					<h6>Files</h6>
 					<ol class="prettyprint">
 						{foreach key=key item=item from=$aToolbar.aFilesIncluded}
@@ -504,9 +518,9 @@ Request::getPathParam( $sKey )</pre>
 				<a id="myMvcToolbar_top"></a>
 
 				<div class="subtab51">
-					<b>Real Memory Usage</b>: {$aToolbar.aMemory.iRealMemoryUsage} KB<br />
-					<b>Memory Usage</b>: {$aToolbar.aMemory.dMemoryUsage} KB<br />
-					<b>Memory Peak Usage</b>: {$aToolbar.aMemory.dMemoryPeakUsage} KB<br />
+					<b>Real Memory Usage</b>: <code>{$aToolbar.aMemory.iRealMemoryUsage} KB</code><br />
+					<b>Memory Usage</b>: <code>{$aToolbar.aMemory.dMemoryUsage} KB</code><br />
+					<b>Memory Peak Usage</b>: <code>{$aToolbar.aMemory.dMemoryPeakUsage} KB</code><br />
 				</div>
 			</figure>
 		</div>
@@ -548,9 +562,9 @@ Request::getPathParam( $sKey )</pre>
 
 				<div class="subtab71">
 					<h6>Cache Folder</h6>
-					<p>
+					<code>
 						{$aToolbar.aRegistry.MVC_CACHE_DIR}
-					</p>
+					</code>
 					<pre>Config::get_MVC_CACHE_DIR()</pre>
 
 					<h6>Cache Files</h6>
@@ -576,14 +590,16 @@ Request::getPathParam( $sKey )</pre>
 				<a id="myMvcToolbar_top"></a>
 
 				<div class="subtab81">
-					<ul>
+					<ul class="list-group">
 						{foreach key=key item=oDTArrayObject from=$aToolbar.aError}
-							<li>
+							<li class="text-break list-group-item bg-transparent">
 								{assign var="oErrorException" value=$oDTArrayObject->getDTKeyValueByKey('$oException')->get_sValue()}
-								<b>{MVC\Error::$aExceptionTranslation[$oErrorException->getCode()]}</b> ({$oErrorException->getCode()})<br>
-								{$oErrorException->getFile()}<br>
-								Line: {$oErrorException->getLine()}<br>
-								<u>Message:</u> <i>{$oErrorException->getMessage()}</i>
+								<b class="text-primary">{MVC\Error::$aExceptionTranslation[$oErrorException->getCode()]}</b> ({$oErrorException->getCode()})
+								<br>
+								File: <span class="text-danger-emphasis">{$oErrorException->getFile()}</span><br>
+								Line: <span class="text-danger-emphasis">{$oErrorException->getLine()}</span><br>
+								Message: <span class="text-danger"><i>{$oErrorException->getMessage()}</i></span>
+								</span>
 							</li>
 						{/foreach}
 					</ul>

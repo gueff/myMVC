@@ -15,6 +15,29 @@ use MVC\DataType\DTKeyValue;
 
 class Debug
 {
+    protected static $_oInstance;
+
+    /**
+     * Constructor
+     */
+    protected function __construct()
+    {
+        ;
+    }
+
+    /**
+     * @return self|null
+     */
+    public static function init()
+    {
+        if (null === self::$_oInstance)
+        {
+            self::$_oInstance = new self();
+        }
+
+        return self::$_oInstance;
+    }
+
     /**
      * @param mixed $mData
      * @return string
@@ -39,9 +62,9 @@ class Debug
     /**
      * Mini OnScreen Debugger
      * @param mixed $mData
-     * @return void
+     * @return \MVC\Debug|null
      */
-    public static function info(mixed $mData = '') : void
+    public static function info(mixed $mData = '') : Debug|null
     {
         // source
         $aBacktrace = self::prepareBacktraceArray(debug_backtrace());
@@ -65,13 +88,15 @@ class Debug
                     <nobr><b>File:</b> ' . $aBacktrace['sFile'] . '</nobr><br>
                     <nobr><b>Line:</b> ' . $aBacktrace['sLine'] . '</nobr><br>
                     <nobr><b>Class/Method:</b> ' . $aBacktrace['sClass'] . '::' . $aBacktrace['sFunction'] . '</nobr><br>
-                </div>				
+                </div>
                 <div class="draggable" style="overflow: auto !important;float:left !important;border:1px dotted grey !important;background-color: whitesmoke; width:100% !important;height:465px !important;font-size:medium !important;-moz-border-radius: 3px !important; border-radius: 3px !important;padding:10px !important;font-family: monospace !important;"><b>';
                 $sHighlight = highlight_string('<?php' . "\n" . $mData, true);
                 echo trim(str_replace('&lt;?php', '', $sHighlight));
-                echo '</b></div>				
+                echo '</b></div>
 			</div>';
         }
+
+        return Debug::init();
     }
 
     /**
@@ -79,9 +104,9 @@ class Debug
      * if you call display more than once, all messages are showed among each other
      * use it to debug a string or array or whatever
      * @param mixed $mData
-     * @return void
+     * @return \MVC\Debug|null
      */
-    public static function display(mixed $mData = '') : void
+    public static function display(mixed $mData = '') : Debug|null
     {
         static $sDisplay;
         static $iCount;
@@ -127,6 +152,8 @@ class Debug
             echo $sDisplay;
             echo '</b></div>';
         }
+
+        return Debug::init();
     }
 
     /**
@@ -224,7 +251,7 @@ class Debug
                 ->set_sKey('bOccurrence')
                 ->set_sValue($bShowWhereStop)));
 
-        (true === Request::isCli()) && Config::get_MVC_MODULE_CURRENT_VIEW()::$bRender = false;
+        (true === Request::isCli()) && Config::get_MVC_MODULE_PRIMARY_VIEW()::$bRender = false;
         exit ();
     }
 

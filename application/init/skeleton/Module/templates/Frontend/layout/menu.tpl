@@ -1,6 +1,6 @@
 
 {* @see https://getbootstrap.com/docs/5.3/components/navbar/ *}
-<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary shadow">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">
             {$oDTRoutingAdditional->get_sTitle()}

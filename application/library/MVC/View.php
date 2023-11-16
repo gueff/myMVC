@@ -72,14 +72,14 @@ class View extends \Smarty
     {
         parent::__construct();
 
-        $this->sTemplateDir = Config::get_MVC_VIEW_TEMPLATES();
+        $this->sTemplateDir = Config::get_MVC_VIEW_TEMPLATE_DIR();
 
         if (false === file_exists($this->sTemplateDir))
         {
             $this->sTemplateDir = Config::get_MVC_MODULES_DIR() . '/' . Route::getCurrent()->get_module() . '/templates';
         }
 
-        $this->setAbsolutePathToTemplateDir ($this->sTemplateDir);
+        $this->setAbsolutePathToTemplateDir($this->sTemplateDir);
         $this->sTemplate = Config::get_MVC_SMARTY_TEMPLATE_DEFAULT();
         $this->iSmartyVersion = (int) preg_replace ('/[^0-9]+/', '', self::SMARTY_VERSION);
         $this->setCompileDir (Config::get_MVC_SMARTY_TEMPLATE_CACHE_DIR());
@@ -112,7 +112,7 @@ class View extends \Smarty
      * @return void
      * @throws \ReflectionException
      */
-    private function checkDirs() : void
+    protected function checkDirs() : void
     {
         if (!file_exists (Config::get_MVC_SMARTY_TEMPLATE_CACHE_DIR()))
         {
@@ -144,12 +144,7 @@ class View extends \Smarty
      */
     public function renderString(string $sTemplateString = '') : void
     {
-        Event::run('mvc.view.renderString.before',
-            DTArrayObject::create()
-                ->add_aKeyValue(
-                    DTKeyValue::create()->set_sKey('sTemplateString')->set_sValue($sTemplateString)
-                )
-        );
+        Event::run('mvc.view.renderString.before', $sTemplateString);
 
         $sRendered = '';
 
@@ -163,18 +158,7 @@ class View extends \Smarty
             }
         }
 
-        Event::run('mvc.view.renderString.after',
-            DTArrayObject::create()
-                ->add_aKeyValue(
-                    DTKeyValue::create()->set_sKey('sTemplateString')->set_sValue($sTemplateString)
-                )
-                ->add_aKeyValue(
-                    DTKeyValue::create()->set_sKey('sRendered')->set_sValue($sRendered)
-                )
-                ->add_aKeyValue(
-                    DTKeyValue::create()->set_sKey('bEchoOut')->set_sValue(self::$bEchoOut)
-                )
-        );
+        Event::run('mvc.view.renderString.after', $sRendered);
     }
 
     /**
@@ -194,7 +178,7 @@ class View extends \Smarty
 
         // Load Template and render
         $sTemplate = (true === is_file($this->sTemplate)) ? file_get_contents ($this->sTemplate, true) : '';
-        $this->renderString ($sTemplate);
+        $this->renderString($sTemplate);
 
         Event::run('mvc.view.render.after',
             DTArrayObject::create()

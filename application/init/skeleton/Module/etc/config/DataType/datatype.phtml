@@ -2,8 +2,7 @@
 
 /**
  * @usage php datatype.php
- *          Classes created by this script are placed into folder: `/modules/Ara/DataType/`
- * @see https://mymvc.ueffing.net/3.3.x/generating-datatype-classes
+ *          Classes created by this script are placed into folder: `/modules/{module}/DataType/`
  */
 
 #---------------------------------------------------------------
@@ -15,12 +14,16 @@ require_once realpath(__DIR__ . '/../../../../../') . '/application/init/util/bo
 #---------------------------------------------------------------
 #  Defining DataType Classes
 
-$sNamespace = str_replace('/', '\\', substr(\MVC\Config::get_MVC_MODULE_CURRENT_DATATYPE_DIR(), strlen(\MVC\Config::get_MVC_MODULES_DIR() . '/')));
+$sDataTypeDir = realpath(__DIR__ . '/../../../') . '/DataType';
+$sNamespace = str_replace('/', '\\', substr($sDataTypeDir, strlen(\MVC\Config::get_MVC_MODULES_DIR() . '/')));
 
 // base setup
 $aDataType = array(
-    'dir' => \MVC\Config::get_MVC_MODULE_CURRENT_DATATYPE_DIR() . '/',
-    'unlinkDir' => false
+    'dir' => $sDataTypeDir,
+    'unlinkDir' => false,
+
+    // enable creation of events in datatype methods
+    'createEvents' => true,
 );
 
 // classes

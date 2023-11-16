@@ -168,6 +168,9 @@ function mvcStoreEnv(string $sEnvFile = '')
  */
 function mvcConfigLoader(array $aConfig = array())
 {
+    #-----------------------------
+    # main config
+
     // place of main myMVC config
     $aConfig['MVC_CONFIG_DIR'] = realpath(__DIR__ . '/../../../') . '/config';
 
@@ -180,41 +183,60 @@ function mvcConfigLoader(array $aConfig = array())
     }
 
     #-----------------------------
+    # module config
 
-    // get modules
-    $aModule = glob($aConfig['MVC_MODULES_DIR'] . '/*', GLOB_ONLYDIR);
-
-    // walk modules
-    foreach ($aModule as $sModule)
+    if (count($aConfig['MVC_MODULE_PRIMARY']) > 1)
     {
-        if (file_exists($sModule . '/etc/config/'))
+        $sMessage = '<div class="alert alert-danger" role="alert"><center>'
+                    . "<h1>⚠️</h1><p><b>There is more than one primary module, <br>but you can only have one. <br><br>Detected primary modules: <br><pre>'" . implode("','", $aConfig['MVC_MODULE_PRIMARY']) . "'</pre>\n\n"
+                    . '- EOM -</b></p></center></div>';
+        echo (true === $aConfig['MVC_CLI']) ? strip_tags($sMessage) : $sMessage;
+        exit(1);
+    }
+
+    $aConfig['MVC_MODULE_SECONDARY'] = array_diff(array_filter(array_map(function ($sValue) use ($aConfig){
+        return str_replace($aConfig['MVC_MODULES_DIR'] . '/', '', $sValue);
+    }, glob($aConfig['MVC_MODULES_DIR'] . '/*', GLOB_ONLYDIR)), 'trim'), $aConfig['MVC_MODULE_PRIMARY']);
+
+    $aConfig['MVC_MODULE_SET'] = array(
+        'SECONDARY' => $aConfig['MVC_MODULE_SECONDARY'],    # handle 'SECONDARY' first
+        'PRIMARY' => $aConfig['MVC_MODULE_PRIMARY'],        # handle 'PRIMARY' second
+    );
+
+    foreach ($aConfig['MVC_MODULE_SET'] as $sType => $aModule)
+    {
+        // walk modules
+        foreach ($aModule as $sModule)
         {
-            // load common config files
-            foreach (glob ($sModule . '/etc/config/*.php') as $sFile)
+            if (file_exists($aConfig['MVC_MODULES_DIR'] . '/' . $sModule . '/etc/config/'))
             {
-                require_once $sFile;
-            }
+                // load common config files
+                foreach (glob ($aConfig['MVC_MODULES_DIR'] . '/' . $sModule . '/etc/config/*.php') as $sFile)
+                {
+                    require_once $sFile;
+                }
 
-            // load staging config
-            $sConfigFileName =
-                $sModule
-                . '/etc/config/'
-                . basename($sModule)
-                . '/config/'
-                . getenv('MVC_ENV')
-                . '.php';
+                // load staging config
+                $sConfigFileName =
+                    $aConfig['MVC_MODULES_DIR'] . '/' . $sModule
+                    . '/etc/config/'
+                    . basename($sModule)
+                    . '/config/'
+                    . getenv('MVC_ENV')
+                    . '.php';
 
-            if (file_exists($sConfigFileName))
-            {
-                include $sConfigFileName;
-            }
+                if (file_exists($sConfigFileName))
+                {
+                    include $sConfigFileName;
+                }
 
-            // External composer Libraries
-            $sVendorAutoload = $sModule . '/etc/config/' . basename($sModule) . '/vendor/autoload.php';
+                // External composer Libraries
+                $sVendorAutoload = $sModule . '/etc/config/' . basename($sModule) . '/vendor/autoload.php';
 
-            if (file_exists($sVendorAutoload))
-            {
-                require_once $sVendorAutoload;
+                if (file_exists($sVendorAutoload))
+                {
+                    require_once $sVendorAutoload;
+                }
             }
         }
     }

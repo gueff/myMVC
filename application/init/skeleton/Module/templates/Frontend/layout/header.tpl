@@ -1,7 +1,7 @@
-		<div class="header">
-			<h3 class="text-muted">{module}</h3>
-		</div>
+<div class="header">
+	<h3 class="text-muted">{module}</h3>
+</div>
 
-		{$sMainmenu}
+{$sMainmenu}
 
-		<hr />
+<hr>

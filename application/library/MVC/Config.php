@@ -93,11 +93,11 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_MODULE_CURRENT_DIR() : string
+    public static function get_MVC_MODULE_PRIMARY_DIR() : string
     {
-        if (Registry::isRegistered('MVC_MODULE_CURRENT_DIR'))
+        if (Registry::isRegistered('MVC_MODULE_PRIMARY_DIR'))
         {
-            return (string) Registry::get('MVC_MODULE_CURRENT_DIR');
+            return (string) Registry::get('MVC_MODULE_PRIMARY_DIR');
         }
 
         return '';
@@ -107,11 +107,11 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_MODULE_CURRENT_CONTROLLER_DIR() : string
+    public static function get_MVC_MODULE_PRIMARY_CONTROLLER_DIR() : string
     {
-        if (Registry::isRegistered('MVC_MODULE_CURRENT_CONTROLLER_DIR'))
+        if (Registry::isRegistered('MVC_MODULE_PRIMARY_CONTROLLER_DIR'))
         {
-            return (string) Registry::get('MVC_MODULE_CURRENT_CONTROLLER_DIR');
+            return (string) Registry::get('MVC_MODULE_PRIMARY_CONTROLLER_DIR');
         }
 
         return '';
@@ -121,11 +121,11 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_MODULE_CURRENT_DATATYPE_DIR() : string
+    public static function get_MVC_MODULE_PRIMARY_DATATYPE_DIR() : string
     {
-        if (Registry::isRegistered('MVC_MODULE_CURRENT_DATATYPE_DIR'))
+        if (Registry::isRegistered('MVC_MODULE_PRIMARY_DATATYPE_DIR'))
         {
-            return (string) Registry::get('MVC_MODULE_CURRENT_DATATYPE_DIR');
+            return (string) Registry::get('MVC_MODULE_PRIMARY_DATATYPE_DIR');
         }
 
         return '';
@@ -135,11 +135,11 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_MODULE_CURRENT_ETC_DIR() : string
+    public static function get_MVC_MODULE_PRIMARY_ETC_DIR() : string
     {
-        if (Registry::isRegistered('MVC_MODULE_CURRENT_ETC_DIR'))
+        if (Registry::isRegistered('MVC_MODULE_PRIMARY_ETC_DIR'))
         {
-            return (string) Registry::get('MVC_MODULE_CURRENT_ETC_DIR');
+            return (string) Registry::get('MVC_MODULE_PRIMARY_ETC_DIR');
         }
 
         return '';
@@ -390,14 +390,24 @@ class Config
     }
 
     /**
+     * @deprecated use instead: Config::get_MVC_VIEW_TEMPLATE_DIR()
      * @return string
      * @throws \ReflectionException
      */
     public static function get_MVC_VIEW_TEMPLATES() : string
     {
-        if (Registry::isRegistered('MVC_VIEW_TEMPLATES'))
+        return self::get_MVC_VIEW_TEMPLATE_DIR();
+    }
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_VIEW_TEMPLATE_DIR() : string
+    {
+        if (Registry::isRegistered('MVC_VIEW_TEMPLATE_DIR'))
         {
-            return (string) Registry::get('MVC_VIEW_TEMPLATES');
+            return (string) Registry::get('MVC_VIEW_TEMPLATE_DIR');
         }
 
         return '';
@@ -818,7 +828,7 @@ class Config
     {
         if ('' === $sModule)
         {
-            $sModule = self::get_MVC_MODULE_CURRENT_NAME();
+            $sModule = self::get_MVC_MODULE_PRIMARY_NAME();
         }
 
         if (Registry::isRegistered('MODULE'))
@@ -886,11 +896,11 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_MODULE_CURRENT_COMPOSER_DIR() : string
+    public static function get_MVC_MODULE_PRIMARY_COMPOSER_DIR() : string
     {
-        if (Registry::isRegistered('MVC_MODULE_CURRENT_COMPOSER_DIR'))
+        if (Registry::isRegistered('MVC_MODULE_PRIMARY_COMPOSER_DIR'))
         {
-            return (string) Registry::get('MVC_MODULE_CURRENT_COMPOSER_DIR');
+            return (string) Registry::get('MVC_MODULE_PRIMARY_COMPOSER_DIR');
         }
 
         return '';
@@ -900,11 +910,11 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_MODULE_CURRENT_CONFIG_DIR() : string
+    public static function get_MVC_MODULE_PRIMARY_CONFIG_DIR() : string
     {
-        if (Registry::isRegistered('MVC_MODULE_CURRENT_CONFIG_DIR'))
+        if (Registry::isRegistered('MVC_MODULE_PRIMARY_CONFIG_DIR'))
         {
-            return (string) Registry::get('MVC_MODULE_CURRENT_CONFIG_DIR');
+            return (string) Registry::get('MVC_MODULE_PRIMARY_CONFIG_DIR');
         }
 
         return '';
@@ -914,11 +924,11 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_MODULE_CURRENT_EVENT_DIR() : string
+    public static function get_MVC_MODULE_PRIMARY_EVENT_DIR() : string
     {
-        if (Registry::isRegistered('MVC_MODULE_CURRENT_EVENT_DIR'))
+        if (Registry::isRegistered('MVC_MODULE_PRIMARY_EVENT_DIR'))
         {
-            return (string) Registry::get('MVC_MODULE_CURRENT_EVENT_DIR');
+            return (string) Registry::get('MVC_MODULE_PRIMARY_EVENT_DIR');
         }
 
         return '';
@@ -928,11 +938,11 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_MODULE_CURRENT_MODEL_DIR() : string
+    public static function get_MVC_MODULE_PRIMARY_MODEL_DIR() : string
     {
-        if (Registry::isRegistered('MVC_MODULE_CURRENT_MODEL_DIR'))
+        if (Registry::isRegistered('MVC_MODULE_PRIMARY_MODEL_DIR'))
         {
-            return (string) Registry::get('MVC_MODULE_CURRENT_MODEL_DIR');
+            return (string) Registry::get('MVC_MODULE_PRIMARY_MODEL_DIR');
         }
 
         return '';
@@ -942,11 +952,11 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_MODULE_CURRENT_POLICY_DIR() : string
+    public static function get_MVC_MODULE_PRIMARY_POLICY_DIR() : string
     {
-        if (Registry::isRegistered('MVC_MODULE_CURRENT_POLICY_DIR'))
+        if (Registry::isRegistered('MVC_MODULE_PRIMARY_POLICY_DIR'))
         {
-            return (string) Registry::get('MVC_MODULE_CURRENT_POLICY_DIR');
+            return (string) Registry::get('MVC_MODULE_PRIMARY_POLICY_DIR');
         }
 
         return '';
@@ -956,11 +966,11 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_MODULE_CURRENT_VIEW_DIR() : string
+    public static function get_MVC_MODULE_PRIMARY_VIEW_DIR() : string
     {
-        if (Registry::isRegistered('MVC_MODULE_CURRENT_VIEW_DIR'))
+        if (Registry::isRegistered('MVC_MODULE_PRIMARY_VIEW_DIR'))
         {
-            return (string) Registry::get('MVC_MODULE_CURRENT_VIEW_DIR');
+            return (string) Registry::get('MVC_MODULE_PRIMARY_VIEW_DIR');
         }
 
         return '';
@@ -970,11 +980,11 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_MODULE_CURRENT_STAGING_CONFIG_DIR() : string
+    public static function get_MVC_MODULE_PRIMARY_STAGING_CONFIG_DIR() : string
     {
-        if (Registry::isRegistered('MVC_MODULE_CURRENT_STAGING_CONFIG_DIR'))
+        if (Registry::isRegistered('MVC_MODULE_PRIMARY_STAGING_CONFIG_DIR'))
         {
-            return (string) Registry::get('MVC_MODULE_CURRENT_STAGING_CONFIG_DIR');
+            return (string) Registry::get('MVC_MODULE_PRIMARY_STAGING_CONFIG_DIR');
         }
 
         return '';
@@ -984,11 +994,11 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_MODULE_CURRENT_NAME() : string
+    public static function get_MVC_MODULE_PRIMARY_NAME() : string
     {
-        if (Registry::isRegistered('MVC_MODULE_CURRENT_NAME'))
+        if (Registry::isRegistered('MVC_MODULE_PRIMARY_NAME'))
         {
-            return (string) Registry::get('MVC_MODULE_CURRENT_NAME');
+            return (string) Registry::get('MVC_MODULE_PRIMARY_NAME');
         }
 
         return '';
@@ -998,24 +1008,24 @@ class Config
      * @param \MVC\View $oView
      * @return void
      */
-    public static function set_MVC_MODULE_CURRENT_VIEW(View $oView) : void
+    public static function set_MVC_MODULE_PRIMARY_VIEW(View $oView) : void
     {
-        Registry::set('MVC_MODULE_CURRENT_VIEW', $oView);
-        $GLOBALS['aConfig']['MVC_MODULE_CURRENT_VIEW'] = $oView;
+        Registry::set('MVC_MODULE_PRIMARY_VIEW', $oView);
+        $GLOBALS['aConfig']['MVC_MODULE_PRIMARY_VIEW'] = $oView;
     }
 
     /**
      * @return \MVC\View|null
      * @throws \ReflectionException
      */
-    public static function get_MVC_MODULE_CURRENT_VIEW() : View|null
+    public static function get_MVC_MODULE_PRIMARY_VIEW() : View|null
     {
         $oView = null;
 
-        if (Registry::isRegistered('MVC_MODULE_CURRENT_VIEW'))
+        if (Registry::isRegistered('MVC_MODULE_PRIMARY_VIEW'))
         {
             /** @var \MVC\View $oView */
-            $oView = Registry::get('MVC_MODULE_CURRENT_VIEW');
+            $oView = Registry::get('MVC_MODULE_PRIMARY_VIEW');
         }
 
         return $oView;

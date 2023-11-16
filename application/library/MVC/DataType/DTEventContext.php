@@ -11,7 +11,7 @@ class DTEventContext
 {
 	use TraitDataType;
 
-	public const DTHASH = 'ac64186dba8d1e9be24f5b0c98882444';
+	public const DTHASH = '28c36155c08f602cf4029f8211b80afe';
 
 	/**
 	 * @required true
@@ -59,6 +59,12 @@ class DTEventContext
 	 * @required true
 	 * @var string
 	 */
+	protected $sCallbackDumped;
+
+	/**
+	 * @required true
+	 * @var string
+	 */
 	protected $sMessage;
 
 	/**
@@ -75,6 +81,7 @@ class DTEventContext
 		$this->sBondedBy = '';
 		$this->sCalledIn = '';
 		$this->oCallback = null;
+		$this->sCallbackDumped = '';
 		$this->sMessage = '';
 
 		foreach ($aData as $sKey => $mValue)
@@ -190,6 +197,18 @@ class DTEventContext
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
+	public function set_sCallbackDumped(string $mValue)
+	{
+		$this->sCallbackDumped = (string) $mValue;
+
+		return $this;
+	}
+
+	/**
+	 * @param string $mValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
 	public function set_sMessage(string $mValue)
 	{
 		$this->sMessage = (string) $mValue;
@@ -271,6 +290,16 @@ class DTEventContext
 	 * @return string
 	 * @throws \ReflectionException
 	 */
+	public function get_sCallbackDumped() : string
+	{
+
+		return $this->sCallbackDumped;
+	}
+
+	/**
+	 * @return string
+	 * @throws \ReflectionException
+	 */
 	public function get_sMessage() : string
 	{
 
@@ -331,6 +360,14 @@ class DTEventContext
 	public static function getPropertyName_oCallback()
 	{
         return 'oCallback';
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getPropertyName_sCallbackDumped()
+	{
+        return 'sCallbackDumped';
 	}
 
 	/**

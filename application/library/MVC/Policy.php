@@ -32,7 +32,7 @@ class Policy
     {
         Event::RUN('mvc.policy.init.before');
 
-        $sPolicyDir = Config::get_MVC_MODULE_CURRENT_ETC_DIR() . '/policy';
+        $sPolicyDir = Config::get_MVC_MODULE_PRIMARY_ETC_DIR() . '/policy';
 
         if (true === file_exists($sPolicyDir))
         {

@@ -67,7 +67,13 @@ class InfoTool
 
             // DOMDocument::loadHTML will treat your string as being in ISO-8859-1 unless you tell it otherwise.
             // @see http://stackoverflow.com/a/8218649/2487859
-            $oDom->loadHTML(mb_encode_numericentity($aToolbar['sRendered'], [0x80, 0x10FFFF, 0, ~0], 'UTF-8'));
+            $oDom->loadHTML(
+                mb_encode_numericentity(
+                    $aToolbar['sRendered'],
+                    [0x80, 0x10FFFF, 0, ~0],
+                    'UTF-8'
+                )
+            );
             libxml_clear_errors();
 
             // add toolbar tag as a placeholder before body closing tag
@@ -113,7 +119,7 @@ class InfoTool
                 $sTmpVar = str_replace('get_', '', $sMethod);
                 $aTmp['sVar'] = $sTmpVar;
 
-                if (in_array($sTmpVar, array('MVC_ROUTING', 'MVC_MODULE_CURRENT_VIEW')))
+                if (in_array($sTmpVar, array('MVC_ROUTING', 'MVC_MODULE_PRIMARY_VIEW')))
                 {
                     $aTmp['mResult'] = '⚠ (would be too large to dump here)';
                 }
@@ -131,62 +137,62 @@ class InfoTool
         $aToolbar['sOS'] = PHP_OS;
         $aToolbar['sUniqueId'] = Config::get_MVC_UNIQUE_ID();
         $aToolbar['sMyMvcVersion'] = Config::get_MVC_VERSION();
-        $aToolbar['sMyMVCCore'] = $this->buildMarkupListTree(Config::get_MVC_CORE());
+        $aToolbar['sMyMVCCore'] = self::buildMarkupListTree(Config::get_MVC_CORE());
         $aToolbar['sEnv'] = getenv('MVC_ENV');
-        $aToolbar['aEnvGetenv'] = $this->buildMarkupListTree(getenv());
-        $aToolbar['aEnvEnv'] = $this->buildMarkupListTree($_ENV);
+        $aToolbar['aEnvGetenv'] = self::buildMarkupListTree(getenv());
+        $aToolbar['aEnvEnv'] = self::buildMarkupListTree($_ENV);
         $aToolbar['sEnvOfRequest'] = \MyMVCInstaller::getEnvironmentOfRequest();
-        $aToolbar['aGet'] = $this->buildMarkupListTree($_GET);
-        $aToolbar['aPost'] = $this->buildMarkupListTree($_POST);
-        $aToolbar['aCookie'] = $this->buildMarkupListTree($_COOKIE);
-        $aToolbar['aRequest'] = $this->buildMarkupListTree($_REQUEST);
+        $aToolbar['aGet'] = self::buildMarkupListTree($_GET);
+        $aToolbar['aPost'] = self::buildMarkupListTree($_POST);
+        $aToolbar['aCookie'] = self::buildMarkupListTree($_COOKIE);
+        $aToolbar['aRequest'] = self::buildMarkupListTree($_REQUEST);
         $aToolbar['session_id'] = Session::is()->getSessionId();
         $aToolbar['aSessionSettings'] = array(
             'MVC_SESSION_ENABLE' => Config::get_MVC_SESSION_ENABLE(),
             'MVC_SESSION_PATH' => Config::get_MVC_SESSION_PATH(),
-            'MVC_SESSION_OPTIONS' => $this->buildMarkupListTree(Config::get_MVC_SESSION_OPTIONS()),
+            'MVC_SESSION_OPTIONS' => self::buildMarkupListTree(Config::get_MVC_SESSION_OPTIONS()),
             'oSession' => Session::is(),
         );
-        $aToolbar['aSessionKeyValues'] = $this->buildMarkupListTree(Session::is()->getAll());
-        $aToolbar['aSessionFiles'] = $this->buildMarkupListTree(
+        $aToolbar['aSessionKeyValues'] = self::buildMarkupListTree(Session::is()->getAll());
+        $aToolbar['aSessionFiles'] = self::buildMarkupListTree(
             preg_grep('/^([^.])/', scandir(Config::get_MVC_SESSION_OPTIONS()['save_path']))
         );
         $aToolbar['aSessionRules']['aEnableSessionForController'] = (false === empty(Config::MODULE()['SESSION']['aEnableSessionForController']))
-            ? $this->buildMarkupListTree(Config::MODULE()['SESSION']['aEnableSessionForController'])
+            ? self::buildMarkupListTree(Config::MODULE()['SESSION']['aEnableSessionForController'])
             : 'none'
         ;
         $aToolbar['aSessionRules']['aDisableSessionForController'] = (false === empty(Config::MODULE()['SESSION']['aDisableSessionForController']))
-            ? $this->buildMarkupListTree(Config::MODULE()['SESSION']['aDisableSessionForController'])
+            ? self::buildMarkupListTree(Config::MODULE()['SESSION']['aDisableSessionForController'])
             : 'none'
         ;
 
         $aToolbar['aSmartyTemplateVars'] = $oView->getTemplateVars();
-        $aToolbar['sSmartyTemplateVars'] = $this->buildMarkupListTree($oView->getTemplateVars());
+        $aToolbar['sSmartyTemplateVars'] = self::buildMarkupListTree($oView->getTemplateVars());
         $aConstants = get_defined_constants (true);
-        $aToolbar['aConstant'] = $this->buildMarkupListTree($aConstants['user']);
-        $aToolbar['aServer'] = $this->buildMarkupListTree($_SERVER);
-        $aToolbar['sPathParam'] = $this->buildMarkupListTree(Request::getPathParam());
+        $aToolbar['aConstant'] = self::buildMarkupListTree($aConstants['user']);
+        $aToolbar['aServer'] = self::buildMarkupListTree($_SERVER);
+        $aToolbar['sPathParam'] = self::buildMarkupListTree(Request::getPathParam());
         $aToolbar['aPathParam'] = Request::getPathParam();
         $aToolbar['aEvent'] = Config::get_MVC_EVENT();
-        $aToolbar['aEventBIND'] = $this->buildMarkupListTree($aToolbar['aEvent']['BIND']);
-        $aToolbar['aEventBINDNAME'] = $this->buildMarkupListTree(Event::$aEvent);
-        $aToolbar['aEventRUN'] = $this->buildMarkupListTree($aToolbar['aEvent']['RUN']);
-        $aToolbar['aEventRUNBONDED'] = (false === empty(get($aToolbar['aEvent']['RUN_BONDED'], array()))) ? $this->buildMarkupListTree($aToolbar['aEvent']['RUN_BONDED']) : array();
-        $aToolbar['aEventDELETE'] = (false === empty(get($aToolbar['aEvent']['DELETE'], array()))) ? $this->buildMarkupListTree($aToolbar['aEvent']['DELETE']) : array();
+        $aToolbar['aEventBIND'] = self::buildMarkupListTree($aToolbar['aEvent']['BIND']);
+        $aToolbar['aEventBINDNAME'] = self::buildMarkupListTree(Event::$aEvent);
+        $aToolbar['aEventRUN'] = self::buildMarkupListTree($aToolbar['aEvent']['RUN']);
+
+        $aToolbar['aEventDELETE'] = (false === empty(get($aToolbar['aEvent']['DELETE'], array()))) ? self::buildMarkupListTree($aToolbar['aEvent']['DELETE']) : array();
         $aToolbar['aRouting'] = array(
             'aRequest' => Request::getCurrentRequest()->getPropertyArray(),
             'sModule' => Route::getCurrent()->get_module(),
             'sController' => Route::getCurrent()->get_c(),
             'sMethod' => Route::getCurrent()->get_method(),
             'aRoutingCurrent' => Route::getCurrent()->getPropertyArray(),
-            'sRoutingCurrent' => $this->buildMarkupListTree(Route::getCurrent()->getPropertyArray()),
-            'aRoute' => $this->buildMarkupListTree(array_keys(Route::$aRoute)),
+            'sRoutingCurrent' => self::buildMarkupListTree(Route::getCurrent()->getPropertyArray()),
+            'aRoute' => self::buildMarkupListTree(array_keys(Route::$aRoute)),
         );
 
         $aToolbar['sRoutingPath'] = Request::getCurrentRequest()->get_path();
         $aToolbar['sRoutingQuery'] = Request::getCurrentRequest()->get_query(); # (isset(Request::getCurrentRequest()->get_query())) ? Request::getCurrentRequest()['query'] : '';
 
-        $aToolbar['aPolicy']['aRule'] = $this->buildMarkupListTree(Policy::getRules());
+        $aToolbar['aPolicy']['aRule'] = self::buildMarkupListTree(Policy::getRules());
         $aPolicy = Policy::getRulesApplied();
         $aTmpPolicy = array();
 
@@ -196,37 +202,40 @@ class InfoTool
             $aTmpPolicy[] = $oDTArrayObject->getDTKeyValueByKey('sPolicy')->get_sValue();
         }
 
-        $aToolbar['aPolicy']['aApplied'] = $this->buildMarkupListTree($aTmpPolicy);
+        $aToolbar['aPolicy']['aApplied'] = self::buildMarkupListTree($aTmpPolicy);
 
         $aToolbar['sTemplate'] = $oView->sTemplate;
         $aToolbar['sTemplateContent'] = (null !== get($aToolbar['sTemplate']) && true === is_file($oView->sTemplate)) ? file_get_contents ($aToolbar['sTemplate'], true) : '';
+        $aToolbar['sTemplateContent'] = Strings::highlight_html($aToolbar['sTemplateContent']);
+
         $sRendered = '';
 
         if (true === is_file($oView->sTemplate))
         {
             ob_start ();
             $sTemplate = file_get_contents ($oView->sTemplate, true);
-            $oView->renderString ($sTemplate);
+            $oView->renderString($sTemplate);
             $sRendered = ob_get_contents ();
             ob_end_clean ();
         }
 
         $aToolbar['sRendered'] = $sRendered;
-        $aToolbar['aFilesIncluded'] = get_required_files ();
-        $aToolbar['aMemory'] = array (
+        $aToolbar['sRenderedHighlight'] = Strings::highlight_html($aToolbar['sRendered']);
+
+        $aToolbar['aFilesIncluded'] = get_required_files();
+        $aToolbar['aMemory'] = array(
             'iRealMemoryUsage' => (memory_get_usage (true) / 1024)
             , 'dMemoryUsage' => (memory_get_usage () / 1024)
             , 'dMemoryPeakUsage' => (memory_get_peak_usage () / 1024)
         );
-        $aToolbar['aRegistry'] = Registry::getStorageArray ();
-        $aToolbar['sRegistry'] = $this->buildMarkupListTree($aToolbar['aRegistry']);
-        $aToolbar['aCache'] = $this->buildMarkupListTree($this->getCaches());
+        $aToolbar['aRegistry'] = Registry::getStorageArray();
+        $aToolbar['sRegistry'] = self::buildMarkupListTree($aToolbar['aRegistry']);
+        $aToolbar['aCache'] = self::buildMarkupListTree($this->getCaches());
         $aToolbar['aError'] = Error::getERROR();
+        $aToolbar['aModuleCurrentConfig'] = self::buildMarkupListTree(Config::MODULE());
 
-        $aToolbar['aModuleCurrentConfig'] = $this->buildMarkupListTree(Config::MODULE());
-
-        $fMicrotime = microtime (true);
-        $sMicrotime = sprintf ("%06d", ($fMicrotime - floor ($fMicrotime)) * 1000000);
+        $fMicrotime = microtime(true);
+        $sMicrotime = sprintf("%06d", ($fMicrotime - floor ($fMicrotime)) * 1000000);
         $oDateTime = new \DateTime (date ('Y-m-d H:i:s.' . $sMicrotime));
 
         try
@@ -252,47 +261,15 @@ class InfoTool
     }
 
     /**
-     * @param $aData
+     * @param mixed $aData
+     * @param array $aConfig
      * @return string
      */
-    protected function buildMarkupListTree($aData) : string
+    protected static function buildMarkupListTree(mixed $aData, array $aConfig = array()) : string
     {
-        if (false === is_array($aData))
-        {
-            return '';
-        }
-
-        $sMarkup = '<ul class="myMvcToolbar-tree">';
-
-        foreach ($aData as $sKey => $mValue)
-        {
-            $sMarkup.= '<li class="myMvcToolbar-tree"><span class="myMvcToolbar-bg-primary">' . trim($sKey) . '</span> <span class="myMvcToolbar-bg-info">=></span> ';
-            (true === empty($mValue)) ? $mValue = '' : false;
-
-            if (is_array($mValue))
-            {
-                $sMarkup.= ' <span class="myMvcToolbar-bg-info">array(...</span> ';
-                $sMarkup.= $this->buildMarkupListTree($mValue);
-            }
-            elseif (is_object($mValue))
-            {
-                ob_start();
-                var_dump($mValue);
-                $mValue = ob_get_contents();
-                ob_end_clean();
-                $sMarkup.= htmlentities(trim(preg_replace('!\s+!', ' ', $mValue)));
-            }
-            else
-            {
-                $sMarkup.= htmlentities(trim(preg_replace('!\s+!', ' ', $mValue)));
-            }
-
-            $sMarkup.= '</li>';
-        }
-
-        $sMarkup.= '</ul>';
-
-        return $sMarkup;
+        return Strings::ulli(
+            $aData
+        );
     }
 
     /**

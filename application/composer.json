@@ -1,7 +1,6 @@
 {
   "require": {
     "php": ">=8.0",
-    "ext-core": "*",
     "ext-ctype": "*",
     "ext-curl": "*",
     "ext-date": "*",
@@ -18,20 +17,20 @@
     "ext-reflection": "*",
     "ext-session": "*",
     "ext-simplexml": "*",
-    "ext-standard": "*",
     "ext-spl": "*",
     "ext-zip": "*",
     "gueff/cachix": "1.0.*",
     "smarty/smarty": "4.3.*",
     "mrclay/jsmin-php": "2.4.*",
     "ezyang/htmlpurifier": "v4.16.*",
+    "erusev/parsedown":"1.7.*",
     "symfony/var-dumper": "@stable",
     "symfony/http-kernel": "@stable",
     "symfony/http-foundation": "@stable"
   },
   "require-dev": {
-    "phpunit/phpunit": "10.*",
-    "php-webdriver/webdriver": "1.15.*",
+    "phpunit/phpunit": "9.*",
+    "php-webdriver/webdriver": "1.14.*",
     "phpunit/phpunit-selenium": "9.0.*"
   }
 }

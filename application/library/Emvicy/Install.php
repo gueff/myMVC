@@ -49,7 +49,7 @@ class Install
 
         if (false === $bPrimary)
         {
-            self::removePrimaryEssentials($aConfig['MVC_MODULES_DIR'] . '/' . $sModuleName);
+            self::removePrimaryEssentials($aConfig['MVC_MODULES_DIR'] . '/' . $sModuleName, $aConfig);
         }
 
         // set rights
@@ -61,17 +61,18 @@ class Install
 
     /**
      * @param string $sModule
+     * @param array  $aConfig
      * @return void
      */
-    protected static function removePrimaryEssentials(string $sModule = '')
+    protected static function removePrimaryEssentials(string $sModule = '', array $aConfig = array())
     {
         $aRemove = array(
-            '/etc/config/_mvc.php',
+            $aConfig['MVC_MODULE_PRIMARY_ESSENTIAL'],
         );
 
         foreach ($aRemove as $sRemove)
         {
-            $sFileUnlink = $sModule . $sRemove;
+            $sFileUnlink = $sModule . '/' . $sRemove;
             echo '>>> removing: ' . $sFileUnlink;
             nl();
             unlink($sFileUnlink);

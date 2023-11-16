@@ -35,7 +35,7 @@ class Event
      */
     public static function init() : bool
     {
-        $sEventDir = Config::get_MVC_MODULE_CURRENT_ETC_DIR() . '/event';
+        $sEventDir = Config::get_MVC_MODULE_PRIMARY_ETC_DIR() . '/event';
 
         if (false === file_exists($sEventDir))
         {
@@ -91,7 +91,7 @@ class Event
      * @param string   $sEvent
      * @param \Closure $oClosure
      * @param          $oObject @deprecated
-     * @param array    $aDebug @deprecated
+     * @param array    $aDebug
      * @return void
      * @throws \ReflectionException
      */
@@ -111,7 +111,7 @@ class Event
             Config::get_MVC_LOG_FILE_EVENT(),
             false
         );
-        Event::addToRegistry('BIND', 'BIND (' . $sEvent . ', ' . Closure::dump($oClosure) . ')' . ' --> called in: ' . $sDebug);
+        Event::addToRegistry('BIND', $sEvent, 'BIND (' . $sEvent . ', ' . Closure::dump($oClosure) . ')' . ' --> called in: ' . $sDebug);
 
         // add listener to event
         self::addListenerToEvent($sEvent, $oClosure, $oObject, $sDebug);
@@ -176,7 +176,7 @@ class Event
             if (true === isset(self::$aEvent['*']))
             {
                 $sPreLogWildCard = ' (* [' . $sEvent . ']) --> called in: ' . $sDebug;
-                Event::addToRegistry('RUN', $sPreLogWildCard);
+                Event::addToRegistry('RUN', $sEvent, $sPreLogWildCard);
                 self::execute(self::$aEvent['*'], $mPackage, 'RUN+', $sPreLogWildCard, '*', $sEvent, $sDebug);
                 $bReturn = true;
             }
@@ -191,7 +191,7 @@ class Event
                 foreach ($aListener as $sListenerEvent)
                 {
                     $sPreLogWildCard = ' (' . $sListenerEvent . ' [' . $sEvent . ']) --> called in: ' . $sDebug;
-                    Event::addToRegistry('RUN', $sPreLogWildCard);
+                    Event::addToRegistry('RUN', $sEvent, $sPreLogWildCard);
                     self::execute(self::$aEvent[$sListenerEvent], $mPackage, 'RUN+', $sPreLogWildCard, $sListenerEvent, $sEvent, $sDebug);
                     $bReturn = true;
                 }
@@ -213,7 +213,7 @@ class Event
         #------------
         # run regular listeners; "RUN+"
 
-        Event::addToRegistry('RUN', $sPreLog);
+        Event::addToRegistry('RUN', $sEvent, $sPreLog);
         self::execute(self::$aEvent[$sEvent], $mPackage, 'RUN+', $sPreLog, $sEvent, $sEvent, $sDebug);
 
         #------------
@@ -285,6 +285,7 @@ class Event
                     ->set_sBondedBy($sKey)
                     ->set_sCalledIn($sCalledIn)
                     ->set_oCallback($sCallback) /** @info get closure alternative way: Event::$aEvent[$oDTEventContext->get_sEvent()][$oDTEventContext->get_sBondedBy()] */
+                    ->set_sCallbackDumped(Closure::dump($sCallback))
                     ->set_sMessage($sMessage)
                 ;
 
@@ -315,7 +316,7 @@ class Event
         // delete all
         if (true === empty($sEvent))
         {
-            Event::addToRegistry('UNBIND', 'UNBIND: All Events deleted --> called in: ' . $sDebug);
+            Event::addToRegistry('UNBIND', $sEvent, 'UNBIND: All Events deleted --> called in: ' . $sDebug);
 
             self::$aEvent = array();
             Log::write(
@@ -335,7 +336,7 @@ class Event
             return false;
         }
 
-        Event::addToRegistry('UNBIND', 'UNBIND: Event `' . $sEvent . '` deleted --> called in: ' . $sDebug);
+        Event::addToRegistry('UNBIND', $sEvent, 'UNBIND: Event `' . $sEvent . '` deleted --> called in: ' . $sDebug);
         self::$aEvent[$sEvent] = NULL;
         unset(self::$aEvent[$sEvent]);
 
@@ -350,15 +351,16 @@ class Event
 
     /**
      * adds a key/value pair to registry
-     * @param string $sKey
-     * @param string $sValue
+     * @param string $sType BIND | RUN
+     * @param string $sEvent event
+     * @param string $sValue closure (if type BIND) | listener (if type RUN)
      * @return void
      * @throws \ReflectionException
      */
-    public static function addToRegistry(string $sKey = '', string $sValue = '') : void
+    public static function addToRegistry(string $sType = '', string $sEvent = '', string $sValue = '') : void
     {
         $aMvcEvent = Config::get_MVC_EVENT();
-        $aMvcEvent[$sKey][] = $sValue;
+        $aMvcEvent[$sType][$sEvent][] = $sValue;
         Config::set_MVC_EVENT($aMvcEvent);
     }
 

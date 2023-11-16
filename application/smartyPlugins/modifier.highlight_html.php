@@ -7,9 +7,9 @@
  * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
  */
 
-function smarty_insert_myplugin(array $aOption = array())
+function smarty_modifier_highlight_html(string $sMarkup = '') : string
 {
-    print_r($aOption);
+    return \MVC\Strings::highlight_html($sMarkup);
 }
 
 

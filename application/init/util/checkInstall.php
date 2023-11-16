@@ -104,7 +104,7 @@ class MyMVCInstaller
         $aModule = glob($this->_aConfig['MVC_MODULES_DIR'] . '/*', GLOB_ONLYDIR);
 
         // check on primary module
-        $aModulePrimary = glob($this->_aConfig['MVC_MODULES_DIR'] . '/*/etc/config/_mvc.php');
+        $aModulePrimary = glob($this->_aConfig['MVC_MODULES_DIR'] . '/*' . $this->_aConfig['MVC_MODULE_PRIMARY_ESSENTIAL']);
 
         if (empty($aModule) || empty($aModulePrimary))
         {
