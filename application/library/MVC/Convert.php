@@ -45,7 +45,6 @@ class Convert
             $aNew = (array) $mObject;
         }
 
-        /** @var array $aNew */
         return $aNew;
     }
 }
