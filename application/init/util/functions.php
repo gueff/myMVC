@@ -231,7 +231,7 @@ function mvcConfigLoader(array $aConfig = array())
                 }
 
                 // External composer Libraries
-                $sVendorAutoload = $sModule . '/etc/config/' . basename($sModule) . '/vendor/autoload.php';
+                $sVendorAutoload = $aConfig['MVC_MODULES_DIR'] . '/' . $sModule . '/etc/config/' . basename($sModule) . '/vendor/autoload.php';
 
                 if (file_exists($sVendorAutoload))
                 {
