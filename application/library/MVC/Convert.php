@@ -42,7 +42,7 @@ class Convert
         }
         else
         {
-            $aNew = $mObject;
+            $aNew = (array) $mObject;
         }
 
         /** @var array $aNew */
