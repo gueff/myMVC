@@ -233,11 +233,11 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_LOG_FILE_FOLDER() : string
+    public static function get_MVC_LOG_FILE_DIR() : string
     {
-        if (Registry::isRegistered('MVC_LOG_FILE_FOLDER'))
+        if (Registry::isRegistered('MVC_LOG_FILE_DIR'))
         {
-            return (string) Registry::get('MVC_LOG_FILE_FOLDER');
+            return (string) Registry::get('MVC_LOG_FILE_DIR');
         }
 
         return '';

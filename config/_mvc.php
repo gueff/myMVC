@@ -95,7 +95,7 @@ MVC_APPLICATION_SETTINGS_I: {
     $aConfig['MVC_LIBRARY'] = $aConfig['MVC_APPLICATION_PATH'] . '/library';
     $aConfig['MVC_MODULES_DIR'] = $aConfig['MVC_BASE_PATH'] . '/modules';
 
-    // Main myMVC config folder
+    // Main myMVC config directory
     $aConfig['MVC_CONFIG_DIR'] = $aConfig['MVC_BASE_PATH'] . '/config';
 
     /**
@@ -118,13 +118,13 @@ MVC_APPLICATION_SETTINGS_I: {
     /**
      * Log
      */
-    $aConfig['MVC_LOG_FILE_FOLDER'] = $aConfig['MVC_APPLICATION_PATH'] . '/log/';
-    $aConfig['MVC_LOG_FILE_DEFAULT'] = $aConfig['MVC_LOG_FILE_FOLDER'] . 'default.log';
-    $aConfig['MVC_LOG_FILE_ERROR'] = $aConfig['MVC_LOG_FILE_FOLDER'] . 'error.log';
-    $aConfig['MVC_LOG_FILE_WARNING'] = $aConfig['MVC_LOG_FILE_FOLDER'] . 'warning.log';
-    $aConfig['MVC_LOG_FILE_NOTICE'] = $aConfig['MVC_LOG_FILE_FOLDER'] . 'notice.log';
-    $aConfig['MVC_LOG_FILE_POLICY'] = $aConfig['MVC_LOG_FILE_FOLDER'] . 'policy.log';
-    $aConfig['MVC_LOG_FILE_EVENT'] = $aConfig['MVC_LOG_FILE_FOLDER'] . 'event.log';
+    $aConfig['MVC_LOG_FILE_DIR'] = $aConfig['MVC_APPLICATION_PATH'] . '/log/';
+    $aConfig['MVC_LOG_FILE_DEFAULT'] = $aConfig['MVC_LOG_FILE_DIR'] . 'default.log';
+    $aConfig['MVC_LOG_FILE_ERROR'] = $aConfig['MVC_LOG_FILE_DIR'] . 'error.log';
+    $aConfig['MVC_LOG_FILE_WARNING'] = $aConfig['MVC_LOG_FILE_DIR'] . 'warning.log';
+    $aConfig['MVC_LOG_FILE_NOTICE'] = $aConfig['MVC_LOG_FILE_DIR'] . 'notice.log';
+    $aConfig['MVC_LOG_FILE_POLICY'] = $aConfig['MVC_LOG_FILE_DIR'] . 'policy.log';
+    $aConfig['MVC_LOG_FILE_EVENT'] = $aConfig['MVC_LOG_FILE_DIR'] . 'event.log';
 
     // control log details
     $aConfig['MVC_LOG_DETAIL'] = [
@@ -145,7 +145,7 @@ MVC_APPLICATION_SETTINGS_I: {
     /**
      * Caching
      */
-    // cache folder
+    // cache directory
     $aConfig['MVC_CACHE_DIR'] = $aConfig['MVC_APPLICATION_PATH'] . '/cache';
     $aConfig['MVC_CACHE_CONFIG'] = array(
         'bCaching' => true,
@@ -168,7 +168,7 @@ MVC_APPLICATION_SETTINGS_I: {
     /**
      * Session
      */
-    // session folder and
+    // session directory and
     // Session options @see http://php.net/manual/de/session.configuration.php
     $aConfig['MVC_SESSION_NAMESPACE'] = 'myMVC';
     $aConfig['MVC_SESSION_PATH'] = $aConfig['MVC_APPLICATION_PATH'] . '/session';
@@ -257,8 +257,8 @@ MVC_TEMPLATE_ENGINE_SMARTY: {
     $aConfig['MVC_SMARTY_TEMPLATE_DIR'] = $aConfig['MVC_VIEW_TEMPLATE_DIR'];
     $aConfig['MVC_SMARTY_TEMPLATE_DEFAULT'] = 'Frontend/layout/index.tpl';
 
-    // templates_c folder and
-    // templates_c folder access rights, octal mode
+    // templates_c directory and
+    // templates_c directory access rights, octal mode
     $aConfig['MVC_SMARTY_TEMPLATE_CACHE_DIR'] = $aConfig['MVC_APPLICATION_PATH'] . '/templates_c';
 
     // array Location of Smarty PlugIns
