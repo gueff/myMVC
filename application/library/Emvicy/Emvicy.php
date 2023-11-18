@@ -403,11 +403,15 @@ class Emvicy
                 $sModuleConfigPathAbs = $GLOBALS['aConfig']['MVC_MODULES_DIR'] . '/' . $sModule . '/etc/config/' . $sModule;
                 $sComposerJson = $sModuleConfigPathAbs . '/composer.json';
 
+                if (false === empty($xGit))
+                {
+                    $sCmd = 'cd ' . $GLOBALS['aConfig']['MVC_MODULES_DIR'] . '/' . $sModule . '; ' . $xGit . ' pull';
+                    self::shellExecute($sCmd, true);
+                }
+
                 if (true === file_exists($sComposerJson))
                 {
-                    $sCmd = "\n" . 'cd ' . $sModuleConfigPathAbs . '; ' . "\n"
-                            . ((false === empty($xGit)) ? $xGit . ' pull; ' . "\n" : false)
-                            . PHP_BINARY . ' ' . Config::get_MVC_APPLICATION_PATH() . '/composer.phar update;';
+                    $sCmd = 'cd ' . $sModuleConfigPathAbs . '; ' . PHP_BINARY . ' ' . Config::get_MVC_APPLICATION_PATH() . '/composer.phar update;';
                     self::shellExecute($sCmd, true);
                 }
             }
