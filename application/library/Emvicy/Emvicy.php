@@ -381,10 +381,16 @@ class Emvicy
      */
     public static function update()
     {
+        $xGit = whereis('git');
+
         UPDATE_FRAMEWORK: {
-            $xGit = whereis('git');
-            $sCmd = $xGit . ' pull';
-            self::shellExecute($sCmd, true);
+
+            if (false === empty($xGit))
+            {
+                $sCmd = $xGit . ' pull';
+                self::shellExecute($sCmd, true);
+            }
+
             $sCmd = 'cd ' . Config::get_MVC_APPLICATION_PATH() . '; ' . PHP_BINARY . ' composer.phar update;';
             self::shellExecute($sCmd, true);
         }
@@ -399,7 +405,9 @@ class Emvicy
 
                 if (true === file_exists($sComposerJson))
                 {
-                    $sCmd = 'cd ' . $sModuleConfigPathAbs . '; ' . PHP_BINARY . ' ' . Config::get_MVC_APPLICATION_PATH() . '/composer.phar update;';
+                    $sCmd = 'cd ' . $sModuleConfigPathAbs . '; '
+                            . ((false === empty($xGit)) ? $xGit . ' pull; ' : false)
+                            . PHP_BINARY . ' ' . Config::get_MVC_APPLICATION_PATH() . '/composer.phar update;';
                     self::shellExecute($sCmd, true);
                 }
             }

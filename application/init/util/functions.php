@@ -251,7 +251,8 @@ function mvcConfigLoader(array $aConfig = array())
 
 /**
  * @param string $sWhereIsItem
- * @return string|void
+ * @return string
+ * @throws \ReflectionException
  */
 function whereis(string $sWhereIsItem = '')
 {
@@ -263,8 +264,7 @@ function whereis(string $sWhereIsItem = '')
 
     if (true === empty($sResult))
     {
-        echo 'program `' . $sWhereIsItem . '` not found. Abort.' . "\n\n";
-        exit();
+        \MVC\Error::warning('function `' . __FUNCTION__ . '()` > requested program `' . $sWhereIsItem . '` not found.');
     }
 
     return $sResult;

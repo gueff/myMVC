@@ -626,10 +626,10 @@ Request::getPathParam( $sKey )</pre>
 			<i class="fa fa-refresh"></i> Cache
 		</label>
 		<label for="tab4">
-			<i class="fa fa-file-o"></i> Files
+			<i class="fa fa-file"></i> Files
 		</label>
 		<label for="tab5">
-			<i class="fa fa-bar-chart-o"></i> Memory
+			<i class="fa fa-bar-chart"></i> Memory
 		</label>
 		{if !empty($aToolbar.aError)}
 			<label for="tab8" class="myMvcToolbar-bg-primaryx" style="position: relative;">

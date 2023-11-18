@@ -74,7 +74,7 @@ class Error
      */
 	public static function errorHandler(int $iCode, string $sMessage, string $sFilename, int $iLineNr, mixed $mContext = '') : void
 	{	
-		$oErrorException = new \ErrorException ($sMessage, $iCode, $iSeverity = 1, $sFilename, $iLineNr);
+		$oErrorException = new \Errorexception($sMessage, $iCode, $iSeverity = 1, $sFilename, $iLineNr);
 		
 		self::exception($oErrorException);
 	}	
@@ -94,9 +94,9 @@ class Error
         $aDebug = Debug::prepareBacktraceArray(debug_backtrace());
         (true === empty($sFilename)) ? $sFilename = $aDebug['sFile'] : false;
         (true === empty($iLineNr)) ? $iLineNr = $aDebug['sLine'] : false;
-		$oErrorException = new \ErrorException ($sMessage, (int) $iCode, (int) $iSeverity, $sFilename, (int) $iLineNr );
+		$oErrorException = new \Errorexception($sMessage, (int) $iCode, (int) $iSeverity, $sFilename, (int) $iLineNr );
 		
-		self::exception ($oErrorException);
+		self::exception($oErrorException);
 	}
 
     /**
@@ -113,9 +113,9 @@ class Error
         $aDebug = Debug::prepareBacktraceArray(debug_backtrace());
         (true === empty($sFilename)) ? $sFilename = $aDebug['sFile'] : false;
         (true === empty($iLineNr)) ? $iLineNr = (int) $aDebug['sLine'] : false;
-        $oErrorException = new \ErrorException ($sMessage, $iCode, $iSeverity, $sFilename, $iLineNr );
+        $oErrorException = new \Errorexception($sMessage, $iCode, $iSeverity, $sFilename, $iLineNr );
 
-        self::exception ($oErrorException);
+        self::exception($oErrorException);
     }
 
     /**
@@ -132,9 +132,9 @@ class Error
         $aDebug = Debug::prepareBacktraceArray(debug_backtrace());
         (true === empty($sFilename)) ? $sFilename = $aDebug['sFile'] : false;
         (true === empty($iLineNr)) ? $iLineNr = (int) $aDebug['sLine'] : false;
-        $oErrorException = new \ErrorException ($sMessage, $iCode, $iSeverity, $sFilename, $iLineNr );
+        $oErrorException = new \Errorexception($sMessage, $iCode, $iSeverity, $sFilename, $iLineNr );
 
-        self::exception ($oErrorException);
+        self::exception($oErrorException);
     }
 
     /**
