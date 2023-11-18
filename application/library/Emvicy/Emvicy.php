@@ -405,8 +405,8 @@ class Emvicy
 
                 if (true === file_exists($sComposerJson))
                 {
-                    $sCmd = 'cd ' . $sModuleConfigPathAbs . '; '
-                            . ((false === empty($xGit)) ? $xGit . ' pull; ' : false)
+                    $sCmd = "\n" . 'cd ' . $sModuleConfigPathAbs . '; ' . "\n"
+                            . ((false === empty($xGit)) ? $xGit . ' pull; ' . "\n" : false)
                             . PHP_BINARY . ' ' . Config::get_MVC_APPLICATION_PATH() . '/composer.phar update;';
                     self::shellExecute($sCmd, true);
                 }
