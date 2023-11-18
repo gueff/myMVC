@@ -4,6 +4,8 @@ application/library/MVC/templates/infoTool.tpl
 colors
 ---------
 blue: hsl(210,50%,50%)
+
+<span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top">&uarr; top</a></small></span>
 *}
 
 {* value for css automatic generation parts *}
@@ -124,7 +126,7 @@ blue: hsl(210,50%,50%)
 					</ul>
 
 					<h6>Session Status
-						<a id="myMvcToolbar_Session_Status"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top">&uarr; top</a></small></span>
+						<a id="myMvcToolbar_Session_Status"></a> 
 					</h6>
 					enabled: <code>{if "1" == MVC\Session::is()->enabled()}true{else}false{/if}</code>
 					<pre>Session::is()->enabled()</pre>
@@ -133,7 +135,7 @@ blue: hsl(210,50%,50%)
 					<pre>Session::is()->getSessionId()</pre>
 
 					<h6>Session Values
-						<a id="myMvcToolbar_Session_Values"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top">&uarr; top</a></small></span>
+						<a id="myMvcToolbar_Session_Values"></a> 
 					</h6>
 					<b>Namespace</b>
 					<code>{MVC\Session::is()->getNamespace()}</code>
@@ -152,11 +154,6 @@ $_SESSION['{MVC\Session::is()->getNamespace()}']</pre>
 					<h6>Session Rules
 						<a id="myMvcToolbar_Session_Rules"></a>
 						<small>* = any</small>
-						<span class="myMvcToolbar-float-right">
-							<small>
-								<a href="#myMvcToolbar_top">&uarr; top</a>
-							</small>
-						</span>
 					</h6>
 					{assign var="aModuleConfig" value=MVC\Config::MODULE()}
 					<p>
@@ -173,13 +170,13 @@ Config::MODULE('{MVC\Config::get_MVC_MODULE_PRIMARY_NAME()}')['SESSION']</pre>
 
 					<!------------------------------------------->
 
-					<h6>Session Options <a id="myMvcToolbar_Session_Options"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top">&uarr; top</a></small></span></h6>
+					<h6>Session Options <a id="myMvcToolbar_Session_Options"></a> </h6>
 					<p>
 						{$aToolbar.aSessionSettings.MVC_SESSION_OPTIONS}
 					</p>
 					<pre>Config::get_MVC_SESSION_OPTIONS()</pre>
 
-					<h6>Session Files <a id="myMvcToolbar_Session_Files"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top">&uarr; top</a></small></span></h6>
+					<h6>Session Files <a id="myMvcToolbar_Session_Files"></a> </h6>
 					<p>
 						{$aToolbar.aSessionFiles}
 					</p>
@@ -192,12 +189,12 @@ Config::MODULE('{MVC\Config::get_MVC_MODULE_PRIMARY_NAME()}')['SESSION']</pre>
 						<li><a href="#myMvcToolbar_ENV">$_ENV</a></li>
 					</ul>
 
-					<h6>getenv() <a id="myMvcToolbar_getenv"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top">&uarr; top</a></small></span></h6>
+					<h6>getenv() <a id="myMvcToolbar_getenv"></a> </h6>
 					<p>
 						{$aToolbar.aEnvGetenv}
 					</p>
 
-					<h6>$_ENV <a id="myMvcToolbar_ENV"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top">&uarr; top</a></small></span></h6>
+					<h6>$_ENV <a id="myMvcToolbar_ENV"></a> </h6>
 					<p>
 						{$aToolbar.aEnvEnv}
 					</p>
@@ -275,7 +272,7 @@ Config::MODULE('{MVC\Config::get_MVC_MODULE_PRIMARY_NAME()}')['SESSION']</pre>
 
 				</div>
 				<div class="subtab22">
-					<h6>Path <small>requested</small><a id="myMvcToolbar_Path"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top2">&uarr; top</a></small></span></h6>
+					<h6>Path <small>requested</small><a id="myMvcToolbar_Path"></a> </h6>
 					<code>{$aToolbar.sRoutingPath|escape:"htmlall":"UTF-8"}</code>
 					<pre>Request::getCurrentRequest()->get_path()</pre>
 
@@ -290,7 +287,7 @@ Config::MODULE('{MVC\Config::get_MVC_MODULE_PRIMARY_NAME()}')['SESSION']</pre>
 					<pre>Request::getPathParam();
 Request::getPathParam( $sKey )</pre>
 
-					<h6>Query <small>requested</small><a id="myMvcToolbar_Query"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top2">&uarr; top</a></small></span></h6>
+					<h6>Query <small>requested</small><a id="myMvcToolbar_Query"></a> </h6>
 					<code>
 						{if '' === $aToolbar.sRoutingQuery}
 							...no GET query
@@ -314,7 +311,7 @@ Request::getPathParam( $sKey )</pre>
 						<li><a href="#myMvcToolbar_DELETE">delete()</a></li>
 					</ul>
 
-					<h6>bind() <small>list by index</small> <a id="myMvcToolbar_BINDindex"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top2">&uarr; top</a></small></span></h6>
+					<h6>bind() <small>list by index</small> <a id="myMvcToolbar_BINDindex"></a> </h6>
 					<p>
 						{$aToolbar.aEventBIND}
 					</p>
@@ -325,7 +322,7 @@ Request::getPathParam( $sKey )</pre>
 					<i><code>bind</code> to an event</i><br>
 					<pre>Event::bind('event.name', \Closure $oClosure, $oObject = NULL);</pre>
 
-					<h6>bind() <small>group by event name</small> <a id="myMvcToolbar_BINDname"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top2">&uarr; top</a></small></span></h6>
+					<h6>bind() <small>group by event name</small> <a id="myMvcToolbar_BINDname"></a> </h6>
 					<p>
 						{$aToolbar.aEventBINDNAME}
 					</p>
@@ -336,7 +333,7 @@ Request::getPathParam( $sKey )</pre>
 					<i><code>bind</code> to an event</i><br>
 					<pre>Event::bind('event.name', \Closure $oClosure, $oObject = NULL);</pre>
 
-					<h6>run() <a id="myMvcToolbar_RUN"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top2">&uarr; top</a></small></span></h6>
+					<h6>run() <a id="myMvcToolbar_RUN"></a> </h6>
 					<p>
 						{$aToolbar.aEventRUN}
 					</p>
@@ -347,7 +344,7 @@ Request::getPathParam( $sKey )</pre>
 					<i><code>run</code> an event</i><br>
 					<pre>Event::run('event.name', DTArrayObject::create());</pre>
 
-					<h6>delete() <a id="myMvcToolbar_DELETE"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top2">&uarr; top</a></small></span></h6>
+					<h6>delete() <a id="myMvcToolbar_DELETE"></a> </h6>
 					{if !empty($aToolbar.aEventDELETE)}
 						<p>
 							{$aToolbar.aEventDELETE}
@@ -356,7 +353,7 @@ Request::getPathParam( $sKey )</pre>
 					<pre>Event::delete('event.name');</pre>
 				</div>
 				<div class="subtab24">
-					<h6>Target Controller method <a id="myMvcToolbar_Target"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top2">&uarr; top</a></small></span></h6>
+					<h6>Target Controller method <a id="myMvcToolbar_Target"></a> </h6>
 					{*					<p>\{$aToolbar.aRouting.sModule}\Controller\{$aToolbar.aRouting.sController}::{$aToolbar.aRouting.sMethod}({$aToolbar.aRouting.sArg|escape:"htmlall":"UTF-8"})	</p>*}
 					{if isset($aToolbar.aRouting.aRoutingCurrent.class)}
 						<code>\{$aToolbar.aRouting.aRoutingCurrent.class}::{$aToolbar.aRouting.aRoutingCurrent.m}()</code>
@@ -365,7 +362,7 @@ Request::getPathParam( $sKey )</pre>
 						<code>unknown</code>
 					{/if}
 
-					<h6>Current Route <a id="myMvcToolbar_Routing"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top2">&uarr; top</a></small></span></h6>
+					<h6>Current Route <a id="myMvcToolbar_Routing"></a> </h6>
 					<p>{$aToolbar.aRouting.sRoutingCurrent}</p>
 					<i>array</i>
 					<pre>Route::getCurrent()->getPropertyArray()</pre>
@@ -386,13 +383,13 @@ Request::getPathParam( $sKey )</pre>
 						<li><a href="#myMvcToolbar_APPLIED">Policy Rules actually applied</a></li>
 					</ul>
 
-					<h6>Policy Rules <a id="myMvcToolbar_RULES"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top2">&uarr; top</a></small></span></h6>
+					<h6>Policy Rules <a id="myMvcToolbar_RULES"></a> </h6>
 					<p>
 						{$aToolbar.aPolicy.aRule}
 					</p>
 					<pre>Policy::getRules()</pre>
 
-					<h6>Policy Rules actually applied <a id="myMvcToolbar_APPLIED"></a> <span class="myMvcToolbar-float-right"><small><a href="#myMvcToolbar_top2">&uarr; top</a></small></span></h6>
+					<h6>Policy Rules actually applied <a id="myMvcToolbar_APPLIED"></a> </h6>
 					<p>
 						{$aToolbar.aPolicy.aApplied}
 					</p>
