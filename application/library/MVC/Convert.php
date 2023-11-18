@@ -15,9 +15,9 @@ class Convert
     /**
      * converts an object into array
      * @param mixed $mObject
-     * @return array
+     * @return array|mixed
      */
-    public static function objectToArray(mixed $mObject) : array
+    public static function objectToArray(mixed $mObject) : mixed
     {
         if (true === is_object($mObject))
         {
@@ -42,7 +42,7 @@ class Convert
         }
         else
         {
-            $aNew = (array) $mObject;
+            $aNew = $mObject;
         }
 
         return $aNew;
