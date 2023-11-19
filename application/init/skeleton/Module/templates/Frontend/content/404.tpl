@@ -1,17 +1,12 @@
 
 {* @see https://getbootstrap.com/docs/5.3/migration/#jumbotron AND https://getbootstrap.com/docs/5.3/examples/jumbotron/*}
-<div class="container py-4">
-    <div class="p-5 mb-4 bg-body-tertiary rounded-3">
-
-        <h1 class="display-3">
-            {MVC\Config::get_MVC_MODULE_PRIMARY_NAME()}
-        </h1>
-        <h2 class="text-danger">404 - Not found.</h2>
-
+<div class="container py-4 shadow bg-white padding20">
+    <div class="text-center">
+        <h1 class="text-danger">404 - Not found</h1>
+        <p>
+            the source you requested can not be found
+        </p>
     </div>
-</div>
-
-<div class="container py-4">
+    <br>
     {include file="Frontend/content/info.tpl"}
-    <hr>
 </div>
