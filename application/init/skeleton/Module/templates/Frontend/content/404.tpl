@@ -3,7 +3,9 @@
 <div class="container py-4">
     <div class="p-5 mb-4 bg-body-tertiary rounded-3">
 
-        <h1 class="display-3">{module}</h1>
+        <h1 class="display-3">
+            {MVC\Config::get_MVC_MODULE_PRIMARY_NAME()}
+        </h1>
         <h2 class="text-danger">404 - Not found.</h2>
 
     </div>
