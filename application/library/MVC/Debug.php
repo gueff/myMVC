@@ -62,12 +62,13 @@ class Debug
     /**
      * Mini OnScreen Debugger
      * @param mixed $mData
-     * @return \MVC\Debug|null
+     * @param array $aDebugBacktrace
+     * @return void
      */
-    public static function info(mixed $mData = '') : Debug|null
+    public static function info(mixed $mData = '', array $aDebugBacktrace = array()) : void
     {
         // source
-        $aBacktrace = self::prepareBacktraceArray(debug_backtrace());
+        $aBacktrace = self::prepareBacktraceArray((false === empty($aDebugBacktrace)) ? $aDebugBacktrace : debug_backtrace());
         $mData = self::obDump($mData);
 
         // output CLI
@@ -95,8 +96,6 @@ class Debug
                 echo '</b></div>
 			</div>';
         }
-
-        return Debug::init();
     }
 
     /**
@@ -104,9 +103,10 @@ class Debug
      * if you call display more than once, all messages are showed among each other
      * use it to debug a string or array or whatever
      * @param mixed $mData
-     * @return \MVC\Debug|null
+     * @param array $aDebugBacktrace
+     * @return void
      */
-    public static function display(mixed $mData = '') : Debug|null
+    public static function display(mixed $mData = '', array $aDebugBacktrace = array()) : void
     {
         static $sDisplay;
         static $iCount;
@@ -114,7 +114,7 @@ class Debug
         $iCount++;
 
         // Source
-        $aBacktrace = self::prepareBacktraceArray(debug_backtrace());
+        $aBacktrace = self::prepareBacktraceArray((false === empty($aDebugBacktrace)) ? $aDebugBacktrace : debug_backtrace());
         $mData = self::obDump($mData);
 
         // Output for CLI
@@ -152,8 +152,6 @@ class Debug
             echo $sDisplay;
             echo '</b></div>';
         }
-
-        return Debug::init();
     }
 
     /**

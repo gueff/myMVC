@@ -30,31 +30,28 @@ function get(&$sVar, $mFallback = null)
 }
 
 /**
- * dumps data using print_r
- * @example pr(get_include_path(), ':');
- * @param mixed  $mData
- * @param string $sSeparator optional works on strings
+ * shorthand for `Debug::display()` on userland
+ * @param mixed $mData
  * @return void
  */
-function pr($mData, string $sSeparator = "\n")
+function display(mixed $mData = '')
 {
-    if (true === is_string($mData))
+    if (true === class_exists('\MVC\Debug', true))
     {
-        echo ('cli' === php_sapi_name())
-            ? print_r(array_filter(explode($sSeparator, $mData)), true) . "\n"
-            : '<pre>' . print_r(array_filter(explode($sSeparator, $mData)), true) . '</pre><hr>';
+        \MVC\Debug::display($mData, debug_backtrace());
     }
-    elseif (true === is_array($mData))
+}
+
+/**
+ * shorthand for `Debug::info()` on userland
+ * @param mixed $mData
+ * @return void
+ */
+function info(mixed $mData = '')
+{
+    if (true === class_exists('\MVC\Debug', true))
     {
-        echo ('cli' === php_sapi_name())
-            ? print_r(array_filter($mData), true) . "\n"
-            : '<pre>' . print_r(array_filter($mData), true) . '</pre><hr>';
-    }
-    else
-    {
-        echo ('cli' === php_sapi_name())
-            ? print_r($mData) . "\n"
-            : '<pre>' . print_r($mData) . '</pre><hr>';
+        \MVC\Debug::info($mData, debug_backtrace());
     }
 }
 
@@ -83,6 +80,35 @@ stop at:
 
     (true === \MVC\Request::isCli()) ? $sMessage = strip_tags($sMessage): false;
     die($sMessage);
+}
+
+/**
+ * dumps data using print_r
+ * @example pr(get_include_path(), ':');
+ * @param mixed  $mData
+ * @param string $sSeparator optional works on strings
+ * @return void
+ */
+function pr($mData, string $sSeparator = "\n")
+{
+    if (true === is_string($mData))
+    {
+        echo ('cli' === php_sapi_name())
+            ? print_r(array_filter(explode($sSeparator, $mData)), true) . "\n"
+            : '<pre>' . print_r(array_filter(explode($sSeparator, $mData)), true) . '</pre><hr>';
+    }
+    elseif (true === is_array($mData))
+    {
+        echo ('cli' === php_sapi_name())
+            ? print_r(array_filter($mData), true) . "\n"
+            : '<pre>' . print_r(array_filter($mData), true) . '</pre><hr>';
+    }
+    else
+    {
+        echo ('cli' === php_sapi_name())
+            ? print_r($mData) . "\n"
+            : '<pre>' . print_r($mData) . '</pre><hr>';
+    }
 }
 
 if (!function_exists('getallheaders'))
