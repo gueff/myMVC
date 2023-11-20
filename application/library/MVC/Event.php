@@ -289,18 +289,7 @@ class Event
                     ->set_sMessage($sMessage)
                 ;
 
-                $mRunPackage = call_user_func($sCallback, $mRunPackage, $oDTEventContext);
-//                $oDTEventContext->set_mRunPackage($mRunPackage);
-
-                if (false === empty($mRunPackage))
-                {
-                    Log::write(
-                        $sEventOrigin . ' => ' . $mRunPackage,
-                        #$oDTEventContext,
-                        'call_user_func.log',
-                        true
-                    );
-                }
+                call_user_func($sCallback, $mRunPackage, $oDTEventContext);
 
                 // error occurred
                 if (false === $mRunPackage)
