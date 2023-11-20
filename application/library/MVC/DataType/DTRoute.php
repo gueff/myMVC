@@ -87,7 +87,8 @@ class DTRoute
 	 */
 	public function __construct(array $aData = array())
 	{
-		\MVC\Event::RUN ('DTRoute.__construct.before', $aData);
+        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTRoute.__construct.before', $oDTValue);
+        $aData = $oDTValue->get_mValue();
 
 		$this->path = '';
 		$this->method = '';
@@ -110,7 +111,7 @@ class DTRoute
 			}
 		}
 
-		\MVC\Event::RUN ('DTRoute.__construct.after', $aData);
+        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTRoute.__construct.after', $oDTValue);
 	}
 
     /**
@@ -120,13 +121,11 @@ class DTRoute
      */
     public static function create(array $aData = array())
     {
-        \MVC\Event::RUN ('DTRoute.create.before', $aData);
+        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTRoute.create.before', $oDTValue);
+        $oObject = new self($oDTValue->get_mValue());
+        $oDTValue = DTValue::create()->set_mValue($oObject); \MVC\Event::RUN ('DTRoute.create.after', $oDTValue);
 
-        $oObject = new self($aData);
-
-        \MVC\Event::RUN ('DTRoute.create.after', $oObject);
-
-        return $oObject;
+        return $oDTValue->get_mValue();
     }
 
 	/**
@@ -136,9 +135,8 @@ class DTRoute
 	 */
 	public function set_path($aValue)
 	{
-		\MVC\Event::RUN ('DTRoute.set_path.before', $aValue);
-
-		$this->path = (string) $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTRoute.set_path.before', $oDTValue);
+		$this->path = (string) $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -150,9 +148,8 @@ class DTRoute
 	 */
 	public function set_method($aValue)
 	{
-		\MVC\Event::RUN ('DTRoute.set_method.before', $aValue);
-
-        $this->method = (string) $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTRoute.set_method.before', $oDTValue);
+        $this->method = (string) $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -164,9 +161,8 @@ class DTRoute
 	 */
 	public function set_methodsAssigned($aValue)
 	{
-		\MVC\Event::RUN ('DTRoute.set_methodsAssigned.before', $aValue);
-
-        $this->methodsAssigned = (array) $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTRoute.set_methodsAssigned.before', $oDTValue);
+        $this->methodsAssigned = (array) $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -178,9 +174,8 @@ class DTRoute
 	 */
 	public function set_query($aValue)
 	{
-		\MVC\Event::RUN ('DTRoute.set_query.before', $aValue);
-
-        $this->query = (string) $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTRoute.set_query.before', $oDTValue);
+        $this->query = (string) $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -192,9 +187,8 @@ class DTRoute
 	 */
 	public function set_class($aValue)
 	{
-		\MVC\Event::RUN ('DTRoute.set_class.before', $aValue);
-
-        $this->class = (string) $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTRoute.set_class.before', $oDTValue);
+        $this->class = (string) $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -206,9 +200,8 @@ class DTRoute
 	 */
 	public function set_classFile($aValue)
 	{
-		\MVC\Event::RUN ('DTRoute.set_classFile.before', $aValue);
-
-        $this->classFile = (string) $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTRoute.set_classFile.before', $oDTValue);
+        $this->classFile = (string) $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -220,9 +213,8 @@ class DTRoute
 	 */
 	public function set_module($aValue)
 	{
-		\MVC\Event::RUN ('DTRoute.set_module.before', $aValue);
-
-        $this->module = (string) $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTRoute.set_module.before', $oDTValue);
+        $this->module = (string) $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -234,9 +226,8 @@ class DTRoute
 	 */
 	public function set_c($aValue)
 	{
-		\MVC\Event::RUN ('DTRoute.set_c.before', $aValue);
-
-        $this->c = (string) $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTRoute.set_c.before', $oDTValue);
+        $this->c = (string) $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -248,9 +239,8 @@ class DTRoute
 	 */
 	public function set_m($aValue)
 	{
-		\MVC\Event::RUN ('DTRoute.set_m.before', $aValue);
-
-        $this->m = (string) $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTRoute.set_m.before', $oDTValue);
+        $this->m = (string) $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -262,9 +252,8 @@ class DTRoute
 	 */
 	public function set_additional($aValue)
 	{
-		\MVC\Event::RUN ('DTRoute.set_additional.before', $aValue);
-
-        $this->additional = $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTRoute.set_additional.before', $oDTValue);
+        $this->additional = $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -275,9 +264,9 @@ class DTRoute
 	 */
 	public function get_path()
 	{
-		\MVC\Event::RUN ('DTRoute.get_path.before', $this->path);
+        $oDTValue = DTValue::create()->set_mValue($this->path); \MVC\Event::RUN ('DTRoute.get_path.before', $oDTValue);
 
-		return $this->path;
+		return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -286,9 +275,9 @@ class DTRoute
 	 */
 	public function get_method()
 	{
-		\MVC\Event::RUN ('DTRoute.get_method.before', $this->method);
+        $oDTValue = DTValue::create()->set_mValue($this->method); \MVC\Event::RUN ('DTRoute.get_method.before', $oDTValue);
 
-        return $this->method;
+        return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -297,9 +286,9 @@ class DTRoute
 	 */
 	public function get_methodsAssigned()
 	{
-		\MVC\Event::RUN ('DTRoute.get_methodsAssigned.before', $this->methodsAssigned);
+        $oDTValue = DTValue::create()->set_mValue($this->methodsAssigned); \MVC\Event::RUN ('DTRoute.get_methodsAssigned.before', $oDTValue);
 
-        return $this->methodsAssigned;
+        return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -308,9 +297,9 @@ class DTRoute
 	 */
 	public function get_query()
 	{
-		\MVC\Event::RUN ('DTRoute.get_query.before', $this->query);
+        $oDTValue = DTValue::create()->set_mValue($this->query); \MVC\Event::RUN ('DTRoute.get_query.before', $oDTValue);
 
-        return $this->query;
+        return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -319,9 +308,9 @@ class DTRoute
 	 */
 	public function get_class()
 	{
-		\MVC\Event::RUN ('DTRoute.get_class.before', $this->class);
+        $oDTValue = DTValue::create()->set_mValue($this->class); \MVC\Event::RUN ('DTRoute.get_class.before', $oDTValue);
 
-        return $this->class;
+        return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -330,9 +319,9 @@ class DTRoute
 	 */
 	public function get_classFile()
 	{
-		\MVC\Event::RUN ('DTRoute.get_classFile.before', $this->classFile);
+        $oDTValue = DTValue::create()->set_mValue($this->classFile); \MVC\Event::RUN ('DTRoute.get_classFile.before', $oDTValue);
 
-        return $this->classFile;
+        return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -341,9 +330,9 @@ class DTRoute
 	 */
 	public function get_module()
 	{
-		\MVC\Event::RUN ('DTRoute.get_module.before', $this->module);
+        $oDTValue = DTValue::create()->set_mValue($this->module); \MVC\Event::RUN ('DTRoute.get_module.before', $oDTValue);
 
-        return $this->module;
+        return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -352,9 +341,9 @@ class DTRoute
 	 */
 	public function get_c()
 	{
-		\MVC\Event::RUN ('DTRoute.get_c.before', $this->c);
+        $oDTValue = DTValue::create()->set_mValue($this->c); \MVC\Event::RUN ('DTRoute.get_c.before', $oDTValue);
 
-        return $this->c;
+        return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -363,9 +352,9 @@ class DTRoute
 	 */
 	public function get_m()
 	{
-		\MVC\Event::RUN ('DTRoute.get_m.before', $this->m);
+        $oDTValue = DTValue::create()->set_mValue($this->m); \MVC\Event::RUN ('DTRoute.get_m.before', $oDTValue);
 
-        return $this->m;
+        return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -374,9 +363,9 @@ class DTRoute
 	 */
 	public function get_additional()
 	{
-		\MVC\Event::RUN ('DTRoute.get_additional.before', $this->additional);
+        $oDTValue = DTValue::create()->set_mValue($this->additional); \MVC\Event::RUN ('DTRoute.get_additional.before', $oDTValue);
 
-        return $this->additional;
+        return $oDTValue->get_mValue();
 	}
 
 	/**

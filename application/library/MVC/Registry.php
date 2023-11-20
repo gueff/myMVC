@@ -68,7 +68,7 @@ class Registry
 	/**
 	 * gets a value by its key
      * @param string $sIndex
-     * @return mixed|null
+     * @return mixed
      * @throws \ReflectionException
      */
 	public static function get(string $sIndex = '') : mixed
@@ -86,6 +86,20 @@ class Registry
 
 		return get(self::$_aStorage[$sIndex]);
 	}
+
+    /**
+     * gets a value by its key and deletes the entry afterwards
+     * @param string $sIndex
+     * @return mixed
+     * @throws \ReflectionException
+     */
+    public static function take(string $sIndex = '') : mixed
+    {
+        $mValue = self::get($sIndex);
+        self::delete($sIndex);
+
+        return $mValue;
+    }
 
 	/**
 	 * saves a key/value pair to registry storage

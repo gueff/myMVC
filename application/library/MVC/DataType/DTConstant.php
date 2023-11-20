@@ -38,7 +38,8 @@ class DTConstant
 	 */
 	public function __construct(array $aData = array())
 	{
-		\MVC\Event::RUN ('DTConstant.__construct.before', $aData);
+        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTConstant.__construct.before', $oDTValue);
+        $aData = $oDTValue->get_mValue();
 
 		$this->key = '';
 		$this->value = null;
@@ -54,7 +55,7 @@ class DTConstant
 			}
 		}
 
-		\MVC\Event::RUN ('DTConstant.__construct.after', $aData);
+        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTConstant.__construct.after', $oDTValue);
 	}
 
     /**
@@ -64,13 +65,11 @@ class DTConstant
      */
     public static function create(array $aData = array())
     {
-        \MVC\Event::RUN ('DTConstant.create.before', $aData);
+        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTConstant.create.before', $oDTValue);
+        $oObject = new self($oDTValue->get_mValue());
+        $oDTValue = DTValue::create()->set_mValue($oObject); \MVC\Event::RUN ('DTConstant.create.after', $oDTValue);
 
-        $oObject = new self($aData);
-
-        \MVC\Event::RUN ('DTConstant.create.after', $oObject);
-
-        return $oObject;
+        return $oDTValue->get_mValue();
     }
 
 	/**
@@ -80,9 +79,8 @@ class DTConstant
 	 */
 	public function set_key(string $mValue)
 	{
-		\MVC\Event::RUN ('DTConstant.set_key.before', $mValue);
-
-		$this->key = $mValue;
+        $oDTValue = DTValue::create()->set_mValue($mValue); \MVC\Event::RUN ('DTConstant.set_key.before', $oDTValue);
+		$this->key = $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -94,9 +92,8 @@ class DTConstant
 	 */
 	public function set_value($mValue)
 	{
-		\MVC\Event::RUN ('DTConstant.set_value.before', $mValue);
-
-		$this->value = $mValue;
+        $oDTValue = DTValue::create()->set_mValue($mValue); \MVC\Event::RUN ('DTConstant.set_value.before', $oDTValue);
+		$this->value = $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -108,9 +105,8 @@ class DTConstant
 	 */
 	public function set_visibility(string $mValue)
 	{
-		\MVC\Event::RUN ('DTConstant.set_visibility.before', $mValue);
-
-		$this->visibility = $mValue;
+        $oDTValue = DTValue::create()->set_mValue($mValue); \MVC\Event::RUN ('DTConstant.set_visibility.before', $oDTValue);
+		$this->visibility = $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -121,9 +117,9 @@ class DTConstant
 	 */
 	public function get_key() : string
 	{
-		\MVC\Event::RUN ('DTConstant.get_key.before', $this->key);
+        $oDTValue = DTValue::create()->set_mValue($this->key); \MVC\Event::RUN ('DTConstant.get_key.before', $oDTValue);
 
-		return $this->key;
+		return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -132,9 +128,9 @@ class DTConstant
 	 */
 	public function get_value()
 	{
-		\MVC\Event::RUN ('DTConstant.get_value.before', $this->value);
+        $oDTValue = DTValue::create()->set_mValue($this->value); \MVC\Event::RUN ('DTConstant.get_value.before', $oDTValue);
 
-		return $this->value;
+		return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -143,9 +139,9 @@ class DTConstant
 	 */
 	public function get_visibility() : string
 	{
-		\MVC\Event::RUN ('DTConstant.get_visibility.before', $this->visibility);
+        $oDTValue = DTValue::create()->set_mValue($this->visibility); \MVC\Event::RUN ('DTConstant.get_visibility.before', $oDTValue);
 
-		return $this->visibility;
+		return $oDTValue->get_mValue();
 	}
 
 	/**

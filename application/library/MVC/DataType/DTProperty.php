@@ -97,7 +97,8 @@ class DTProperty
      */
     public function __construct(array $aData = array())
     {
-        \MVC\Event::RUN ('DTProperty.__construct.before', $aData);
+        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTProperty.__construct.before', $aData);
+        $aData = $oDTValue->get_mValue();
 
         $this->key = '';
         $this->var = "string";
@@ -124,7 +125,7 @@ class DTProperty
             }
         }
 
-        \MVC\Event::RUN ('DTProperty.__construct.after', $aData);
+        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTProperty.__construct.after', $oDTValue);
     }
 
     /**
@@ -134,13 +135,11 @@ class DTProperty
      */
     public static function create(array $aData = array())
     {
-        \MVC\Event::RUN ('DTProperty.create.before', $aData);
+        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTProperty.create.before', $oDTValue);
+        $oObject = new self($oDTValue->get_mValue());
+        $oDTValue = DTValue::create()->set_mValue($oObject); \MVC\Event::RUN ('DTProperty.create.after', $oDTValue);
 
-        $oObject = new self($aData);
-
-        \MVC\Event::RUN ('DTProperty.create.after', $oObject);
-
-        return $oObject;
+        return $oDTValue->get_mValue();
     }
 
     /**
@@ -150,9 +149,8 @@ class DTProperty
      */
     public function set_key($sValue)
     {
-        \MVC\Event::RUN ('DTProperty.set_key.before', $sValue);
-
-        $this->key = $sValue;
+        $oDTValue = DTValue::create()->set_mValue($sValue); \MVC\Event::RUN ('DTProperty.set_key.before', $oDTValue);
+        $this->key = $oDTValue->get_mValue();
 
         return $this;
     }
@@ -164,9 +162,8 @@ class DTProperty
      */
     public function set_var($sValue)
     {
-        \MVC\Event::RUN ('DTProperty.set_var.before', $sValue);
-
-        $this->var = $sValue;
+        $oDTValue = DTValue::create()->set_mValue($sValue); \MVC\Event::RUN ('DTProperty.set_var.before', $oDTValue);
+        $this->var = $oDTValue->get_mValue();
 
         return $this;
     }
@@ -178,9 +175,8 @@ class DTProperty
      */
     public function set_value($mValue)
     {
-        \MVC\Event::RUN ('DTProperty.set_value.before', $mValue);
-
-        $this->value = $mValue;
+        $oDTValue = DTValue::create()->set_mValue($mValue); \MVC\Event::RUN ('DTProperty.set_value.before', $oDTValue);
+        $this->value = $oDTValue->get_mValue();
 
         return $this;
     }
@@ -192,9 +188,8 @@ class DTProperty
      */
     public function set_visibility($sValue)
     {
-        \MVC\Event::RUN ('DTProperty.set_visibility.before', $sValue);
-
-        $this->visibility = $sValue;
+        $oDTValue = DTValue::create()->set_mValue($sValue); \MVC\Event::RUN ('DTProperty.set_visibility.before', $oDTValue);
+        $this->visibility = $oDTValue->get_mValue();
 
         return $this;
     }
@@ -206,9 +201,8 @@ class DTProperty
      */
     public function set_static($bValue)
     {
-        \MVC\Event::RUN ('DTProperty.set_static.before', $bValue);
-
-        $this->static = $bValue;
+        $oDTValue = DTValue::create()->set_mValue($bValue); \MVC\Event::RUN ('DTProperty.set_static.before', $oDTValue);
+        $this->static = $oDTValue->get_mValue();
 
         return $this;
     }
@@ -220,9 +214,8 @@ class DTProperty
      */
     public function set_setter($bValue)
     {
-        \MVC\Event::RUN ('DTProperty.set_setter.before', $bValue);
-
-        $this->setter = $bValue;
+        $oDTValue = DTValue::create()->set_mValue($bValue); \MVC\Event::RUN ('DTProperty.set_setter.before', $oDTValue);
+        $this->setter = $oDTValue->get_mValue();
 
         return $this;
     }
@@ -234,9 +227,8 @@ class DTProperty
      */
     public function set_getter($bValue)
     {
-        \MVC\Event::RUN ('DTProperty.set_getter.before', $bValue);
-
-        $this->getter = $bValue;
+        $oDTValue = DTValue::create()->set_mValue($bValue); \MVC\Event::RUN ('DTProperty.set_getter.before', $oDTValue);
+        $this->getter = $oDTValue->get_mValue();
 
         return $this;
     }
@@ -248,9 +240,8 @@ class DTProperty
      */
     public function set_explicitMethodForValue($bValue)
     {
-        \MVC\Event::RUN ('DTProperty.set_explicitMethodForValue.before', $bValue);
-
-        $this->explicitMethodForValue = $bValue;
+        $oDTValue = DTValue::create()->set_mValue($bValue); \MVC\Event::RUN ('DTProperty.set_explicitMethodForValue.before', $oDTValue);
+        $this->explicitMethodForValue = $oDTValue->get_mValue();
 
         return $this;
     }
@@ -262,9 +253,8 @@ class DTProperty
      */
     public function set_listProperty($bValue)
     {
-        \MVC\Event::RUN ('DTProperty.set_listProperty.before', $bValue);
-
-        $this->listProperty = $bValue;
+        $oDTValue = DTValue::create()->set_mValue($bValue); \MVC\Event::RUN ('DTProperty.set_listProperty.before', $oDTValue);
+        $this->listProperty = $oDTValue->get_mValue();
 
         return $this;
     }
@@ -276,9 +266,8 @@ class DTProperty
      */
     public function set_createStaticPropertyGetter($bValue)
     {
-        \MVC\Event::RUN ('DTProperty.set_createStaticPropertyGetter.before', $bValue);
-
-        $this->createStaticPropertyGetter = $bValue;
+        $oDTValue = DTValue::create()->set_mValue($bValue); \MVC\Event::RUN ('DTProperty.set_createStaticPropertyGetter.before', $oDTValue);
+        $this->createStaticPropertyGetter = $oDTValue->get_mValue();
 
         return $this;
     }
@@ -290,9 +279,8 @@ class DTProperty
      */
     public function set_setValueInConstructor($bValue)
     {
-        \MVC\Event::RUN ('DTProperty.set_setValueInConstructor.before', $bValue);
-
-        $this->setValueInConstructor = $bValue;
+        $oDTValue = DTValue::create()->set_mValue($bValue); \MVC\Event::RUN ('DTProperty.set_setValueInConstructor.before', $oDTValue);
+        $this->setValueInConstructor = $oDTValue->get_mValue();
 
         return $this;
     }
@@ -304,9 +292,8 @@ class DTProperty
      */
     public function set_forceCasting($bValue)
     {
-        \MVC\Event::RUN ('DTProperty.set_forceCasting.before', $bValue);
-
-        $this->forceCasting = $bValue;
+        $oDTValue = DTValue::create()->set_mValue($bValue); \MVC\Event::RUN ('DTProperty.set_forceCasting.before', $oDTValue);
+        $this->forceCasting = $oDTValue->get_mValue();
 
         return $this;
     }
@@ -318,9 +305,8 @@ class DTProperty
      */
     public function set_required($bValue)
     {
-        \MVC\Event::RUN ('DTProperty.set_required.before', $bValue);
-
-        $this->required = $bValue;
+        $oDTValue = DTValue::create()->set_mValue($bValue); \MVC\Event::RUN ('DTProperty.set_required.before', $oDTValue);
+        $this->required = $oDTValue->get_mValue();
 
         return $this;
     }
@@ -332,9 +318,8 @@ class DTProperty
      */
     public function set_addMyMVCEvents($aValue)
     {
-        \MVC\Event::RUN ('DTProperty.set_addMyMVCEvents.before', $aValue);
-
-        $this->addMyMVCEvents = $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTProperty.set_addMyMVCEvents.before', $oDTValue);
+        $this->addMyMVCEvents = $oDTValue->get_mValue();
 
         return $this;
     }
@@ -345,9 +330,9 @@ class DTProperty
      */
     public function get_key()
     {
-        \MVC\Event::RUN ('DTProperty.get_key.before', $this->key);
+        $oDTValue = DTValue::create()->set_mValue($this->key); \MVC\Event::RUN ('DTProperty.get_key.before', $oDTValue);
 
-        return $this->key;
+        return $oDTValue->get_mValue();
     }
 
     /**
@@ -356,9 +341,9 @@ class DTProperty
      */
     public function get_var()
     {
-        \MVC\Event::RUN ('DTProperty.get_var.before', $this->var);
+        $oDTValue = DTValue::create()->set_mValue($this->var); \MVC\Event::RUN ('DTProperty.get_var.before', $oDTValue);
 
-        return $this->var;
+        return $oDTValue->get_mValue();
     }
 
     /**
@@ -367,9 +352,9 @@ class DTProperty
      */
     public function get_value()
     {
-        \MVC\Event::RUN ('DTProperty.get_value.before', $this->value);
+        $oDTValue = DTValue::create()->set_mValue($this->value); \MVC\Event::RUN ('DTProperty.get_value.before', $oDTValue);
 
-        return $this->value;
+        return $oDTValue->get_mValue();
     }
 
     /**
@@ -378,9 +363,9 @@ class DTProperty
      */
     public function get_visibility()
     {
-        \MVC\Event::RUN ('DTProperty.get_visibility.before', $this->visibility);
+        $oDTValue = DTValue::create()->set_mValue($this->visibility); \MVC\Event::RUN ('DTProperty.get_visibility.before', $oDTValue);
 
-        return $this->visibility;
+        return $oDTValue->get_mValue();
     }
 
     /**
@@ -389,9 +374,9 @@ class DTProperty
      */
     public function get_static()
     {
-        \MVC\Event::RUN ('DTProperty.get_static.before', $this->static);
+        $oDTValue = DTValue::create()->set_mValue($this->static); \MVC\Event::RUN ('DTProperty.get_static.before', $oDTValue);
 
-        return $this->static;
+        return $oDTValue->get_mValue();
     }
 
     /**
@@ -400,9 +385,9 @@ class DTProperty
      */
     public function get_setter()
     {
-        \MVC\Event::RUN ('DTProperty.get_setter.before', $this->setter);
+        $oDTValue = DTValue::create()->set_mValue($this->setter); \MVC\Event::RUN ('DTProperty.get_setter.before', $oDTValue);
 
-        return $this->setter;
+        return $oDTValue->get_mValue();
     }
 
     /**
@@ -411,9 +396,9 @@ class DTProperty
      */
     public function get_getter()
     {
-        \MVC\Event::RUN ('DTProperty.get_getter.before', $this->getter);
+        $oDTValue = DTValue::create()->set_mValue($this->getter); \MVC\Event::RUN ('DTProperty.get_getter.before', $oDTValue);
 
-        return $this->getter;
+        return $oDTValue->get_mValue();
     }
 
     /**
@@ -422,9 +407,9 @@ class DTProperty
      */
     public function get_explicitMethodForValue()
     {
-        \MVC\Event::RUN ('DTProperty.get_explicitMethodForValue.before', $this->explicitMethodForValue);
+        $oDTValue = DTValue::create()->set_mValue($this->explicitMethodForValue); \MVC\Event::RUN ('DTProperty.get_explicitMethodForValue.before', $oDTValue);
 
-        return $this->explicitMethodForValue;
+        return $oDTValue->get_mValue();
     }
 
     /**
@@ -433,9 +418,9 @@ class DTProperty
      */
     public function get_listProperty()
     {
-        \MVC\Event::RUN ('DTProperty.get_listProperty.before', $this->listProperty);
+        $oDTValue = DTValue::create()->set_mValue($this->listProperty); \MVC\Event::RUN ('DTProperty.get_listProperty.before', $oDTValue);
 
-        return $this->listProperty;
+        return $oDTValue->get_mValue();
     }
 
     /**
@@ -444,9 +429,9 @@ class DTProperty
      */
     public function get_createStaticPropertyGetter()
     {
-        \MVC\Event::RUN ('DTProperty.get_createStaticPropertyGetter.before', $this->createStaticPropertyGetter);
+        $oDTValue = DTValue::create()->set_mValue($this->createStaticPropertyGetter); \MVC\Event::RUN ('DTProperty.get_createStaticPropertyGetter.before', $oDTValue);
 
-        return $this->createStaticPropertyGetter;
+        return $oDTValue->get_mValue();
     }
 
     /**
@@ -455,9 +440,9 @@ class DTProperty
      */
     public function get_setValueInConstructor()
     {
-        \MVC\Event::RUN ('DTProperty.get_setValueInConstructor.before', $this->setValueInConstructor);
+        $oDTValue = DTValue::create()->set_mValue($this->setValueInConstructor); \MVC\Event::RUN ('DTProperty.get_setValueInConstructor.before', $oDTValue);
 
-        return $this->setValueInConstructor;
+        return $oDTValue->get_mValue();
     }
 
     /**
@@ -466,9 +451,9 @@ class DTProperty
      */
     public function get_forceCasting()
     {
-        \MVC\Event::RUN ('DTProperty.get_forceCasting.before', $this->forceCasting);
+        $oDTValue = DTValue::create()->set_mValue($this->forceCasting); \MVC\Event::RUN ('DTProperty.get_forceCasting.before', $oDTValue);
 
-        return $this->forceCasting;
+        return $oDTValue->get_mValue();
     }
 
     /**
@@ -477,9 +462,9 @@ class DTProperty
      */
     public function get_required()
     {
-        \MVC\Event::RUN ('DTProperty.get_required.before', $this->required);
+        $oDTValue = DTValue::create()->set_mValue($this->required); \MVC\Event::RUN ('DTProperty.get_required.before', $oDTValue);
 
-        return $this->required;
+        return $oDTValue->get_mValue();
     }
 
     /**
@@ -488,9 +473,9 @@ class DTProperty
      */
     public function get_addMyMVCEvents()
     {
-        \MVC\Event::RUN ('DTProperty.get_addMyMVCEvents.before', $this->addMyMVCEvents);
+        $oDTValue = DTValue::create()->set_mValue($this->addMyMVCEvents); \MVC\Event::RUN ('DTProperty.get_addMyMVCEvents.before', $oDTValue);
 
-        return $this->addMyMVCEvents;
+        return $oDTValue->get_mValue();
     }
 
     /**

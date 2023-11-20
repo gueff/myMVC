@@ -58,7 +58,8 @@ class DTClass
 	 */
 	public function __construct(array $aData = array())
 	{
-		\MVC\Event::RUN ('DTClass.__construct.before', $aData);
+        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTClass.__construct.before', $oDTValue);
+        $aData = $oDTValue->get_mValue();
 
 		$this->name = '';
 		$this->file = '';
@@ -78,7 +79,7 @@ class DTClass
 			}
 		}
 
-		\MVC\Event::RUN ('DTClass.__construct.after', $aData);
+        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTClass.__construct.after', $oDTValue);
 	}
 
     /**
@@ -88,13 +89,11 @@ class DTClass
      */
     public static function create(array $aData = array())
     {
-        \MVC\Event::RUN ('DTClass.create.before', $aData);
+        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTClass.create.before', $oDTValue);
+        $oObject = new self($oDTValue->get_mValue());
+        $oDTValue = DTValue::create()->set_mValue($oObject); \MVC\Event::RUN ('DTClass.create.after', $oDTValue);
         
-        $oObject = new self($aData);
-
-        \MVC\Event::RUN ('DTClass.create.after', $oObject);
-        
-        return $oObject;
+        return $oDTValue->get_mValue();
     }
 
 	/**
@@ -104,9 +103,8 @@ class DTClass
 	 */
 	public function set_name(string $mValue)
 	{
-		\MVC\Event::RUN ('DTClass.set_name.before', $mValue);
-
-		$this->name = $mValue;
+        $oDTValue = DTValue::create()->set_mValue($mValue); \MVC\Event::RUN ('DTClass.set_name.before', $oDTValue);
+		$this->name = $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -118,9 +116,8 @@ class DTClass
 	 */
 	public function set_file(string $mValue)
 	{
-		\MVC\Event::RUN ('DTClass.set_file.before', $mValue);
-
-		$this->file = $mValue;
+        $oDTValue = DTValue::create()->set_mValue($mValue); \MVC\Event::RUN ('DTClass.set_file.before', $oDTValue);
+		$this->file = $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -132,9 +129,8 @@ class DTClass
 	 */
 	public function set_extends(string $mValue)
 	{
-		\MVC\Event::RUN ('DTClass.set_extends.before', $mValue);
-
-		$this->extends = $mValue;
+        $oDTValue = DTValue::create()->set_mValue($mValue); \MVC\Event::RUN ('DTClass.set_extends.before', $oDTValue);
+		$this->extends = $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -146,9 +142,8 @@ class DTClass
 	 */
 	public function set_namespace(string $mValue)
 	{
-		\MVC\Event::RUN ('DTClass.set_namespace.before', $mValue);
-
-		$this->namespace = $mValue;
+        $oDTValue = DTValue::create()->set_mValue($mValue); \MVC\Event::RUN ('DTClass.set_namespace.before', $oDTValue);
+		$this->namespace = $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -160,7 +155,8 @@ class DTClass
 	 */
 	public function set_constant(array $aValue)
 	{
-		\MVC\Event::RUN ('DTClass.set_constant.before', $aValue);
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTClass.set_constant.before', $oDTValue);
+        $aValue = $oDTValue->get_mValue();
 
 		foreach ($aValue as $mKey => $aData)
         {
@@ -175,15 +171,15 @@ class DTClass
 		return $this;
 	}
 
-	/**
-	 * @param \MVC\DataType\DTConstant $mValue
-	 * @return $this
-	 */
+    /**
+     * @param \MVC\DataType\DTConstant $mValue
+     * @return $this
+     * @throws \ReflectionException
+     */
 	public function add_DTconstant(\MVC\DataType\DTConstant $mValue)
 	{
-        \MVC\Event::RUN ('DTClass.add_DTconstant.before', $mValue);
-
-		$this->constant[] = $mValue;
+        $oDTValue = DTValue::create()->set_mValue($mValue); \MVC\Event::RUN ('DTClass.add_DTconstant.before', $oDTValue);
+		$this->constant[] = $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -195,7 +191,8 @@ class DTClass
 	 */
 	public function set_property(array $aValue)
 	{
-		\MVC\Event::RUN ('DTClass.set_property.before', $aValue);
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTClass.set_property.before', $oDTValue);
+        $aValue = $oDTValue->get_mValue();
 
 		foreach ($aValue as $mKey => $aData)
         {
@@ -210,15 +207,15 @@ class DTClass
 		return $this;
 	}
 
-	/**
-	 * @param \MVC\DataType\DTProperty $mValue
-	 * @return $this
-	 */
+    /**
+     * @param \MVC\DataType\DTProperty $mValue
+     * @return $this
+     * @throws \ReflectionException
+     */
 	public function add_DTproperty(\MVC\DataType\DTProperty $mValue)
 	{
-        \MVC\Event::RUN ('DTClass.add_DTproperty.before', $mValue);
-
-		$this->property[] = $mValue;
+        $oDTValue = DTValue::create()->set_mValue($mValue); \MVC\Event::RUN ('DTClass.add_DTproperty.before', $oDTValue);
+		$this->property[] = $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -230,9 +227,8 @@ class DTClass
 	 */
 	public function set_createHelperMethods(bool $mValue)
 	{
-		\MVC\Event::RUN ('DTClass.set_createHelperMethods.before', $mValue);
-
-		$this->createHelperMethods = $mValue;
+        $oDTValue = DTValue::create()->set_mValue($mValue); \MVC\Event::RUN ('DTClass.set_createHelperMethods.before', $oDTValue);
+		$this->createHelperMethods = $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -243,9 +239,9 @@ class DTClass
 	 */
 	public function get_name() : string
 	{
-		\MVC\Event::RUN ('DTClass.get_name.before', $this->name);
+        $oDTValue = DTValue::create()->set_mValue($this->name); \MVC\Event::RUN ('DTClass.get_name.before', $oDTValue);
 
-		return $this->name;
+		return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -254,9 +250,9 @@ class DTClass
 	 */
 	public function get_file() : string
 	{
-		\MVC\Event::RUN ('DTClass.get_file.before', $this->file);
+        $oDTValue = DTValue::create()->set_mValue($this->file); \MVC\Event::RUN ('DTClass.get_file.before', $oDTValue);
 
-		return $this->file;
+		return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -265,9 +261,9 @@ class DTClass
 	 */
 	public function get_extends() : string
 	{
-		\MVC\Event::RUN ('DTClass.get_extends.before', $this->extends);
+        $oDTValue = DTValue::create()->set_mValue($this->extends); \MVC\Event::RUN ('DTClass.get_extends.before', $oDTValue);
 
-		return $this->extends;
+		return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -276,9 +272,9 @@ class DTClass
 	 */
 	public function get_namespace() : string
 	{
-		\MVC\Event::RUN ('DTClass.get_namespace.before', $this->namespace);
+        $oDTValue = DTValue::create()->set_mValue($this->namespace); \MVC\Event::RUN ('DTClass.get_namespace.before', $oDTValue);
 
-		return $this->namespace;
+		return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -287,9 +283,9 @@ class DTClass
 	 */
 	public function get_constant()
 	{
-		\MVC\Event::RUN ('DTClass.get_constant.before', $this->constant);
+        $oDTValue = DTValue::create()->set_mValue($this->constant); \MVC\Event::RUN ('DTClass.get_constant.before', $oDTValue);
 
-		return $this->constant;
+		return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -298,9 +294,9 @@ class DTClass
 	 */
 	public function get_property()
 	{
-		\MVC\Event::RUN ('DTClass.get_property.before', $this->property);
+        $oDTValue = DTValue::create()->set_mValue($this->property); \MVC\Event::RUN ('DTClass.get_property.before', $oDTValue);
 
-		return $this->property;
+		return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -309,9 +305,9 @@ class DTClass
 	 */
 	public function get_createHelperMethods() : bool
 	{
-		\MVC\Event::RUN ('DTClass.get_createHelperMethods.before', $this->createHelperMethods);
+        $oDTValue = DTValue::create()->set_mValue($this->createHelperMethods); \MVC\Event::RUN ('DTClass.get_createHelperMethods.before', $oDTValue);
 
-		return $this->createHelperMethods;
+		return $oDTValue->get_mValue();
 	}
 
 	/**

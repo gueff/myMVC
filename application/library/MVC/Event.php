@@ -289,8 +289,21 @@ class Event
                     ->set_sMessage($sMessage)
                 ;
 
+                $mRunPackage = call_user_func($sCallback, $mRunPackage, $oDTEventContext);
+//                $oDTEventContext->set_mRunPackage($mRunPackage);
+
+                if (false === empty($mRunPackage))
+                {
+                    Log::write(
+                        $sEventOrigin . ' => ' . $mRunPackage,
+                        #$oDTEventContext,
+                        'call_user_func.log',
+                        true
+                    );
+                }
+
                 // error occurred
-                if (call_user_func($sCallback, $mRunPackage, $oDTEventContext) === false)
+                if (false === $mRunPackage)
                 {
                     Log::write(
                         "ERROR\t" . $sRunType . $sPreLog . ' *** Closure could not be run: ' . serialize($sCallback),

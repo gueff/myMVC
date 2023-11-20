@@ -52,7 +52,8 @@ class DTKeyValue
      */
     public function __construct(array $aData = array())
     {
-        \MVC\Event::RUN ('DTKeyValue.__construct.before', $aData);
+        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTKeyValue.__construct.before', $oDTValue);
+        $aData = $oDTValue->get_mValue();
 
         $this->sKey = '';
         $this->sValue = null;
@@ -70,7 +71,7 @@ class DTKeyValue
             }
         }
 
-        \MVC\Event::RUN ('DTKeyValue.__construct.after', $aData);
+        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTKeyValue.__construct.after', $oDTValue);
     }
 
     /**
@@ -80,13 +81,11 @@ class DTKeyValue
      */
     public static function create(array $aData = array())
     {
-        \MVC\Event::RUN ('DTKeyValue.create.before', $aData);
+        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTKeyValue.create.before', $oDTValue);
+        $oObject = new self($oDTValue->get_mValue());
+        $oDTValue = DTValue::create()->set_mValue($oObject); \MVC\Event::RUN ('DTKeyValue.create.after', $oDTValue);
 
-        $oObject = new self($aData);
-
-        \MVC\Event::RUN ('DTKeyValue.create.before', $oObject);
-
-        return $oObject;
+        return $oDTValue->get_mValue();
     }
 
     /**
@@ -96,9 +95,8 @@ class DTKeyValue
      */
     public function set_sKey($mValue)
     {
-        \MVC\Event::RUN ('DTKeyValue.set_sKey.before', $mValue);
-
-        $this->sKey = $mValue;
+        $oDTValue = DTValue::create()->set_mValue($mValue); \MVC\Event::run('DTKeyValue.set_sKey.before', $oDTValue);
+        $this->sKey = $oDTValue->get_mValue();
 
         return $this;
     }
@@ -110,9 +108,8 @@ class DTKeyValue
      */
     public function set_iIndex($iIndex = null)
     {
-        \MVC\Event::RUN ('DTKeyValue.set_iIndex.before', $iIndex);
-
-        $this->iIndex = $iIndex;
+        $oDTValue = DTValue::create()->set_mValue($iIndex); \MVC\Event::run('DTKeyValue.set_iIndex.before', $oDTValue);
+        $this->iIndex = $oDTValue->get_mValue();
 
         return $this;
     }
@@ -124,9 +121,8 @@ class DTKeyValue
      */
     public function set_sValue($mValue)
     {
-        \MVC\Event::RUN ('DTKeyValue.set_sValue.before', $mValue);
-
-        $this->sValue = $mValue;
+        $oDTValue = DTValue::create()->set_mValue($mValue); \MVC\Event::run('DTKeyValue.set_sValue.before', $oDTValue);
+        $this->sValue = $oDTValue->get_mValue();
 
         return $this;
     }
@@ -138,9 +134,8 @@ class DTKeyValue
      */
     public function set_mOptional1($mValue)
     {
-        \MVC\Event::RUN ('DTKeyValue.set_mOptional1.before', $mValue);
-
-        $this->mOptional1 = $mValue;
+        $oDTValue = DTValue::create()->set_mValue($mValue); \MVC\Event::run('DTKeyValue.set_mOptional1.before', $oDTValue);
+        $this->mOptional1 = $oDTValue->get_mValue();
 
         return $this;
     }
@@ -152,9 +147,8 @@ class DTKeyValue
      */
     public function set_mOptional2($mValue)
     {
-        \MVC\Event::RUN ('DTKeyValue.set_mOptional2.before', $mValue);
-
-        $this->mOptional2 = $mValue;
+        $oDTValue = DTValue::create()->set_mValue($mValue); \MVC\Event::run('DTKeyValue.set_mOptional2.before', $oDTValue);
+        $this->mOptional2 = $oDTValue->get_mValue();
 
         return $this;
     }
@@ -166,9 +160,8 @@ class DTKeyValue
      */
     public function set_mOptional3($mValue)
     {
-        \MVC\Event::RUN ('DTKeyValue.set_mOptional3.before', $mValue);
-
-        $this->mOptional3 = $mValue;
+        $oDTValue = DTValue::create()->set_mValue($mValue); \MVC\Event::run('DTKeyValue.set_mOptional3.before', $oDTValue);
+        $this->mOptional3 = $oDTValue->get_mValue();
 
         return $this;
     }
@@ -179,19 +172,20 @@ class DTKeyValue
      */
     public function get_sKey()
     {
-        \MVC\Event::RUN ('DTKeyValue.get_sKey.before', $this->sKey);
+        $oDTValue = DTValue::create()->set_mValue($this->sKey); \MVC\Event::run('DTKeyValue.get_sKey.before', $oDTValue);
 
-        return $this->sKey;
+        return $oDTValue->get_mValue();
     }
 
     /**
-     * @return integer
+     * @return int
+     * @throws \ReflectionException
      */
     public function get_iIndex()
     {
-        \MVC\Event::RUN ('DTKeyValue.get_iIndex.before', $this->iIndex);
+        $oDTValue = DTValue::create()->set_mValue($this->iIndex); \MVC\Event::run('DTKeyValue.get_iIndex.before', $oDTValue);
 
-        return $this->iIndex;
+        return (int) $oDTValue->get_mValue();
     }
 
     /**
@@ -200,9 +194,9 @@ class DTKeyValue
      */
     public function get_sValue()
     {
-        \MVC\Event::RUN ('DTKeyValue.get_sValue.before', $this->sValue);
+        $oDTValue = DTValue::create()->set_mValue($this->sValue); \MVC\Event::run('DTKeyValue.get_sValue.before', $oDTValue);
 
-        return $this->sValue;
+        return $oDTValue->get_mValue();
     }
 
     /**
@@ -211,9 +205,9 @@ class DTKeyValue
      */
     public function get_mOptional1()
     {
-        \MVC\Event::RUN ('DTKeyValue.get_mOptional1.before', $this->mOptional1);
+        $oDTValue = DTValue::create()->set_mValue($this->mOptional1); \MVC\Event::run('DTKeyValue.get_mOptional1.before', $oDTValue);
 
-        return $this->mOptional1;
+        return $oDTValue->get_mValue();
     }
 
     /**
@@ -222,9 +216,9 @@ class DTKeyValue
      */
     public function get_mOptional2()
     {
-        \MVC\Event::RUN ('DTKeyValue.get_mOptional2.before', $this->mOptional2);
+        $oDTValue = DTValue::create()->set_mValue($this->mOptional2); \MVC\Event::run('DTKeyValue.get_mOptional2.before', $oDTValue);
 
-        return $this->mOptional2;
+        return $oDTValue->get_mValue();
     }
 
     /**
@@ -233,9 +227,9 @@ class DTKeyValue
      */
     public function get_mOptional3()
     {
-        \MVC\Event::RUN ('DTKeyValue.get_mOptional3.before', $this->mOptional3);
+        $oDTValue = DTValue::create()->set_mValue($this->mOptional3); \MVC\Event::run('DTKeyValue.get_mOptional3.before', $oDTValue);
 
-        return $this->mOptional3;
+        return $oDTValue->get_mValue();
     }
 
     /**

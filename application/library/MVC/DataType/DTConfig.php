@@ -38,7 +38,8 @@ class DTConfig
 	 */
 	public function __construct(array $aData = array())
 	{
-		\MVC\Event::RUN ('DTConfig.__construct.before', $aData);
+        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTConfig.__construct.before', $oDTValue);
+        $aData = $oDTValue->get_mValue();
 
 		$this->dir = '';
 		$this->unlinkDir = false;
@@ -54,7 +55,7 @@ class DTConfig
 			}
 		}
 
-		\MVC\Event::RUN ('DTConfig.__construct.after', $aData);
+        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTConfig.__construct.after', $oDTValue);
 	}
 
     /**
@@ -64,24 +65,22 @@ class DTConfig
      */
     public static function create(array $aData = array())
     {
-        \MVC\Event::RUN ('DTConfig.create.before', $aData);
+        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTConfig.create.before', $oDTValue);
+        $oObject = new self($oDTValue->get_mValue());
+        $oDTValue = DTValue::create()->set_mValue($oObject); \MVC\Event::RUN ('DTConfig.create.after', $oDTValue);
         
-        $oObject = new self($aData);
-
-        \MVC\Event::RUN ('DTConfig.create.after', $oObject);
-        
-        return $oObject;
+        return $oDTValue->get_mValue();
     }
 
     /**
      * @param \MVC\DataType\DTClass $oDTClass
      * @return $this
+     * @throws \ReflectionException
      */
     public function add_DTClass(\MVC\DataType\DTClass $oDTClass)
     {
-        \MVC\Event::RUN ('DTConfig.add_DTClass.before', $oDTClass);
-
-        $this->class[] = $oDTClass;
+        $oDTValue = DTValue::create()->set_mValue($oDTClass); \MVC\Event::RUN ('DTConfig.add_DTClass.before', $oDTValue);
+        $this->class[] = $oDTValue->get_mValue();
 
         return $this;
     }
@@ -93,9 +92,8 @@ class DTConfig
 	 */
 	public function set_dir(string $mValue)
 	{
-		\MVC\Event::RUN ('DTConfig.set_dir.before', $mValue);
-
-		$this->dir = $mValue;
+        $oDTValue = DTValue::create()->set_mValue($mValue); \MVC\Event::RUN ('DTConfig.set_dir.before', $oDTValue);
+		$this->dir = $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -107,9 +105,8 @@ class DTConfig
 	 */
 	public function set_unlinkDir(bool $mValue)
 	{
-		\MVC\Event::RUN ('DTConfig.set_unlinkDir.before', $mValue);
-
-		$this->unlinkDir = $mValue;
+        $oDTValue = DTValue::create()->set_mValue($mValue); \MVC\Event::RUN ('DTConfig.set_unlinkDir.before', $oDTValue);
+		$this->unlinkDir = $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -121,7 +118,8 @@ class DTConfig
 	 */
 	public function set_class(array $aValue)
 	{
-		\MVC\Event::RUN ('DTConfig.set_class.before', $aValue);
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTConfig.set_class.before', $oDTValue);
+        $aValue = $oDTValue->get_mValue();
 
 		foreach ($aValue as $mKey => $aData)
         {
@@ -136,15 +134,15 @@ class DTConfig
 		return $this;
 	}
 
-	/**
-	 * @param \MVC\DataType\DTClass $mValue
-	 * @return $this
-	 */
+    /**
+     * @param \MVC\DataType\DTClass $mValue
+     * @return $this
+     * @throws \ReflectionException
+     */
 	public function add_class(\MVC\DataType\DTClass $mValue)
 	{
-        \MVC\Event::RUN ('DTConfig.add_class.before', $mValue);
-
-		$this->class[] = $mValue;
+        $oDTValue = DTValue::create()->set_mValue($mValue); \MVC\Event::RUN ('DTConfig.add_class.before', $oDTValue);
+		$this->class[] = $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -155,9 +153,9 @@ class DTConfig
 	 */
 	public function get_dir() : string
 	{
-		\MVC\Event::RUN ('DTConfig.get_dir.before', $this->dir);
+        $oDTValue = DTValue::create()->set_mValue($this->dir); \MVC\Event::RUN ('DTConfig.get_dir.before', $oDTValue);
 
-		return $this->dir;
+		return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -166,9 +164,9 @@ class DTConfig
 	 */
 	public function get_unlinkDir() : bool
 	{
-		\MVC\Event::RUN ('DTConfig.get_unlinkDir.before', $this->unlinkDir);
+        $oDTValue = DTValue::create()->set_mValue($this->unlinkDir); \MVC\Event::RUN ('DTConfig.get_unlinkDir.before', $oDTValue);
 
-		return $this->unlinkDir;
+		return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -177,9 +175,9 @@ class DTConfig
 	 */
 	public function get_class()
 	{
-		\MVC\Event::RUN ('DTConfig.get_class.before', $this->class);
+        $oDTValue = DTValue::create()->set_mValue($this->class); \MVC\Event::RUN ('DTConfig.get_class.before', $oDTValue);
 
-		return $this->class;
+		return $oDTValue->get_mValue();
 	}
 
 	/**

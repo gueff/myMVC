@@ -219,26 +219,26 @@ class Policy
                     $bSuccess = true;
 
                     // execute policy
-                    if (false === call_user_func ($sPolicy))
+                    if (false === call_user_func($sPolicy))
                     {
                         $bSuccess = false;
-                        Event::run ('mvc.error',
-                            DTArrayObject::create()
-                                ->add_aKeyValue(
-                                    DTKeyValue::create()->set_sKey('sMessage')->set_sValue("Policy could not be executed: " . $sPolicy)
-                                )
-                        );
+                        $oDTArrayObject = DTArrayObject::create()
+                            ->add_aKeyValue(DTKeyValue::create()
+                                ->set_sKey('sMessage')
+                                ->set_sValue("Policy could not be executed: " . $sPolicy)
+                            );
+                        Event::run('mvc.error', $oDTArrayObject);
                     }
 
                     $oDTArrayObject = DTArrayObject::create()
-                        ->add_aKeyValue(
-                            DTKeyValue::create()->set_sKey('bSuccess')->set_sValue($bSuccess)
-                        )
-                        ->add_aKeyValue(
-                            DTKeyValue::create()->set_sKey('sPolicy')->set_sValue($sPolicy)
-                        );
+                        ->add_aKeyValue(DTKeyValue::create()
+                            ->set_sKey('bSuccess')
+                            ->set_sValue($bSuccess))
+                        ->add_aKeyValue(DTKeyValue::create()
+                            ->set_sKey('sPolicy')
+                            ->set_sValue($sPolicy));
                     self::$aApplied[] = $oDTArrayObject;
-                    Event::run ('mvc.policy.apply.execute', $oDTArrayObject);
+                    Event::run('mvc.policy.apply.execute', $oDTArrayObject);
                 }
             }
         }

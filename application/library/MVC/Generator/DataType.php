@@ -189,7 +189,6 @@ class DataType
             : md5(base64_encode(serialize($oDTDataTypeGeneratorConfig)))
         ;
         $sCacheKey = preg_replace('/[^a-zA-Z0-9\.]+/', '_', trim(__CLASS__) . '.' . $sMd5);
-
         $bUnlinkDir = ('' !== $oDTDataTypeGeneratorConfig->get_unlinkDir())
             ? (boolean) $oDTDataTypeGeneratorConfig->get_unlinkDir()
             : false;
@@ -197,7 +196,6 @@ class DataType
         if ($sCacheKey != Cache::getCache($sCacheKey))
         {
             Lock::create($sCacheKey);
-
             (true === $bUnlinkDir && file_exists($oDTDataTypeGeneratorConfig->get_dir()))
                 ? $this->unlinkDataTypeClassDir($oDTDataTypeGeneratorConfig->get_dir())
                 : false;
@@ -435,6 +433,7 @@ class DataType
             $sContent = '';
             $sContent.= $this->createDocHeader();
             $sContent.= $this->createNamespace($oDTDataTypeGeneratorClass->get_namespace());
+            $sContent.= "use MVC\DataType\DTValue;\n";
             $sContent.= "use MVC\MVCTrait\TraitDataType;\n\n";
             $sContent.= "class " . $oDTDataTypeGeneratorClass->get_name();
 
@@ -577,10 +576,13 @@ class DataType
         $sContent = "\t/**\r\n\t * " . $oDTDataTypeGeneratorClass->get_name() . " constructor." . "\r\n\t * @param array " . '$aData' . "\r\n\t * @throws \ReflectionException " . "\r\n\t " . "*/\r\n\t";
         $sContent.= "public function __construct(array " . '$aData' . " = array())\r\n\t";
         $sContent.= "{\r\n";
+
+        $sContent.= "\t\t" . '$oDTValue = DTValue::create()->set_mValue($aData);' . "\n";
         (true === $this->bCreateEvents)
-            ? $sContent.= "\t\t\MVC\Event::RUN ('" . $oDTDataTypeGeneratorClass->get_name() . ".__construct.before', " . '$aData' . ");\r\n\r\n"
+            ? $sContent.= "\t\t\MVC\Event::run('" . $oDTDataTypeGeneratorClass->get_name() . ".__construct.before', " . '$oDTValue' . ");\r\n"
             : false
         ;
+        $sContent.= "\t\t" . '$aData = $oDTValue->get_mValue();' . "\n\n";
 
         if (false === empty($oDTDataTypeGeneratorClass->get_extends()))
         {
@@ -670,11 +672,13 @@ class DataType
         $sContent.= "{\r\n\t\t\t\t" . '$this->$sMethod($mValue);' . "\r\n\t\t\t";
         $sContent.= "}\r\n\t\t}" . "\r\n\r\n";
 
+        $sContent.= "\t\t" . '$oDTValue = DTValue::create()->set_mValue($aData); ';
+
         (true === $this->bCreateEvents)
-            ? $sContent.= "\t\t\MVC\Event::RUN ('" . $oDTDataTypeGeneratorClass->get_name() . ".__construct.after', " . '$aData' . ");\r\n"
+            ? $sContent.= "\MVC\Event::run('" . $oDTDataTypeGeneratorClass->get_name() . ".__construct.after', " . '$oDTValue' . ");"
             : false
             ;
-        $sContent.= "\t}\r\n\r\n";
+        $sContent.= "\n\t}\r\n\r\n";
 
         return $sContent;
     }
@@ -692,9 +696,9 @@ class DataType
      */
     public static function create(array " . '$aData' . " = array())
     {
-        "; (true === $this->bCreateEvents) ? $sContent.="\MVC\Event::RUN ('" . $sClassName . ".create.before', " . '$aData' . ");\n\n\t\t" : false; $sContent.="" . '$oObject' . " = new self(" . '$aData' . ");
-        "; (true === $this->bCreateEvents) ? $sContent.="\n\t\t\MVC\Event::RUN ('" . $sClassName . ".create.after', " . '$aData' . ");\n" : false; $sContent.="
-        return " . '$oObject' . ";
+        " . '$oDTValue = DTValue::create()->set_mValue($aData);' . "\n"; (true === $this->bCreateEvents) ? $sContent.="\t\t\MVC\Event::run('" . $sClassName . ".create.before', " . '$oDTValue' . ");\n" : false; $sContent.="\t\t" . '$oObject' . " = new self(" . '$oDTValue->get_mValue()' . ");
+        " . '$oDTValue = DTValue::create()->set_mValue($oObject); '; (true === $this->bCreateEvents) ? $sContent.="\MVC\Event::run('" . $sClassName . ".create.after', " . '$oDTValue' . ");" : false; $sContent.="\n
+        return " . '$oDTValue->get_mValue()' . ";
     }\n\n";
 
         return $sContent;
@@ -907,29 +911,32 @@ class DataType
             $sContent.= "\tpublic function set_" . $oProperty->get_key() . '(';
             $sContent.= $sVar . ' ';
 
-            $sContent.= '$mValue)' . "\r\n" . "\t{" . "\r\n\t\t"; (true === $this->bCreateEvents) ? $sContent.="\MVC\Event::RUN ('" . $sClassName . ".set_" . $oProperty->get_key() . ".before', " . '$mValue' . ");\n\n\t\t" : false;
+            $sContent.= '$mValue)' . "\r\n" . "\t{" . "\r\n\t\t";
+            $sContent.= '$oDTValue = DTValue::create()->set_mValue($mValue); ' . "\n\t\t";
+
+            (true === $this->bCreateEvents) ? $sContent.="\MVC\Event::run('" . $sClassName . ".set_" . $oProperty->get_key() . ".before', " . '$oDTValue' . ");\n\t\t" : false;
 
             if (true === $oProperty->get_forceCasting())
             {
                 // common types
                 if (in_array($oProperty->get_var(), array('string', 'int', 'integer', 'array', 'bool', 'boolean', 'float', 'double')))
                 {
-                    $sContent.= '$this->' . $oProperty->get_key() . ' = (' . $oProperty->get_var() . ') $mValue;' . "\r\n\r\n" . "\t\treturn " . '$this;' . "\r\n\t}\r\n\r\n";
+                    $sContent.= '$this->' . $oProperty->get_key() . ' = (' . $oProperty->get_var() . ') $oDTValue->get_mValue();' . "\r\n\r\n" . "\t\treturn " . '$this;' . "\r\n\t}\r\n\r\n";
                 }
                 // mixed
                 elseif (in_array($oProperty->get_var(), array('mixed')))
                 {
-                    $sContent.= '$this->' . $oProperty->get_key() . ' = $mValue;' . "\r\n\r\n" . "\t\treturn " . '$this;' . "\r\n\t}\r\n\r\n";
+                    $sContent.= '$this->' . $oProperty->get_key() . ' = $oDTValue->get_mValue();' . "\r\n\r\n" . "\t\treturn " . '$this;' . "\r\n\t}\r\n\r\n";
                 }
                 // custom types
                 else
                 {
-                    $sContent.= '$this->' . $oProperty->get_key() . ' = $mValue;' . "\r\n\r\n" . "\t\treturn " . '$this;' . "\r\n\t}\r\n\r\n";
+                    $sContent.= '$this->' . $oProperty->get_key() . ' = $oDTValue->get_mValue();' . "\r\n\r\n" . "\t\treturn " . '$this;' . "\r\n\t}\r\n\r\n";
                 }
             }
             else
             {
-                $sContent.= '$this->' . $oProperty->get_key() . ' = $mValue;' . "\r\n\r\n" . "\t\treturn " . '$this;' . "\r\n\t}\r\n\r\n";
+                $sContent.= '$this->' . $oProperty->get_key() . ' = $oDTValue->get_mValue();' . "\r\n\r\n" . "\t\treturn " . '$this;' . "\r\n\t}\r\n\r\n";
             }
         }
         // type is array
@@ -941,13 +948,14 @@ class DataType
             // place type for php7 and newer
             $sContent.= 'array ';
             $sContent.= '$mValue)' . "\r\n" . "\t{\r\n\t\t";
+            $sContent.= '$oDTValue = DTValue::create()->set_mValue($mValue); ' . "\n\t\t";
 
             // add ArrayType Instancer
             if (false === in_array(strtolower($sVar), $this->aType))
             {
-                (true === $this->bCreateEvents) ? $sContent.= "\MVC\Event::RUN ('" . $sClassName . ".set_" . $oProperty->get_key() . ".before', " . '$mValue' . ");\r\n" : false;
+                (true === $this->bCreateEvents) ? $sContent.= "\MVC\Event::run('" . $sClassName . ".set_" . $oProperty->get_key() . ".before', " . '$oDTValue' . ");\r\n" : false;
 
-                $sContent.= "\r\n\t\t" . '$mValue = (array) $mValue;
+                $sContent.= "\r\n\t\t" . '$mValue = (array) $oDTValue->get_mValue();
                 
         foreach ($mValue as $mKey => $aData)
         {            
@@ -991,7 +999,9 @@ class DataType
             : false;
 
         $sContent.= "\r\n";
-        $sContent.= "\t{\r\n"; (true === $this->bCreateEvents) ? $sContent.="\t\t" . "\MVC\Event::RUN ('" . $sClassName . ".get_" . $oProperty->get_key() . ".before', " . '$this->' . $oProperty->get_key() . ");" . "\r\n" : false; $sContent.="\r\n\t\t" . 'return $this->' . $oProperty->get_key() . ';' . "\r\n\t}\r\n\r\n";
+        $sContent.= "\t{\r\n";
+        $sContent.= "\t\t" . '$oDTValue = DTValue::create()->set_mValue($this->' . $oProperty->get_key() . '); ' . "\n";
+        (true === $this->bCreateEvents) ? $sContent.= "\t\t\MVC\Event::run('" . $sClassName . ".get_" . $oProperty->get_key() . ".before', " . '$oDTValue' . ");" . "\r\n" : false; $sContent.="\r\n\t\t" . 'return $oDTValue->get_mValue();' . "\r\n\t}\r\n\r\n";
 
         return $sContent;
     }

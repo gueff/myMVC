@@ -28,7 +28,8 @@ class DTArrayObject
      */
     public function __construct(array $aData = array())
     {
-        \MVC\Event::RUN ('DTArrayObject.__construct.before', $aData);
+        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTArrayObject.__construct.before', $oDTValue);
+        $aData = $oDTValue->get_mValue();
 
         $this->aKeyValue = array();
 
@@ -48,7 +49,7 @@ class DTArrayObject
             }
         }
 
-        \MVC\Event::RUN ('DTArrayObject.__construct.after', $aData);
+        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTArrayObject.__construct.after', $oDTValue);
     }
 
     /**
@@ -58,13 +59,11 @@ class DTArrayObject
      */
     public static function create(array $aData = array())
     {
-        \MVC\Event::RUN ('DTArrayObject.create.before', $aData);
+        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTArrayObject.create.before', $oDTValue);
+        $oObject = new self($oDTValue->get_mValue());
+        $oDTValue = DTValue::create()->set_mValue($oObject); \MVC\Event::RUN ('DTArrayObject.create.before', $oDTValue);
 
-        $oObject = new self($aData);
-
-        \MVC\Event::RUN ('DTArrayObject.create.before', $oObject);
-
-        return $oObject;
+        return $oDTValue->get_mValue();
     }
 
     /**
@@ -74,7 +73,8 @@ class DTArrayObject
      */
     public function set_aKeyValue($aValue)
     {
-        \MVC\Event::RUN ('DTArrayObject.set_aKeyValue.before', $aValue);
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTArrayObject.set_aKeyValue.before', $oDTValue);
+        $aValue = $oDTValue->get_mValue();
 
         foreach ($aValue as $mKey => $aData)
         {
@@ -96,9 +96,9 @@ class DTArrayObject
      */
     public function add_aKeyValue(\MVC\DataType\DTKeyValue $mValue)
     {
-        \MVC\Event::RUN ('DTArrayObject.add_aKeyValue.before', $mValue);
+        $oDTValue = DTValue::create()->set_mValue($mValue); \MVC\Event::RUN ('DTArrayObject.add_aKeyValue.before', $oDTValue);
 
-        $this->aKeyValue[] = $mValue;
+        $this->aKeyValue[] = $oDTValue->get_mValue();
 
         return $this;
     }
@@ -109,9 +109,9 @@ class DTArrayObject
      */
     public function get_aKeyValue()
     {
-        \MVC\Event::RUN ('DTArrayObject.get_aKeyValue.before', $this->aKeyValue);
+        $oDTValue = DTValue::create()->set_mValue($this->aKeyValue); \MVC\Event::RUN ('DTArrayObject.get_aKeyValue.before', $oDTValue);
 
-        return $this->aKeyValue;
+        return $oDTValue->get_mValue();
     }
 
     /**
@@ -132,7 +132,8 @@ class DTArrayObject
      */
     function setDTKeyValueByKey(DTKeyValue $oDTKeyValueNew = null, bool $bUnset = false)
     {
-        \MVC\Event::RUN ('DTArrayObject.setDTKeyValueByKey.before', $oDTKeyValueNew);
+        $oDTValue = DTValue::create()->set_mValue($oDTKeyValueNew); \MVC\Event::RUN ('DTArrayObject.setDTKeyValueByKey.before', $oDTValue->get_mValue());
+        $oDTKeyValueNew = $oDTValue->get_mValue();
 
         if (null === $oDTKeyValueNew)
         {
@@ -175,7 +176,8 @@ class DTArrayObject
      */
     function getDTKeyValueByKey($sKey = '', DTArrayObject $oDTArrayObject = null)
     {
-        \MVC\Event::RUN ('DTArrayObject.getDTKeyValueByKey.before', $sKey);
+        $oDTValue = DTValue::create()->set_mValue($sKey); \MVC\Event::RUN ('DTArrayObject.getDTKeyValueByKey.before', $oDTValue->get_mValue());
+        $sKey = $oDTValue->get_mValue();
 
         if (null === $oDTArrayObject)
         {

@@ -128,7 +128,8 @@ class DTFileinfo
 	 */
 	public function __construct(array $aData = array())
 	{
-		\MVC\Event::RUN ('DTFileinfo.__construct.before', $aData);
+        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTFileinfo.__construct.before', $oDTValue);
+        $aData = $oDTValue->get_mValue();
 
 		$this->dirname = '';
 		$this->basename = '';
@@ -158,7 +159,7 @@ class DTFileinfo
 			}
 		}
 
-		\MVC\Event::RUN ('DTFileinfo.__construct.after', $aData);
+        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTFileinfo.__construct.after', $oDTValue);
 	}
 
     /**
@@ -168,13 +169,11 @@ class DTFileinfo
      */
     public static function create(array $aData = array())
     {
-        \MVC\Event::RUN ('DTFileinfo.create.before', $aData);
+        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTFileinfo.create.before', $oDTValue);
+        $oObject = new self($oDTValue->get_mValue());
+        $oDTValue = DTValue::create()->set_mValue($oObject); \MVC\Event::RUN ('DTFileinfo.create.after', $oDTValue);
 
-        $oObject = new self($aData);
-
-        \MVC\Event::RUN ('DTFileinfo.create.after', $oObject);
-
-        return $oObject;
+        return $oDTValue->get_mValue();
     }
 
 	/**
@@ -184,9 +183,8 @@ class DTFileinfo
 	 */
 	public function set_dirname($aValue)
 	{
-		\MVC\Event::RUN ('DTFileinfo.set_dirname.before', $aValue);
-
-		$this->dirname = (string) $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTFileinfo.set_dirname.before', $aValue);
+		$this->dirname = (string) $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -198,9 +196,8 @@ class DTFileinfo
 	 */
 	public function set_basename($aValue)
 	{
-		\MVC\Event::RUN ('DTFileinfo.set_basename.before', $aValue);
-
-		$this->basename = (string) $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTFileinfo.set_basename.before', $oDTValue);
+		$this->basename = (string) $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -212,9 +209,8 @@ class DTFileinfo
 	 */
 	public function set_path($aValue)
 	{
-		\MVC\Event::RUN ('DTFileinfo.set_path.before', $aValue);
-
-		$this->path = (string) $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTFileinfo.set_path.before', $oDTValue);
+		$this->path = (string) $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -226,9 +222,8 @@ class DTFileinfo
 	 */
 	public function set_is_file($aValue)
 	{
-		\MVC\Event::RUN ('DTFileinfo.set_is_file.before', $aValue);
-
-		$this->is_file = (bool) $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTFileinfo.set_is_file.before', $oDTValue);
+		$this->is_file = (bool) $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -240,9 +235,8 @@ class DTFileinfo
 	 */
 	public function set_is_dir($aValue)
 	{
-		\MVC\Event::RUN ('DTFileinfo.set_is_dir.before', $aValue);
-
-		$this->is_dir = (bool) $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTFileinfo.set_is_dir.before', $oDTValue);
+		$this->is_dir = (bool) $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -254,9 +248,8 @@ class DTFileinfo
 	 */
 	public function set_extension($aValue)
 	{
-		\MVC\Event::RUN ('DTFileinfo.set_extension.before', $aValue);
-
-		$this->extension = (string) $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTFileinfo.set_extension.before', $oDTValue);
+		$this->extension = (string) $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -268,9 +261,8 @@ class DTFileinfo
 	 */
 	public function set_filename($aValue)
 	{
-		\MVC\Event::RUN ('DTFileinfo.set_filename.before', $aValue);
-
-		$this->filename = (string) $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTFileinfo.set_filename.before', $oDTValue);
+		$this->filename = (string) $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -282,9 +274,8 @@ class DTFileinfo
 	 */
 	public function set_name($aValue)
 	{
-		\MVC\Event::RUN ('DTFileinfo.set_name.before', $aValue);
-
-		$this->name = (string) $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTFileinfo.set_name.before', $oDTValue);
+		$this->name = (string) $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -296,9 +287,8 @@ class DTFileinfo
 	 */
 	public function set_passwd($aValue)
 	{
-		\MVC\Event::RUN ('DTFileinfo.set_passwd.before', $aValue);
-
-		$this->passwd = (string) $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTFileinfo.set_passwd.before', $oDTValue);
+		$this->passwd = (string) $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -310,9 +300,8 @@ class DTFileinfo
 	 */
 	public function set_uid($aValue)
 	{
-		\MVC\Event::RUN ('DTFileinfo.set_uid.before', $aValue);
-
-		$this->uid = (int) $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTFileinfo.set_uid.before', $oDTValue);
+		$this->uid = (int) $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -324,9 +313,8 @@ class DTFileinfo
 	 */
 	public function set_gid($aValue)
 	{
-		\MVC\Event::RUN ('DTFileinfo.set_gid.before', $aValue);
-
-		$this->gid = (int) $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTFileinfo.set_gid.before', $oDTValue);
+		$this->gid = (int) $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -338,9 +326,8 @@ class DTFileinfo
 	 */
 	public function set_gecos($aValue)
 	{
-		\MVC\Event::RUN ('DTFileinfo.set_gecos.before', $aValue);
-
-		$this->gecos = (string) $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTFileinfo.set_gecos.before', $oDTValue);
+		$this->gecos = (string) $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -352,9 +339,8 @@ class DTFileinfo
 	 */
 	public function set_dir($aValue)
 	{
-		\MVC\Event::RUN ('DTFileinfo.set_dir.before', $aValue);
-
-		$this->dir = (string) $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTFileinfo.set_dir.before', $oDTValue);
+		$this->dir = (string) $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -366,9 +352,8 @@ class DTFileinfo
 	 */
 	public function set_shell($aValue)
 	{
-		\MVC\Event::RUN ('DTFileinfo.set_shell.before', $aValue);
-
-		$this->shell = (string) $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTFileinfo.set_shell.before', $oDTValue);
+		$this->shell = (string) $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -380,9 +365,8 @@ class DTFileinfo
 	 */
 	public function set_filemtime($aValue)
 	{
-		\MVC\Event::RUN ('DTFileinfo.set_filemtime.before', $aValue);
-
-		$this->filemtime = (int) $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTFileinfo.set_filemtime.before', $oDTValue);
+		$this->filemtime = (int) $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -394,9 +378,8 @@ class DTFileinfo
 	 */
 	public function set_filectime($aValue)
 	{
-		\MVC\Event::RUN ('DTFileinfo.set_filectime.before', $aValue);
-
-		$this->filectime = (int) $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTFileinfo.set_filectime.before', $oDTValue);
+		$this->filectime = (int) $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -408,9 +391,8 @@ class DTFileinfo
      */
     public function set_mimetype($sValue)
     {
-        \MVC\Event::RUN ('DTFileinfo.set_mimetype.before', $sValue);
-
-        $this->mimetype = (string) $sValue;
+        $oDTValue = DTValue::create()->set_mValue($sValue); \MVC\Event::RUN ('DTFileinfo.set_mimetype.before', $oDTValue);
+        $this->mimetype = (string) $oDTValue->get_mValue();
 
         return $this;
     }
@@ -421,9 +403,9 @@ class DTFileinfo
 	 */
 	public function get_dirname()
 	{
-		\MVC\Event::RUN ('DTFileinfo.get_dirname.before', $this->dirname);
+        $oDTValue = DTValue::create()->set_mValue($this->dirname); \MVC\Event::RUN ('DTFileinfo.get_dirname.before', $oDTValue);
 
-		return $this->dirname;
+        return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -432,9 +414,9 @@ class DTFileinfo
 	 */
 	public function get_basename()
 	{
-		\MVC\Event::RUN ('DTFileinfo.get_basename.before', $this->basename);
+        $oDTValue = DTValue::create()->set_mValue($this->basename); \MVC\Event::RUN ('DTFileinfo.get_basename.before', $oDTValue);
 
-		return $this->basename;
+        return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -443,9 +425,9 @@ class DTFileinfo
 	 */
 	public function get_path()
 	{
-		\MVC\Event::RUN ('DTFileinfo.get_path.before', $this->path);
+        $oDTValue = DTValue::create()->set_mValue($this->path); \MVC\Event::RUN ('DTFileinfo.get_path.before', $oDTValue);
 
-		return $this->path;
+        return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -454,9 +436,9 @@ class DTFileinfo
 	 */
 	public function get_is_file()
 	{
-		\MVC\Event::RUN ('DTFileinfo.get_is_file.before', $this->is_file);
+        $oDTValue = DTValue::create()->set_mValue($this->is_file); \MVC\Event::RUN ('DTFileinfo.get_is_file.before', $oDTValue);
 
-		return $this->is_file;
+        return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -465,9 +447,9 @@ class DTFileinfo
 	 */
 	public function get_is_dir()
 	{
-		\MVC\Event::RUN ('DTFileinfo.get_is_dir.before', $this->is_dir);
+        $oDTValue = DTValue::create()->set_mValue($this->is_dir); \MVC\Event::RUN ('DTFileinfo.get_is_dir.before', $oDTValue);
 
-		return $this->is_dir;
+        return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -476,9 +458,9 @@ class DTFileinfo
 	 */
 	public function get_extension()
 	{
-		\MVC\Event::RUN ('DTFileinfo.get_extension.before', $this->extension);
+        $oDTValue = DTValue::create()->set_mValue($this->extension); \MVC\Event::RUN ('DTFileinfo.get_extension.before', $oDTValue);
 
-		return $this->extension;
+        return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -487,9 +469,9 @@ class DTFileinfo
 	 */
 	public function get_filename()
 	{
-		\MVC\Event::RUN ('DTFileinfo.get_filename.before', $this->filename);
+        $oDTValue = DTValue::create()->set_mValue($this->filename); \MVC\Event::RUN ('DTFileinfo.get_filename.before', $oDTValue);
 
-		return $this->filename;
+        return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -498,9 +480,9 @@ class DTFileinfo
 	 */
 	public function get_name()
 	{
-		\MVC\Event::RUN ('DTFileinfo.get_name.before', $this->name);
+        $oDTValue = DTValue::create()->set_mValue($this->name); \MVC\Event::RUN ('DTFileinfo.get_name.before', $oDTValue);
 
-		return $this->name;
+        return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -509,9 +491,9 @@ class DTFileinfo
 	 */
 	public function get_passwd()
 	{
-		\MVC\Event::RUN ('DTFileinfo.get_passwd.before', $this->passwd);
+        $oDTValue = DTValue::create()->set_mValue($this->passwd); \MVC\Event::RUN ('DTFileinfo.get_passwd.before', $oDTValue);
 
-		return $this->passwd;
+        return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -520,9 +502,9 @@ class DTFileinfo
 	 */
 	public function get_uid()
 	{
-		\MVC\Event::RUN ('DTFileinfo.get_uid.before', $this->uid);
+        $oDTValue = DTValue::create()->set_mValue($this->uid); \MVC\Event::RUN ('DTFileinfo.get_uid.before', $oDTValue);
 
-		return $this->uid;
+        return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -531,9 +513,9 @@ class DTFileinfo
 	 */
 	public function get_gid()
 	{
-		\MVC\Event::RUN ('DTFileinfo.get_gid.before', $this->gid);
+        $oDTValue = DTValue::create()->set_mValue($this->gid); \MVC\Event::RUN ('DTFileinfo.get_gid.before', $oDTValue);
 
-		return $this->gid;
+        return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -542,9 +524,9 @@ class DTFileinfo
 	 */
 	public function get_gecos()
 	{
-		\MVC\Event::RUN ('DTFileinfo.get_gecos.before', $this->gecos);
+        $oDTValue = DTValue::create()->set_mValue($this->gecos); \MVC\Event::RUN ('DTFileinfo.get_gecos.before', $oDTValue);
 
-		return $this->gecos;
+        return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -553,9 +535,9 @@ class DTFileinfo
 	 */
 	public function get_dir()
 	{
-		\MVC\Event::RUN ('DTFileinfo.get_dir.before', $this->dir);
+        $oDTValue = DTValue::create()->set_mValue($this->dir); \MVC\Event::RUN ('DTFileinfo.get_dir.before', $oDTValue);
 
-		return $this->dir;
+        return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -564,9 +546,9 @@ class DTFileinfo
 	 */
 	public function get_shell()
 	{
-		\MVC\Event::RUN ('DTFileinfo.get_shell.before', $this->shell);
+        $oDTValue = DTValue::create()->set_mValue($this->shell); \MVC\Event::RUN ('DTFileinfo.get_shell.before', $oDTValue);
 
-		return $this->shell;
+        return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -575,9 +557,9 @@ class DTFileinfo
 	 */
 	public function get_filemtime()
 	{
-		\MVC\Event::RUN ('DTFileinfo.get_filemtime.before', $this->filemtime);
+        $oDTValue = DTValue::create()->set_mValue($this->filemtime); \MVC\Event::RUN ('DTFileinfo.get_filemtime.before', $oDTValue);
 
-		return $this->filemtime;
+        return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -586,9 +568,9 @@ class DTFileinfo
 	 */
 	public function get_filectime()
 	{
-		\MVC\Event::RUN ('DTFileinfo.get_filectime.before', $this->filectime);
+        $oDTValue = DTValue::create()->set_mValue($this->filectime); \MVC\Event::RUN ('DTFileinfo.get_filectime.before', $oDTValue);
 
-		return $this->filectime;
+        return $oDTValue->get_mValue();
 	}
 
     /**
@@ -597,9 +579,9 @@ class DTFileinfo
      */
     public function get_mimetype()
     {
-        \MVC\Event::RUN ('DTFileinfo.get_mimetype.before', $this->mimetype);
+        $oDTValue = DTValue::create()->set_mValue($this->mimetype); \MVC\Event::RUN ('DTFileinfo.get_mimetype.before', $oDTValue);
 
-        return $this->mimetype;
+        return $oDTValue->get_mValue();
     }
 
 	/**

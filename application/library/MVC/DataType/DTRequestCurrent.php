@@ -111,7 +111,8 @@ class DTRequestCurrent
 	 */
 	public function __construct(array $aData = array())
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.__construct.before', $aData);
+        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTRequestCurrent.__construct.before', $aData);
+        $aData = $oDTValue->get_mValue();
 
 		$this->scheme = '';
 		$this->host = '';
@@ -138,7 +139,7 @@ class DTRequestCurrent
 			}
 		}
 
-		\MVC\Event::RUN ('DTRequestCurrent.__construct.after', $aData);
+        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTRequestCurrent.__construct.after', $oDTValue);
 	}
 
     /**
@@ -148,13 +149,11 @@ class DTRequestCurrent
      */
     public static function create(array $aData = array())
     {
-        \MVC\Event::RUN ('DTRequestCurrent.create.before', $aData);
+        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTRequestCurrent.create.before', $oDTValue);
+        $oObject = new self($oDTValue->get_mValue());
+        $oDTValue = DTValue::create()->set_mValue($oObject); \MVC\Event::RUN ('DTRequestCurrent.create.after', $oDTValue);
 
-        $oObject = new self($aData);
-
-        \MVC\Event::RUN ('DTRequestCurrent.create.after', $oObject);
-
-        return $oObject;
+        return $oDTValue->get_mValue();
     }
 
 	/**
@@ -164,9 +163,8 @@ class DTRequestCurrent
 	 */
 	public function set_scheme($aValue)
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.set_scheme.before', $aValue);
-
-		$this->scheme = $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTRequestCurrent.set_scheme.before', $oDTValue);
+		$this->scheme = $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -178,9 +176,8 @@ class DTRequestCurrent
 	 */
 	public function set_host($aValue)
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.set_host.before', $aValue);
-
-        $this->host = $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTRequestCurrent.set_host.before', $oDTValue);
+        $this->host = $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -192,9 +189,8 @@ class DTRequestCurrent
 	 */
 	public function set_path($sValue)
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.set_path.before', $sValue);
-
-        $this->path = $sValue;
+        $oDTValue = DTValue::create()->set_mValue($sValue); \MVC\Event::RUN ('DTRequestCurrent.set_path.before', $oDTValue);
+        $this->path = $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -206,9 +202,8 @@ class DTRequestCurrent
 	 */
 	public function set_query($aValue)
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.set_query.before', $aValue);
-
-        $this->query = $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTRequestCurrent.set_query.before', $oDTValue);
+        $this->query = $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -220,9 +215,8 @@ class DTRequestCurrent
 	 */
 	public function set_queryArray($aValue)
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.set_queryArray.before', $aValue);
-
-        $this->queryArray = $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTRequestCurrent.set_queryArray.before', $oDTValue);
+        $this->queryArray = $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -234,9 +228,8 @@ class DTRequestCurrent
 	 */
 	public function set_requesturi($aValue)
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.set_requesturi.before', $aValue);
-
-        $this->requesturi = $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTRequestCurrent.set_requesturi.before', $oDTValue);
+        $this->requesturi = $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -248,9 +241,8 @@ class DTRequestCurrent
 	 */
 	public function set_requestmethod($aValue)
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.set_requestmethod.before', $aValue);
-
-        $this->requestmethod = $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTRequestCurrent.set_requestmethod.before', $oDTValue);
+        $this->requestmethod = $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -262,9 +254,8 @@ class DTRequestCurrent
 	 */
 	public function set_protocol($aValue)
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.set_protocol.before', $aValue);
-
-        $this->protocol = $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTRequestCurrent.set_protocol.before', $oDTValue);
+        $this->protocol = $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -276,9 +267,8 @@ class DTRequestCurrent
 	 */
 	public function set_full($aValue)
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.set_full.before', $aValue);
-
-        $this->full = $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTRequestCurrent.set_full.before', $oDTValue);
+        $this->full = $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -290,9 +280,8 @@ class DTRequestCurrent
 	 */
 	public function set_input($aValue)
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.set_input.before', $aValue);
-
-        $this->input = $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTRequestCurrent.set_input.before', $oDTValue);
+        $this->input = $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -304,9 +293,8 @@ class DTRequestCurrent
 	 */
 	public function set_isSecure($aValue)
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.set_isSecure.before', $aValue);
-
-        $this->isSecure = $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTRequestCurrent.set_isSecure.before', $oDTValue);
+        $this->isSecure = $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -318,9 +306,8 @@ class DTRequestCurrent
 	 */
 	public function set_headerArray($aValue)
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.set_headerArray.before', $aValue);
-
-        $this->headerArray = $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTRequestCurrent.set_headerArray.before', $oDTValue);
+        $this->headerArray = $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -332,9 +319,8 @@ class DTRequestCurrent
 	 */
 	public function set_pathParam($aValue)
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.set_pathParam.before', $aValue);
-
-        $this->pathParam = $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTRequestCurrent.set_pathParam.before', $oDTValue);
+        $this->pathParam = $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -346,9 +332,8 @@ class DTRequestCurrent
 	 */
 	public function set_ip($aValue)
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.set_ip.before',$aValue);
-
-        $this->ip = $aValue;
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTRequestCurrent.set_ip.before', $oDTValue);
+        $this->ip = $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -359,9 +344,9 @@ class DTRequestCurrent
 	 */
 	public function get_scheme()
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.get_scheme.before', $this->scheme);
+        $oDTValue = DTValue::create()->set_mValue($this->scheme); \MVC\Event::RUN ('DTRequestCurrent.get_scheme.before', $oDTValue);
 
-		return $this->scheme;
+		return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -370,9 +355,9 @@ class DTRequestCurrent
 	 */
 	public function get_host()
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.get_host.before', $this->host);
+        $oDTValue = DTValue::create()->set_mValue($this->host); \MVC\Event::RUN ('DTRequestCurrent.get_host.before', $oDTValue);
 
-        return $this->host;
+        return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -381,9 +366,9 @@ class DTRequestCurrent
 	 */
 	public function get_path()
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.get_path.before', $this->path);
+        $oDTValue = DTValue::create()->set_mValue($this->path); \MVC\Event::RUN ('DTRequestCurrent.get_path.before', $oDTValue);
 
-        return $this->path;
+        return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -392,9 +377,9 @@ class DTRequestCurrent
 	 */
 	public function get_query()
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.get_query.before', $this->query);
+        $oDTValue = DTValue::create()->set_mValue($this->query); \MVC\Event::RUN ('DTRequestCurrent.get_query.before', $oDTValue);
 
-        return $this->query;
+        return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -403,9 +388,9 @@ class DTRequestCurrent
 	 */
 	public function get_queryArray()
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.get_queryArray.before', $this->queryArray);
+        $oDTValue = DTValue::create()->set_mValue($this->queryArray); \MVC\Event::RUN ('DTRequestCurrent.get_queryArray.before', $oDTValue);
 
-        return $this->queryArray;
+        return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -414,9 +399,9 @@ class DTRequestCurrent
 	 */
 	public function get_requesturi()
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.get_requesturi.before', $this->requesturi);
+        $oDTValue = DTValue::create()->set_mValue($this->requesturi); \MVC\Event::RUN ('DTRequestCurrent.get_requesturi.before', $oDTValue);
 
-        return $this->requesturi;
+        return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -425,9 +410,9 @@ class DTRequestCurrent
 	 */
 	public function get_requestmethod()
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.get_requestmethod.before', $this->requestmethod);
+        $oDTValue = DTValue::create()->set_mValue($this->requestmethod); \MVC\Event::RUN ('DTRequestCurrent.get_requestmethod.before', $oDTValue);
 
-        return $this->requestmethod;
+        return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -436,9 +421,9 @@ class DTRequestCurrent
 	 */
 	public function get_protocol()
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.get_protocol.before', $this->protocol);
+        $oDTValue = DTValue::create()->set_mValue($this->protocol); \MVC\Event::RUN ('DTRequestCurrent.get_protocol.before', $oDTValue);
 
-        return $this->protocol;
+        return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -447,9 +432,9 @@ class DTRequestCurrent
 	 */
 	public function get_full()
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.get_full.before', $this->full);
+        $oDTValue = DTValue::create()->set_mValue($this->full); \MVC\Event::RUN ('DTRequestCurrent.get_full.before', $oDTValue);
 
-        return $this->full;
+        return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -458,9 +443,9 @@ class DTRequestCurrent
 	 */
 	public function get_input()
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.get_input.before', $this->input);
+        $oDTValue = DTValue::create()->set_mValue($this->input); \MVC\Event::RUN ('DTRequestCurrent.get_input.before', $oDTValue);
 
-        return $this->input;
+        return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -469,9 +454,9 @@ class DTRequestCurrent
 	 */
 	public function get_isSecure()
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.get_isSecure.before', $this->isSecure);
+        $oDTValue = DTValue::create()->set_mValue($this->isSecure); \MVC\Event::RUN ('DTRequestCurrent.get_isSecure.before', $oDTValue);
 
-        return $this->isSecure;
+        return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -480,9 +465,9 @@ class DTRequestCurrent
 	 */
 	public function get_headerArray()
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.get_headerArray.before', $this->headerArray);
+        $oDTValue = DTValue::create()->set_mValue($this->headerArray); \MVC\Event::RUN ('DTRequestCurrent.get_headerArray.before', $oDTValue);
 
-        return $this->headerArray;
+        return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -491,9 +476,9 @@ class DTRequestCurrent
 	 */
 	public function get_pathParam()
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.get_pathParam.before', $this->pathParam);
+        $oDTValue = DTValue::create()->set_mValue($this->pathParam); \MVC\Event::RUN ('DTRequestCurrent.get_pathParam.before', $oDTValue);
 
-        return $this->pathParam;
+        return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -502,9 +487,9 @@ class DTRequestCurrent
 	 */
 	public function get_ip()
 	{
-		\MVC\Event::RUN ('DTRequestCurrent.get_ip.before', $this->ip);
+        $oDTValue = DTValue::create()->set_mValue($this->ip); \MVC\Event::RUN ('DTRequestCurrent.get_ip.before', $oDTValue);
 
-        return $this->ip;
+        return $oDTValue->get_mValue();
 	}
 
 	/**

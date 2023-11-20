@@ -14,6 +14,7 @@ application/library/MVC/DataType/DTRequestCurrent.php
 application/library/MVC/DataType/test/DTEventClosureParam.php
 application/library/MVC/DataType/test/DTEventContext.php
 application/library/MVC/DataType/test/DTFileSecureFilePath.php
+application/library/MVC/DataType/test/DTVar.php
 application/library/MVC/DataType/DTEventContext.php
 application/library/MVC/DataType/DTFileinfo.php
 application/library/MVC/DataType/DTArrayObject.php
@@ -22,6 +23,7 @@ application/library/MVC/DataType/DTRoute.php
 application/library/MVC/DataType/DTConstant.php
 application/library/MVC/DataType/DTProperty.php
 application/library/MVC/DataType/DTConfig.php
+application/library/MVC/DataType/DTValue.php
 application/library/MVC/Cache.php
 application/library/MVC/View.php
 application/library/MVC/Request.php
