@@ -15,6 +15,7 @@ application/library/MVC/DataType/test/DTEventClosureParam.php
 application/library/MVC/DataType/test/DTEventContext.php
 application/library/MVC/DataType/test/DTFileSecureFilePath.php
 application/library/MVC/DataType/test/DTVar.php
+application/library/MVC/DataType/test/DTValue.php
 application/library/MVC/DataType/DTEventContext.php
 application/library/MVC/DataType/DTFileinfo.php
 application/library/MVC/DataType/DTArrayObject.php
