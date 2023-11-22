@@ -1,0 +1,26 @@
+
+/* maxlengthVisualFeedback
+ */
+.maxlengthVisualFeedback {}
+.progress {
+    position: absolute;
+}
+    .progress-bar {
+        background-color: gray;
+    }
+    .progress-bar-info {
+        background-color: lightblue;
+    }
+    .progress-bar-warning {
+        background-color: orange;
+    }
+    .progress-bar-danger {
+        background-color: lightcoral;
+    }
+    .progresstext {
+    }
+/* other
+ */     
+textarea, input, select {
+    display: block;
+}    
