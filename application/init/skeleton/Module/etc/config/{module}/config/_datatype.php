@@ -1,25 +1,20 @@
 <?php
 
-/**
- * @usage php datatype.php
- *          Classes created by this script are placed into folder: `/modules/{module}/DataType/`
- */
-
-#---------------------------------------------------------------
-require_once realpath(__DIR__ . '/../../../../../') . '/application/init/util/bootstrap.php';
-\MVC\Config::init(get($GLOBALS['aConfig'], array()));
-\MVC\Cache::init(\MVC\Config::get_MVC_CACHE_CONFIG());
-\MVC\Cache::autoDeleteCache('DataType', 0);
-
 #---------------------------------------------------------------
 #  Defining DataType Classes
 
-$sDataTypeDir = realpath(__DIR__ . '/../../../') . '/DataType';
-$sNamespace = str_replace('/', '\\', substr($sDataTypeDir, strlen(\MVC\Config::get_MVC_MODULES_DIR() . '/')));
+$sModuleCurrentDir = realpath(__DIR__ . '/../../../../');
+$sModuleCurrent = basename($sModuleCurrentDir);
+$sDataTypeDir = $sModuleCurrentDir . '/DataType';
+$sNamespace = str_replace('/', '\\', substr($sDataTypeDir, strlen($aConfig['MVC_MODULES_DIR'] . '/')));
 
 // base setup
 $aDataType = array(
+
+    // directory
     'dir' => $sDataTypeDir,
+
+    // remove complete dir before new creation
     'unlinkDir' => false,
 
     // enable creation of events in datatype methods
@@ -98,6 +93,8 @@ $aDataType['class'][] = array(
 );
 
 #---------------------------------------------------------------
-#  create!
+# copy settings to module's config
+# in your code you can access this datatype config by: \MVC\Config::MODULE()['DATATYPE'];
 
-\MVC\Generator\DataType::create()->initConfigArray($aDataType);
+$aConfig['MODULE'][$sModuleCurrent]['DATATYPE'] = $aDataType;
+

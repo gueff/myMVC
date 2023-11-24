@@ -42,6 +42,17 @@ clearall | ca
         - /application/session/
         - /application/templates_c/
 
+modules | md
+    command:    php emvicy.php md
+        lists available modules in JSON format
+        example:
+        {"SECONDARY":{"0":"Captcha","1":"DB","2":"Email","4":"Idolon","5":"InfoService","6":"OpenApi"},"PRIMARY":["Emvicy"]}
+
+datatype | dt
+    command:    php emvicy.php dt               # creating datatype classes for all modules
+                php emvicy.php dt module:Foo    # creating datatype classes for module `Foo`
+        creates datatype classes for a given module or for all modules (default)
+
 update | up
     command:    php emvicy.php up
         updates

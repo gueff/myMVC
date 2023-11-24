@@ -481,4 +481,63 @@ class Emvicy
     {
         self::version();
     }
+
+    /**
+     * @return void
+     */
+    public static function md()
+    {
+        self::modules();
+    }
+
+    /**
+     * @return void
+     */
+    public static function modules()
+    {
+        echo json_encode($GLOBALS['aConfig']['MVC_MODULE_SET']) . "\n\n";
+    }
+
+    /**
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function dt()
+    {
+        self::datatype();
+    }
+
+    /**
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function datatype()
+    {
+        $sModuleRequested = get($_GET['module']);
+
+        \MVC\Cache::init(\MVC\Config::get_MVC_CACHE_CONFIG());
+        \MVC\Cache::autoDeleteCache('DataType', 0);
+
+        foreach ($GLOBALS['aConfig']['MVC_MODULE_SET'] as $sType => $aModule)
+        {
+            foreach ($aModule as $sModule)
+            {
+                // skip if a certain module was requested
+                if (false === is_null($sModuleRequested) && $sModule !== $sModuleRequested)
+                {
+                    continue;
+                }
+
+                $aDataTypeConfig = get($GLOBALS['aConfig']['MODULE'][$sModule]['DATATYPE']);
+
+                if (false === is_null($aDataTypeConfig))
+                {
+                    echo 'generating Datatype Classes for module: `' . $sModule . '`, ';
+                    echo 'directory: `' . get($aDataTypeConfig['dir']) . '` ... ';
+                    \MVC\Generator\DataType::create()->initConfigArray($aDataTypeConfig);
+                    echo "done ✔\n";
+                }
+            }
+        }
+    }
 }
