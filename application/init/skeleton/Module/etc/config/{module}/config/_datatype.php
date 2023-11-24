@@ -22,7 +22,7 @@ $aDataType = array(
 );
 
 // classes
-$aDataType['class'][] = array(
+$aDataType['class']['DTRoutingAdditional'] = array(
     'name' => 'DTRoutingAdditional',
     'file' => 'DTRoutingAdditional.php',
     'namespace' => $sNamespace,
