@@ -63,7 +63,7 @@ class Reflex
 				// Singleton or New
 				if (method_exists ($sControllerClassName, 'getInstance'))
 				{
-					$oReflectionObject = $sControllerClassName::getInstance ();
+					$oReflectionObject = $sControllerClassName::getInstance(Request::getCurrentRequest(), $oDTRoute);
 
                     // run an event which KEY is
                     //		Class::method
@@ -81,7 +81,7 @@ class Reflex
 				}
 				else
 				{
-					$oReflectionObject = new $sControllerClassName ();
+					$oReflectionObject = new $sControllerClassName(Request::getCurrentRequest(), $oDTRoute);
 
                     // run an event which KEY is
                     //		Class::method
@@ -109,7 +109,7 @@ class Reflex
 				{
 					try
 					{
-						$oReflectionMethod = new \ReflectionMethod ($sControllerClassName, $sMethod);
+						$oReflectionMethod = new \ReflectionMethod($sControllerClassName, $sMethod);
 					}
 					catch (\ReflectionException $oReflectionException)
 					{
@@ -144,13 +144,13 @@ class Reflex
                     );
 
 					// static Method or not-static
-					if (true === filter_var ($oReflectionMethod->isStatic (), FILTER_VALIDATE_BOOLEAN))
+					if (true === filter_var ($oReflectionMethod->isStatic(), FILTER_VALIDATE_BOOLEAN))
 					{
-						$oReflectionObject::$sMethod ();
+						$oReflectionObject::$sMethod(Request::getCurrentRequest(), $oDTRoute);
 					}
 					else
 					{
-						$oReflectionObject->$sMethod ();
+						$oReflectionObject->$sMethod(Request::getCurrentRequest(), $oDTRoute);
 					}
 					
 					Event::run ('mvc.reflex.reflect.targetObject.after',

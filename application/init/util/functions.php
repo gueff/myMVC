@@ -145,14 +145,6 @@ function mvcStoreEnv(string $sEnvFile = '')
         : false
     ;
 
-    if (false === file_exists($sEnvFile))
-    {
-        file_put_contents(
-            $sEnvFile,
-            "# auto-created " . date('Y-m-d H:i:s') . "\nMVC_ENV=develop\n"
-        );
-    }
-
     // read .env file in the public folder
     if (file_exists($sEnvFile))
     {

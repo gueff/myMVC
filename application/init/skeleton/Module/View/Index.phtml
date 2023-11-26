@@ -33,7 +33,7 @@ class Index extends \MVC\View
      * Index constructor.
      * @throws \ReflectionException
      */
-    protected function __construct ()
+    protected function __construct()
 	{
 		parent::__construct ();
         $this->sendSecurityHeader();
@@ -43,7 +43,7 @@ class Index extends \MVC\View
     /**
      * @return \MVC\View|\{module}\View\Index|null
      */
-    public static function init ()
+    public static function init()
     {
         if (null === self::$_oInstance)
         {
@@ -88,13 +88,12 @@ class Index extends \MVC\View
     }
 
     /**
-     * @param \MVC\DataType\DTRoute|null $oDTRoute
+     * @param \MVC\DataType\DTRoute $oDTRoute
      * @return void
      * @throws \ReflectionException
      */
-    public function autoAssign(DTRoute $oDTRoute = null)
+    public function autoAssign(DTRoute $oDTRoute)
     {
-        (null === $oDTRoute) ? $oDTRoute = Route::getCurrent() : false;
         $oDTRoutingAdditional = DTRoutingAdditional::create(json_decode($oDTRoute->get_additional(), true));
 
         $this->sTemplateRelative = (false === empty($oDTRoutingAdditional->get_sLayout())) ? $oDTRoutingAdditional->get_sLayout() : Config::get_MVC_SMARTY_TEMPLATE_DEFAULT();

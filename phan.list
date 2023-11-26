@@ -1,3 +1,4 @@
+application/library/App/Controller.php
 application/library/MVC/Dir.php
 application/library/MVC/Closure.php
 application/library/MVC/Error.php

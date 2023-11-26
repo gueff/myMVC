@@ -13,6 +13,9 @@
  */
 namespace  MVC\MVCInterface;
 
+use MVC\DataType\DTRequestCurrent;
+use MVC\DataType\DTRoute;
+
 /**
  * Interface to be implemented in a Target Controller Class
  */
@@ -23,12 +26,13 @@ interface Controller
 	 * this methodname is noted in the config:
 	 * $aConfig['MVC_METHODNAME_PRECONSTRUCT']
 	 */	
-	public static function __preconstruct ();
+	public static function __preconstruct();
 
-	/**
-	 * Constructor
-	 */
-	public function __construct ();
+    /**
+     * @param \MVC\DataType\DTRequestCurrent $oDTRequestCurrent
+     * @param \MVC\DataType\DTRoute          $oDTRoute
+     */
+	public function __construct(DTRequestCurrent $oDTRequestCurrent, DTRoute $oDTRoute);
 	
 	/**
 	 * Destructor

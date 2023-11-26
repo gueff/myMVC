@@ -14,14 +14,17 @@ MVC_FUNCTIONS: {
 
 READ_ENV: {
 
-    mvcStoreEnv(realpath(__DIR__ . '/../../../') . '/.env');
+    $sBasePath = realpath(__DIR__ . '/../../../');
+    (false === file_exists ($sBasePath . '/.env')) ? copy($sBasePath . '/.env.example',$sBasePath . '/.env') : false;
+    mvcStoreEnv($sBasePath . '/.env');
+    unset($sBasePath);
 }
 
 MVC_ENV: {
 
     // we need the variable MVC_ENV set.
     // So this fallback sets it to "develop" if MVC_ENV is not already set before
-    (false === getenv ('MVC_ENV'))
+    (false === getenv('MVC_ENV'))
         ? putenv('MVC_ENV=develop')
         : false
     ;

@@ -33,6 +33,6 @@ $aConfig['MODULE']['{module}'] = array();
 
 //-------------------------------------------------------------------------------------
 
-include_once '_datatype.php';
-include_once '_session.php';
-include_once '_csp.php';
+require '_datatype.php';
+require '_session.php';
+require '_csp.php';

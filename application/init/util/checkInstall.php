@@ -217,24 +217,13 @@ class MyMVCInstaller
     /**
      * @return bool
      */
-	protected function setupDirsAndFiles ()
+	protected function setupDirsAndFiles()
 	{
-		(!file_exists ($this->_aConfig['MVC_CACHE_DIR'])) ? mkdir ($this->_aConfig['MVC_CACHE_DIR']) : FALSE;
-		(!file_exists ($this->_aConfig['MVC_SESSION_PATH'])) ? mkdir ($this->_aConfig['MVC_SESSION_PATH']) : FALSE;
-		(!file_exists ($this->_aConfig['MVC_SMARTY_TEMPLATE_CACHE_DIR'])) ? mkdir ($this->_aConfig['MVC_SMARTY_TEMPLATE_CACHE_DIR']) : FALSE;
-		(!file_exists ($this->_aConfig['MVC_CONFIG_DIR'])) ? mkdir ($this->_aConfig['MVC_CONFIG_DIR']) : FALSE;
-		(!file_exists ($this->_aConfig['MVC_LOG_FILE_DIR'])) ? mkdir ($this->_aConfig['MVC_LOG_FILE_DIR']) : FALSE;
-
-		if (!file_exists ($this->_aConfig['MVC_BASE_PATH'] . '/.env'))
-        {
-            $sMsg = "# auto generated at " . date('Y-m-d H:i:s') . "\n";
-            $sMsg.= "MVC_ENV=" . $this->_aConfig['MVC_ENV'];
-
-            return (boolean) file_put_contents(
-                $this->_aConfig['MVC_PUBLIC_PATH'] . '/.env',
-                $sMsg
-            );
-        }
+		(!file_exists ($this->_aConfig['MVC_CACHE_DIR'])) ? mkdir ($this->_aConfig['MVC_CACHE_DIR']) : false;
+		(!file_exists ($this->_aConfig['MVC_SESSION_PATH'])) ? mkdir ($this->_aConfig['MVC_SESSION_PATH']) : false;
+		(!file_exists ($this->_aConfig['MVC_SMARTY_TEMPLATE_CACHE_DIR'])) ? mkdir ($this->_aConfig['MVC_SMARTY_TEMPLATE_CACHE_DIR']) : false;
+		(!file_exists ($this->_aConfig['MVC_CONFIG_DIR'])) ? mkdir ($this->_aConfig['MVC_CONFIG_DIR']) : false;
+		(!file_exists ($this->_aConfig['MVC_LOG_FILE_DIR'])) ? mkdir ($this->_aConfig['MVC_LOG_FILE_DIR']) : false;
 
 		return false;
     }

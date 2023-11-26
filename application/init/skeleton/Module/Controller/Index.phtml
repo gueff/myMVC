@@ -13,44 +13,51 @@
  */
 namespace {module}\Controller;
 
-use MVC\Route;
+use App\Controller;
+use MVC\DataType\DTRequestCurrent;
+use MVC\DataType\DTRoute;
 
 /**
- * Index
- * @implements \MVC\MVCInterface\Controller
+ * @extends Controller
  */
-class Index implements \MVC\MVCInterface\Controller
+class Index extends Controller
 {
     /**
      * @return void
      */
-    public static function __preconstruct ()
+    public static function __preconstruct()
     {
         ;
     }
-	
+
     /**
-     * Index constructor.
+     * @param \MVC\DataType\DTRequestCurrent $oDTRequestCurrent
+     * @param \MVC\DataType\DTRoute          $oDTRoute
      * @throws \ReflectionException
-     * @throws \SmartyException
      */
-	public function __construct ()
+    public function __construct(DTRequestCurrent $oDTRequestCurrent, DTRoute $oDTRoute)
 	{
-        \{module}\View\Index::init()->autoAssign();
+        \{module}\View\Index::init()->autoAssign($oDTRoute);
 	}
 
     /**
+     * @param \MVC\DataType\DTRequestCurrent $oDTRequestCurrent
+     * @param \MVC\DataType\DTRoute          $oDTRoute
      * @return void
+     * @throws \ReflectionException
      */
-	public function index ()
+	public function index(DTRequestCurrent $oDTRequestCurrent, DTRoute $oDTRoute)
 	{
 		;
 	}
 
     /**
+     * @param \MVC\DataType\DTRequestCurrent $oDTRequestCurrent
+     * @param \MVC\DataType\DTRoute          $oDTRoute
      * @return void
+     * @throws \ReflectionException
      */
-    public function notFound()
+    public function notFound(DTRequestCurrent $oDTRequestCurrent, DTRoute $oDTRoute)
     {
         http_response_code(404);
     }
@@ -59,7 +66,7 @@ class Index implements \MVC\MVCInterface\Controller
      * @throws \ReflectionException
      * @throws \SmartyException
      */
-	public function __destruct ()
+	public function __destruct()
 	{
         \{module}\View\Index::init()->render();
 	}
