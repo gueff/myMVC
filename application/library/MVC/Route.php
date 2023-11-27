@@ -63,7 +63,7 @@ class Route
      * @return void
      * @throws \ReflectionException
      */
-    public static function ANY(string $sPath = '', string $sQuery = '', mixed $mOptional = '') : void
+    public static function any(string $sPath = '', string $sQuery = '', mixed $mOptional = '') : void
     {
         self::add('*', $sPath, $sQuery, $mOptional);
     }
@@ -76,7 +76,7 @@ class Route
      * @return void
      * @throws \ReflectionException
      */
-    public static function MIX(array $aMethod = array(), string $sPath = '', string $sQuery = '', mixed $mOptional = '') : void
+    public static function mix(array $aMethod = array(), string $sPath = '', string $sQuery = '', mixed $mOptional = '') : void
     {
         foreach ($aMethod as $sMethod)
         {
@@ -91,7 +91,7 @@ class Route
      * @return void
      * @throws \ReflectionException
      */
-    public static function GET(string $sPath = '', string $sQuery = '', mixed $mOptional = '') : void
+    public static function get(string $sPath = '', string $sQuery = '', mixed $mOptional = '') : void
     {
         self::add('GET', $sPath, $sQuery, $mOptional);
     }
@@ -103,7 +103,7 @@ class Route
      * @return void
      * @throws \ReflectionException
      */
-    public static function POST(string $sPath = '', string $sQuery = '', mixed $mOptional = '') : void
+    public static function post(string $sPath = '', string $sQuery = '', mixed $mOptional = '') : void
     {
         self::add('POST', $sPath, $sQuery, $mOptional);
     }
@@ -115,7 +115,7 @@ class Route
      * @return void
      * @throws \ReflectionException
      */
-    public static function PUT(string $sPath = '', string $sQuery = '', mixed $mOptional = '') : void
+    public static function put(string $sPath = '', string $sQuery = '', mixed $mOptional = '') : void
     {
         self::add('PUT', $sPath, $sQuery, $mOptional);
     }
@@ -127,7 +127,7 @@ class Route
      * @return void
      * @throws \ReflectionException
      */
-    public static function DELETE(string $sPath = '', string $sQuery = '', mixed $mOptional = ''): void
+    public static function delete(string $sPath = '', string $sQuery = '', mixed $mOptional = ''): void
     {
         self::add('DELETE', $sPath, $sQuery, $mOptional);
     }

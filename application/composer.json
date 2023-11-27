@@ -24,6 +24,7 @@
     "mrclay/jsmin-php": "2.4.*",
     "ezyang/htmlpurifier": "v4.17.*",
     "erusev/parsedown":"1.7.*",
+    "adbario/php-dot-notation": "3.3.*",
     "symfony/var-dumper": "@stable",
     "symfony/http-kernel": "@stable",
     "symfony/http-foundation": "@stable"

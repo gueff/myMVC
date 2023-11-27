@@ -97,7 +97,7 @@ class DTProperty
      */
     public function __construct(array $aData = array())
     {
-        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTProperty.__construct.before', $aData);
+        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTProperty.__construct.before', $oDTValue);
         $aData = $oDTValue->get_mValue();
 
         $this->key = '';

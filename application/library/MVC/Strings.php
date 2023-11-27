@@ -10,6 +10,8 @@
 
 namespace MVC;
 
+use Emvicy\Emvicy;
+
 class Strings
 {
     /**
@@ -125,19 +127,21 @@ class Strings
     }
 
     /**
-     * returns a random uuid Version4 string
+     * returns a random uuid Version4 string (8-4-4-4-12)
      * @example 889abaf2-461d-42a1-86f4-07eb3e9876a5
      * @return string
+     * @throws \ReflectionException
      */
     public static function uuid4() : string
     {
-        return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-            mt_rand(0, 0xffff), mt_rand(0, 0xffff),
-            mt_rand(0, 0xffff),
-            mt_rand(0, 0x0fff) | 0x4000,
-            mt_rand(0, 0x3fff) | 0x8000,
-            mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
-        );
+        return sprintf(
+                '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+                mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+                mt_rand(0, 0xffff),
+                mt_rand(0, 0x0fff) | 0x4000,
+                mt_rand(0, 0x3fff) | 0x8000,
+                mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
+            );
     }
 
     /**

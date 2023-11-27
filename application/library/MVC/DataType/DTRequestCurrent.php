@@ -104,6 +104,11 @@ class DTRequestCurrent
 	 */
 	protected $ip;
 
+    /**
+     * @var array
+     */
+    protected $cookieArray;
+
 	/**
 	 * DTRequestCurrent constructor.
 	 * @param array $aData
@@ -111,7 +116,7 @@ class DTRequestCurrent
 	 */
 	public function __construct(array $aData = array())
 	{
-        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTRequestCurrent.__construct.before', $aData);
+        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTRequestCurrent.__construct.before', $oDTValue);
         $aData = $oDTValue->get_mValue();
 
 		$this->scheme = '';
@@ -128,6 +133,7 @@ class DTRequestCurrent
 		$this->headerArray = array();
 		$this->pathParam = array();
 		$this->ip = '';
+        $this->cookieArray = $_COOKIE;
 
 		foreach ($aData as $sKey => $mValue)
 		{
@@ -337,6 +343,30 @@ class DTRequestCurrent
 
 		return $this;
 	}
+
+    /**
+     * @param $aValue
+     * @return $this
+     * @throws \ReflectionException
+     */
+    public function set_coookieArray($aValue)
+    {
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTRequestCurrent.set_coookieArray.before', $oDTValue);
+        $this->cookieArray = (array) $oDTValue->get_mValue();
+
+        return $this;
+    }
+
+    /**
+     * @return mixed|null
+     * @throws \ReflectionException
+     */
+    public function get_coookieArray()
+    {
+        $oDTValue = DTValue::create()->set_mValue($this->cookieArray); \MVC\Event::RUN ('DTRequestCurrent.get_coookieArray.before', $oDTValue);
+
+        return $oDTValue->get_mValue();
+    }
 
 	/**
 	 * @return string

@@ -37,9 +37,11 @@ application/library/MVC/Registry.php
 application/library/MVC/Reflex.php
 application/library/MVC/Route.php
 application/library/MVC/File.php
+application/library/MVC/ArrDot.php
 application/library/MVC/Config.php
 application/library/MVC/Generator/DataType.php
 application/library/MVC/MVCInterface/Controller.php
+application/library/MVC/Asset.php
 application/library/MVC/Session.php
 application/library/MVC/Controller.php
 application/library/MVC/Strings.php

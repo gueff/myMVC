@@ -28,13 +28,13 @@ $oDTRoutingAdditional = \{module}\DataType\DTRoutingAdditional::create()
 /*
  * Routes
  */
-\MVC\Route::MIX(
+\MVC\Route::mix(
     ['GET', 'POST'],
     '/',
     '\{module}\Controller\Index::index',
     $oDTRoutingAdditional->getPropertyJson()
 );
-\MVC\Route::GET(
+\MVC\Route::get(
     '/404/',
     '\{module}\Controller\Index::notFound',
     $oDTRoutingAdditional->set_sTitle('404')

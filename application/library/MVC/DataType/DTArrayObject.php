@@ -61,7 +61,7 @@ class DTArrayObject
     {
         $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTArrayObject.create.before', $oDTValue);
         $oObject = new self($oDTValue->get_mValue());
-        $oDTValue = DTValue::create()->set_mValue($oObject); \MVC\Event::RUN ('DTArrayObject.create.before', $oDTValue);
+        $oDTValue = DTValue::create()->set_mValue($oObject); \MVC\Event::RUN ('DTArrayObject.create.after', $oDTValue);
 
         return $oDTValue->get_mValue();
     }

@@ -48,6 +48,7 @@ class Request
         $oDTRequestCurrent->set_headerArray(self::getHeaderArray());
         $oDTRequestCurrent->set_pathParam(self::getPathParam());
         $oDTRequestCurrent->set_ip(self::getIpAddress());
+        $oDTRequestCurrent->set_coookieArray($_COOKIE);
 
         // if event ...
         Event::bind('mvc.controller.init.before', function(){
