@@ -5,6 +5,7 @@
  */
 namespace MVC\DataType;
 
+use MVC\DataType\DTValue;
 use MVC\MVCTrait\TraitDataType;
 
 class DTEventContext
@@ -74,6 +75,9 @@ class DTEventContext
 	 */
 	public function __construct(array $aData = array())
 	{
+		$oDTValue = DTValue::create()->set_mValue($aData);
+		$aData = $oDTValue->get_mValue();
+
 		$this->sEvent = '';
 		$this->sEventOrigin = '';
 		$this->mRunPackage = '';
@@ -94,6 +98,7 @@ class DTEventContext
 			}
 		}
 
+		$oDTValue = DTValue::create()->set_mValue($aData); 
 	}
 
     /**
@@ -103,9 +108,11 @@ class DTEventContext
      */
     public static function create(array $aData = array())
     {
-        $oObject = new self($aData);
-        
-        return $oObject;
+        $oDTValue = DTValue::create()->set_mValue($aData);
+		$oObject = new self($oDTValue->get_mValue());
+        $oDTValue = DTValue::create()->set_mValue($oObject); 
+
+        return $oDTValue->get_mValue();
     }
 
 	/**
@@ -115,7 +122,8 @@ class DTEventContext
 	 */
 	public function set_sEvent(string $mValue)
 	{
-		$this->sEvent = (string) $mValue;
+		$oDTValue = DTValue::create()->set_mValue($mValue); 
+		$this->sEvent = (string) $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -127,7 +135,8 @@ class DTEventContext
 	 */
 	public function set_sEventOrigin(string $mValue)
 	{
-		$this->sEventOrigin = (string) $mValue;
+		$oDTValue = DTValue::create()->set_mValue($mValue); 
+		$this->sEventOrigin = (string) $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -139,7 +148,8 @@ class DTEventContext
 	 */
 	public function set_mRunPackage(mixed $mValue)
 	{
-		$this->mRunPackage = $mValue;
+		$oDTValue = DTValue::create()->set_mValue($mValue); 
+		$this->mRunPackage = $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -151,7 +161,8 @@ class DTEventContext
 	 */
 	public function set_aBonded(array $mValue)
 	{
-		$this->aBonded = (array) $mValue;
+		$oDTValue = DTValue::create()->set_mValue($mValue); 
+		$this->aBonded = (array) $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -163,7 +174,8 @@ class DTEventContext
 	 */
 	public function set_sBondedBy(string $mValue)
 	{
-		$this->sBondedBy = (string) $mValue;
+		$oDTValue = DTValue::create()->set_mValue($mValue); 
+		$this->sBondedBy = (string) $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -175,7 +187,8 @@ class DTEventContext
 	 */
 	public function set_sCalledIn(string $mValue)
 	{
-		$this->sCalledIn = (string) $mValue;
+		$oDTValue = DTValue::create()->set_mValue($mValue); 
+		$this->sCalledIn = (string) $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -187,7 +200,8 @@ class DTEventContext
 	 */
 	public function set_oCallback(\Closure $mValue)
 	{
-		$this->oCallback = $mValue;
+		$oDTValue = DTValue::create()->set_mValue($mValue); 
+		$this->oCallback = $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -199,7 +213,8 @@ class DTEventContext
 	 */
 	public function set_sCallbackDumped(string $mValue)
 	{
-		$this->sCallbackDumped = (string) $mValue;
+		$oDTValue = DTValue::create()->set_mValue($mValue); 
+		$this->sCallbackDumped = (string) $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -211,7 +226,8 @@ class DTEventContext
 	 */
 	public function set_sMessage(string $mValue)
 	{
-		$this->sMessage = (string) $mValue;
+		$oDTValue = DTValue::create()->set_mValue($mValue); 
+		$this->sMessage = (string) $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -222,8 +238,9 @@ class DTEventContext
 	 */
 	public function get_sEvent() : string
 	{
+		$oDTValue = DTValue::create()->set_mValue($this->sEvent); 
 
-		return $this->sEvent;
+		return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -232,8 +249,9 @@ class DTEventContext
 	 */
 	public function get_sEventOrigin() : string
 	{
+		$oDTValue = DTValue::create()->set_mValue($this->sEventOrigin); 
 
-		return $this->sEventOrigin;
+		return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -242,8 +260,9 @@ class DTEventContext
 	 */
 	public function get_mRunPackage()
 	{
+		$oDTValue = DTValue::create()->set_mValue($this->mRunPackage); 
 
-		return $this->mRunPackage;
+		return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -252,8 +271,9 @@ class DTEventContext
 	 */
 	public function get_aBonded() : array
 	{
+		$oDTValue = DTValue::create()->set_mValue($this->aBonded); 
 
-		return $this->aBonded;
+		return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -262,8 +282,9 @@ class DTEventContext
 	 */
 	public function get_sBondedBy() : string
 	{
+		$oDTValue = DTValue::create()->set_mValue($this->sBondedBy); 
 
-		return $this->sBondedBy;
+		return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -272,8 +293,9 @@ class DTEventContext
 	 */
 	public function get_sCalledIn() : string
 	{
+		$oDTValue = DTValue::create()->set_mValue($this->sCalledIn); 
 
-		return $this->sCalledIn;
+		return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -282,8 +304,9 @@ class DTEventContext
 	 */
 	public function get_oCallback() : \Closure
 	{
+		$oDTValue = DTValue::create()->set_mValue($this->oCallback); 
 
-		return $this->oCallback;
+		return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -292,8 +315,9 @@ class DTEventContext
 	 */
 	public function get_sCallbackDumped() : string
 	{
+		$oDTValue = DTValue::create()->set_mValue($this->sCallbackDumped); 
 
-		return $this->sCallbackDumped;
+		return $oDTValue->get_mValue();
 	}
 
 	/**
@@ -302,8 +326,9 @@ class DTEventContext
 	 */
 	public function get_sMessage() : string
 	{
+		$oDTValue = DTValue::create()->set_mValue($this->sMessage); 
 
-		return $this->sMessage;
+		return $oDTValue->get_mValue();
 	}
 
 	/**

@@ -1,5 +1,6 @@
 .git
 .idea
+.bak
 .trash
 .env
 application/.composer

@@ -224,6 +224,6 @@ class Error
      */
 	public static function getERROR() : array
 	{
-		return self::$_aError;
+		return (array) self::$_aError;
 	}
 }

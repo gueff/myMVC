@@ -37,7 +37,6 @@ class DTValue
 				$this->$sMethod($mValue);
 			}
 		}
-
 	}
 
     /**
@@ -47,8 +46,8 @@ class DTValue
      */
     public static function create(array $aData = array())
     {
-        $oObject = new self($aData);
-        
+		$oObject = new self($aData);
+
         return $oObject;
     }
 
@@ -70,7 +69,6 @@ class DTValue
 	 */
 	public function get_mValue()
 	{
-
 		return $this->mValue;
 	}
 
@@ -135,5 +133,4 @@ class DTValue
 
 		return $this;
 	}
-
 }

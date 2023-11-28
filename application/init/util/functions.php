@@ -66,19 +66,13 @@ function stop()
         (false === class_exists('\MVC\Request', true))
     )
     {
-        die("\ndie at: " . __FILE__ . ', ' . __LINE__ . "\n");
+        die("\nstop at: \n- File: " . debug_backtrace()[0]['file']. "\n- Line: " . debug_backtrace()[0]['line'] . "\n");
     }
 
     $aDebug = \MVC\Debug::prepareBacktraceArray(debug_backtrace());
-    $sMessage = "<pre>
-stop at:
-- File: " . $aDebug['sFile'] . "
-- Line: " . $aDebug['sLine']. "
-- Method: " . $aDebug['sClass'] . "::" . $aDebug['sFunction'] . "
-</pre>
-";
-
-    (true === \MVC\Request::isCli()) ? $sMessage = strip_tags($sMessage): false;
+    $sMessage = "\n<pre>stop at:\n- File: " . $aDebug['sFile'] . "\n- Line: " . $aDebug['sLine'] . "\n";
+    (!empty(get($aDebug['sClass']))) ? $sMessage.="- Method: " . $aDebug['sClass'] . "::" . $aDebug['sFunction'] . "</pre>" : false;
+    ('cli' === strtolower(php_sapi_name())) ? $sMessage = strip_tags($sMessage): false;
     die($sMessage);
 }
 

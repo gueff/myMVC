@@ -76,7 +76,8 @@ log
             - bash, grep, awk, sort, sed
 
 lint | l
-    command:    php emvicy.php l
+    command:    php emvicy.php lint module:Foo  # checks module "Foo" on errors
+                php emvicy.php lint             # checks the whole application on errors
         checks all codes on errors and returns a parsable JSON containing bool `bSuccess` and array `aMessage`.
         Examples
             no errors found

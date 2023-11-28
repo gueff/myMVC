@@ -333,9 +333,26 @@ class Emvicy
      * @return void
      * @throws \ReflectionException
      */
-    public static function lint()
+    public static function lint(string $sModule = '')
     {
-        $sCmd = whereis('find') . ' ' . \MVC\Config::get_MVC_BASE_PATH() . ' -type f -name "*.php" '
+        $sPath = \MVC\Config::get_MVC_BASE_PATH();
+
+        if (false === empty($sModule))
+        {
+            $sPath = \MVC\Config::get_MVC_MODULES_DIR() . '/' . $sModule;
+        }
+        if (false === empty(self::get_module()))
+        {
+            $sPath = \MVC\Config::get_MVC_MODULES_DIR() . '/' . self::get_module();
+        }
+
+        if (false === file_exists($sPath))
+        {
+            echo 'file does not exist: `' . $sPath . '`' . "\n";
+            exit();
+        }
+
+        $sCmd = whereis('find') . ' ' . $sPath . ' -type f -name "*.php" '
             . ' -exec ' . PHP_BINARY . ' -l {} \; 2>&1 '
             . '| (! ' . whereis('grep') . ' -v "errors detected")';
         $sResult = self::shellExecute($sCmd, false);

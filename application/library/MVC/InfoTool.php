@@ -25,12 +25,12 @@ class InfoTool
     public function __construct(\Smarty $oView)
     {
         // add toolbar at the right time
-        Event::BIND ('mvc.view.render.before', function (\MVC\DataType\DTArrayObject $oDTArrayObject) {
-            InfoTool::injectToolbar ($oDTArrayObject->getDTKeyValueByKey('oView')->get_sValue());
+        Event::bind('mvc.view.render.before', function() {
+            InfoTool::injectToolbar(Config::get_MVC_MODULE_PRIMARY_VIEW());
         });
 
         // get toolbar values and save them to registry
-        Registry::set ('aToolbar', $this->collectInfo ($oView));
+        Registry::set('aToolbar', $this->collectInfo($oView));
     }
 
     /**
@@ -41,9 +41,14 @@ class InfoTool
      * @throws \ReflectionException
      * @throws \SmartyException
      */
-    public static function injectToolbar(\Smarty $oView) : void
+    public static function injectToolbar(\Smarty $oView)
     {
-        $aToolbar = Registry::get ('aToolbar');
+        if (false === Registry::isRegistered('aToolbar'))
+        {
+            return false;
+        }
+
+        $aToolbar = Registry::get('aToolbar');
         $sHtml = '';
 
         $sToolBarVarName = 'sToolBar_' . uniqid();

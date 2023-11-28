@@ -31,7 +31,7 @@ class Log
 
         if (true === str_starts_with($aData['sFile'], $GLOBALS['aConfig']['MVC_BASE_PATH']))
         {
-            $aData['sFile'] = $GLOBALS['aConfig']['MVC_BASE_PATH'];
+            $aData['sFile'] = substr($aData['sFile'], strlen($GLOBALS['aConfig']['MVC_BASE_PATH']));
         }
 
         return $aData['sFile'] . ', ' . $aData['sLine'];

@@ -33,6 +33,6 @@ $aConfig['MODULE']['{module}'] = array();
 
 //-------------------------------------------------------------------------------------
 
-require '_datatype.php';
-require '_session.php';
-require '_csp.php';
+require realpath(__DIR__) . '/_datatype.php';
+require realpath(__DIR__) . '/_session.php';
+require realpath(__DIR__) . '/_csp.php';

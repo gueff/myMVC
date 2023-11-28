@@ -30,6 +30,7 @@
     "symfony/http-foundation": "@stable"
   },
   "require-dev": {
+    "phpstan/phpstan": "1.10.*",
     "phpunit/phpunit": "9.*",
     "php-webdriver/webdriver": "1.14.*",
     "phpunit/phpunit-selenium": "9.0.*"
