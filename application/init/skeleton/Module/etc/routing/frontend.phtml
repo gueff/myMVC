@@ -1,11 +1,14 @@
 <?php
 
 /*
- * you can use your own $oDTRoutingAdditional
- * @see modules/{module}/etc/config/{module}/config/_dataType.php
+ * modify this Datatype `DTRoutingAdditional` to your needs in:
+ *      `modules/{module}/etc/config/{module}/config/_dataType.php`
+ * create the Datatype class finally on cli:
+ *      `php emvicy.php datatype`
  */
 
-$oDTRoutingAdditional = \MVC\DataType\DTRoutingAdditional::create()
+// template
+$oDTRoutingAdditional = \{module}\DataType\DTRoutingAdditional::create()
     ->set_sTitle('{module}')
     ->set_sLayout('Frontend/layout/index.tpl')
     ->set_sMainmenu('Frontend/layout/menu.tpl')
@@ -33,12 +36,12 @@ $oDTRoutingAdditional = \MVC\DataType\DTRoutingAdditional::create()
     ['GET', 'POST'],
     '/',
     '\{module}\Controller\Index::index',
-    $oDTRoutingAdditional->getPropertyJson()
+    clone $oDTRoutingAdditional
 );
 \MVC\Route::get(
     '/404/',
     '\{module}\Controller\Index::notFound',
-    $oDTRoutingAdditional->set_sTitle('404')
+    clone $oDTRoutingAdditional
+        ->set_sTitle('404')
         ->set_sContent('Frontend/content/404.tpl')
-        ->getPropertyJson()
 );

@@ -32,28 +32,23 @@ class Route
      */
     public static function init() : void
     {
-        Event::RUN('mvc.route.init.before');
+        Event::run('mvc.route.init.before');
+        $sRoutingDir = Config::get_MVC_MODULE_PRIMARY_ETC_DIR() . '/routing';
 
-        DEFAULT_SOURCE_PHP_FILES: {
-
-
-            $sRoutingDir = Config::get_MVC_MODULE_PRIMARY_ETC_DIR() . '/routing';
-
-            if (true === file_exists($sRoutingDir))
+        if (true === file_exists($sRoutingDir))
+        {
+            //  require recursively all php files in module's routing dir
+            /** @var \SplFileInfo $oSplFileInfo */
+            foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($sRoutingDir)) as $oSplFileInfo)
             {
-                //  require recursively all php files in module's routing dir
-                /** @var \SplFileInfo $oSplFileInfo */
-                foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($sRoutingDir)) as $oSplFileInfo)
+                if ('php' === strtolower($oSplFileInfo->getExtension()))
                 {
-                    if ('php' === strtolower($oSplFileInfo->getExtension()))
-                    {
-                        require_once $oSplFileInfo->getPathname();
-                    }
+                    require_once $oSplFileInfo->getPathname();
                 }
             }
         }
 
-        Event::RUN('mvc.route.init.after');
+        Event::run('mvc.route.init.after');
     }
 
     /**

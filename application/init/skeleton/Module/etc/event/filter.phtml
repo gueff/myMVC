@@ -7,9 +7,10 @@
 \MVC\Event::processBindConfigStack([
 
     /**
-     * on Input ($_POST, etc.)
+     * on Input (PUT, POST, etc.)
      */
     'DTRequestCurrent.set_input.before' => [
+
         /**
          * converts default input, which is of type string
          * 'email=john%28.doe%29%40exa%2F%2Fmple.com&password=EinPa%C3%9Fwort'
@@ -19,6 +20,47 @@
         function(\MVC\DataType\DTValue $oDTValue){
             parse_str($oDTValue->get_mValue(), $mValue);
             $oDTValue->set_mValue($mValue);
+        },
+
+        /**
+         * sanitize input
+         * following asset filter rules
+         */
+        function(\MVC\DataType\DTValue $oDTValue) {
+
+            $aInput = $oDTValue->get_mValue();
+
+            foreach ($aInput as $sKey => $sInput)
+            {
+                $aSet = \MVC\Asset::init()->get('Filter.input.' . $sKey);
+
+                if (true === empty($aSet))
+                {
+                    continue;
+                }
+
+                // sanitize_var
+                foreach (get($aSet['sanitize_var'], []) as $iSanitizeVar)
+                {
+                    $aInput[$sKey] = filter_var($aInput[$sKey], $iSanitizeVar);
+                }
+
+                // preg_replace
+                foreach (get($aSet['preg_replace'], []) as $sRegEx)
+                {
+                    $aInput[$sKey] = preg_replace($sRegEx, '', $aInput[$sKey]);
+                }
+
+                // cast
+                $sCast = get($aSet['cast']);
+                ('int' === $sCast) ? $aInput[$sKey] = (int) $aInput[$sKey] : false;
+                ('string' === $sCast) ? $aInput[$sKey] = (string) $aInput[$sKey] : false;
+                ('bool' === $sCast) ? $aInput[$sKey] = (boolean) $aInput[$sKey] : false;
+                ('float' === $sCast) ? $aInput[$sKey] = (float) $aInput[$sKey] : false;
+                ('array' === $sCast) ? $aInput[$sKey] = (array) $aInput[$sKey] : false;
+            }
+
+            $oDTValue->set_mValue($aInput);
         },
     ],
 ]);

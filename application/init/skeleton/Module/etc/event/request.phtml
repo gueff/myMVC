@@ -6,6 +6,16 @@
 
 \MVC\Event::processBindConfigStack([
 
+    'mvc.event.init.after' => [
+        /**
+         * at this early stage
+         * create "Assets" object with given config
+         */
+        function(){
+            \MVC\Asset::init(\MVC\Config::get_MVC_MODULE_PRIMARY_STAGING_CONFIG_DIR() . '/_asset.yaml');
+        },
+    ],
+
     /**
      * after current request was get
      */

@@ -12,7 +12,6 @@ namespace App;
 
 use MVC\Config;
 use MVC\DataType\DTRoute;
-use MVC\DataType\DTRoutingAdditional;
 use MVC\Route;
 
 /**
@@ -86,7 +85,7 @@ class View extends \MVC\View
     public function autoAssign(DTRoute $oDTRoute = null)
     {
         (true === is_null($oDTRoute)) ? $oDTRoute = Route::getCurrent() : false;
-        $oDTRoutingAdditional = DTRoutingAdditional::create(json_decode($oDTRoute->get_additional(), true));
+        $oDTRoutingAdditional = $oDTRoute->get_additional();
 
         $this->sTemplateRelative = (false === empty($oDTRoutingAdditional->get_sLayout())) ? $oDTRoutingAdditional->get_sLayout() : Config::get_MVC_SMARTY_TEMPLATE_DEFAULT();
         $this->sTemplate = $this->sTemplateDir . '/' . $this->sTemplateRelative;
