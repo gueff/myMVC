@@ -27,7 +27,8 @@
     "adbario/php-dot-notation": "3.3.*",
     "symfony/var-dumper": "@stable",
     "symfony/http-kernel": "@stable",
-    "symfony/http-foundation": "@stable"
+    "symfony/http-foundation": "@stable",
+    "symfony/yaml": "v6.3.*"
   },
   "require-dev": {
     "phpstan/phpstan": "1.10.*",
