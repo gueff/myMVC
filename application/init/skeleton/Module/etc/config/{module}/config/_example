@@ -16,14 +16,12 @@
 error_reporting(E_ALL);
 date_default_timezone_set('Europe/Berlin');
 
-// Log autoloader actions
-$aConfig['MVC_LOG_AUTOLOADER'] = true;
+$aConfig['MVC_EVENT_LOG_RUN'] = false;      // logging of each simple "RUN" event into MVC_LOG_FILE_EVENT
+$aConfig['MVC_LOG_AUTOLOADER'] = false;     // Log autoloader actions
+$aConfig['MVC_LOG_FORCE_LINEBREAK'] = true; // force linebreaks in logfiles no matter what
+$aConfig['MVC_INFOTOOL_ENABLE'] = true;     // show InfoTool bar
+$aConfig['MVC_LOG_REQUEST'] = false;        // logging request into MVC_LOG_FILE_REQUEST
 
-// show InfoTool bar
-$aConfig['MVC_INFOTOOL_ENABLE'] = true;
-
-// force linebreaks in logfiles no matter what
-$aConfig['MVC_LOG_FORCE_LINEBREAK'] = true;
 
 //-------------------------------------------------------------------------------------
 // Module {module}

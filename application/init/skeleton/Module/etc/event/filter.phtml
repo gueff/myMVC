@@ -11,9 +11,9 @@
      */
     'DTRequestCurrent.set_input.before' => [
         /**
-         * converts
+         * converts default input, which is of type string
          * 'email=john%28.doe%29%40exa%2F%2Fmple.com&password=EinPa%C3%9Fwort'
-         * into
+         * into array:
          * ['email' => 'john(.doe)@exa//mple.com', 'password' => 'EinPaßwort',]
          */
         function(\MVC\DataType\DTValue $oDTValue){

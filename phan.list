@@ -1,5 +1,7 @@
+application/library/App/View.php
 application/library/App/Controller.php
 application/library/MVC/Dir.php
+application/library/MVC/Info.php
 application/library/MVC/Closure.php
 application/library/MVC/Error.php
 application/library/MVC/Debug.php
@@ -12,6 +14,7 @@ application/library/MVC/InfoTool.php
 application/library/MVC/DataType/DTClass.php
 application/library/MVC/DataType/DTKeyValue.php
 application/library/MVC/DataType/DTRequestCurrent.php
+application/library/MVC/DataType/DTRoutingAdditional.php
 application/library/MVC/DataType/.bak/DTContainer.php
 application/library/MVC/DataType/.bak/DTEventContext.php
 application/library/MVC/DataType/.bak/DTValue.php

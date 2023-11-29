@@ -6,22 +6,32 @@
 namespace MVC\DataType;
 
 
+use MVC\Convert;
+
 /**
  * @example
-   $oDTContainer = DTContainer::create()
-   ->set_bSuccess(false)
-   ->set_mData(123)
-   ->add_Message(E_USER_NOTICE, 'foo')
-   ->add_Message(E_USER_WARNING, 'bar')
-   ->add_Message(E_USER_NOTICE, 'baz')
-   ->add_Message(E_USER_ERROR, 'fatal error on foo')
-   ;
-   info($oDTContainer->get_Message()->get(E_USER_NOTICE));
+ * $oDTContainer = DTContainer::create()
+   * ->set_bSuccess(false)
+   * ->set_mData(123)
+   * ->add_Message(E_USER_NOTICE, 'foo')
+   * ->add_Message(E_USER_WARNING, 'bar')
+   * ->add_Message(E_USER_NOTICE, 'baz')
+   * ->add_Message(E_USER_ERROR, 'fatal error on foo')
+   * ;
+   * info($oDTContainer->get_Message()->get(E_USER_NOTICE));
  */
 
 class DTContainer
 {
+    /**
+     * @var self
+     */
     protected static $_oInstance;
+
+    /**
+     * @var false|string
+     */
+    protected $sIdentifier;
 
     /**
      * @required true
@@ -46,6 +56,7 @@ class DTContainer
      */
     protected function __construct()
     {
+        $this->sIdentifier = microtime(true) . '.' . uniqid();
         $this->bSuccess = false;
         $this->oMessage = new \MVC\ArrDot();
         $this->mData = null;
@@ -56,24 +67,34 @@ class DTContainer
      */
     public static function create() : self
     {
-        if (null === self::$_oInstance)
-        {
-            self::$_oInstance = new self();
-        }
-
-        return self::$_oInstance;
+        return new self();
     }
 
     /**
      * @param string $sMessage
-     * @param string $sValue
+     * @param int    $iLevel
      * @return $this
      */
-    public function add_Message(string $sMessage = '', string $sValue = '')
+    public function add_Message(string $sMessage = '', int $iLevel = E_USER_NOTICE)
     {
-        $this->oMessage->push($sMessage, $sValue);
+        $sLevel = Convert::constValueToKey($iLevel);
+        (true === empty($sLevel)) ? $sLevel = 'E_USER_NOTICE' : false;
+        $sMessage = preg_replace('/[^\da-zA-Z0-9 \/\-_=>:]/i', '', $sMessage);
+        $this->oMessage->push($sLevel, $sMessage);
 
         return $this;
+    }
+
+    /**
+     * @return mixed|null
+     * @throws \ReflectionException
+     */
+    public function get_sIdentifier()
+    {
+        $oDTValue = DTValue::create()->set_mValue($this->sIdentifier);
+        \MVC\Event::run('DTContainer.get_sIdentifier.before', $oDTValue);
+
+        return $oDTValue->get_mValue();
     }
 
     /**

@@ -1,5 +1,9 @@
 <?php
 
+# @usage
+#   php emvicy.php datatype
+
+
 #---------------------------------------------------------------
 #  Defining DataType Classes
 

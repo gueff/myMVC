@@ -10,6 +10,8 @@
 
 namespace MVC;
 
+use MVC\DataType\DTArrayObject;
+
 /**
  * Session
  */
@@ -232,5 +234,42 @@ class Session
         }
 
         return self::$_oInstance;
+    }
+
+    /**
+     * activates Session for controllers based on module's config file (`_session.php`); gets active by triggered event "mvc.application.setSession.before"
+     * @see /modules/{module}/etc/event/
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function applySessionRules()
+    {
+        $aEnableSessionForController = get(Config::MODULE()['SESSION']['aEnableSessionForController'], array());
+        $aDisableSessionForController = get(Config::MODULE()['SESSION']['aDisableSessionForController'], array());
+
+        $bEnable = (
+            // current controller
+            in_array(Route::getCurrent()->get_c(), $aEnableSessionForController)
+            ||
+            // any
+            in_array('*', $aEnableSessionForController)
+        );
+
+        $bDisable = (
+            // current controller
+            in_array(Route::getCurrent()->get_c(), $aDisableSessionForController)
+            ||
+            // any
+            in_array('*', $aDisableSessionForController)
+        );
+
+        if (true == $bEnable
+            && false == $bDisable
+            && isset($_COOKIE['myMVC_cookieConsent'])
+            && "true" == $_COOKIE['myMVC_cookieConsent']
+        )
+        {
+            Config::set_MVC_SESSION_ENABLE();
+        }
     }
 }

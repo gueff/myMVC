@@ -115,6 +115,9 @@ MVC_APPLICATION_SETTINGS_I: {
     // anyway this might be useful for a develop environment, as it helps debugging and understanding
     $aConfig['MVC_EVENT_LOG_RUN'] = false;
 
+    // logging request into request.log
+    $aConfig['MVC_LOG_REQUEST'] = false;
+
     /**
      * Log
      */
@@ -125,6 +128,7 @@ MVC_APPLICATION_SETTINGS_I: {
     $aConfig['MVC_LOG_FILE_NOTICE'] = $aConfig['MVC_LOG_FILE_DIR'] . 'notice.log';
     $aConfig['MVC_LOG_FILE_POLICY'] = $aConfig['MVC_LOG_FILE_DIR'] . 'policy.log';
     $aConfig['MVC_LOG_FILE_EVENT'] = $aConfig['MVC_LOG_FILE_DIR'] . 'event.log';
+    $aConfig['MVC_LOG_FILE_REQUEST'] = $aConfig['MVC_LOG_FILE_DIR'] . 'request.log';
 
     // control log details
     $aConfig['MVC_LOG_DETAIL'] = [

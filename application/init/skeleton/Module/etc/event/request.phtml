@@ -12,15 +12,18 @@
     'mvc.request.getCurrentRequest.after' => [
         /*
          * logging requests
-         * uncomment if you want requests to your application get logged
-         * watch the log on command line with `tail -f request.log`
          */
         function(\MVC\DataType\DTArrayObject $oDTArrayObject, \MVC\DataType\DTEventContext $oDTEventContext) {
 
-//            /** @var \MVC\DataType\DTRequestCurrent $oDTRequestCurrent */
-//            $oDTRequestCurrent = $oDTArrayObject->flatten()['oDTRequestCurrent'];
-//
-//            \MVC\Log::write($oDTRequestCurrent, 'request.log');
+            if (false === \MVC\Config::get_MVC_LOG_REQUEST())
+            {
+                return false;
+            }
+
+            /** @var \MVC\DataType\DTRequestCurrent $oDTRequestCurrent */
+            $oDTRequestCurrent = $oDTArrayObject->flatten()['oDTRequestCurrent'];
+
+            \MVC\Log::write($oDTRequestCurrent, \MVC\Config::get_MVC_LOG_FILE_REQUEST());
         },
     ],
 

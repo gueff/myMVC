@@ -13,10 +13,6 @@
  */
 namespace {module}\Model;
 
-use MVC\Config;
-use MVC\DataType\DTArrayObject;
-use MVC\Route;
-
 /**
  * Index
  */
@@ -25,51 +21,13 @@ class Index
     /**
      * Index constructor.
      */
-	public function __construct ()
-	{
-		;
-	}
-
-    /**
-     * activates Session
-     * gets active by triggered event "mvc.application.setSession.before"
-     * @see /modules/{module}/etc/event/
-     * @param DTArrayObject $oDTArrayObject
-     * @throws \ReflectionException
-     */
-    public static function enableSession(\MVC\DataType\DTArrayObject $oDTArrayObject)
+    public function __construct ()
     {
-        $aEnableSessionForController = get(Config::MODULE()['SESSION']['aEnableSessionForController'], array());
-        $aDisableSessionForController = get(Config::MODULE()['SESSION']['aDisableSessionForController'], array());
-
-        $bEnable = (
-            // current controller
-            in_array(Route::getCurrent()->get_c(), $aEnableSessionForController)
-            ||
-            // any
-            in_array('*', $aEnableSessionForController)
-        );
-
-        $bDisable = (
-            // current controller
-            in_array(Route::getCurrent()->get_c(), $aDisableSessionForController)
-            ||
-            // any
-            in_array('*', $aDisableSessionForController)
-        );
-
-        if (true == $bEnable
-            && false == $bDisable
-            && isset($_COOKIE['myMVC_cookieConsent'])
-            && "true" == $_COOKIE['myMVC_cookieConsent']
-        )
-        {
-            Config::set_MVC_SESSION_ENABLE();
-        }
+        ;
     }
 
-	public function __destruct ()
-	{
-		;
-	}	
+    public function __destruct ()
+    {
+        ;
+    }
 }

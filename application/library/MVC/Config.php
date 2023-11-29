@@ -1190,4 +1190,52 @@ class Config
         Registry::set('MVC_EVENT_ENABLE_WILDCARD', $bVar);
         $GLOBALS['aConfig']['MVC_EVENT_ENABLE_WILDCARD'] = $bVar;
     }
+
+    /**
+     * @return bool
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_LOG_REQUEST() : bool
+    {
+        if (Registry::isRegistered('MVC_LOG_REQUEST'))
+        {
+            return (boolean) Registry::get('MVC_LOG_REQUEST');
+        }
+
+        return false;
+    }
+
+    /**
+     * @param bool $bVar
+     * @return void
+     */
+    public static function set_MVC_LOG_REQUEST(bool $bVar = false) : void
+    {
+        Registry::set('MVC_LOG_REQUEST', $bVar);
+        $GLOBALS['aConfig']['MVC_LOG_REQUEST'] = $bVar;
+    }
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_LOG_FILE_REQUEST() : string
+    {
+        if (Registry::isRegistered('MVC_LOG_FILE_REQUEST'))
+        {
+            return (string) Registry::get('MVC_LOG_FILE_REQUEST');
+        }
+
+        return '';
+    }
+
+    /**
+     * @param string $sLogFileName
+     * @return void
+     */
+    public static function set_MVC_LOG_FILE_REQUEST(string $sLogFileName = '') : void
+    {
+        Registry::set('MVC_LOG_FILE_REQUEST', $sLogFileName);
+        $GLOBALS['aConfig']['MVC_LOG_FILE_REQUEST'] = $sLogFileName;
+    }
 }

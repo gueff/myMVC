@@ -502,17 +502,24 @@ class Emvicy
     /**
      * @return void
      */
-    public static function md()
+    public static function md(bool $bReturn = false)
     {
-        self::modules();
+        self::modules($bReturn);
     }
 
     /**
      * @return void
      */
-    public static function modules()
+    public static function modules(bool $bReturn = false)
     {
-        echo json_encode($GLOBALS['aConfig']['MVC_MODULE_SET']) . "\n\n";
+        $aModuleSet = get($GLOBALS['aConfig']['MVC_MODULE_SET'], array());
+
+        if (true === $bReturn)
+        {
+            return $aModuleSet;
+        }
+
+        echo json_encode($aModuleSet) . "\n\n";
     }
 
     /**

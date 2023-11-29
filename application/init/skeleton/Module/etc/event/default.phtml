@@ -6,25 +6,29 @@
 
 \MVC\Event::processBindConfigStack([
 
+    'mvc.application.setSession.before' => [
+        // enable Session
+        function() {
+            \MVC\Session::applySessionRules();
+        }
+    ],
     'mvc.reflex.reflect.targetObject.before' => [
-        function(\MVC\DataType\DTArrayObject $oDTArrayObject) { // minify css/js files
+        // minify css/js files
+        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
             \MVC\Minify::init();
         }
     ],
     'mvc.reflex.reflect.targetObject.after' => [
-        function (\MVC\DataType\DTArrayObject $oDTArrayObject) { // switch on InfoTool
+        // switch on InfoTool
+        function (\MVC\DataType\DTArrayObject $oDTArrayObject) {
             if (true === \MVC\Config::get_MVC_INFOTOOL_ENABLE()) {
                 new \MVC\InfoTool(\{module}\View\Index::init());
             }
         }
     ],
-    'mvc.application.setSession.before' => [
-        function(\MVC\DataType\DTArrayObject $oDTArrayObject) { // enable Session
-            \{module}\Model\Index::enableSession($oDTArrayObject);
-        }
-    ],
     'mvc.debug.stop.after' => [
-        function (\MVC\DataType\DTArrayObject $oDTArrayObject) { // Logging stops
+        // Logging stops
+        function (\MVC\DataType\DTArrayObject $oDTArrayObject) {
             \MVC\Log::write(
                 "\n\n*** STOP ***\n" . print_r($oDTArrayObject->get_akeyvalue()[0]->get_sValue(), true),
                 \MVC\Config::get_MVC_LOG_FILE_DEFAULT(),
@@ -33,7 +37,8 @@
         }
     ],
     'mvc.error' => [
-        function(\MVC\DataType\DTArrayObject $oDTArrayObject) { // write errors into error log file
+        // write errors into error log file
+        function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
             \MVC\Log::write(
                 $oDTArrayObject,
                 \MVC\Config::get_MVC_LOG_FILE_ERROR(),

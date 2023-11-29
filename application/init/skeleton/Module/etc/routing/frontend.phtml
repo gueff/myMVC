@@ -1,10 +1,11 @@
 <?php
 
 /*
- * this DataType class "\{module}\DataType\DTRoutingAdditional" is generated
- * @see modules/{module}/etc/config/DataType/
+ * you can use your own $oDTRoutingAdditional
+ * @see modules/{module}/etc/config/{module}/config/_dataType.php
  */
-$oDTRoutingAdditional = \{module}\DataType\DTRoutingAdditional::create()
+
+$oDTRoutingAdditional = \MVC\DataType\DTRoutingAdditional::create()
     ->set_sTitle('{module}')
     ->set_sLayout('Frontend/layout/index.tpl')
     ->set_sMainmenu('Frontend/layout/menu.tpl')

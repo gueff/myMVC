@@ -139,7 +139,6 @@ function mvcStoreEnv(string $sEnvFile = '')
         : false
     ;
 
-    // read .env file in the public folder
     if (file_exists($sEnvFile))
     {
         $aEnvContent = array_values(array_filter(file($sEnvFile), 'trim'));

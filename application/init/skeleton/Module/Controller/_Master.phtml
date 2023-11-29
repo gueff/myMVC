@@ -1,0 +1,61 @@
+<?php
+/**
+ * _Master.php
+ *
+ * @package myMVC
+ * @copyright ueffing.net
+ * @author Guido K.B.W. Üffing <mymvc@ueffing.net>
+ * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
+ */
+
+/**
+ * @name ${module}Controller
+ */
+namespace {module}\Controller;
+
+use App\Controller;
+use MVC\DataType\DTRequestCurrent;
+use MVC\DataType\DTRoute;
+use MVC\MVCTrait\TraitDataType;
+
+/**
+ * @extends Controller
+ */
+class _Master extends Controller
+{
+    use TraitDataType;
+
+    /**
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function __preconstruct()
+    {
+        parent::__preconstruct();
+    }
+
+    /**
+     * @param \MVC\DataType\DTRequestCurrent $oDTRequestCurrent
+     * @param \MVC\DataType\DTRoute          $oDTRoute
+     * @throws \ReflectionException
+     */
+    public function __construct(DTRequestCurrent $oDTRequestCurrent, DTRoute $oDTRoute)
+	{
+        parent::__construct($oDTRequestCurrent, $oDTRoute);
+
+        // View
+        if (true === $this->isPrimary())
+        {
+            function view() {return \{module}\View\Index::init();}
+        }
+        else
+        {
+            \{module}\View\Index::init();
+        }
+    }
+
+    public function __destruct()
+    {
+        ;
+    }
+}

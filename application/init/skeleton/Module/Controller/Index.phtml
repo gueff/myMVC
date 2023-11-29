@@ -13,21 +13,21 @@
  */
 namespace {module}\Controller;
 
-use App\Controller;
 use MVC\DataType\DTRequestCurrent;
 use MVC\DataType\DTRoute;
 
 /**
- * @extends Controller
+ * @extends \{module}\Controller\_Master
  */
-class Index extends Controller
+class Index extends _Master
 {
     /**
      * @return void
+     * @throws \ReflectionException
      */
     public static function __preconstruct()
     {
-        ;
+        parent::__preconstruct();
     }
 
     /**
@@ -36,9 +36,9 @@ class Index extends Controller
      * @throws \ReflectionException
      */
     public function __construct(DTRequestCurrent $oDTRequestCurrent, DTRoute $oDTRoute)
-	{
-        \{module}\View\Index::init()->autoAssign($oDTRoute);
-	}
+    {
+        parent::__construct($oDTRequestCurrent, $oDTRoute);
+    }
 
     /**
      * @param \MVC\DataType\DTRequestCurrent $oDTRequestCurrent
@@ -48,7 +48,7 @@ class Index extends Controller
      */
 	public function index(DTRequestCurrent $oDTRequestCurrent, DTRoute $oDTRoute)
 	{
-		;
+        view()->autoAssign();
 	}
 
     /**
@@ -60,14 +60,15 @@ class Index extends Controller
     public function notFound(DTRequestCurrent $oDTRequestCurrent, DTRoute $oDTRoute)
     {
         http_response_code(404);
+        view()->autoAssign();
     }
 
     /**
      * @throws \ReflectionException
      * @throws \SmartyException
      */
-	public function __destruct()
-	{
-        \{module}\View\Index::init()->render();
-	}
+    public function __destruct ()
+    {
+        view()->render();
+    }
 }
