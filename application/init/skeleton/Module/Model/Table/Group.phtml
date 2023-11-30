@@ -1,0 +1,54 @@
+<?php
+
+namespace {module}\Model\Table;
+
+use MVC\DB\DataType\DB\Foreign;
+use MVC\DB\Model\Db;
+
+class Group extends Db
+{
+    /**
+     * @var array
+     */
+    protected $aField = array();
+
+    /**
+     * @param array $aDbConfig
+     * @throws \ReflectionException
+     */
+    public function __construct(array $aDbConfig = array())
+    {
+        $this->aField = array(
+            'name'     => "varchar(255) COLLATE utf8_general_ci NOT NULL UNIQUE",
+            'active'    => "int(1)      DEFAULT '0'             NOT NULL",
+            'uuid'      => "varchar(36) COLLATE utf8_general_ci NOT NULL UNIQUE COMMENT 'uuid permanent'",
+        );
+
+        // basic creation of the table
+        parent::__construct(
+            $this->aField,
+            $aDbConfig
+        );
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1238,4 +1238,52 @@ class Config
         Registry::set('MVC_LOG_FILE_REQUEST', $sLogFileName);
         $GLOBALS['aConfig']['MVC_LOG_FILE_REQUEST'] = $sLogFileName;
     }
+
+    /**
+     * @return bool
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_LOG_SQL() : bool
+    {
+        if (Registry::isRegistered('MVC_LOG_SQL'))
+        {
+            return (boolean) Registry::get('MVC_LOG_SQL');
+        }
+
+        return false;
+    }
+
+    /**
+     * @param bool $bVar
+     * @return void
+     */
+    public static function set_MVC_LOG_SQL(bool $bVar = false) : void
+    {
+        Registry::set('MVC_LOG_SQL', $bVar);
+        $GLOBALS['aConfig']['MVC_LOG_SQL'] = $bVar;
+    }
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_LOG_FILE_SQL() : string
+    {
+        if (Registry::isRegistered('MVC_LOG_FILE_SQL'))
+        {
+            return (string) Registry::get('MVC_LOG_FILE_SQL');
+        }
+
+        return '';
+    }
+
+    /**
+     * @param string $sLogFileName
+     * @return void
+     */
+    public static function set_MVC_LOG_FILE_SQL(string $sLogFileName = '') : void
+    {
+        Registry::set('MVC_LOG_FILE_SQL', $sLogFileName);
+        $GLOBALS['aConfig']['MVC_LOG_FILE_SQL'] = $sLogFileName;
+    }
 }

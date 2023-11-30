@@ -12,8 +12,13 @@ application/composer.lock
 application/library/MVC/*.tar.gz
 application/vendor
 application/library/MVC/DataType/_datatype.php
+application/library/MVC/DataType/.bak
 application/library/MVC/DataType/.trash
 application/library/MVC/DataType/test
+application/library/MVC/DB/DataType/_db_datatype.php
+application/library/MVC/DB/DataType/.bak
+application/library/MVC/DB/DataType/.trash
+application/library/MVC/DB/DataType/test
 gen
 *.tar.gz
 vendor

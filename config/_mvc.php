@@ -118,10 +118,14 @@ MVC_APPLICATION_SETTINGS_I: {
     // logging request into request.log
     $aConfig['MVC_LOG_REQUEST'] = false;
 
+    // logging of SQL Statements
+    $aConfig['MVC_LOG_SQL'] = false;
+
     /**
      * Log
+     * consider a logrotate mechanism for these logfiles as they may grow quickly
      */
-    $aConfig['MVC_LOG_FILE_DIR'] = $aConfig['MVC_APPLICATION_PATH'] . '/log/';
+    $aConfig['MVC_LOG_FILE_DIR'] = $aConfig['MVC_APPLICATION_PATH'] . '/log/';          # trailing slash required
     $aConfig['MVC_LOG_FILE_DEFAULT'] = $aConfig['MVC_LOG_FILE_DIR'] . 'default.log';
     $aConfig['MVC_LOG_FILE_ERROR'] = $aConfig['MVC_LOG_FILE_DIR'] . 'error.log';
     $aConfig['MVC_LOG_FILE_WARNING'] = $aConfig['MVC_LOG_FILE_DIR'] . 'warning.log';
@@ -129,6 +133,12 @@ MVC_APPLICATION_SETTINGS_I: {
     $aConfig['MVC_LOG_FILE_POLICY'] = $aConfig['MVC_LOG_FILE_DIR'] . 'policy.log';
     $aConfig['MVC_LOG_FILE_EVENT'] = $aConfig['MVC_LOG_FILE_DIR'] . 'event.log';
     $aConfig['MVC_LOG_FILE_REQUEST'] = $aConfig['MVC_LOG_FILE_DIR'] . 'request.log';
+    $aConfig['MVC_LOG_FILE_SQL'] = $aConfig['MVC_LOG_FILE_DIR'] . 'sql.log';
+
+    // 1) make sure write access is given to the folder
+    // as long as the db user is going to write and not the webserver user
+    // 2) consider a logrotate mechanism for this logfile as it may grow quickly
+    $aConfig['MVC_LOG_FILE_DB_DIR'] = '/tmp/';
 
     // control log details
     $aConfig['MVC_LOG_DETAIL'] = [

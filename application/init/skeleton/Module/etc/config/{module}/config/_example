@@ -10,26 +10,40 @@
  * `/modules/{module}/etc/config/_mvc.php` (exists if module `{module}` is a primary module)
  */
 
-//-------------------------------------------------------------------------------------
+//######################################################################################################################
 // MVC
 
+declare(strict_types=1);  // @see https://www.php.net/manual/en/language.types.declarations.php#language.types.declarations.strict
 error_reporting(E_ALL);
 date_default_timezone_set('Europe/Berlin');
 
-$aConfig['MVC_EVENT_LOG_RUN'] = false;      // logging of each simple "RUN" event into MVC_LOG_FILE_EVENT
-$aConfig['MVC_LOG_AUTOLOADER'] = false;     // Log autoloader actions
-$aConfig['MVC_LOG_FORCE_LINEBREAK'] = true; // force linebreaks in logfiles no matter what
-$aConfig['MVC_INFOTOOL_ENABLE'] = true;     // show InfoTool bar
-$aConfig['MVC_LOG_REQUEST'] = false;        // logging request into MVC_LOG_FILE_REQUEST
+// consider a logrotate mechanism for these logfiles as they may grow quickly
+$aConfig['MVC_LOG_SQL'] = false;            // consider to set to true for develop environments only: logging request into MVC_LOG_FILE_SQL
+$aConfig['MVC_LOG_REQUEST'] = false;        // consider to set to true for develop environments only: logging request into MVC_LOG_FILE_REQUEST
+$aConfig['MVC_EVENT_LOG_RUN'] = false;      // consider to set to true for develop environments only: logging of each simple "RUN" event into MVC_LOG_FILE_EVENT
+$aConfig['MVC_LOG_AUTOLOADER'] = false;     // consider to set to true for develop environments only: Log autoloader actions
+$aConfig['MVC_INFOTOOL_ENABLE'] = true;     // consider to set to true for develop environments only: show InfoTool bar
+$aConfig['MVC_LOG_FORCE_LINEBREAK'] = true; // consider to set to true for develop environments only: force linebreaks in logfiles no matter what, improves readabilty of logs but blows up
 
 
-//-------------------------------------------------------------------------------------
+//######################################################################################################################
 // Module {module}
 
 $aConfig['MODULE']['{module}'] = array();
 
+// ...your config goes here...
 
-//-------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------
+// DB
+// watch database log; e.g.:      cd /tmp; tail -f {module}*.log
+
+require realpath(__DIR__) . '/_db.php';
+// consider a logrotate mechanism for this logfile as it may grow quickly
+$aConfig['MODULE']['{module}']['DB']['logging']['general_log'] = 'ON'; // consider to set it to ON for develop or test environments only
+
+
+//######################################################################################################################
+// common settings
 
 require realpath(__DIR__) . '/_datatype.php';
 require realpath(__DIR__) . '/_session.php';

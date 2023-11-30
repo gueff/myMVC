@@ -1,0 +1,46 @@
+<?php
+
+# List of myMVC Standard Events
+# @see https://mymvc.ueffing.net/3.4.x/events#myMVCStandardEvents
+
+
+\MVC\Event::processBindConfigStack([
+
+    'db.model.db.create.before' => [
+        /*
+         * add timestamps if missing at creation
+         */
+        function(MVC\DB\DataType\DB\TableDataType $oTableDataType) {
+
+            (true === empty($oTableDataType->get_stampCreate())) ? $oTableDataType->set_stampCreate(date('Y-m-d H:i:s')) : false;
+            (true === empty($oTableDataType->get_stampChange())) ? $oTableDataType->set_stampChange(date('Y-m-d H:i:s')) : false;
+        },
+    ],
+    'DT{module}ModelTableUser.set_password.before' => [
+        /*
+         * encrypt the transferred password
+         */
+        function(\MVC\DataType\DTValue $oDTValue){
+            $oDTValue->set_mValue(
+                password_hash(
+                    $oDTValue->get_mValue(),
+                    PASSWORD_DEFAULT
+                )
+            );
+        },
+    ],
+    'db.model.db.create.sql' => [
+        /*
+         * log SQL Statements, if enabled via config
+         */
+        function(MVC\DataType\DTArrayObject $oDTArrayObject){
+            if (true === \MVC\Config::get_MVC_LOG_SQL())
+            {
+                \MVC\Log::write(
+                    $oDTArrayObject->getDTKeyValueByKey('sSql')->get_sValue(),
+                    \MVC\Config::get_MVC_LOG_FILE_SQL()
+                );
+            }
+        }
+    ],
+]);

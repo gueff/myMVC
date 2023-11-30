@@ -14,6 +14,7 @@
 namespace {module}\Controller;
 
 use App\Controller;
+use {module}\Model\DB;
 use MVC\DataType\DTRequestCurrent;
 use MVC\DataType\DTRoute;
 use MVC\MVCTrait\TraitDataType;
@@ -52,6 +53,9 @@ class _Master extends Controller
         {
             \{module}\View\Index::init();
         }
+
+        // Init Database
+        DB::init();
     }
 
     public function __destruct()

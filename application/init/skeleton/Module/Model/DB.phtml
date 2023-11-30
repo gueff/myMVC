@@ -1,0 +1,24 @@
+<?php
+
+namespace {module}\Model;
+
+use MVC\DB\Model\DbInit;
+use MVC\DB\Trait\DbInitTrait;
+
+/**
+ * DB
+ */
+class DB extends DbInit
+{
+    use DbInitTrait;
+
+    /**
+     * @var \{module}\Model\Table\Group
+     */
+    #public static $o{module}ModelTableGroup;
+
+    /**
+     * @var \{module}\Model\Table\User
+     */
+    #public static $o{module}ModelTableUser;
+}
