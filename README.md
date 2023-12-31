@@ -1,3 +1,12 @@
+
+# myMVC has become `Emvicy`
+
+please move to [https://github.com/emvicy/Emvicy](https://github.com/emvicy/Emvicy). Thank you.
+2023-12-31
+
+
+---
+
 # <img src="https://mymvc.ueffing.net/myMVC.png" width="60" align="left"> myMVC
 
 the PHP Framework
